@@ -1,0 +1,26 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/tools/blurtap",
+      "has": [
+        {
+          "type": "host",
+          "value": "tool7.ai-autosite.com"
+        }
+      ],
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "/tools/blurtap",
+      "has": [
+        {
+          "type": "host",
+          "value": "tool7.ai-autosite.com"
+        }
+      ],
+      "permanent": true
+    }
+  ]
+}
