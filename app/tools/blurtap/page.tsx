@@ -404,7 +404,7 @@ export default function BlurTapPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <Link href="https://ai-autosite.com" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                 <div className="relative">
                   <Shield className="w-10 h-10 text-cyan-400" />
                   <Sparkles className="w-4 h-4 text-yellow-400 absolute -top-1 -right-1 animate-pulse" />
@@ -419,7 +419,7 @@ export default function BlurTapPage() {
             </div>
             <div className="flex items-center space-x-4">
               <Link 
-                href="/" 
+                href="https://ai-autosite.com" 
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-gray-300 text-sm"
               >
                 <Home className="w-4 h-4" />
