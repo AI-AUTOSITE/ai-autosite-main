@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Upload, Download, RotateCcw, Undo2, Shield, AlertCircle, CheckCircle, Sparkles, Lock, Zap, Info, X, FileImage, MousePointer, Move, Home } from 'lucide-react'
+import Header from '@/app/components/Header'
+import Footer from '@/app/components/Footer'
+import { Upload, Download, RotateCcw, Undo2, Shield, AlertCircle, CheckCircle, Sparkles, Lock, Zap, Info, X, FileImage, MousePointer, Move } from 'lucide-react'
 
 // マスク領域の型定義
 interface MaskRegion {
@@ -392,49 +394,25 @@ export default function BlurTapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 relative overflow-hidden flex flex-col">
       {/* 背景アニメーション */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
       </div>
 
-      {/* ヘッダー */}
-      <header className="relative z-10 backdrop-blur-xl bg-white/5 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link href="https://ai-autosite.com" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                <div className="relative">
-                  <Shield className="w-10 h-10 text-cyan-400" />
-                  <Sparkles className="w-4 h-4 text-yellow-400 absolute -top-1 -right-1 animate-pulse" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    BlurTap
-                  </h1>
-                  <p className="text-xs text-gray-400 mt-0.5">Privacy Masking Tool</p>
-                </div>
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="https://ai-autosite.com" 
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all text-gray-300 text-sm"
-              >
-                <Home className="w-4 h-4" />
-                <span className="hidden sm:inline">All Tools</span>
-              </Link>
-              <button
-                onClick={() => setShowInfo(!showInfo)}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
-              >
-                <Info className="w-5 h-5 text-gray-400" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Common Header */}
+      <Header />
+
+      {/* Info Button */}
+      <div className="fixed top-20 right-4 z-40">
+        <button
+          onClick={() => setShowInfo(!showInfo)}
+          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 backdrop-blur-xl border border-white/10"
+        >
+          <Info className="w-5 h-5 text-gray-400" />
+        </button>
+      </div>
 
       {/* 情報パネル */}
       {showInfo && (
@@ -477,7 +455,7 @@ export default function BlurTapPage() {
       )}
 
       {/* メインコンテンツ */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         {/* アップロードセクション */}
         {!imageUrl ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -733,14 +711,8 @@ export default function BlurTapPage() {
         )}
       </main>
 
-      {/* フッター */}
-      <footer className="relative z-10 mt-auto py-8 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500">
-            100% Private • No Data Stored • No Tracking
-          </p>
-        </div>
-      </footer>
+      {/* Common Footer */}
+      <Footer />
 
       {/* アニメーション用のスタイル */}
       <style jsx>{`

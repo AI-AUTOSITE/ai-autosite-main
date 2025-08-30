@@ -1,8 +1,9 @@
-// app/page.tsx
 'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Header from '@/app/components/Header'
+import Footer from '@/app/components/Footer'
 import { Shield, Zap, Palette, Code, Database, Clock, Search, ChevronRight, Sparkles, Lock, Globe, Star } from 'lucide-react'
 
 // Tool data
@@ -12,7 +13,7 @@ const tools = [
     name: 'BlurTap',
     description: 'Mask sensitive information in images with one click. Perfect for screenshots and documents.',
     category: 'privacy',
-    icon: '🔒',
+    icon: '🔐',
     color: 'from-cyan-500 to-purple-500',
     status: 'live',
     url: '/tools/blurtap',
@@ -102,43 +103,15 @@ export default function HomePage() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col">
       {/* Background animation */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 backdrop-blur-xl bg-white/5 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <Sparkles className="w-10 h-10 text-cyan-400" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Instant Tools
-                </h1>
-                <p className="text-xs text-gray-400">No Sign-up, No Upload, Just Works</p>
-              </div>
-            </div>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors">
-                Blog
-              </Link>
-              <Link href="/about" className="text-gray-300 hover:text-white transition-colors">
-                About
-              </Link>
-              <Link href="/updates" className="text-gray-300 hover:text-white transition-colors">
-                Updates
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      {/* Common Header */}
+      <Header />
 
       {/* Hero Section */}
       <section className="relative z-10 text-center py-16 px-4">
@@ -190,7 +163,7 @@ export default function HomePage() {
             <Link href="/tools/tech-stack-analyzer" className="group">
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-content text-2xl">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
                     ⚙️
                   </div>
                   <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
@@ -275,7 +248,7 @@ export default function HomePage() {
       </section>
 
       {/* Tools Grid */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTools.map((tool) => (
             <Link
@@ -359,14 +332,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 py-8 border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500">
-            © 2024 Instant Tools by AI AutoSite • All tools are free and process data locally • No tracking, no ads
-          </p>
-        </div>
-      </footer>
+      {/* Common Footer */}
+      <Footer />
     </div>
   )
 }
