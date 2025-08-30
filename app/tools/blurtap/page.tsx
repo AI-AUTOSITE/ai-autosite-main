@@ -1,10 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
-import { Upload, Download, RotateCcw, Undo2, Shield, AlertCircle, CheckCircle, Sparkles, Lock, Zap, Info, X, FileImage, MousePointer, Move } from 'lucide-react'
+import { Upload, Download, RotateCcw, Undo2, Shield, AlertCircle, CheckCircle, Lock, Zap, Info, X, FileImage, MousePointer, Move } from 'lucide-react'
 
 // マスク領域の型定義
 interface MaskRegion {
@@ -394,16 +391,7 @@ export default function BlurTapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 relative overflow-hidden flex flex-col">
-      {/* 背景アニメーション */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      </div>
-
-      {/* Common Header */}
-      <Header />
-
+    <>
       {/* Info Button */}
       <div className="fixed top-20 right-4 z-40">
         <button
@@ -446,8 +434,9 @@ export default function BlurTapPage() {
               </div>
             </div>
             <div className="mt-6 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-              <p className="text-xs text-yellow-400">
-                🔒 100% Private: All processing happens locally in your browser.
+              <p className="text-xs text-yellow-400 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                100% Private: All processing happens locally in your browser.
               </p>
             </div>
           </div>
@@ -455,7 +444,19 @@ export default function BlurTapPage() {
       )}
 
       {/* メインコンテンツ */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* ページタイトル */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="relative">
+              <Shield className="w-12 h-12 text-cyan-400" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-white mb-2">BlurTap Privacy Tool</h1>
+          <p className="text-gray-400">Mask sensitive information with complete privacy</p>
+        </div>
+
         {/* アップロードセクション */}
         {!imageUrl ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -711,9 +712,6 @@ export default function BlurTapPage() {
         )}
       </main>
 
-      {/* Common Footer */}
-      <Footer />
-
       {/* アニメーション用のスタイル */}
       <style jsx>{`
         @keyframes fade-in {
@@ -731,6 +729,6 @@ export default function BlurTapPage() {
           animation: fade-in 0.3s ease-out;
         }
       `}</style>
-    </div>
+    </>
   )
 }
