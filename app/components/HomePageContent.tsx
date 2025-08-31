@@ -1,0 +1,376 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { Shield, Zap, Palette, Code, Search, ChevronRight, Lock, Globe, Star, BookOpen, Sparkles } from 'lucide-react'
+
+// Tool data
+const tools = [
+  {
+    id: 'blurtap',
+    name: 'BlurTap',
+    description: 'Mask sensitive information in images with one click. Perfect for screenshots and documents.',
+    category: 'privacy',
+    icon: '🔒',
+    color: 'from-cyan-500 to-purple-500',
+    status: 'live',
+    url: '/tools/blurtap',
+    tags: ['Privacy', 'Images', 'Security'],
+    users: '2.5k',
+    featured: false
+  },
+  {
+    id: 'code-reader',
+    name: 'Code Dependency Visualizer',
+    description: 'Analyze project structure and visualize file dependencies. Perfect for understanding codebases.',
+    category: 'developer',
+    icon: '🔍',
+    color: 'from-blue-500 to-indigo-600',
+    status: 'live',
+    url: '/tools/code-reader',
+    tags: ['Developer', 'Code Analysis', 'Dependencies'],
+    users: '850',
+    featured: true
+  },
+  {
+    id: 'tech-stack-analyzer',
+    name: 'Tech Stack Analyzer',
+    description: 'Compare frameworks and get AI-powered recommendations for your next project.',
+    category: 'developer',
+    icon: '⚙️',
+    color: 'from-green-500 to-emerald-600',
+    status: 'live',
+    url: '/tools/tech-stack-analyzer',
+    tags: ['Developer', 'Frameworks', 'Planning'],
+    users: '1.2k',
+    featured: true
+  },
+  {
+    id: 'ai-dev-dictionary',
+    name: 'AI Dev Dictionary',
+    description: 'Comprehensive glossary of AI and development terms with interactive examples and visual demonstrations.',
+    category: 'learning',
+    icon: '📚',
+    color: 'from-amber-500 to-orange-600',
+    status: 'live',
+    url: '/tools/ai-dev-dictionary',
+    tags: ['Learning', 'AI', 'Reference'],
+    users: '500',
+    featured: true
+  },
+  {
+    id: 'json-format',
+    name: 'JSON Beautify',
+    description: 'Format, validate, and minify JSON data instantly. Perfect for developers and API testing.',
+    category: 'developer',
+    icon: '{ }',
+    color: 'from-green-500 to-emerald-500',
+    status: 'coming',
+    url: '/tools/json-format',
+    tags: ['Developer', 'Data', 'API'],
+    users: 'Soon',
+    featured: false
+  },
+  {
+    id: 'color-picker',
+    name: 'Color Palette',
+    description: 'Extract colors from any image and generate beautiful palettes for your designs.',
+    category: 'creative',
+    icon: '🎨',
+    color: 'from-pink-500 to-rose-500',
+    status: 'coming',
+    url: '/tools/color-picker',
+    tags: ['Design', 'Colors', 'Creative'],
+    users: 'Soon',
+    featured: false
+  },
+  {
+    id: 'pdf-merge',
+    name: 'PDF Merge',
+    description: 'Combine multiple PDF files into one. No upload needed, works in your browser.',
+    category: 'productivity',
+    icon: '📄',
+    color: 'from-blue-500 to-indigo-500',
+    status: 'coming',
+    url: '/tools/pdf-merge',
+    tags: ['PDF', 'Documents', 'Office'],
+    users: 'Soon',
+    featured: false
+  }
+]
+
+const categories = [
+  { id: 'all', name: 'All Tools', icon: Globe, count: tools.length },
+  { id: 'developer', name: 'Developer', icon: Code, count: tools.filter(t => t.category === 'developer').length },
+  { id: 'learning', name: 'Learning', icon: BookOpen, count: tools.filter(t => t.category === 'learning').length },
+  { id: 'privacy', name: 'Privacy', icon: Shield, count: tools.filter(t => t.category === 'privacy').length },
+  { id: 'productivity', name: 'Productivity', icon: Zap, count: tools.filter(t => t.category === 'productivity').length },
+  { id: 'creative', name: 'Creative', icon: Palette, count: tools.filter(t => t.category === 'creative').length },
+]
+
+export default function HomePageContent() {
+  const searchParams = useSearchParams()
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Handle category from URL params (for redirect from /tools)
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
+      setSelectedCategory(categoryParam)
+    }
+  }, [searchParams])
+
+  // Listen for category change events from header
+  useEffect(() => {
+    const handleCategoryChange = (e: CustomEvent) => {
+      setSelectedCategory(e.detail)
+    }
+    
+    window.addEventListener('categoryChange', handleCategoryChange as EventListener)
+    return () => {
+      window.removeEventListener('categoryChange', handleCategoryChange as EventListener)
+    }
+  }, [])
+
+  const filteredTools = tools.filter(tool => {
+    const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory
+    const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    return matchesCategory && matchesSearch
+  })
+
+  const featuredTools = tools.filter(tool => tool.featured && tool.status === 'live')
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="relative z-10 text-center py-16 px-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full border border-cyan-500/20 mb-6">
+          <Sparkles className="w-4 h-4 text-cyan-400" />
+          <span className="text-sm text-cyan-400">Free Tools for Developers & Creators</span>
+        </div>
+        
+        <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">
+          Instant Tools for
+          <span className="block text-3xl sm:text-5xl mt-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+            Everything You Need
+          </span>
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">
+          Professional tools that work instantly in your browser. No account required, 
+          no data uploaded, no quality limits. Just simple tools that work.
+        </p>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <Lock className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
+            <p className="text-sm text-gray-300">100% Private</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <Zap className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+            <p className="text-sm text-gray-300">Instant Use</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <Globe className="w-6 h-6 text-green-400 mx-auto mb-2" />
+            <p className="text-sm text-gray-300">No Upload</p>
+          </div>
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <Star className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+            <p className="text-sm text-gray-300">Free Forever</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Tools Section - Highlighted */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                ⭐ Featured Tools
+              </h2>
+              <p className="text-gray-400">
+                Our most popular tools for developers and creators
+              </p>
+            </div>
+            <button
+              onClick={() => setSelectedCategory('developer')}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 text-gray-300 transition-all"
+            >
+              <Code className="w-4 h-4" />
+              View Developer Tools
+            </button>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredTools.map((tool) => (
+              <Link key={tool.id} href={tool.url} className="group">
+                <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 bg-gradient-to-br ${tool.color} rounded-xl flex items-center justify-center text-2xl`}>
+                      {tool.icon}
+                    </div>
+                    <span className={`px-3 py-1 text-xs rounded-full ${
+                      tool.id === 'ai-dev-dictionary' 
+                        ? 'bg-amber-500/20 text-amber-400' 
+                        : 'bg-green-500/20 text-green-400'
+                    }`}>
+                      {tool.id === 'ai-dev-dictionary' ? 'NEW' : 'LIVE'}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                    {tool.name}
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-4 flex-1">
+                    {tool.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-xs text-gray-500">{tool.users} users</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Search and Filter */}
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Search */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search tools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition-colors"
+            />
+          </div>
+
+          {/* Categories */}
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 py-2 rounded-lg border transition-all whitespace-nowrap ${
+                  selectedCategory === cat.id
+                    ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white border-transparent'
+                    : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
+                }`}
+              >
+                <span className="flex items-center space-x-2">
+                  <cat.icon className="w-4 h-4" />
+                  <span>{cat.name}</span>
+                  <span className="text-xs opacity-70">({cat.count})</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* All Tools Grid */}
+      <section id="tools-section" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1">
+        <h2 className="text-xl font-bold text-white mb-6">
+          {selectedCategory === 'all' 
+            ? 'All Tools' 
+            : `${categories.find(c => c.id === selectedCategory)?.name} Tools`}
+        </h2>
+        
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredTools.map((tool) => (
+            <Link
+              key={tool.id}
+              href={tool.status === 'live' ? tool.url : '#'}
+              className={`group ${tool.status !== 'live' ? 'cursor-not-allowed' : ''}`}
+            >
+              <div className={`bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 transition-all hover:bg-white/10 hover:scale-105 h-full flex flex-col ${
+                tool.status !== 'live' ? 'opacity-60' : ''
+              }`}>
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${tool.color} rounded-xl flex items-center justify-center text-2xl`}>
+                    {tool.icon}
+                  </div>
+                  <span className={`px-3 py-1 text-xs rounded-full ${
+                    tool.status === 'live' 
+                      ? tool.id === 'ai-dev-dictionary' 
+                        ? 'bg-amber-500/20 text-amber-400' 
+                        : 'bg-green-500/20 text-green-400'
+                      : 'bg-yellow-500/20 text-yellow-400'
+                  }`}>
+                    {tool.status === 'live' 
+                      ? tool.id === 'ai-dev-dictionary' ? 'NEW' : 'LIVE' 
+                      : 'SOON'}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  {tool.name}
+                </h3>
+                <p className="text-gray-400 text-sm mb-4 line-clamp-2 flex-1">
+                  {tool.description}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tool.tags.map((tag) => (
+                    <span key={tag} className="text-xs px-2 py-1 bg-white/10 rounded text-gray-300">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between mt-auto">
+                  <span className="text-xs text-gray-500">
+                    {tool.users} users
+                  </span>
+                  {tool.status === 'live' && (
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {filteredTools.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-gray-400">No tools found matching your criteria.</p>
+          </div>
+        )}
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 py-16 px-4 bg-white/5 border-t border-white/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-3xl font-bold text-white mb-4">
+            Building Something Special?
+          </h3>
+          <p className="text-gray-400 mb-8">
+            We're constantly adding new tools based on user feedback. 
+            Have an idea for a tool you need? Let us know!
+          </p>
+          <Link
+            href="/request"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
+          >
+            <span>Request a Tool</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+    </>
+  )
+}
