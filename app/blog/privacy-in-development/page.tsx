@@ -1,6 +1,3 @@
-
-<artifacts>
-<artifact id="privacy-in-development-blog" type="application/vnd.ant.code" language="tsx" title="Privacy-First Development Practices - BlurTap関連ブログ記事">
 // app/blog/privacy-in-development/page.tsx
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -875,5 +872,3 @@ return (
 </div>
 );
 }
-</artifact>
-</artifacts>
