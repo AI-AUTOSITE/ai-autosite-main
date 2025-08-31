@@ -164,13 +164,13 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
           value={repoInput}
           onChange={(e) => setRepoInput(e.target.value)}
           placeholder="owner/repository (e.g., facebook/react)"
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
           disabled={isLoading}
         />
         <select
           value={branch}
           onChange={(e) => setBranch(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent [&>option]:bg-slate-800 [&>option]:text-white"
           disabled={isLoading}
         >
           <option value="main">main</option>
@@ -180,7 +180,7 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
         <button
           onClick={handleFetch}
           disabled={isLoading}
-          className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {isLoading ? (
             <>
@@ -197,7 +197,7 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
       </div>
       
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
           {error}
         </div>
       )}
@@ -205,19 +205,19 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
       {isLoading && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">Processing repository...</span>
-            <span className="text-sm font-medium text-blue-600">{Math.round(progress)}%</span>
+            <span className="text-sm text-gray-400">Processing repository...</span>
+            <span className="text-sm font-medium text-cyan-400">{Math.round(progress)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-white/10 rounded-full h-2">
             <div 
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
       )}
       
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-gray-400 flex items-center">
         <GitBranch size={12} className="inline mr-1" />
         Note: Limited to 50 files to avoid API rate limits. For larger repos, use local upload.
       </div>

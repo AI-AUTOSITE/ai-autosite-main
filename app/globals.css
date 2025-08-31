@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111827;
+  --foreground: #f9fafb;
 }
 
 @theme inline {
@@ -14,8 +14,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #111827;
+    --foreground: #f9fafb;
   }
 }
 
@@ -24,8 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
 @layer components {
   .code-reader-container {
     @apply bg-white rounded-2xl shadow-xl p-6;
   }
+}
+
+/* ヘッダーの固定位置でのz-index確保 */
+header {
+  z-index: 9999 !important;
+}
+
+/* ダークテーマ統一 */
+html {
+  background-color: #111827;
+}
+
+/* スクロール時のスムーズな背景色変更 */
+.backdrop-blur-xl {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }

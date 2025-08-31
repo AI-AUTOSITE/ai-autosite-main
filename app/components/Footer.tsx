@@ -12,13 +12,18 @@ export default function Footer() {
     ],
     resources: [
       { label: 'Blog', href: '/blog' },
-      { label: 'Documentation', href: '#' },
+      { label: 'Documentation', href: '/documentation' },
       { label: 'GitHub', href: 'https://github.com/ai-autosite', external: true },
     ],
     legal: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms of Service', href: '/terms-of-service' },
       { label: 'Open Source', href: 'https://github.com/ai-autosite', external: true },
+    ],
+    company: [
+      { label: 'About Us', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Request Tool', href: '/request' },
     ],
   }
   
@@ -53,7 +58,7 @@ export default function Footer() {
           </div>
           
           {/* Links Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
             {/* Developer Tools */}
             <div>
               <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
@@ -99,6 +104,25 @@ export default function Footer() {
                         {link.label}
                       </Link>
                     )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Company */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+                Company
+              </h3>
+              <ul className="space-y-2">
+                {footerLinks.company.map((link) => (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href}
+                      className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

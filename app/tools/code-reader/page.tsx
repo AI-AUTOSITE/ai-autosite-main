@@ -60,6 +60,21 @@ export default function CodeReaderPage() {
       .reduce((sum, path) => sum + (allFiles[path] || '').length, 0)
   }
 
+  // Clear all data when switching tabs
+  const handleTabChange = (tab: 'github' | 'local') => {
+    if (tab !== activeTab) {
+      // Clear all data
+      setAllFiles({})
+      setFileStructure({})
+      setExcludedFiles(new Set())
+      setError(null)
+      setIsLoading(false)
+      setProgress(0)
+      // Set the new active tab
+      setActiveTab(tab)
+    }
+  }
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
@@ -225,10 +240,10 @@ export default function CodeReaderPage() {
             </button>
           </div>
 
-          {/* Tabs */}
+          {/* Tabs - Updated with handleTabChange */}
           <div className="flex gap-2 mb-6 border-b border-white/10">
             <button
-              onClick={() => setActiveTab('github')}
+              onClick={() => handleTabChange('github')}
               className={`px-6 py-3 font-medium transition-colors relative ${
                 activeTab === 'github' 
                   ? 'text-cyan-400 border-b-2 border-cyan-400' 
@@ -241,7 +256,7 @@ export default function CodeReaderPage() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('local')}
+              onClick={() => handleTabChange('local')}
               className={`px-6 py-3 font-medium transition-colors relative ${
                 activeTab === 'local' 
                   ? 'text-cyan-400 border-b-2 border-cyan-400' 

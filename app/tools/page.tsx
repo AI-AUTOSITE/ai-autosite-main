@@ -16,7 +16,7 @@ const tools = [
     description: 'Analyze and visualize your project structure with dependency mapping and file relationships',
     icon: Code2,
     href: '/tools/code-reader',
-    status: 'coming-soon',
+    status: 'live',
     features: [
       'GitHub/Local file support',
       'Dependency tree visualization',

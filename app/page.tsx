@@ -13,7 +13,7 @@ const tools = [
     name: 'BlurTap',
     description: 'Mask sensitive information in images with one click. Perfect for screenshots and documents.',
     category: 'privacy',
-    icon: '🔐',
+    icon: '🔒',
     color: 'from-cyan-500 to-purple-500',
     status: 'live',
     url: '/tools/blurtap',
@@ -27,10 +27,10 @@ const tools = [
     category: 'developer',
     icon: '🔍',
     color: 'from-blue-500 to-indigo-600',
-    status: 'coming',
+    status: 'live',
     url: '/tools/code-reader',
     tags: ['Developer', 'Code Analysis', 'Dependencies'],
-    users: 'Soon'
+    users: '850'
   },
   {
     id: 'tech-stack-analyzer',
@@ -161,7 +161,7 @@ export default function HomePage() {
           
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/tools/tech-stack-analyzer" className="group">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all">
+              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
                     ⚙️
@@ -173,35 +173,35 @@ export default function HomePage() {
                 <h4 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
                   Tech Stack Analyzer
                 </h4>
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-gray-400 text-sm mb-4 flex-1">
                   Compare frameworks, understand trade-offs, and get AI-powered recommendations for your project.
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto">
                   <span className="text-xs text-gray-500">1.2k users</span>
                   <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
                 </div>
               </div>
             </Link>
 
-            <Link href="/tools/code-reader" className="group opacity-75">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all">
+            <Link href="/tools/code-reader" className="group">
+              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-2xl">
                     🔍
                   </div>
-                  <span className="px-3 py-1 text-xs rounded-full bg-yellow-500/20 text-yellow-400">
-                    SOON
+                  <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
+                    LIVE
                   </span>
                 </div>
                 <h4 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                   Code Dependency Visualizer
                 </h4>
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-gray-400 text-sm mb-4 flex-1">
                   Analyze project structure, visualize file dependencies, and understand complex codebases.
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Coming Soon</span>
-                  <div className="w-4 h-4"></div>
+                <div className="flex items-center justify-between mt-auto">
+                  <span className="text-xs text-gray-500">850 users</span>
+                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
                 </div>
               </div>
             </Link>
@@ -256,7 +256,7 @@ export default function HomePage() {
               href={tool.status === 'live' ? tool.url : tool.url}
               className="group"
             >
-              <div className={`bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 transition-all hover:bg-white/10 hover:scale-105 ${
+              <div className={`bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 transition-all hover:bg-white/10 hover:scale-105 h-full flex flex-col ${
                 tool.status !== 'live' ? 'opacity-60' : ''
               }`}>
                 {/* Header */}
@@ -277,7 +277,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
                   {tool.name}
                 </h3>
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-400 text-sm mb-4 line-clamp-2 flex-1">
                   {tool.description}
                 </p>
 
@@ -291,7 +291,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto">
                   <span className="text-xs text-gray-500">
                     {tool.users} users
                   </span>

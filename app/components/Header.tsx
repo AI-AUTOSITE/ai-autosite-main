@@ -23,7 +23,7 @@ export default function Header() {
   ]
   
   return (
-    <header className="relative z-50 backdrop-blur-xl bg-white/5 border-b border-white/10">
+    <header className="relative z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4">
           {/* Logo Section */}
@@ -58,7 +58,7 @@ export default function Header() {
                     transition-all duration-200 text-sm
                     ${isActive 
                       ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white border border-cyan-500/30' 
-                      : 'bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white'
+                      : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white'
                     }
                   `}
                 >
@@ -72,7 +72,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all"
+            className="md:hidden p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-all"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5 text-gray-300" />
@@ -101,7 +101,7 @@ export default function Header() {
                       transition-all duration-200
                       ${isActive 
                         ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white' 
-                        : 'bg-white/5 hover:bg-white/10 text-gray-300'
+                        : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300'
                       }
                     `}
                   >
