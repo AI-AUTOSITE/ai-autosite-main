@@ -41,13 +41,31 @@ export const metadata: Metadata = {
 
 const blogPosts = [
   {
+    id: 'ai-dev-dictionary',
+    title: 'Introducing AI Dev Dictionary',
+    description: 'Master AI and development terminology with our interactive dictionary featuring visual demonstrations, code examples, and real-world applications.',
+    category: 'Learning Tools',
+    readTime: '5 min read',
+    publishDate: 'December 2024',
+    featured: true,
+    status: 'published',
+    url: '/blog/ai-dev-dictionary',
+    icon: BookOpen,
+    color: 'from-amber-500 to-orange-600',
+    relatedTool: {
+      name: 'AI Dev Dictionary',
+      url: '/tools/ai-dev-dictionary',
+      description: 'Interactive learning tool'
+    }
+  },
+  {
     id: 'choosing-the-right-tech-stack',
     title: 'Choosing the Right Tech Stack in 2025',
     description: 'A complete guide to selecting frameworks, databases, and tools for modern web development projects. Includes interactive comparison tool and AI recommendations.',
     category: 'Tech Stack',
     readTime: '12 min read',
     publishDate: 'January 2025',
-    featured: true,
+    featured: false,
     status: 'published',
     url: '/blog/choosing-the-right-tech-stack',
     icon: Code,
@@ -200,7 +218,7 @@ export default function BlogPage() {
           </p>
         </section>
 
-        {/* Tools Integration Callout */}
+        {/* Tools Integration Callout - Updated with AI Dev Dictionary */}
         <section className="mb-16">
           <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-8 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">Learn by Doing</h2>
@@ -209,6 +227,13 @@ export default function BlogPage() {
               so you can practice concepts immediately and see real results.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                href="/tools/ai-dev-dictionary"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg hover:from-amber-600 hover:to-orange-700 transition-all"
+              >
+                <BookOpen className="w-4 h-4 mr-2" />
+                AI Dev Dictionary
+              </Link>
               <Link 
                 href="/tools/tech-stack-analyzer"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all"
@@ -222,13 +247,6 @@ export default function BlogPage() {
               >
                 <Database className="w-4 h-4 mr-2" />
                 Code Dependency Visualizer
-              </Link>
-              <Link 
-                href="/tools/blurtap"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
-              >
-                <Zap className="w-4 h-4 mr-2" />
-                BlurTap Privacy Tool
               </Link>
             </div>
           </div>
@@ -443,11 +461,11 @@ export default function BlogPage() {
               <ExternalLink className="w-4 h-4 ml-2" />
             </Link>
             <Link 
-              href="/tools/tech-stack-analyzer"
-              className="inline-flex items-center px-6 py-3 border border-cyan-500/30 text-cyan-400 font-medium rounded-lg hover:bg-cyan-500/10 transition-all"
+              href="/tools/ai-dev-dictionary"
+              className="inline-flex items-center px-6 py-3 border border-amber-500/30 text-amber-400 font-medium rounded-lg hover:bg-amber-500/10 transition-all"
             >
-              <Code className="w-4 h-4 mr-2" />
-              Start with Tech Stack Analyzer
+              <BookOpen className="w-4 h-4 mr-2" />
+              Try AI Dev Dictionary
             </Link>
           </div>
         </section>

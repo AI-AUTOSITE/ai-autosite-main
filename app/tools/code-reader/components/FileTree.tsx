@@ -12,8 +12,16 @@ import {
   GitBranch,
   Package,
   FileText,
-  Settings
+  Settings,
+  FileJson,
+  Hash,
+  Brain,
+  Eye,
+  EyeOff
 } from 'lucide-react'
+import { DependencyAnalyzer } from '../lib/dependency-analyzer'
+// 将来の拡張用：可視化ライブラリをここにインポート
+// import SimpleDependencyGraph from './SimpleDependencyGraph'
 
 interface FileAnalysis {
   fileName: string
@@ -41,6 +49,8 @@ interface FileTreeProps {
   excludedFiles: Set<string>
   onExcludeFile: (path: string) => void
   onIncludeFile: (path: string) => void
+  selectedFile: string | null
+  setSelectedFile: (path: string | null) => void
 }
 
 export default function FileTree({ 
@@ -48,12 +58,13 @@ export default function FileTree({
   allFiles, 
   excludedFiles, 
   onExcludeFile, 
-  onIncludeFile 
+  onIncludeFile,
+  selectedFile,
+  setSelectedFile
 }: FileTreeProps) {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedFile, setSelectedFile] = useState<string | null>(null)
-  const [showDependencies, setShowDependencies] = useState(false)
+  const [exportFormat, setExportFormat] = useState<'text' | 'json' | 'mermaid'>('text')
 
   const toggleDir = (dir: string) => {
     const newExpanded = new Set(expandedDirs)
@@ -119,21 +130,66 @@ export default function FileTree({
     URL.revokeObjectURL(url)
   }
 
-  const generateTreeStructure = () => {
-    let tree = 'Project Structure:\n'
-    Object.entries(fileStructure).forEach(([dir, files]) => {
-      tree += `\n📁 ${dir === '/' ? 'root' : dir}\n`
-      files.forEach((file, index) => {
-        const isLast = index === files.length - 1
-        const prefix = isLast ? '└── ' : '├── '
-        const icon = file.analysis.fileType === 'component' ? '⚛️' : '📄'
-        tree += `   ${prefix}${icon} ${file.name} (${file.analysis.linesOfCode} lines)\n`
-      })
-    })
+  const generateDependencyAnalysis = () => {
+    const analyzer = new DependencyAnalyzer()
+    analyzer.analyze(fileStructure, allFiles)
     
-    navigator.clipboard.writeText(tree)
-      .then(() => alert('Tree structure copied to clipboard!'))
+    switch (exportFormat) {
+      case 'json':
+        return analyzer.toJSON()
+      case 'mermaid':
+        return analyzer.toMermaid()
+      default:
+        return analyzer.toText()
+    }
+  }
+
+  const downloadDependencyAnalysis = () => {
+    const analysis = generateDependencyAnalysis()
+    const extension = exportFormat === 'json' ? 'json' : exportFormat === 'mermaid' ? 'mmd' : 'txt'
+    const mimeType = exportFormat === 'json' ? 'application/json' : 'text/plain'
+    
+    const blob = new Blob([analysis], { type: mimeType })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `dependency-analysis-${new Date().toISOString().split('T')[0]}.${extension}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const copyForAI = () => {
+    const analyzer = new DependencyAnalyzer()
+    analyzer.analyze(fileStructure, allFiles)
+    const textAnalysis = analyzer.toText()
+    
+    let aiOutput = '# Project Dependency Analysis\n\n'
+    aiOutput += '```\n'
+    aiOutput += textAnalysis
+    aiOutput += '```\n\n'
+    aiOutput += '## Analysis Request\n'
+    aiOutput += 'Please analyze this project structure and provide:\n'
+    aiOutput += '1. Architecture overview\n'
+    aiOutput += '2. Potential refactoring suggestions\n'
+    aiOutput += '3. Circular dependency resolution\n'
+    aiOutput += '4. Performance optimization opportunities\n'
+    
+    navigator.clipboard.writeText(aiOutput)
+      .then(() => alert('Dependency analysis copied for AI review!'))
       .catch(() => alert('Failed to copy to clipboard'))
+  }
+
+  const getFormatIcon = () => {
+    switch (exportFormat) {
+      case 'json':
+        return <FileJson size={16} className="text-orange-400" />
+      case 'mermaid':
+        return <Hash size={16} className="text-purple-400" />
+      default:
+        return <FileText size={16} className="text-blue-400" />
+    }
   }
 
   const filteredStructure = Object.entries(fileStructure).reduce((acc, [dir, files]) => {
@@ -152,7 +208,24 @@ export default function FileTree({
 
   return (
     <div className="space-y-4">
-      {/* Controls */}
+      {/* Export Format Selector */}
+      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
+        <span className="text-sm text-gray-400">Export Format:</span>
+        <div className="flex items-center gap-2">
+          <select
+            value={exportFormat}
+            onChange={(e) => setExportFormat(e.target.value as 'text' | 'json' | 'mermaid')}
+            className="px-3 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 [&>option]:bg-slate-800"
+          >
+            <option value="text">Text Report</option>
+            <option value="json">JSON</option>
+            <option value="mermaid">Mermaid Diagram</option>
+          </select>
+          {getFormatIcon()}
+        </div>
+      </div>
+      
+      {/* Enhanced Controls */}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={copyAllFiles}
@@ -161,6 +234,7 @@ export default function FileTree({
           <Copy size={16} />
           Copy All Code
         </button>
+        
         <button
           onClick={downloadFiles}
           className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors flex items-center gap-2 border border-green-500/30"
@@ -168,19 +242,21 @@ export default function FileTree({
           <Download size={16} />
           Download Files
         </button>
+        
         <button
-          onClick={generateTreeStructure}
-          className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors flex items-center gap-2 border border-purple-500/30"
+          onClick={downloadDependencyAnalysis}
+          className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors flex items-center gap-2 border border-cyan-500/30"
         >
           <GitBranch size={16} />
-          Copy Tree
+          Dependency Analysis
         </button>
+        
         <button
-          onClick={() => setShowDependencies(!showDependencies)}
-          className="px-4 py-2 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors flex items-center gap-2 border border-orange-500/30"
+          onClick={copyForAI}
+          className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors flex items-center gap-2 border border-purple-500/30"
         >
-          <Package size={16} />
-          {showDependencies ? 'Hide' : 'Show'} Dependencies
+          <Brain size={16} />
+          Copy for AI
         </button>
       </div>
 
@@ -263,14 +339,24 @@ export default function FileTree({
                           isExcluded ? onIncludeFile(file.path) : onExcludeFile(file.path)
                         }}
                         className={`
-                          px-3 py-1 text-xs rounded-md transition-colors
+                          px-3 py-1 text-xs rounded-md transition-colors flex items-center gap-1
                           ${isExcluded 
                             ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30' 
                             : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30'
                           }
                         `}
                       >
-                        {isExcluded ? 'Include' : 'Exclude'}
+                        {isExcluded ? (
+                          <>
+                            <Eye size={12} />
+                            Include
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff size={12} />
+                            Exclude
+                          </>
+                        )}
                       </button>
                     </div>
                   )
@@ -280,50 +366,6 @@ export default function FileTree({
           </div>
         ))}
       </div>
-
-      {/* Selected File Details */}
-      {selectedFile && showDependencies && (
-        <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-4">
-          <h3 className="font-semibold text-cyan-400 mb-3">
-            Dependencies for: {selectedFile.split('/').pop()}
-          </h3>
-          
-          {(() => {
-            const file = Object.values(fileStructure).flat().find(f => f.path === selectedFile)
-            if (!file) return null
-            
-            return (
-              <div className="space-y-3">
-                {file.analysis.localImports.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-cyan-300 mb-1">Local Imports:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {file.analysis.localImports.map((imp, i) => (
-                        <span key={i} className="px-2 py-1 bg-white/10 rounded text-xs text-blue-300">
-                          {imp}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {file.analysis.externalImports.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-cyan-300 mb-1">External Libraries:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {file.analysis.externalImports.map((imp, i) => (
-                        <span key={i} className="px-2 py-1 bg-white/10 rounded text-xs text-purple-300">
-                          {imp}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )
-          })()}
-        </div>
-      )}
     </div>
   )
 }

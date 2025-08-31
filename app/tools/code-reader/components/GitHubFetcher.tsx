@@ -1,19 +1,26 @@
 'use client'
 
 import { useState } from 'react'
-import { Github, GitBranch, Loader2 } from 'lucide-react'
+import { Github, GitBranch, Loader2, X } from 'lucide-react'
 
 interface GitHubFetcherProps {
   onFilesProcessed: (files: Record<string, string>, structure: any) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
+  onCancel?: () => void
 }
 
-export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoading }: GitHubFetcherProps) {
+export default function GitHubFetcher({ 
+  onFilesProcessed, 
+  isLoading, 
+  setIsLoading,
+  onCancel 
+}: GitHubFetcherProps) {
   const [repoInput, setRepoInput] = useState('')
   const [branch, setBranch] = useState('main')
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
+  const [isCancelled, setIsCancelled] = useState(false)
 
   const isAllowedFile = (path: string): boolean => {
     const ext = path.split('.').pop()?.toLowerCase()
@@ -56,8 +63,16 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
     return 'other'
   }
 
+  const handleCancel = () => {
+    setIsCancelled(true)
+    if (onCancel) {
+      onCancel()
+    }
+  }
+
   const handleFetch = async () => {
     setError('')
+    setIsCancelled(false)
     
     if (!repoInput) {
       setError('Please enter a repository')
@@ -74,6 +89,13 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
     setProgress(10)
 
     try {
+      // Check if cancelled before fetch
+      if (isCancelled) {
+        setIsLoading(false)
+        setProgress(0)
+        return
+      }
+
       // Fetch repository tree
       const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`
       const treeResponse = await fetch(treeUrl)
@@ -111,6 +133,13 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
       const filesToFetch = codeFiles.slice(0, 50)
       
       for (let i = 0; i < filesToFetch.length; i++) {
+        // Check if cancelled
+        if (isCancelled) {
+          setIsLoading(false)
+          setProgress(0)
+          return
+        }
+
         const file = filesToFetch[i]
         const progress = 40 + ((i / filesToFetch.length) * 50)
         setProgress(progress)
@@ -145,14 +174,19 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
         }
       }
       
-      setProgress(100)
-      onFilesProcessed(allFiles, fileStructure)
+      if (!isCancelled) {
+        setProgress(100)
+        onFilesProcessed(allFiles, fileStructure)
+      }
       
     } catch (error: any) {
-      setError(error.message || 'An error occurred')
+      if (!isCancelled) {
+        setError(error.message || 'An error occurred')
+      }
     } finally {
       setIsLoading(false)
       setProgress(0)
+      setIsCancelled(false)
     }
   }
 
@@ -206,7 +240,18 @@ export default function GitHubFetcher({ onFilesProcessed, isLoading, setIsLoadin
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-400">Processing repository...</span>
-            <span className="text-sm font-medium text-cyan-400">{Math.round(progress)}%</span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-cyan-400">{Math.round(progress)}%</span>
+              {onCancel && (
+                <button
+                  onClick={handleCancel}
+                  className="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded hover:bg-red-500/30 transition-colors border border-red-500/30 flex items-center gap-1"
+                >
+                  <X size={14} />
+                  Cancel
+                </button>
+              )}
+            </div>
           </div>
           <div className="w-full bg-white/10 rounded-full h-2">
             <div 

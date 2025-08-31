@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import Header from '@/app/components/Header'
 import Footer from '@/app/components/Footer'
-import { Shield, Zap, Palette, Code, Database, Clock, Search, ChevronRight, Sparkles, Lock, Globe, Star } from 'lucide-react'
+import { Shield, Zap, Palette, Code, Search, ChevronRight, Lock, Globe, Star, BookOpen, Sparkles } from 'lucide-react'
 
 // Tool data
 const tools = [
@@ -18,7 +19,8 @@ const tools = [
     status: 'live',
     url: '/tools/blurtap',
     tags: ['Privacy', 'Images', 'Security'],
-    users: '2.5k'
+    users: '2.5k',
+    featured: false
   },
   {
     id: 'code-reader',
@@ -30,7 +32,8 @@ const tools = [
     status: 'live',
     url: '/tools/code-reader',
     tags: ['Developer', 'Code Analysis', 'Dependencies'],
-    users: '850'
+    users: '850',
+    featured: true
   },
   {
     id: 'tech-stack-analyzer',
@@ -42,7 +45,21 @@ const tools = [
     status: 'live',
     url: '/tools/tech-stack-analyzer',
     tags: ['Developer', 'Frameworks', 'Planning'],
-    users: '1.2k'
+    users: '1.2k',
+    featured: true
+  },
+  {
+    id: 'ai-dev-dictionary',
+    name: 'AI Dev Dictionary',
+    description: 'Comprehensive glossary of AI and development terms with interactive examples and visual demonstrations.',
+    category: 'learning',
+    icon: '📚',
+    color: 'from-amber-500 to-orange-600',
+    status: 'live',
+    url: '/tools/ai-dev-dictionary',
+    tags: ['Learning', 'AI', 'Reference'],
+    users: '500',
+    featured: true
   },
   {
     id: 'json-format',
@@ -54,7 +71,8 @@ const tools = [
     status: 'coming',
     url: '/tools/json-format',
     tags: ['Developer', 'Data', 'API'],
-    users: 'Soon'
+    users: 'Soon',
+    featured: false
   },
   {
     id: 'color-picker',
@@ -66,7 +84,8 @@ const tools = [
     status: 'coming',
     url: '/tools/color-picker',
     tags: ['Design', 'Colors', 'Creative'],
-    users: 'Soon'
+    users: 'Soon',
+    featured: false
   },
   {
     id: 'pdf-merge',
@@ -78,21 +97,32 @@ const tools = [
     status: 'coming',
     url: '/tools/pdf-merge',
     tags: ['PDF', 'Documents', 'Office'],
-    users: 'Soon'
+    users: 'Soon',
+    featured: false
   }
 ]
 
 const categories = [
   { id: 'all', name: 'All Tools', icon: Globe, count: tools.length },
   { id: 'developer', name: 'Developer', icon: Code, count: tools.filter(t => t.category === 'developer').length },
+  { id: 'learning', name: 'Learning', icon: BookOpen, count: tools.filter(t => t.category === 'learning').length },
   { id: 'privacy', name: 'Privacy', icon: Shield, count: tools.filter(t => t.category === 'privacy').length },
   { id: 'productivity', name: 'Productivity', icon: Zap, count: tools.filter(t => t.category === 'productivity').length },
   { id: 'creative', name: 'Creative', icon: Palette, count: tools.filter(t => t.category === 'creative').length },
 ]
 
 export default function HomePage() {
+  const searchParams = useSearchParams()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Handle category from URL params (for redirect from /tools)
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
+      setSelectedCategory(categoryParam)
+    }
+  }, [searchParams])
 
   const filteredTools = tools.filter(tool => {
     const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory
@@ -101,6 +131,8 @@ export default function HomePage() {
                           tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
     return matchesCategory && matchesSearch
   })
+
+  const featuredTools = tools.filter(tool => tool.featured && tool.status === 'live')
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col">
@@ -115,18 +147,23 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative z-10 text-center py-16 px-4">
-        <h2 className="text-4xl sm:text-6xl font-bold text-white mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full border border-cyan-500/20 mb-6">
+          <Sparkles className="w-4 h-4 text-cyan-400" />
+          <span className="text-sm text-cyan-400">Free Tools for Developers & Creators</span>
+        </div>
+        
+        <h1 className="text-4xl sm:text-6xl font-bold text-white mb-4">
           Instant Tools for
           <span className="block text-3xl sm:text-5xl mt-2 bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
             Everything You Need
           </span>
-        </h2>
+        </h1>
         <p className="text-lg sm:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">
-          Free online tools that work instantly in your browser. No account required, 
+          Professional tools that work instantly in your browser. No account required, 
           no data uploaded, no quality limits. Just simple tools that work.
         </p>
 
-        {/* Features */}
+        {/* Quick Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
           <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
             <Lock className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
@@ -147,64 +184,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Developer Tools Section */}
+      {/* Featured Tools Section - Highlighted */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-white mb-2">
-              🚀 AI-Powered Developer Tools
-            </h3>
-            <p className="text-gray-400">
-              Professional code analysis and tech stack guidance for modern developers
-            </p>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                ⭐ Featured Tools
+              </h2>
+              <p className="text-gray-400">
+                Our most popular tools for developers and creators
+              </p>
+            </div>
+            <button
+              onClick={() => setSelectedCategory('developer')}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 text-gray-300 transition-all"
+            >
+              <Code className="w-4 h-4" />
+              View Developer Tools
+            </button>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            <Link href="/tools/tech-stack-analyzer" className="group">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
-                    ⚙️
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredTools.map((tool) => (
+              <Link key={tool.id} href={tool.url} className="group">
+                <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 bg-gradient-to-br ${tool.color} rounded-xl flex items-center justify-center text-2xl`}>
+                      {tool.icon}
+                    </div>
+                    <span className={`px-3 py-1 text-xs rounded-full ${
+                      tool.id === 'ai-dev-dictionary' 
+                        ? 'bg-amber-500/20 text-amber-400' 
+                        : 'bg-green-500/20 text-green-400'
+                    }`}>
+                      {tool.id === 'ai-dev-dictionary' ? 'NEW' : 'LIVE'}
+                    </span>
                   </div>
-                  <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
-                    LIVE
-                  </span>
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
-                  Tech Stack Analyzer
-                </h4>
-                <p className="text-gray-400 text-sm mb-4 flex-1">
-                  Compare frameworks, understand trade-offs, and get AI-powered recommendations for your project.
-                </p>
-                <div className="flex items-center justify-between mt-auto">
-                  <span className="text-xs text-gray-500">1.2k users</span>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
-                </div>
-              </div>
-            </Link>
-
-            <Link href="/tools/code-reader" className="group">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all h-full flex flex-col">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-2xl">
-                    🔍
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                    {tool.name}
+                  </h3>
+                  <p className="text-gray-400 text-sm mb-4 flex-1">
+                    {tool.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto">
+                    <span className="text-xs text-gray-500">{tool.users} users</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
                   </div>
-                  <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
-                    LIVE
-                  </span>
                 </div>
-                <h4 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                  Code Dependency Visualizer
-                </h4>
-                <p className="text-gray-400 text-sm mb-4 flex-1">
-                  Analyze project structure, visualize file dependencies, and understand complex codebases.
-                </p>
-                <div className="flex items-center justify-between mt-auto">
-                  <span className="text-xs text-gray-500">850 users</span>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
-                </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -247,14 +276,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Tools Grid */}
+      {/* All Tools Grid */}
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1">
+        <h2 className="text-xl font-bold text-white mb-6">
+          {selectedCategory === 'all' 
+            ? 'All Tools' 
+            : `${categories.find(c => c.id === selectedCategory)?.name} Tools`}
+        </h2>
+        
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTools.map((tool) => (
             <Link
               key={tool.id}
-              href={tool.status === 'live' ? tool.url : tool.url}
-              className="group"
+              href={tool.status === 'live' ? tool.url : '#'}
+              className={`group ${tool.status !== 'live' ? 'cursor-not-allowed' : ''}`}
             >
               <div className={`bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 transition-all hover:bg-white/10 hover:scale-105 h-full flex flex-col ${
                 tool.status !== 'live' ? 'opacity-60' : ''
@@ -266,10 +301,14 @@ export default function HomePage() {
                   </div>
                   <span className={`px-3 py-1 text-xs rounded-full ${
                     tool.status === 'live' 
-                      ? 'bg-green-500/20 text-green-400' 
+                      ? tool.id === 'ai-dev-dictionary' 
+                        ? 'bg-amber-500/20 text-amber-400' 
+                        : 'bg-green-500/20 text-green-400'
                       : 'bg-yellow-500/20 text-yellow-400'
                   }`}>
-                    {tool.status === 'live' ? 'LIVE' : 'SOON'}
+                    {tool.status === 'live' 
+                      ? tool.id === 'ai-dev-dictionary' ? 'NEW' : 'LIVE' 
+                      : 'SOON'}
                   </span>
                 </div>
 
@@ -295,7 +334,7 @@ export default function HomePage() {
                   <span className="text-xs text-gray-500">
                     {tool.users} users
                   </span>
-                  {(tool.status === 'live' || tool.id === 'code-reader') && (
+                  {tool.status === 'live' && (
                     <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
                   )}
                 </div>

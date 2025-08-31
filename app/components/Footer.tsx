@@ -9,6 +9,7 @@ export default function Footer() {
       { label: 'Code Reader', href: '/tools/code-reader' },
       { label: 'Tech Stack Analyzer', href: '/tools/tech-stack-analyzer' },
       { label: 'BlurTap', href: '/tools/blurtap' },
+      { label: 'AI Dev Dictionary', href: '/tools/ai-dev-dictionary' },
     ],
     resources: [
       { label: 'Blog', href: '/blog' },
