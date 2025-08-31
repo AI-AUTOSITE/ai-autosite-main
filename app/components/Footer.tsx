@@ -14,12 +14,12 @@ export default function Footer() {
     resources: [
       { label: 'Blog', href: '/blog' },
       { label: 'Documentation', href: '/documentation' },
-      { label: 'GitHub', href: 'https://github.com/ai-autosite', external: true },
+      { label: 'API Docs', href: '/documentation' },
     ],
     legal: [
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Terms of Service', href: '/terms-of-service' },
-      { label: 'Open Source', href: 'https://github.com/ai-autosite', external: true },
+      { label: 'Cookie Policy', href: '/privacy-policy#cookies' },
     ],
     company: [
       { label: 'About Us', href: '/about' },
@@ -87,24 +87,12 @@ export default function Footer() {
               <ul className="space-y-2">
                 {footerLinks.resources.map((link) => (
                   <li key={link.href}>
-                    {link.external ? (
-                      <a 
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-flex items-center"
-                      >
-                        {link.label}
-                        <span className="ml-1 text-xs">↗</span>
-                      </a>
-                    ) : (
-                      <Link 
-                        href={link.href}
-                        className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
+                    <Link 
+                      href={link.href}
+                      className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -137,24 +125,12 @@ export default function Footer() {
               <ul className="space-y-2">
                 {footerLinks.legal.map((link) => (
                   <li key={link.href}>
-                    {link.external ? (
-                      <a 
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-cyan-400 transition-colors text-sm inline-flex items-center"
-                      >
-                        {link.label}
-                        <span className="ml-1 text-xs">↗</span>
-                      </a>
-                    ) : (
-                      <Link 
-                        href={link.href}
-                        className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
+                    <Link 
+                      href={link.href}
+                      className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

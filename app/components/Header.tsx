@@ -17,10 +17,30 @@ export default function Header() {
   // Navigation items - Updated to reflect unified structure
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/?category=developer', label: 'Developer Tools', icon: Code2 },
+    { href: '/#developer', label: 'Developer Tools', icon: Code2, scrollTo: true },
     { href: '/tools/tech-stack-analyzer', label: 'Tech Stack', icon: Layers },
     { href: '/blog', label: 'Blog', icon: BookOpen },
   ]
+  
+  // Handle navigation click
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: any) => {
+    if (item.scrollTo && pathname === '/') {
+      e.preventDefault()
+      // Set category to developer
+      const url = new URL(window.location.href)
+      url.searchParams.set('category', 'developer')
+      window.history.pushState({}, '', url)
+      
+      // Trigger a custom event to update the category
+      window.dispatchEvent(new CustomEvent('categoryChange', { detail: 'developer' }))
+      
+      // Scroll to tools section
+      const toolsSection = document.getElementById('tools-section')
+      if (toolsSection) {
+        toolsSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }
   
   return (
     <header className="relative z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
@@ -47,12 +67,13 @@ export default function Header() {
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href || 
-                (item.href !== '/' && item.href !== '/?category=developer' && pathname.startsWith(item.href.split('?')[0]))
+                (item.href !== '/' && !item.scrollTo && pathname.startsWith(item.href.split('?')[0]))
               
               return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
                   className={`
                     flex items-center space-x-2 px-4 py-2 rounded-lg
                     transition-all duration-200 text-sm

@@ -124,6 +124,18 @@ export default function HomePage() {
     }
   }, [searchParams])
 
+  // Listen for category change events from header
+  useEffect(() => {
+    const handleCategoryChange = (e: CustomEvent) => {
+      setSelectedCategory(e.detail)
+    }
+    
+    window.addEventListener('categoryChange', handleCategoryChange as EventListener)
+    return () => {
+      window.removeEventListener('categoryChange', handleCategoryChange as EventListener)
+    }
+  }, [])
+
   const filteredTools = tools.filter(tool => {
     const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory
     const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -277,7 +289,7 @@ export default function HomePage() {
       </section>
 
       {/* All Tools Grid */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1">
+      <section id="tools-section" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 flex-1">
         <h2 className="text-xl font-bold text-white mb-6">
           {selectedCategory === 'all' 
             ? 'All Tools' 
