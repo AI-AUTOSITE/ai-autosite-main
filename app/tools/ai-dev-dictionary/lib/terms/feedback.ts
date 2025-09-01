@@ -332,3 +332,4 @@ const SuccessState = ({ message }) => {
     demoType: 'success-state',
     relatedTerms: ['Feedback', 'Alert', 'Confirmation']
   }
+];
