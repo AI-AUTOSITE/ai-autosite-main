@@ -20,9 +20,12 @@ import {
   Component,
   FormInput,
   MessageSquare,
-  Loader2
+  Loader2,
+  Link as LinkIcon  // Link iconの名前を変更
 } from 'lucide-react'
-import { techTerms, categories } from './lib/terms-data'
+
+// terms フォルダから新しい構造でインポート
+import { techTerms, categories, type TechTerm } from './lib/terms'
 import InteractiveDemo from './components/InteractiveDemo'
 import SearchBar from './components/SearchBar'
 import TermCard from './components/TermCard'
@@ -31,7 +34,7 @@ import CategoryFilter from './components/CategoryFilter'
 export default function AIDevDictionaryPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [selectedTerm, setSelectedTerm] = useState<any>(null)
+  const [selectedTerm, setSelectedTerm] = useState<TechTerm | null>(null)
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [demoStates, setDemoStates] = useState<Record<string, boolean>>({})
 
@@ -185,6 +188,17 @@ export default function AIDevDictionaryPage() {
             {/* Modal Content */}
             <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
               <div className="p-6 space-y-6">
+                {/* Beginner Tip */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-yellow-400" />
+                    Beginner Tip
+                  </h3>
+                  <div className="p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+                    <p className="text-yellow-200">{selectedTerm.beginnerTip}</p>
+                  </div>
+                </div>
+
                 {/* Interactive Demo */}
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -258,7 +272,7 @@ export default function AIDevDictionaryPage() {
                 {selectedTerm.relatedTerms && selectedTerm.relatedTerms.length > 0 && (
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                      <Link className="w-5 h-5 text-indigo-400" />
+                      <LinkIcon className="w-5 h-5 text-indigo-400" />
                       Related Terms
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -337,6 +351,7 @@ export default function AIDevDictionaryPage() {
 function getCategoryIcon(category: string) {
   const icons: Record<string, JSX.Element> = {
     'ui-components': <Component className="w-5 h-5 text-cyan-400" />,
+    'data-display': <Layout className="w-5 h-5 text-blue-400" />,
     'layout': <Layout className="w-5 h-5 text-purple-400" />,
     'navigation': <MousePointer className="w-5 h-5 text-green-400" />,
     'forms': <FormInput className="w-5 h-5 text-yellow-400" />,
@@ -349,6 +364,7 @@ function getCategoryIcon(category: string) {
 function getCategoryColor(category: string) {
   const colors: Record<string, { bg: string, text: string }> = {
     'ui-components': { bg: 'bg-cyan-500/20', text: 'text-cyan-400' },
+    'data-display': { bg: 'bg-blue-500/20', text: 'text-blue-400' },
     'layout': { bg: 'bg-purple-500/20', text: 'text-purple-400' },
     'navigation': { bg: 'bg-green-500/20', text: 'text-green-400' },
     'forms': { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
