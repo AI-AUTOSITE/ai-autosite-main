@@ -2,9 +2,9 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from 'react'
 import { Upload, AlertCircle, X } from 'lucide-react'
-import { FileStructure } from '@/lib/types'
-import { IGNORED_FOLDERS, ALLOWED_EXTENSIONS, performSecurityCheck } from '@/lib/constants'
-import { analyzeFileContent } from '@/lib/utils'
+import { FileStructure } from '../lib/types'
+import { IGNORED_FOLDERS, ALLOWED_EXTENSIONS, performSecurityCheck } from '../lib/constants'
+import { analyzeFileContent } from '../lib/utils'
 
 interface FileUploaderProps {
   onFilesProcessed: (files: Record<string, string>, structure: FileStructure) => void

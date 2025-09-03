@@ -35,15 +35,15 @@ export default function GitHubFetcher({
 
   const analyzeFileContent = (path: string, content: string) => {
     const importRegex = /import\s+(?:(?:\{[^}]*\})|(?:\*\s+as\s+\w+)|(?:\w+))?\s*(?:,\s*(?:\{[^}]*\}|\w+))?\s*from\s+['"`]([^'"`]+)['"`]/g
-    const imports = []
-    let match
+    const imports: string[] = []
+    let match: RegExpExecArray | null
     
     while ((match = importRegex.exec(content)) !== null) {
       imports.push(match[1])
     }
     
-    const localImports = imports.filter(imp => imp.startsWith('.') || imp.startsWith('/'))
-    const externalImports = imports.filter(imp => !imp.startsWith('.') && !imp.startsWith('/'))
+    const localImports = imports.filter((imp: string) => imp.startsWith('.') || imp.startsWith('/'))
+    const externalImports = imports.filter((imp: string) => !imp.startsWith('.') && !imp.startsWith('/'))
     
     return {
       fileName: path.split('/').pop() || '',
@@ -55,7 +55,7 @@ export default function GitHubFetcher({
     }
   }
 
-  const determineFileType = (path: string, content: string) => {
+  const determineFileType = (path: string, content: string): 'page' | 'component' | 'util' | 'type' | 'other' => {
     if (path.includes('page.') || path.includes('layout.')) return 'page'
     if (path.includes('component')) return 'component'
     if (path.includes('utils') || path.includes('lib')) return 'util'
@@ -141,8 +141,8 @@ export default function GitHubFetcher({
         }
 
         const file = filesToFetch[i]
-        const progress = 40 + ((i / filesToFetch.length) * 50)
-        setProgress(progress)
+        const currentProgress = 40 + ((i / filesToFetch.length) * 50)
+        setProgress(currentProgress)
         
         try {
           const contentUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${file.path}`

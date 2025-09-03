@@ -110,6 +110,20 @@ export default function TechStackAnalyzerPage() {
         </div>
       </section>
 
+      {/* AI Recommendation Link */}
+<div className="text-center mt-8">
+  <Link 
+    href="/tools/stack-recommender"
+    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-medium rounded-lg hover:from-purple-600 hover:to-cyan-600 transition-all"
+  >
+    <span className="text-lg mr-2">🤖</span>
+    Want AI Recommendations? Try Stack Recommender
+    <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  </Link>
+</div>
+
       {/* Main Content - Tech Stack Comparison */}
       <main className="relative z-10">
         <TechStackComparison />

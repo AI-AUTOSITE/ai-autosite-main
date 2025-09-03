@@ -19,9 +19,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
-import { DependencyAnalyzer } from '../lib/dependency-analyzer'
-// 将来の拡張用：可視化ライブラリをここにインポート
-// import SimpleDependencyGraph from './SimpleDependencyGraph'
+import { SmartDependencyAnalyzer } from '../lib/smart-dependency-analyzer'
 
 interface FileAnalysis {
   fileName: string
@@ -64,7 +62,7 @@ export default function FileTree({
 }: FileTreeProps) {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState('')
-  const [exportFormat, setExportFormat] = useState<'text' | 'json' | 'mermaid'>('text')
+  const [exportFormat, setExportFormat] = useState<'ai-prompt' | 'markdown' | 'json'>('ai-prompt')
 
   const toggleDir = (dir: string) => {
     const newExpanded = new Set(expandedDirs)
@@ -131,23 +129,24 @@ export default function FileTree({
   }
 
   const generateDependencyAnalysis = () => {
-    const analyzer = new DependencyAnalyzer()
-    analyzer.analyze(fileStructure, allFiles)
+    const analyzer = new SmartDependencyAnalyzer()
+    analyzer.analyze(fileStructure)
     
     switch (exportFormat) {
+      case 'markdown':
+        return analyzer.generateMarkdownReport()
       case 'json':
-        return analyzer.toJSON()
-      case 'mermaid':
-        return analyzer.toMermaid()
+        return analyzer.generateCompactJSON()
+      case 'ai-prompt':
       default:
-        return analyzer.toText()
+        return analyzer.generateAIPrompt()
     }
   }
 
   const downloadDependencyAnalysis = () => {
     const analysis = generateDependencyAnalysis()
-    const extension = exportFormat === 'json' ? 'json' : exportFormat === 'mermaid' ? 'mmd' : 'txt'
-    const mimeType = exportFormat === 'json' ? 'application/json' : 'text/plain'
+    const extension = exportFormat === 'json' ? 'json' : 'md'
+    const mimeType = exportFormat === 'json' ? 'application/json' : 'text/markdown'
     
     const blob = new Blob([analysis], { type: mimeType })
     const url = URL.createObjectURL(blob)
@@ -161,23 +160,12 @@ export default function FileTree({
   }
 
   const copyForAI = () => {
-    const analyzer = new DependencyAnalyzer()
-    analyzer.analyze(fileStructure, allFiles)
-    const textAnalysis = analyzer.toText()
+    const analyzer = new SmartDependencyAnalyzer()
+    analyzer.analyze(fileStructure)
+    const aiPrompt = analyzer.generateAIPrompt()
     
-    let aiOutput = '# Project Dependency Analysis\n\n'
-    aiOutput += '```\n'
-    aiOutput += textAnalysis
-    aiOutput += '```\n\n'
-    aiOutput += '## Analysis Request\n'
-    aiOutput += 'Please analyze this project structure and provide:\n'
-    aiOutput += '1. Architecture overview\n'
-    aiOutput += '2. Potential refactoring suggestions\n'
-    aiOutput += '3. Circular dependency resolution\n'
-    aiOutput += '4. Performance optimization opportunities\n'
-    
-    navigator.clipboard.writeText(aiOutput)
-      .then(() => alert('Dependency analysis copied for AI review!'))
+    navigator.clipboard.writeText(aiPrompt)
+      .then(() => alert('AI-optimized dependency analysis copied to clipboard!'))
       .catch(() => alert('Failed to copy to clipboard'))
   }
 
@@ -185,10 +173,11 @@ export default function FileTree({
     switch (exportFormat) {
       case 'json':
         return <FileJson size={16} className="text-orange-400" />
-      case 'mermaid':
-        return <Hash size={16} className="text-purple-400" />
-      default:
+      case 'markdown':
         return <FileText size={16} className="text-blue-400" />
+      case 'ai-prompt':
+      default:
+        return <Brain size={16} className="text-purple-400" />
     }
   }
 
@@ -214,12 +203,12 @@ export default function FileTree({
         <div className="flex items-center gap-2">
           <select
             value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as 'text' | 'json' | 'mermaid')}
+            onChange={(e) => setExportFormat(e.target.value as 'ai-prompt' | 'markdown' | 'json')}
             className="px-3 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 [&>option]:bg-slate-800"
           >
-            <option value="text">Text Report</option>
+            <option value="ai-prompt">AI Prompt</option>
+            <option value="markdown">Markdown Report</option>
             <option value="json">JSON</option>
-            <option value="mermaid">Mermaid Diagram</option>
           </select>
           {getFormatIcon()}
         </div>
@@ -248,7 +237,7 @@ export default function FileTree({
           className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors flex items-center gap-2 border border-cyan-500/30"
         >
           <GitBranch size={16} />
-          Dependency Analysis
+          Smart Analysis
         </button>
         
         <button

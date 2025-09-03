@@ -1,8 +1,18 @@
 // app/blog/page.tsx
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { Calendar, Clock, ArrowRight, BookOpen, Code, Zap, Database, ExternalLink } from 'lucide-react';
-
+import { 
+  Calendar, 
+  Clock, 
+  ArrowRight, 
+  BookOpen, 
+  Code, 
+  Zap, 
+  Database, 
+  ExternalLink,
+  Type,
+  Braces
+} from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Developer Tools Blog | AI-Powered Development Guides & Tech Stack Analysis',
   description: 'Expert guides on modern web development, tech stack decisions, and AI-powered developer tools. Interactive tutorials on frameworks, performance optimization, and best practices.',
@@ -76,6 +86,26 @@ const blogPosts = [
       description: 'Interactive tool mentioned in this article'
     }
   },
+  // Add this to the blogPosts array in blog/page.tsx
+
+{
+  id: 'pc-optimizer-guide',
+  title: 'Complete Guide to PC Optimization',
+  description: 'Learn how to free up disk space, improve performance, and identify software to safely remove. Includes our free PC Optimizer tool for automated analysis.',
+  category: 'Performance',
+  readTime: '15 min read',
+  publishDate: 'January 2025',
+  featured: false,
+  status: 'published',
+  url: '/blog/pc-optimizer-guide',
+  icon: HardDrive, // Import from lucide-react
+  color: 'from-blue-500 to-cyan-500',
+  relatedTool: {
+    name: 'PC Optimizer Advisor',
+    url: '/tools/pc-optimizer',
+    description: 'Analyze your PC performance'
+  }
+},
   {
     id: 'code-dependency-analysis',
     title: 'Understanding Code Dependencies',
@@ -146,6 +176,42 @@ const blogPosts = [
       name: 'BlurTap',
       url: '/tools/blurtap',
       description: 'Privacy tool for sensitive data'
+  }
+  },
+  {
+    id: 'text-case-converter-guide',
+    title: 'Master Text Case Conversion: 10 Essential Formats',
+    description: 'Complete guide to text case conversion. Learn when to use camelCase, snake_case, PascalCase and more in your development workflow.',
+    category: 'Developer Tools',
+    readTime: '8 min read',
+    publishDate: 'January 2025',
+    featured: false,
+    status: 'published',
+    url: '/blog/text-case-converter',
+    icon: Type,
+    color: 'from-cyan-500 to-purple-500',
+    relatedTool: {
+      name: 'Text Case Converter',
+      url: '/tools/text-case',
+      description: 'Convert between 10 text formats'
+    }
+  },
+  {
+    id: 'json-beautify-guide',
+    title: 'JSON Beautify: Format & Debug Like a Pro',
+    description: 'Learn how to format, validate, and debug JSON effectively. Essential guide for API development and configuration management.',
+    category: 'Developer Tools',
+    readTime: '10 min read',
+    publishDate: 'January 2025',
+    featured: false,
+    status: 'published',
+    url: '/blog/json-beautify-guide',
+    icon: Braces,
+    color: 'from-green-500 to-emerald-500',
+    relatedTool: {
+      name: 'JSON Beautify',
+      url: '/tools/json-format',
+      description: 'Format and validate JSON'
     }
   }
 ]

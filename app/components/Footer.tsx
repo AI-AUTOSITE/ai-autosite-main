@@ -14,7 +14,7 @@ export default function Footer() {
     resources: [
       { label: 'Blog', href: '/blog' },
       { label: 'Documentation', href: '/documentation' },
-      { label: 'API Docs', href: '/documentation' },
+      { label: 'API Docs', href: '/documentation/api' }, // ← 修正：異なるパスに変更
     ],
     legal: [
       { label: 'Privacy Policy', href: '/privacy-policy' },
@@ -66,8 +66,8 @@ export default function Footer() {
                 Developer Tools
               </h3>
               <ul className="space-y-2">
-                {footerLinks.tools.map((link) => (
-                  <li key={link.href}>
+                {footerLinks.tools.map((link, index) => (
+                  <li key={`${link.href}-${index}`}>
                     <Link 
                       href={link.href}
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
@@ -85,8 +85,8 @@ export default function Footer() {
                 Resources
               </h3>
               <ul className="space-y-2">
-                {footerLinks.resources.map((link) => (
-                  <li key={link.href}>
+                {footerLinks.resources.map((link, index) => (
+                  <li key={`${link.href}-${index}`}>
                     <Link 
                       href={link.href}
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
@@ -104,8 +104,8 @@ export default function Footer() {
                 Company
               </h3>
               <ul className="space-y-2">
-                {footerLinks.company.map((link) => (
-                  <li key={link.href}>
+                {footerLinks.company.map((link, index) => (
+                  <li key={`${link.href}-${index}`}>
                     <Link 
                       href={link.href}
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
@@ -123,8 +123,8 @@ export default function Footer() {
                 Legal
               </h3>
               <ul className="space-y-2">
-                {footerLinks.legal.map((link) => (
-                  <li key={link.href}>
+                {footerLinks.legal.map((link, index) => (
+                  <li key={`${link.href}-${index}`}>
                     <Link 
                       href={link.href}
                       className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"

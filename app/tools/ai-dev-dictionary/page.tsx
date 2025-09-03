@@ -21,14 +21,21 @@ import {
   FormInput,
   MessageSquare,
   Loader2,
-  Link as LinkIcon  // Link iconの名前を変更
+  Link as LinkIcon,
+  Grid3x3,
+  List,
+  Bot,
+  User
 } from 'lucide-react'
 
-// terms フォルダから新しい構造でインポート
+// Import from the new structure
 import { techTerms, categories, type TechTerm } from './lib/terms'
-import InteractiveDemo from './components/InteractiveDemo'
+
+// Chat-style components
+import ChatStyleDemoCard from './components/ChatStyleDemoCard'
+import ChatDemoModal from './components/ChatDemoModal'
+import TermListItem from './components/TermListItem'
 import SearchBar from './components/SearchBar'
-import TermCard from './components/TermCard'
 import CategoryFilter from './components/CategoryFilter'
 
 export default function AIDevDictionaryPage() {
@@ -37,6 +44,7 @@ export default function AIDevDictionaryPage() {
   const [selectedTerm, setSelectedTerm] = useState<TechTerm | null>(null)
   const [copiedCode, setCopiedCode] = useState<string | null>(null)
   const [demoStates, setDemoStates] = useState<Record<string, boolean>>({})
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   // Filter terms based on search and category
   const filteredTerms = useMemo(() => {
@@ -67,22 +75,15 @@ export default function AIDevDictionaryPage() {
     setTimeout(() => setCopiedCode(null), 2000)
   }
 
-  const triggerDemo = (termId: string) => {
-    setDemoStates({ ...demoStates, [termId]: true })
-    setTimeout(() => {
-      setDemoStates({ ...demoStates, [termId]: false })
-    }, 3000)
-  }
-
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
+      {/* Hero Section with Chat Theme */}
       <section className="relative z-10 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-medium mb-6 border border-green-500/20">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            Interactive Dictionary
+            AI × Individual Developer
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
@@ -93,8 +94,33 @@ export default function AIDevDictionaryPage() {
           </h1>
 
           <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Decode AI terminology with interactive examples. Understand what AI really means when it suggests UI components and development patterns.
+            Discover "So this is what a Modal is!" moments. 
+            A terminology dictionary for individual developers to give precise instructions to AI.
           </p>
+
+          {/* Chat Style Preview */}
+          <div className="max-w-2xl mx-auto mb-12 bg-slate-900 rounded-xl border border-white/10 p-4">
+            <div className="flex gap-3 mb-3">
+              <div className="w-7 h-7 bg-gray-700 rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-gray-300" />
+              </div>
+              <div className="bg-gray-800 rounded-lg rounded-tl-none px-3 py-2">
+                <p className="text-sm text-gray-300">
+                  I want to create something like a popup
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="w-7 h-7 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg rounded-tl-none px-3 py-2 border border-cyan-500/20">
+                <p className="text-sm text-gray-300">
+                  That's called a <span className="text-cyan-400 font-semibold">Modal</span> UI pattern
+                </p>
+              </div>
+            </div>
+          </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto mb-12">
@@ -107,8 +133,8 @@ export default function AIDevDictionaryPage() {
               <div className="text-sm text-gray-400">Live Demos</div>
             </div>
             <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
-              <div className="text-2xl font-bold text-purple-400">AI-Focused</div>
-              <div className="text-sm text-gray-400">Phrase Mapping</div>
+              <div className="text-2xl font-bold text-purple-400">AI-Ready</div>
+              <div className="text-sm text-gray-400">Copy & Paste Prompts</div>
             </div>
           </div>
 
@@ -133,9 +159,42 @@ export default function AIDevDictionaryPage() {
         </div>
       </section>
 
-      {/* Terms Grid */}
+      {/* Terms Grid - Chat Style Layout */}
       <section className="relative z-10 px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-7xl mx-auto">
+          {/* Results Count and View Toggle */}
+          {filteredTerms.length > 0 && (
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-sm text-gray-400">
+                Found <span className="text-cyan-400 font-semibold">{filteredTerms.length}</span> terms
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'grid' 
+                      ? 'bg-cyan-500/20 text-cyan-400' 
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  }`}
+                  title="Grid view"
+                >
+                  <Grid3x3 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === 'list' 
+                      ? 'bg-cyan-500/20 text-cyan-400' 
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  }`}
+                  title="List view"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {filteredTerms.length === 0 ? (
             <div className="text-center py-16">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-white/5 rounded-full mb-4">
@@ -145,156 +204,37 @@ export default function AIDevDictionaryPage() {
               <p className="text-gray-400">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={
+              viewMode === 'grid' 
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                : "space-y-3"
+            }>
               {filteredTerms.map((term) => (
-                <TermCard
-                  key={term.id}
-                  term={term}
-                  isActive={demoStates[term.id]}
-                  onTriggerDemo={() => triggerDemo(term.id)}
-                  onViewDetails={() => setSelectedTerm(term)}
-                />
+                viewMode === 'grid' ? (
+                  <ChatStyleDemoCard
+                    key={term.id}
+                    term={term}
+                    onViewDemo={() => setSelectedTerm(term)}
+                  />
+                ) : (
+                  <TermListItem
+                    key={term.id}
+                    term={term}
+                    onViewDetails={() => setSelectedTerm(term)}
+                  />
+                )
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* Detail Modal */}
+      {/* Chat Demo Modal */}
       {selectedTerm && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-white/10">
-            {/* Modal Header */}
-            <div className="p-6 border-b border-white/10">
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className={`p-2 rounded-lg ${getCategoryColor(selectedTerm.category).bg}`}>
-                      {getCategoryIcon(selectedTerm.category)}
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">{selectedTerm.term}</h2>
-                  </div>
-                  <p className="text-gray-400">{selectedTerm.description}</p>
-                </div>
-                <button
-                  onClick={() => setSelectedTerm(null)}
-                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-400" />
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
-              <div className="p-6 space-y-6">
-                {/* Beginner Tip */}
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-yellow-400" />
-                    Beginner Tip
-                  </h3>
-                  <div className="p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-                    <p className="text-yellow-200">{selectedTerm.beginnerTip}</p>
-                  </div>
-                </div>
-
-                {/* Interactive Demo */}
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-yellow-400" />
-                    Live Demo
-                  </h3>
-                  <InteractiveDemo term={selectedTerm} />
-                </div>
-
-                {/* AI Synonyms */}
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-purple-400" />
-                    AI Synonyms & Variations
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedTerm.aiSynonyms.map((synonym: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm border border-purple-500/30"
-                      >
-                        {synonym}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Common AI Phrases */}
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-cyan-400" />
-                    Common AI Phrases
-                  </h3>
-                  <div className="space-y-2">
-                    {selectedTerm.aiPhrases.map((phrase: string, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-start gap-2 p-3 bg-white/5 rounded-lg border border-white/10"
-                      >
-                        <ChevronRight className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-300 text-sm">{phrase}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Code Example */}
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <Code2 className="w-5 h-5 text-green-400" />
-                    Code Example
-                  </h3>
-                  <div className="relative">
-                    <pre className="bg-black/50 text-gray-300 p-4 rounded-lg overflow-x-auto border border-white/10">
-                      <code className="text-sm">{selectedTerm.codeExample}</code>
-                    </pre>
-                    <button
-                      onClick={() => handleCopyCode(selectedTerm.codeExample, selectedTerm.id)}
-                      className="absolute top-2 right-2 p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                    >
-                      {copiedCode === selectedTerm.id ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Related Terms */}
-                {selectedTerm.relatedTerms && selectedTerm.relatedTerms.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                      <LinkIcon className="w-5 h-5 text-indigo-400" />
-                      Related Terms
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedTerm.relatedTerms.map((related: string, index: number) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            const relatedTerm = techTerms.find(t => t.term === related)
-                            if (relatedTerm) setSelectedTerm(relatedTerm)
-                          }}
-                          className="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-sm border border-indigo-500/30 hover:bg-indigo-500/30 transition-colors"
-                        >
-                          {related}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <ChatDemoModal
+          term={selectedTerm}
+          onClose={() => setSelectedTerm(null)}
+        />
       )}
 
       {/* Related Tools Section */}

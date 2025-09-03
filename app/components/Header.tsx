@@ -1,38 +1,89 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Shield, Sparkles, Home, Code2, Layers, BookOpen, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { Shield, Sparkles, Home, Zap, Code, BookOpen, Menu, X, Palette } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 export default function Header() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [currentPersona, setCurrentPersona] = useState<string | null>(null)
   
-  // Determine current section for styling
+  // personaパラメータを取得
+  useEffect(() => {
+    const persona = searchParams.get('persona')
+    setCurrentPersona(persona)
+  }, [searchParams])
+  
+  // Determine current section
   const isTools = pathname.startsWith('/tools')
   const isBlog = pathname.startsWith('/blog')
   const isHome = pathname === '/'
   
-  // Navigation items - Updated to reflect unified structure
+  // Updated navigation with personas
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/#developer', label: 'Developer Tools', icon: Code2, scrollTo: true },
-    { href: '/tools/tech-stack-analyzer', label: 'Tech Stack', icon: Layers },
-    { href: '/blog', label: 'Blog', icon: BookOpen },
+    { 
+      href: '/?persona=quick-tools', 
+      label: 'Quick Tools', 
+      icon: Zap,
+      scrollTo: true,
+      persona: 'quick-tools'
+    },
+    { 
+      href: '/?persona=dev-tools', 
+      label: 'Dev Tools', 
+      icon: Code,
+      scrollTo: true,
+      persona: 'dev-tools'
+    },
+    { 
+      href: '/?persona=learning', 
+      label: 'Learning', 
+      icon: BookOpen,
+      scrollTo: true,
+      persona: 'learning'
+    },
+    { href: '/blog', label: 'Blog', icon: Palette },
   ]
   
-  // Handle navigation click
+  // アクティブ状態の判定
+  const isNavItemActive = (item: any) => {
+    // Blogページの場合
+    if (item.href === '/blog' && pathname.startsWith('/blog')) {
+      return true
+    }
+    
+    // Homeページの場合
+    if (item.href === '/' && pathname === '/' && !item.persona) {
+      return !currentPersona // personaがない場合のみHomeがアクティブ
+    }
+    
+    // Persona付きリンクの場合
+    if (item.persona && pathname === '/') {
+      return currentPersona === item.persona
+    }
+    
+    return false
+  }
+  
+  // Handle navigation click for persona links
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: any) => {
     if (item.scrollTo && pathname === '/') {
       e.preventDefault()
-      // Set category to developer
+      
+      // Update URL with persona parameter
       const url = new URL(window.location.href)
-      url.searchParams.set('category', 'developer')
+      url.searchParams.set('persona', item.persona)
       window.history.pushState({}, '', url)
       
-      // Trigger a custom event to update the category
-      window.dispatchEvent(new CustomEvent('categoryChange', { detail: 'developer' }))
+      // Update current persona state
+      setCurrentPersona(item.persona)
+      
+      // Trigger custom event to update the persona
+      window.dispatchEvent(new CustomEvent('personaChange', { detail: item.persona }))
       
       // Scroll to tools section
       const toolsSection = document.getElementById('tools-section')
@@ -40,6 +91,22 @@ export default function Header() {
         toolsSection.scrollIntoView({ behavior: 'smooth' })
       }
     }
+    
+    // Close mobile menu
+    setMobileMenuOpen(false)
+  }
+  
+  // Get current tool name if on a tool page
+  const getToolName = () => {
+    const toolPaths: Record<string, string> = {
+      '/tools/blurtap': 'BlurTap',
+      '/tools/code-reader': 'Code Reader',
+      '/tools/tech-stack-analyzer': 'Tech Stack Analyzer',
+      '/tools/ai-dev-dictionary': 'AI Dev Dictionary',
+      '/tools/text-case': 'Text Case Converter',
+      '/tools/json-format': 'JSON Beautify',
+    }
+    return toolPaths[pathname] || 'Tools'
   }
   
   return (
@@ -53,8 +120,8 @@ export default function Header() {
               <Sparkles className="w-4 h-4 text-yellow-400 absolute -top-1 -right-1 animate-pulse" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {isTools ? 'Developer Tools' : isBlog ? 'Tech Blog' : 'Instant Tools'}
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {isTools ? getToolName() : isBlog ? 'Tech Blog' : 'AI AutoSite'}
               </h1>
               <p className="text-xs text-gray-400 mt-0.5">
                 Free • Private • Instant
@@ -63,32 +130,54 @@ export default function Header() {
           </Link>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-2">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href || 
-                (item.href !== '/' && !item.scrollTo && pathname.startsWith(item.href.split('?')[0]))
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item)}
-                  className={`
-                    flex items-center space-x-2 px-4 py-2 rounded-lg
-                    transition-all duration-200 text-sm
-                    ${isActive 
-                      ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-white border border-cyan-500/30' 
-                      : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white'
-                    }
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </nav>
+<nav className="hidden md:flex items-center space-x-2">
+  {navItems.map((item) => {
+    const Icon = item.icon
+    const isActive = isNavItemActive(item)
+    
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={(e) => handleNavClick(e, item)}
+        className={`
+          relative flex items-center space-x-2 px-3 py-2 rounded-lg
+          text-sm overflow-hidden
+          ${isActive 
+            ? 'text-white' 
+            : 'text-gray-300 hover:text-white'
+          }
+        `}
+      >
+        {/* 背景エフェクト（別レイヤー） */}
+        <div 
+          className={`
+            absolute inset-0 rounded-lg transition-all duration-300
+            ${isActive 
+              ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-100' 
+              : 'bg-gray-800/50 opacity-100 hover:bg-gray-700/50'
+            }
+          `}
+        />
+        
+        {/* ボーダーエフェクト（別レイヤー） */}
+        <div 
+          className={`
+            absolute inset-0 rounded-lg transition-all duration-300
+            ${isActive 
+              ? 'border border-cyan-500/30' 
+              : 'border border-transparent'
+            }
+          `}
+        />
+        
+        {/* コンテンツ（最前面） */}
+        <Icon className="w-4 h-4 relative z-10" />
+        <span className="hidden lg:inline relative z-10">{item.label}</span>
+      </Link>
+    )
+  })}
+</nav>
           
           {/* Mobile Menu Button */}
           <button
@@ -109,14 +198,13 @@ export default function Header() {
             <nav className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon
-                const isActive = pathname === item.href || 
-                  (item.href !== '/' && item.href !== '/?category=developer' && pathname.startsWith(item.href.split('?')[0]))
+                const isActive = isNavItemActive(item)
                 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, item)}
                     className={`
                       flex items-center space-x-3 px-4 py-3 rounded-lg
                       transition-all duration-200

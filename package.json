@@ -11,9 +11,11 @@
     "clean-dev": "npm run clean && npm run dev"
   },
   "dependencies": {
+    "@types/papaparse": "^5.3.16",
     "clsx": "^2.1.1",
     "lucide-react": "^0.540.0",
     "next": "^14.2.3",
+    "papaparse": "^5.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.17",

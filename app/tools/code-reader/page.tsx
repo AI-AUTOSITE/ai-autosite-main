@@ -5,6 +5,8 @@ import Link from 'next/link'
 import GitHubFetcher from './components/GitHubFetcher'
 import FileTree from './components/FileTree'
 import DependencyViewer from './components/DependencyViewer'
+import ErrorPanel from './components/ErrorPanel'
+import { SmartDependencyAnalyzer } from './lib/smart-dependency-analyzer'
 import { 
   Upload, 
   Github, 
@@ -23,7 +25,8 @@ import {
   FileJson,
   Hash,
   Sparkles,
-  Copy
+  Copy,
+  FileWarning
 } from 'lucide-react'
 
 // Types
@@ -47,6 +50,16 @@ interface FileStructure {
   [directory: string]: FileData[]
 }
 
+interface CodeError {
+  type: 'unresolved_import' | 'circular_dependency' | 'missing_export' | 'unused_file' | 'type_error'
+  severity: 'error' | 'warning' | 'info'
+  file: string
+  line?: number
+  message: string
+  details?: string
+  quickFix?: string
+}
+
 // Output format types
 type OutputFormat = 'markdown' | 'compact' | 'full'
 
@@ -68,6 +81,8 @@ export default function CodeReaderPage() {
   const [isCancelled, setIsCancelled] = useState(false)
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('markdown')
   const [copiedFormat, setCopiedFormat] = useState<OutputFormat | null>(null)
+  const [errors, setErrors] = useState<CodeError[]>([])
+  const [showErrors, setShowErrors] = useState(true)
 
   const stats = {
     totalFiles: Object.keys(allFiles).filter(path => !excludedFiles.has(path)).length,
@@ -287,6 +302,44 @@ export default function CodeReaderPage() {
     }
   }
 
+  // Analyze files for errors
+  const analyzeFiles = (files: Record<string, string>, structure: FileStructure) => {
+    // SmartDependencyAnalyzerを使用してエラー検出
+    const analyzer = new SmartDependencyAnalyzer()
+    const insight = analyzer.analyze(structure, files)
+    
+    if (insight.errors) {
+      setErrors(insight.errors)
+    }
+  }
+
+  const analyzeFile = (path: string, content: string): FileAnalysis => {
+    const imports = content.match(/import .* from ['"](.+)['"]/g) || []
+    const localImports = imports
+      .filter((imp: string) => imp.includes('./') || imp.includes('../'))
+      .map((imp: string) => imp.match(/['"](.+)['"]/)?.[1] || '')
+    const externalImports = imports
+      .filter((imp: string) => !imp.includes('./') && !imp.includes('../'))
+      .map((imp: string) => imp.match(/['"](.+)['"]/)?.[1] || '')
+    
+    return {
+      fileName: path.split('/').pop() || '',
+      fullPath: path,
+      fileType: determineFileType(path),
+      localImports,
+      externalImports,
+      linesOfCode: content.split('\n').length
+    }
+  }
+
+  const determineFileType = (path: string): FileAnalysis['fileType'] => {
+    if (path.includes('page.') || path.includes('layout.')) return 'page'
+    if (path.includes('component')) return 'component'
+    if (path.includes('utils') || path.includes('lib')) return 'util'
+    if (path.includes('types') || path.includes('.d.ts')) return 'type'
+    return 'other'
+  }
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
@@ -345,6 +398,8 @@ export default function CodeReaderPage() {
       } else if (!isCancelled) {
         setAllFiles(processedFiles)
         setFileStructure(structure)
+        // エラー分析を実行
+        analyzeFiles(processedFiles, structure)
       }
     } catch (err) {
       setError('Failed to process files. Please try again.')
@@ -355,34 +410,20 @@ export default function CodeReaderPage() {
     }
   }
 
-  const analyzeFile = (path: string, content: string): FileAnalysis => {
-    const imports = content.match(/import .* from ['"](.+)['"]/g) || []
-    const localImports = imports.filter(imp => imp.includes('./') || imp.includes('../'))
-    const externalImports = imports.filter(imp => !imp.includes('./') && !imp.includes('../'))
-    
-    return {
-      fileName: path.split('/').pop() || '',
-      fullPath: path,
-      fileType: determineFileType(path),
-      localImports: localImports.map(imp => imp.match(/['"](.+)['"]/)?.[1] || ''),
-      externalImports: externalImports.map(imp => imp.match(/['"](.+)['"]/)?.[1] || ''),
-      linesOfCode: content.split('\n').length
-    }
-  }
-
-  const determineFileType = (path: string): FileAnalysis['fileType'] => {
-    if (path.includes('page.') || path.includes('layout.')) return 'page'
-    if (path.includes('component')) return 'component'
-    if (path.includes('utils') || path.includes('lib')) return 'util'
-    if (path.includes('types') || path.includes('.d.ts')) return 'type'
-    return 'other'
-  }
-
   const handleFilesProcessed = (files: Record<string, string>, structure: FileStructure) => {
     setAllFiles(files)
     setFileStructure(structure)
     setExcludedFiles(new Set())
     setError(null)
+    
+    // エラー分析を実行
+    analyzeFiles(files, structure)
+  }
+
+  // handleErrorFileClick関数を追加
+  const handleErrorFileClick = (filePath: string) => {
+    setSelectedFile(filePath)
+    setViewMode('tree') // ツリービューに切り替え
   }
 
   const handleExcludeFile = (path: string) => {
@@ -404,6 +445,7 @@ export default function CodeReaderPage() {
     setError(null)
     setSelectedFile(null)
     setViewMode('tree')
+    setErrors([])
   }
 
   const cancelProcessing = () => {
@@ -586,13 +628,33 @@ export default function CodeReaderPage() {
                 </div>
               </div>
 
+              {/* Error Panel Toggle & View Mode Buttons */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                <button
-                  onClick={clearAll}
-                  className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors border border-red-500/30"
-                >
-                  Clear All
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowErrors(!showErrors)}
+                    className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                      showErrors 
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
+                        : 'bg-white/10 text-gray-300 border border-white/10'
+                    }`}
+                  >
+                    <FileWarning size={16} />
+                    {showErrors ? 'Hide' : 'Show'} Code Analysis
+                    {errors.filter(e => e.severity === 'error').length > 0 && (
+                      <span className="ml-2 px-2 py-0.5 bg-red-500/30 rounded-full text-xs">
+                        {errors.filter(e => e.severity === 'error').length}
+                      </span>
+                    )}
+                  </button>
+                  
+                  <button
+                    onClick={clearAll}
+                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors border border-red-500/30"
+                  >
+                    Clear All
+                  </button>
+                </div>
                 
                 <button
                   onClick={() => setViewMode(viewMode === 'tree' ? 'analytics' : 'tree')}
@@ -695,6 +757,17 @@ export default function CodeReaderPage() {
 
           {Object.keys(fileStructure).length > 0 && (
             <>
+              {/* Error Panel */}
+              {showErrors && errors.length > 0 && (
+                <div className="mb-6">
+                  <ErrorPanel 
+                    errors={errors}
+                    onFileClick={handleErrorFileClick}
+                  />
+                </div>
+              )}
+
+              {/* File Tree or Dependency Viewer */}
               {viewMode === 'tree' ? (
                 <FileTree
                   fileStructure={fileStructure}
