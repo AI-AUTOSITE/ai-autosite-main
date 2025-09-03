@@ -11,7 +11,9 @@ import {
   Database, 
   ExternalLink,
   Type,
-  Braces
+  Braces,
+  HardDrive 
+
 } from 'lucide-react';
 export const metadata: Metadata = {
   title: 'Developer Tools Blog | AI-Powered Development Guides & Tech Stack Analysis',
