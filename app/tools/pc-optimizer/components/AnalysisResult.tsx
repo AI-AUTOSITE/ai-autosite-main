@@ -25,32 +25,32 @@ const categoryIcons: Record<SoftwareCategory, JSX.Element> = {
 };
 
 const categoryNames: Record<SoftwareCategory, string> = {
-  browser: 'ブラウザ',
-  gaming: 'ゲーム',
-  productivity: '仕事効率化',
-  development: '開発ツール',
-  media: 'メディア・クリエイティブ',
-  communication: 'コミュニケーション',
-  security: 'セキュリティ',
-  utility: 'ユーティリティ',
-  system: 'システム',
-  unknown: 'その他',
+  browser: 'Browser',
+  gaming: 'Gaming',
+  productivity: 'Productivity',
+  development: 'Development',
+  media: 'Media & Creative',
+  communication: 'Communication',
+  security: 'Security',
+  utility: 'Utility',
+  system: 'System',
+  unknown: 'Other',
 };
 
 const priorityColors: Record<Priority, string> = {
-  critical: 'bg-red-100 text-red-800 border-red-200',
-  high: 'bg-green-100 text-green-800 border-green-200',
-  medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  low: 'bg-orange-100 text-orange-800 border-orange-200',
-  removable: 'bg-gray-100 text-gray-800 border-gray-200',
+  critical: 'bg-red-500/20 text-red-400 border-red-500/30',
+  high: 'bg-green-500/20 text-green-400 border-green-500/30',
+  medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+  low: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+  removable: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
 };
 
 const priorityLabels: Record<Priority, string> = {
-  critical: 'システム必須',
-  high: 'よく使用',
-  medium: 'たまに使用',
-  low: 'ほとんど使わない',
-  removable: '削除候補',
+  critical: 'System Critical',
+  high: 'Frequently Used',
+  medium: 'Occasionally Used',
+  low: 'Rarely Used',
+  removable: 'Safe to Remove',
 };
 
 export default function AnalysisResult({ data }: AnalysisResultProps) {
@@ -111,39 +111,39 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
   return (
     <div className="space-y-6">
       {/* Summary Stats */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">分析結果サマリー</h3>
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+        <h3 className="text-xl font-bold text-white mb-4">Analysis Summary</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-sm text-blue-600 mb-1">合計サイズ</p>
-            <p className="text-2xl font-bold text-blue-900">{formatBytes(stats.totalSize)}</p>
+          <div className="bg-blue-500/10 p-4 rounded-lg border border-blue-500/20">
+            <p className="text-sm text-blue-400 mb-1">Total Size</p>
+            <p className="text-2xl font-bold text-blue-300">{formatBytes(stats.totalSize)}</p>
           </div>
-          <div className="bg-purple-50 p-4 rounded-lg">
-            <p className="text-sm text-purple-600 mb-1">キャッシュ推定</p>
-            <p className="text-2xl font-bold text-purple-900">{formatBytes(stats.totalCache)}</p>
+          <div className="bg-purple-500/10 p-4 rounded-lg border border-purple-500/20">
+            <p className="text-sm text-purple-400 mb-1">Cache (Est.)</p>
+            <p className="text-2xl font-bold text-purple-300">{formatBytes(stats.totalCache)}</p>
           </div>
-          <div className="bg-orange-50 p-4 rounded-lg">
-            <p className="text-sm text-orange-600 mb-1">削除可能</p>
-            <p className="text-2xl font-bold text-orange-900">{formatBytes(stats.removableSize)}</p>
+          <div className="bg-orange-500/10 p-4 rounded-lg border border-orange-500/20">
+            <p className="text-sm text-orange-400 mb-1">Removable</p>
+            <p className="text-2xl font-bold text-orange-300">{formatBytes(stats.removableSize)}</p>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <p className="text-sm text-green-600 mb-1">ソフト数</p>
-            <p className="text-2xl font-bold text-green-900">{stats.count}</p>
+          <div className="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
+            <p className="text-sm text-green-400 mb-1">Total Apps</p>
+            <p className="text-2xl font-bold text-green-300">{stats.count}</p>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">カテゴリ:</span>
+            <span className="text-sm font-medium text-gray-300">Category:</span>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value as SoftwareCategory | 'all')}
-              className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
-              <option value="all">すべて ({data.length})</option>
+              <option value="all">All ({data.length})</option>
               {Array.from(categories.entries()).map(([cat, count]) => (
                 <option key={cat} value={cat}>
                   {categoryNames[cat]} ({count})
@@ -152,14 +152,14 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
             </select>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">並び替え:</span>
+            <span className="text-sm font-medium text-gray-300">Sort by:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'size' | 'lastUsed')}
-              className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
             >
-              <option value="size">サイズ順</option>
-              <option value="lastUsed">最終利用日順</option>
+              <option value="size">Size</option>
+              <option value="lastUsed">Last Used</option>
             </select>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
         {filteredData.map((software) => (
           <div
             key={software.id}
-            className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow"
+            className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 hover:border-cyan-500/30 transition-all"
           >
             <div
               className="p-6 cursor-pointer"
@@ -183,35 +183,35 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2">
-                      <h4 className="text-lg font-semibold text-gray-900">
+                      <h4 className="text-lg font-semibold text-white">
                         {software.displayName}
                       </h4>
                       <span className={`px-2 py-0.5 text-xs rounded-full border ${priorityColors[software.priority]}`}>
                         {priorityLabels[software.priority]}
                       </span>
                       {software.isStartup && (
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
                           <Zap className="w-3 h-3 inline mr-1" />
-                          スタートアップ
+                          Startup
                         </span>
                       )}
                     </div>
                     {software.description && (
-                      <p className="text-sm text-gray-600 mb-2">{software.description}</p>
+                      <p className="text-sm text-gray-400 mb-2">{software.description}</p>
                     )}
                     <div className="flex flex-wrap gap-4 text-sm">
-                      <div className="flex items-center text-gray-700">
+                      <div className="flex items-center text-gray-300">
                         <HardDrive className="w-4 h-4 mr-1" />
                         <span className="font-medium">{software.sizeFormatted}</span>
                       </div>
-                      <div className="flex items-center text-gray-700">
+                      <div className="flex items-center text-gray-300">
                         <Calendar className="w-4 h-4 mr-1" />
-                        <span>最終利用: {software.lastUsedFormatted}</span>
+                        <span>Last used: {software.lastUsedFormatted}</span>
                       </div>
                       {software.cacheSizeFormatted && (
-                        <div className="flex items-center text-gray-700">
+                        <div className="flex items-center text-gray-300">
                           <HardDrive className="w-4 h-4 mr-1" />
-                          <span>キャッシュ: {software.cacheSizeFormatted}</span>
+                          <span>Cache: {software.cacheSizeFormatted}</span>
                         </div>
                       )}
                     </div>
@@ -229,39 +229,39 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
 
             {/* Expanded Details */}
             {expandedItems.has(software.id) && (
-              <div className="border-t border-gray-200 px-6 py-4 bg-gray-50">
+              <div className="border-t border-white/10 px-6 py-4 bg-white/5">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h5 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <h5 className="font-semibold text-white mb-3 flex items-center">
                       <Info className="w-4 h-4 mr-2" />
-                      詳細情報
+                      Details
                     </h5>
                     <dl className="space-y-2 text-sm">
                       <div className="flex">
-                        <dt className="font-medium text-gray-600 w-24">パス:</dt>
-                        <dd className="text-gray-800 break-all">{software.path}</dd>
+                        <dt className="font-medium text-gray-400 w-24">Path:</dt>
+                        <dd className="text-gray-300 break-all">{software.path}</dd>
                       </div>
                       <div className="flex">
-                        <dt className="font-medium text-gray-600 w-24">カテゴリ:</dt>
-                        <dd className="text-gray-800">{categoryNames[software.category]}</dd>
+                        <dt className="font-medium text-gray-400 w-24">Category:</dt>
+                        <dd className="text-gray-300">{categoryNames[software.category]}</dd>
                       </div>
                       <div className="flex">
-                        <dt className="font-medium text-gray-600 w-24">優先度:</dt>
-                        <dd className="text-gray-800">{priorityLabels[software.priority]}</dd>
+                        <dt className="font-medium text-gray-400 w-24">Priority:</dt>
+                        <dd className="text-gray-300">{priorityLabels[software.priority]}</dd>
                       </div>
                     </dl>
                   </div>
 
                   {software.tips && software.tips.length > 0 && (
                     <div>
-                      <h5 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <h5 className="font-semibold text-white mb-3 flex items-center">
                         <Zap className="w-4 h-4 mr-2" />
-                        最適化のヒント
+                        Optimization Tips
                       </h5>
                       <ul className="space-y-2">
                         {software.tips.map((tip, index) => (
-                          <li key={index} className="text-sm text-gray-700 flex items-start">
-                            <span className="text-blue-500 mr-2">•</span>
+                          <li key={index} className="text-sm text-gray-300 flex items-start">
+                            <span className="text-cyan-400 mr-2">•</span>
                             <span>{tip}</span>
                           </li>
                         ))}
@@ -271,17 +271,17 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
                 </div>
 
                 {software.priority === 'removable' && (
-                  <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                  <div className="mt-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
                     <div className="flex items-start">
-                      <AlertTriangle className="w-5 h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-amber-800">
-                        <p className="font-semibold mb-1">削除候補</p>
+                      <AlertTriangle className="w-5 h-5 text-amber-400 mr-2 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-amber-300">
+                        <p className="font-semibold mb-1">Removal Candidate</p>
                         <p>
-                          このソフトウェアは3ヶ月以上使用されていません。
-                          アンインストールを検討してください。
+                          This software hasn't been used for over 3 months.
+                          Consider uninstalling to free up space.
                         </p>
                         <p className="mt-2">
-                          削除方法: 設定 → アプリ → アプリと機能 → {software.displayName} → アンインストール
+                          To uninstall: Settings → Apps → Apps & features → {software.displayName} → Uninstall
                         </p>
                       </div>
                     </div>
@@ -289,14 +289,14 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
                 )}
 
                 {software.priority === 'critical' && (
-                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
                     <div className="flex items-start">
-                      <Shield className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-red-800">
-                        <p className="font-semibold mb-1">システム必須</p>
+                      <Shield className="w-5 h-5 text-red-400 mr-2 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-red-300">
+                        <p className="font-semibold mb-1">System Critical</p>
                         <p>
-                          このソフトウェアはシステムの動作に必要です。
-                          削除しないでください。
+                          This software is required for system operation.
+                          Do not remove.
                         </p>
                       </div>
                     </div>
@@ -305,18 +305,18 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
 
                 {/* Action Buttons */}
                 <div className="mt-4 flex gap-3">
-                  <button className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                    タスクマネージャーで確認
+                  <button className="px-4 py-2 text-sm bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors">
+                    View in Task Manager
                   </button>
                   {software.isStartup && (
-                    <button className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                      スタートアップを管理
+                    <button className="px-4 py-2 text-sm bg-white/10 text-gray-300 rounded-lg hover:bg-white/20 transition-colors">
+                      Manage Startup
                     </button>
                   )}
                   {software.priority === 'removable' && (
-                    <button className="px-4 py-2 text-sm bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                    <button className="px-4 py-2 text-sm bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors">
                       <Trash2 className="w-4 h-4 inline mr-1" />
-                      アンインストール方法
+                      How to Uninstall
                     </button>
                   )}
                 </div>
@@ -328,25 +328,25 @@ export default function AnalysisResult({ data }: AnalysisResultProps) {
 
       {/* Optimization Summary */}
       {filteredData.filter(s => s.priority === 'removable').length > 0 && (
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-          <h3 className="text-xl font-bold text-green-900 mb-4">
-            🎯 最適化の推奨アクション
+        <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl p-6 border border-green-500/20">
+          <h3 className="text-xl font-bold text-white mb-4">
+            🎯 Optimization Recommendations
           </h3>
-          <div className="space-y-3 text-sm text-green-800">
+          <div className="space-y-3 text-sm text-gray-300">
             <p>
-              <strong>{filteredData.filter(s => s.priority === 'removable').length}個</strong>
-              のソフトウェアが削除候補です。
-              これらを削除すると約
-              <strong className="text-lg mx-1">{formatBytes(stats.removableSize)}</strong>
-              の空き容量を確保できます。
+              <strong className="text-white">{filteredData.filter(s => s.priority === 'removable').length}</strong>
+              {' '}applications are safe to remove.
+              Removing them would free up approximately
+              <strong className="text-lg mx-1 text-white">{formatBytes(stats.removableSize)}</strong>
+              of storage space.
             </p>
-            <div className="mt-4 p-4 bg-white rounded-lg">
-              <h4 className="font-semibold mb-2">推奨される順番:</h4>
-              <ol className="space-y-1">
-                <li>1. 削除候補のソフトをアンインストール</li>
-                <li>2. ブラウザのキャッシュをクリア</li>
-                <li>3. 不要なスタートアップアプリを無効化</li>
-                <li>4. Windowsのディスククリーンアップを実行</li>
+            <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
+              <h4 className="font-semibold mb-2 text-white">Recommended Steps:</h4>
+              <ol className="space-y-1 text-gray-300">
+                <li>1. Uninstall unused software marked as removable</li>
+                <li>2. Clear browser cache and temporary files</li>
+                <li>3. Disable unnecessary startup applications</li>
+                <li>4. Run Windows Disk Cleanup</li>
               </ol>
             </div>
           </div>

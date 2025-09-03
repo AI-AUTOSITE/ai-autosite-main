@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Shield, Sparkles, Home, Zap, Code, BookOpen, Menu, X, Palette } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 
-export default function Header() {
+// Header内容をSuspenseでラップ
+function HeaderContent() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -130,54 +131,54 @@ export default function Header() {
           </Link>
           
           {/* Desktop Navigation */}
-<nav className="hidden md:flex items-center space-x-2">
-  {navItems.map((item) => {
-    const Icon = item.icon
-    const isActive = isNavItemActive(item)
-    
-    return (
-      <Link
-        key={item.href}
-        href={item.href}
-        onClick={(e) => handleNavClick(e, item)}
-        className={`
-          relative flex items-center space-x-2 px-3 py-2 rounded-lg
-          text-sm overflow-hidden
-          ${isActive 
-            ? 'text-white' 
-            : 'text-gray-300 hover:text-white'
-          }
-        `}
-      >
-        {/* 背景エフェクト（別レイヤー） */}
-        <div 
-          className={`
-            absolute inset-0 rounded-lg transition-all duration-300
-            ${isActive 
-              ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-100' 
-              : 'bg-gray-800/50 opacity-100 hover:bg-gray-700/50'
-            }
-          `}
-        />
-        
-        {/* ボーダーエフェクト（別レイヤー） */}
-        <div 
-          className={`
-            absolute inset-0 rounded-lg transition-all duration-300
-            ${isActive 
-              ? 'border border-cyan-500/30' 
-              : 'border border-transparent'
-            }
-          `}
-        />
-        
-        {/* コンテンツ（最前面） */}
-        <Icon className="w-4 h-4 relative z-10" />
-        <span className="hidden lg:inline relative z-10">{item.label}</span>
-      </Link>
-    )
-  })}
-</nav>
+          <nav className="hidden md:flex items-center space-x-2">
+            {navItems.map((item) => {
+              const Icon = item.icon
+              const isActive = isNavItemActive(item)
+              
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className={`
+                    relative flex items-center space-x-2 px-3 py-2 rounded-lg
+                    text-sm overflow-hidden
+                    ${isActive 
+                      ? 'text-white' 
+                      : 'text-gray-300 hover:text-white'
+                    }
+                  `}
+                >
+                  {/* 背景エフェクト（別レイヤー） */}
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-lg transition-all duration-300
+                      ${isActive 
+                        ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 opacity-100' 
+                        : 'bg-gray-800/50 opacity-100 hover:bg-gray-700/50'
+                      }
+                    `}
+                  />
+                  
+                  {/* ボーダーエフェクト（別レイヤー） */}
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-lg transition-all duration-300
+                      ${isActive 
+                        ? 'border border-cyan-500/30' 
+                        : 'border border-transparent'
+                      }
+                    `}
+                  />
+                  
+                  {/* コンテンツ（最前面） */}
+                  <Icon className="w-4 h-4 relative z-10" />
+                  <span className="hidden lg:inline relative z-10">{item.label}</span>
+                </Link>
+              )
+            })}
+          </nav>
           
           {/* Mobile Menu Button */}
           <button
@@ -224,5 +225,32 @@ export default function Header() {
         )}
       </div>
     </header>
+  )
+}
+
+// Suspense境界でラップしたHeaderコンポーネント
+export default function Header() {
+  return (
+    <Suspense fallback={
+      <header className="relative z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center space-x-3">
+              <Shield className="w-10 h-10 text-cyan-400" />
+              <div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  AI AutoSite
+                </h1>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Free • Private • Instant
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    }>
+      <HeaderContent />
+    </Suspense>
   )
 }
