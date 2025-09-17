@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import { Book, Code, Zap, Shield, ChevronRight, ExternalLink, PlayCircle, FileText } from 'lucide-react'
 
 export default function DocumentationPage() {

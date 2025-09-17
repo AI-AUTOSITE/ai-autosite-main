@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
+import Header from 'app/components/Header'
+import Footer from 'app/components/Footer'
 import { Shield, Zap, Heart, Users, Code, Globe, Target, Sparkles } from 'lucide-react'
 
 export default function AboutPage() {

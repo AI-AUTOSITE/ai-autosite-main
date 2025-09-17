@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import { Shield, Lock, Eye, UserCheck, Download, Trash2 } from 'lucide-react'
 
 export default function PrivacyPolicyPage() {

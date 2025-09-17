@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useRef, useEffect } from 'react'
-import { FileCode, Package, FileText, Settings, Maximize2, Minimize2 } from 'lucide-react'
+import { FileCode, Package, FileText, Settings, Maximize2, Minimize2, RefreshCw, Download } from 'lucide-react'
 
 interface FileNode {
   id: string
@@ -25,13 +25,15 @@ interface InteractiveDependencyGraphProps {
   allFiles: Record<string, string>
   selectedFile: string | null
   setSelectedFile: (path: string | null) => void
+  embedded?: boolean  // New prop for embedded mode
 }
 
 export default function InteractiveDependencyGraph({ 
   fileStructure, 
   allFiles,
   selectedFile,
-  setSelectedFile
+  setSelectedFile,
+  embedded = false  // Default to full mode
 }: InteractiveDependencyGraphProps) {
   
   const svgRef = useRef<SVGSVGElement>(null)
@@ -131,8 +133,8 @@ export default function InteractiveDependencyGraph({
   
   // Layout nodes using force-directed layout simulation
   const layoutNodes = (nodes: FileNode[], groups: Map<string, number>, edges: Edge[]) => {
-    const width = 1200
-    const height = 800
+    const width = embedded ? 800 : 1200  // Smaller for embedded mode
+    const height = embedded ? 500 : 800
     const centerX = width / 2
     const centerY = height / 2
     
@@ -152,7 +154,7 @@ export default function InteractiveDependencyGraph({
     
     groupedNodes.forEach((groupNodes, groupId) => {
       const angle = (groupIndex / numGroups) * 2 * Math.PI
-      const groupRadius = 300
+      const groupRadius = embedded ? 200 : 300
       const groupCenterX = centerX + Math.cos(angle) * groupRadius
       const groupCenterY = centerY + Math.sin(angle) * groupRadius
       
@@ -235,7 +237,7 @@ export default function InteractiveDependencyGraph({
       case 'page': return '📄'
       case 'component': return '🧩'
       case 'util': return '🔧'
-      case 'type': return '📝'
+      case 'type': return '🔑'
       default: return '📁'
     }
   }
@@ -285,38 +287,73 @@ export default function InteractiveDependencyGraph({
     setPan({ x: 0, y: 0 })
     layoutNodes(nodes, new Map(), edges)
   }
+
+  // Export graph as SVG
+  const exportSVG = () => {
+    if (!svgRef.current) return
+    
+    const svgData = new XMLSerializer().serializeToString(svgRef.current)
+    const blob = new Blob([svgData], { type: 'image/svg+xml' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'dependency-graph.svg'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+  
+  // Simplified view for embedded mode
+  const viewBoxDimensions = embedded 
+    ? `${pan.x} ${pan.y} ${800 / zoom} ${500 / zoom}`
+    : `${pan.x} ${pan.y} ${1200 / zoom} ${800 / zoom}`
+  
+  const graphHeight = embedded ? '400px' : (isFullscreen ? 'calc(100vh - 120px)' : '600px')
   
   return (
-    <div className={`bg-white/5 rounded-lg border border-white/10 ${isFullscreen ? 'fixed inset-4 z-50' : ''}`}>
+    <div className={`bg-slate-900/50 rounded-lg border border-white/10 ${isFullscreen ? 'fixed inset-4 z-50' : ''}`}>
       <div className="flex justify-between items-center p-4 border-b border-white/10">
         <h3 className="text-lg font-semibold text-white">
-          Interactive Dependency Graph
+          {embedded ? '🕸️ Quick Graph View' : 'Interactive Dependency Graph'}
         </h3>
         <div className="flex gap-2">
           <button
             onClick={resetView}
-            className="px-3 py-1 bg-white/10 rounded text-sm text-gray-300 hover:bg-white/20"
+            className="px-3 py-1 bg-white/10 rounded text-sm text-gray-300 hover:bg-white/20 transition-all"
           >
-            Reset View
+            <RefreshCw size={14} className="inline mr-1" />
+            Reset
           </button>
-          <button
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-1 bg-white/10 rounded text-gray-300 hover:bg-white/20"
-          >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-          </button>
+          {!embedded && (
+            <>
+              <button
+                onClick={exportSVG}
+                className="px-3 py-1 bg-white/10 rounded text-sm text-gray-300 hover:bg-white/20 transition-all"
+              >
+                <Download size={14} className="inline mr-1" />
+                Export
+              </button>
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="p-1 bg-white/10 rounded text-gray-300 hover:bg-white/20 transition-all"
+              >
+                {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+            </>
+          )}
         </div>
       </div>
       
       <div 
-        className="overflow-hidden bg-black/30"
-        style={{ height: isFullscreen ? 'calc(100vh - 120px)' : '600px' }}
+        className="overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800"
+        style={{ height: graphHeight }}
       >
         <svg
           ref={svgRef}
           width="100%"
           height="100%"
-          viewBox={`${pan.x} ${pan.y} ${1200 / zoom} ${800 / zoom}`}
+          viewBox={viewBoxDimensions}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
@@ -337,6 +374,12 @@ export default function InteractiveDependencyGraph({
                 fill="#60a5fa"
               />
             </marker>
+            
+            {/* Gradient definitions for nodes */}
+            <radialGradient id="nodeGradient">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.1" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
           </defs>
           
           {/* Draw edges */}
@@ -350,7 +393,7 @@ export default function InteractiveDependencyGraph({
               const distance = Math.sqrt(dx * dx + dy * dy)
               
               if (distance > 0) {
-                const nodeRadius = 35
+                const nodeRadius = embedded ? 25 : 35
                 const startRatio = nodeRadius / distance
                 const endRatio = (distance - nodeRadius) / distance
                 
@@ -367,9 +410,10 @@ export default function InteractiveDependencyGraph({
                     x2={x2}
                     y2={y2}
                     stroke="#60a5fa"
-                    strokeWidth="2"
+                    strokeWidth={embedded ? "1.5" : "2"}
                     markerEnd="url(#arrowhead)"
-                    opacity="0.6"
+                    opacity="0.4"
+                    className="hover:opacity-100 transition-opacity"
                   />
                 )
               }
@@ -381,6 +425,7 @@ export default function InteractiveDependencyGraph({
           {nodes.map((node) => {
             const isSelected = selectedFile === node.path
             const importCount = node.importedBy.length
+            const nodeRadius = embedded ? 25 : 35
             
             return (
               <g
@@ -388,38 +433,50 @@ export default function InteractiveDependencyGraph({
                 transform={`translate(${node.x}, ${node.y})`}
                 onMouseDown={(e) => handleMouseDown(e, node.id)}
                 style={{ cursor: 'pointer' }}
+                className="hover:filter hover:brightness-125 transition-all"
               >
                 {/* Tooltip on hover */}
                 <title>{`${node.path}\nImports: ${node.imports.length}\nImported by: ${importCount}`}</title>
                 
+                {/* Node background with gradient */}
                 <circle
-                  r="35"
+                  r={nodeRadius}
                   fill={getNodeColor(node.type)}
                   stroke={isSelected ? '#fbbf24' : '#ffffff'}
                   strokeWidth={isSelected ? '3' : '1'}
                   opacity={node.imports.length > 0 || importCount > 0 ? '1' : '0.4'}
                 />
                 
+                {/* Gradient overlay */}
+                <circle
+                  r={nodeRadius}
+                  fill="url(#nodeGradient)"
+                  pointerEvents="none"
+                />
+                
+                {/* Node icon */}
                 <text
                   textAnchor="middle"
-                  dy="-5"
-                  fontSize="20"
+                  dy={embedded ? "-3" : "-5"}
+                  fontSize={embedded ? "16" : "20"}
                   className="select-none pointer-events-none"
                 >
                   {getNodeIcon(node.type)}
                 </text>
                 
+                {/* File name (abbreviated) */}
                 <text
                   textAnchor="middle"
-                  dy="20"
-                  fontSize="10"
+                  dy={embedded ? "15" : "20"}
+                  fontSize={embedded ? "8" : "10"}
                   fill="white"
                   className="select-none pointer-events-none"
                 >
                   {node.name.length > 15 ? node.name.substring(0, 12) + '...' : node.name}
                 </text>
                 
-                {importCount > 0 && (
+                {/* Import count badge */}
+                {importCount > 0 && !embedded && (
                   <>
                     <circle
                       cx="25"
@@ -449,8 +506,15 @@ export default function InteractiveDependencyGraph({
       <div className="p-4 border-t border-white/10">
         <div className="flex justify-between items-start">
           <div className="text-xs text-gray-400">
-            <p>Drag nodes to rearrange • Scroll to zoom • Click to select</p>
-            <p className="mt-1">Files: {nodes.length} • Dependencies: {edges.length}</p>
+            <p>
+              {embedded 
+                ? `Files: ${nodes.length} • Dependencies: ${edges.length}`
+                : 'Drag nodes to rearrange • Scroll to zoom • Click to select'
+              }
+            </p>
+            {!embedded && (
+              <p className="mt-1">Files: {nodes.length} • Dependencies: {edges.length}</p>
+            )}
           </div>
           
           {selectedFile && (

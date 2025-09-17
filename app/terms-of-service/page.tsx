@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import { FileText, Shield, Zap, Users, AlertTriangle, CheckCircle } from 'lucide-react'
 
 export default function TermsOfServicePage() {

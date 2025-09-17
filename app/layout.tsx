@@ -93,6 +93,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
         <script
           type="application/ld+json"
           // 注意: 直接オブジェクトを入れず JSON.stringify する
@@ -100,7 +101,7 @@ export default function RootLayout({
         />
       </head>
       {/* ④ Inter フォントを body に適用 */}
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} overflow-x-hidden`}>{children}</body>
     </html>
   )
 }

@@ -1,3 +1,71 @@
+# Robots.txt for AI AutoSite
+# Last updated: 2025-01
+
+# Default - Allow all legitimate crawlers
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /.env
+Disallow: /config/
+Crawl-delay: 1
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /_next/static/
+Allow: /_next/static/css/
+Allow: /_next/static/media/
+Crawl-delay: 0
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Crawl-delay: 1
+
+# AI/LLM Crawlers Control
+User-agent: GPTBot
+Disallow: /tools/pdf-tools/
+Allow: /
+
+User-agent: ChatGPT-User
+Disallow: /tools/pdf-tools/
+Allow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Social Media
+User-agent: facebookexternalhit
+Allow: /
+Crawl-delay: 0
+
+User-agent: Twitterbot
+Allow: /
+Crawl-delay: 0
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap location
 Sitemap: https://ai-autosite.com/sitemap.xml
+Sitemap: https://ai-autosite.com/sitemap-tools.xml

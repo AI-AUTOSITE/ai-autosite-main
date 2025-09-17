@@ -1,0 +1,8 @@
+
+<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
+  <rect width="144" height="144" fill="#111827"/>
+  <rect x="14.4" y="14.4" width="115.2" height="115.2" rx="7.2" fill="#06b6d4"/>
+  <text x="50%" y="50%" text-anchor="middle" dy=".35em" fill="white" font-family="Arial, sans-serif" font-size="36" font-weight="bold">
+    PDF
+  </text>
+</svg>

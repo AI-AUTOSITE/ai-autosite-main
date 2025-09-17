@@ -1,20 +1,8 @@
-// lib/smart-dependency-analyzer.ts - Extended with Error Detection
+// lib/smart-dependency-analyzer.ts - Simplified version without error detection
 import { SmartDependency, DependencyInsight, ProjectStats } from './types'
-
-// New error types
-export interface CodeError {
-  type: 'unresolved_import' | 'circular_dependency' | 'missing_export' | 'unused_file' | 'type_error'
-  severity: 'error' | 'warning' | 'info'
-  file: string
-  line?: number
-  message: string
-  details?: string
-  quickFix?: string
-}
 
 export class SmartDependencyAnalyzer {
   private files: Map<string, SmartDependency> = new Map()
-  private errors: CodeError[] = []
   private fileContents: Map<string, string> = new Map()
   
   analyze(fileStructure: any, allFiles?: Record<string, string>): DependencyInsight {
@@ -25,8 +13,8 @@ export class SmartDependencyAnalyzer {
       })
     }
     
+    // Build dependency graph only (no error detection)
     this.buildSimpleGraph(fileStructure)
-    this.detectErrors(fileStructure)
     
     return {
       hotspots: this.getHotspots(),
@@ -35,253 +23,10 @@ export class SmartDependencyAnalyzer {
       depth: this.calculateMaxDepth(),
       suggestions: this.generateSuggestions(),
       stats: this.calculateProjectStats(),
-      errors: this.errors // Add errors to the insight
+      errors: [] // Always return empty errors array for compatibility
     }
   }
   
-  // New: Detect various types of errors
-  private detectErrors(fileStructure: any) {
-    this.errors = []
-    const allFiles = Object.values(fileStructure).flat() as any[]
-    
-    allFiles.forEach(file => {
-      // 1. Check for unresolved imports
-      this.checkUnresolvedImports(file, allFiles)
-      
-      // 2. Check for missing exports (if we have file contents)
-      if (this.fileContents.has(file.path)) {
-        this.checkMissingExports(file, allFiles)
-      }
-      
-      // 3. Check for type errors (basic)
-      this.checkBasicTypeErrors(file)
-    })
-    
-    // 4. Add circular dependency errors
-    const cycles = this.detectSimpleCycles()
-    cycles.forEach(cycle => {
-      this.errors.push({
-        type: 'circular_dependency',
-        severity: 'error',
-        file: cycle[0],
-        message: `Circular dependency detected`,
-        details: `Dependency chain: ${cycle.map(f => f.split('/').pop()).join(' → ')}`
-      })
-    })
-    
-    // 5. Add unused file warnings
-    const orphans = this.getOrphans()
-    orphans.forEach(orphan => {
-      this.errors.push({
-        type: 'unused_file',
-        severity: 'warning',
-        file: orphan.path,
-        message: `File appears to be unused`,
-        details: `This file is not imported anywhere and doesn't import anything`,
-        quickFix: `Consider removing this file or adding it to the project`
-      })
-    })
-  }
-  
-  private checkUnresolvedImports(file: any, allFiles: any[]) {
-    if (!file.analysis.localImports) return
-    
-    file.analysis.localImports.forEach((importPath: string) => {
-      const cleanPath = importPath.replace(/^['"`]|['"`]$/g, '')
-      const resolved = this.findExactMatch(cleanPath, allFiles)
-      
-      if (!resolved) {
-        // Try to find the line number if we have file contents
-        let lineNumber: number | undefined
-        if (this.fileContents.has(file.path)) {
-          const content = this.fileContents.get(file.path)!
-          const lines = content.split('\n')
-          lineNumber = lines.findIndex(line => 
-            line.includes(importPath) || line.includes(cleanPath)
-          ) + 1
-        }
-        
-        this.errors.push({
-          type: 'unresolved_import',
-          severity: 'error',
-          file: file.path,
-          line: lineNumber,
-          message: `Cannot resolve import '${cleanPath}'`,
-          details: `The imported module '${cleanPath}' could not be found`,
-          quickFix: `Check if the file exists or if the import path is correct`
-        })
-      }
-    })
-  }
-  
-  private checkMissingExports(file: any, allFiles: any[]) {
-    const content = this.fileContents.get(file.path)
-    if (!content) return
-    
-    // Files that import this file
-    const importingFiles = allFiles.filter(f => 
-      f.analysis.localImports?.some((imp: string) => {
-        const resolved = this.findExactMatch(imp, allFiles)
-        return resolved?.path === file.path
-      })
-    )
-    
-    importingFiles.forEach(importingFile => {
-      const importingContent = this.fileContents.get(importingFile.path)
-      if (!importingContent) return
-      
-      // Check for named imports
-      const namedImportRegex = /import\s*{([^}]+)}\s*from\s*['"`][^'"`]*['"`]/g
-      const matches = importingContent.matchAll(namedImportRegex)
-      
-      for (const match of matches) {
-        const imports = match[1].split(',').map(s => s.trim())
-        
-        imports.forEach(importName => {
-          // Check if the export exists in the target file
-          const exportExists = this.checkExportExists(content, importName)
-          
-          if (!exportExists) {
-            this.errors.push({
-              type: 'missing_export',
-              severity: 'error',
-              file: importingFile.path,
-              message: `Named export '${importName}' not found`,
-              details: `'${importName}' is not exported from '${file.name}'`,
-              quickFix: `Add 'export' to ${importName} in ${file.name}`
-            })
-          }
-        })
-      }
-    })
-  }
-  
-  private checkExportExists(content: string, exportName: string): boolean {
-    // Simple regex patterns to check for exports
-    const patterns = [
-      new RegExp(`export\\s+(const|let|var|function|class)\\s+${exportName}\\b`),
-      new RegExp(`export\\s*{[^}]*\\b${exportName}\\b[^}]*}`),
-      new RegExp(`export\\s*\\*\\s*from`), // export * would export everything
-      new RegExp(`export\\s+default\\s+${exportName}\\b`)
-    ]
-    
-    return patterns.some(pattern => pattern.test(content))
-  }
-  
-  private checkBasicTypeErrors(file: any) {
-    const content = this.fileContents.get(file.path)
-    if (!content) return
-    
-    // Check for common TypeScript errors
-    const lines = content.split('\n')
-    
-    lines.forEach((line, index) => {
-      // Check for any type usage (basic)
-      if (line.includes(': any') && !line.includes('// eslint-disable')) {
-        this.errors.push({
-          type: 'type_error',
-          severity: 'warning',
-          file: file.path,
-          line: index + 1,
-          message: `Avoid using 'any' type`,
-          details: `Using 'any' type defeats the purpose of TypeScript`,
-          quickFix: `Replace with a specific type or 'unknown'`
-        })
-      }
-      
-      // Check for unused variables (simple pattern)
-      const unusedVarMatch = line.match(/^\s*(const|let|var)\s+(\w+)\s*=/)
-      if (unusedVarMatch) {
-        const varName = unusedVarMatch[2]
-        const restOfFile = lines.slice(index + 1).join('\n')
-        if (!restOfFile.includes(varName)) {
-          this.errors.push({
-            type: 'type_error',
-            severity: 'info',
-            file: file.path,
-            line: index + 1,
-            message: `Variable '${varName}' is declared but never used`,
-            quickFix: `Remove unused variable or use it`
-          })
-        }
-      }
-    })
-  }
-  
-  // New: Get errors for a specific file
-  getFileErrors(filePath: string): CodeError[] {
-    return this.errors.filter(error => error.file === filePath)
-  }
-  
-  // New: Get all errors grouped by severity
-  getErrorsBySeverity(): {
-    errors: CodeError[]
-    warnings: CodeError[]
-    info: CodeError[]
-  } {
-    return {
-      errors: this.errors.filter(e => e.severity === 'error'),
-      warnings: this.errors.filter(e => e.severity === 'warning'),
-      info: this.errors.filter(e => e.severity === 'info')
-    }
-  }
-  
-  // New: Generate error report
-  generateErrorReport(): string {
-    const { errors, warnings, info } = this.getErrorsBySeverity()
-    
-    let report = `# 🔍 Code Analysis Report\n\n`
-    report += `**Generated**: ${new Date().toISOString()}\n\n`
-    
-    // Summary
-    report += `## Summary\n`
-    report += `- 🔴 **Errors**: ${errors.length}\n`
-    report += `- 🟡 **Warnings**: ${warnings.length}\n`
-    report += `- 🔵 **Info**: ${info.length}\n\n`
-    
-    // Errors
-    if (errors.length > 0) {
-      report += `## 🔴 Errors (${errors.length})\n\n`
-      errors.forEach((error, i) => {
-        report += `### ${i + 1}. ${error.message}\n`
-        report += `- **File**: \`${error.file}\`${error.line ? ` (line ${error.line})` : ''}\n`
-        report += `- **Type**: ${error.type.replace(/_/g, ' ')}\n`
-        if (error.details) report += `- **Details**: ${error.details}\n`
-        if (error.quickFix) report += `- **Quick Fix**: ${error.quickFix}\n`
-        report += '\n'
-      })
-    }
-    
-    // Warnings
-    if (warnings.length > 0) {
-      report += `## 🟡 Warnings (${warnings.length})\n\n`
-      warnings.forEach((warning, i) => {
-        report += `### ${i + 1}. ${warning.message}\n`
-        report += `- **File**: \`${warning.file}\`${warning.line ? ` (line ${warning.line})` : ''}\n`
-        if (warning.details) report += `- **Details**: ${warning.details}\n`
-        if (warning.quickFix) report += `- **Quick Fix**: ${warning.quickFix}\n`
-        report += '\n'
-      })
-    }
-    
-    // Info
-    if (info.length > 0) {
-      report += `## 🔵 Info (${info.length})\n\n`
-      info.forEach((item, i) => {
-        report += `- ${item.message} in \`${item.file}\`${item.line ? ` (line ${item.line})` : ''}\n`
-      })
-    }
-    
-    // No issues found
-    if (this.errors.length === 0) {
-      report += `## ✅ No Issues Found!\n\n`
-      report += `Your code looks clean! Keep up the good work.\n`
-    }
-    
-    return report
-  }
-  
-  // Rest of the existing methods remain the same...
   private buildSimpleGraph(fileStructure: any) {
     const allFiles = Object.values(fileStructure).flat() as any[]
     
@@ -302,14 +47,14 @@ export class SmartDependencyAnalyzer {
       })
     })
     
-    // Step 2: Build dependencies (simplified approach)
+    // Step 2: Build dependencies
     allFiles.forEach(file => {
       const node = this.files.get(file.path)!
       
       if (file.analysis.localImports && Array.isArray(file.analysis.localImports)) {
         file.analysis.localImports.forEach((imp: string) => {
           const targetFile = this.findExactMatch(imp, allFiles)
-          if (targetFile && targetFile.path !== file.path) { // Avoid self-reference
+          if (targetFile && targetFile.path !== file.path) {
             node.imports.push(targetFile.path)
             const targetNode = this.files.get(targetFile.path)!
             if (!targetNode.importedBy.includes(file.path)) {
@@ -328,21 +73,14 @@ export class SmartDependencyAnalyzer {
   }
   
   private findExactMatch(importPath: string, allFiles: any[]) {
-    // Clean the import path
     const cleanPath = importPath.replace(/^['"`]|['"`]$/g, '')
     
-    // Try different matching strategies
     return allFiles.find(file => {
       const fileName = file.name.replace(/\.(tsx?|jsx?)$/, '')
       const importName = cleanPath.split('/').pop()?.replace(/\.(tsx?|jsx?)$/, '')
       
-      // Direct file name match (most common)
       if (fileName === importName) return true
-      
-      // Path contains import
       if (file.path.includes(cleanPath)) return true
-      
-      // Path ends with import + extension
       if (file.path.endsWith(cleanPath + '.tsx') || 
           file.path.endsWith(cleanPath + '.ts') ||
           file.path.endsWith(cleanPath + '.jsx') || 
@@ -353,14 +91,13 @@ export class SmartDependencyAnalyzer {
   }
   
   private calculateScore(node: SmartDependency): number {
-    // Importance = (times imported * 2) + (times imports * 1) + type bonus
     let score = node.importedBy.length * 2 + node.imports.length * 1
     
     const typeBonus = {
-      'page': 10,      // Pages are critical
-      'component': 5,  // Components are important
-      'util': 3,       // Utilities are moderate
-      'type': 1,       // Types are low priority
+      'page': 10,
+      'component': 5,
+      'util': 3,
+      'type': 1,
       'other': 0
     }
     
@@ -370,16 +107,16 @@ export class SmartDependencyAnalyzer {
   private calculateRisk(node: SmartDependency): 'low' | 'medium' | 'high' {
     const importedByCount = node.importedBy.length
     
-    if (importedByCount > 10) return 'high'    // Many files depend on this
-    if (importedByCount > 5) return 'medium'   // Moderate dependencies
+    if (importedByCount > 10) return 'high'
+    if (importedByCount > 5) return 'medium'
     return 'low'
   }
   
   private getHotspots(): SmartDependency[] {
     return Array.from(this.files.values())
-      .filter(f => f.importedBy.length > 0)     // Only files that are imported
-      .sort((a, b) => b.score - a.score)       // Sort by importance
-      .slice(0, 5)                             // Top 5
+      .filter(f => f.importedBy.length > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
   }
   
   private getOrphans(): SmartDependency[] {
@@ -394,7 +131,6 @@ export class SmartDependencyAnalyzer {
     
     const dfs = (nodeId: string, path: string[]) => {
       if (recursionStack.has(nodeId)) {
-        // Found a cycle
         const cycleStart = path.indexOf(nodeId)
         if (cycleStart >= 0) {
           cycles.push([...path.slice(cycleStart), nodeId])
@@ -417,21 +153,20 @@ export class SmartDependencyAnalyzer {
       recursionStack.delete(nodeId)
     }
     
-    // Check each node for cycles
     this.files.forEach((_, nodeId) => {
       if (!visited.has(nodeId)) {
         dfs(nodeId, [])
       }
     })
     
-    return cycles.slice(0, 3) // Limit to 3 cycles for readability
+    return cycles.slice(0, 3)
   }
   
   private calculateMaxDepth(): number {
     let maxDepth = 0
     
     const calculateNodeDepth = (nodeId: string, depth = 0, visited = new Set<string>()): number => {
-      if (visited.has(nodeId)) return depth // Avoid infinite loops
+      if (visited.has(nodeId)) return depth
       visited.add(nodeId)
       
       const node = this.files.get(nodeId)
@@ -461,13 +196,12 @@ export class SmartDependencyAnalyzer {
     
     const averageImportsPerFile = totalFiles > 0 ? totalDependencies / totalFiles : 0
     
-    // Calculate health scores (0-100)
     const filesWithDependencies = Array.from(this.files.values())
       .filter(f => f.importedBy.length > 0).length
     const reuseabilityScore = totalFiles > 0 ? Math.round((filesWithDependencies / totalFiles) * 100) : 0
     
     const maxDepth = this.calculateMaxDepth()
-    const complexityScore = Math.max(0, 100 - (maxDepth * 15)) // Penalty for deep dependencies
+    const complexityScore = Math.max(0, 100 - (maxDepth * 15))
     const maintainabilityScore = Math.round((reuseabilityScore + complexityScore) / 2)
     
     return {
@@ -504,7 +238,6 @@ export class SmartDependencyAnalyzer {
       suggestions.push(`📊 Dependency depth is ${depth} levels deep. Consider structural review.`)
     }
     
-    // Additional intelligent suggestions
     const highRiskFiles = Array.from(this.files.values()).filter(f => f.risk === 'high')
     if (highRiskFiles.length > 0) {
       suggestions.push(`⚠️ ${highRiskFiles.length} files have high change risk. Monitor closely.`)
@@ -513,7 +246,6 @@ export class SmartDependencyAnalyzer {
     return suggestions
   }
   
-  // Export methods for different formats
   generateAIPrompt(): string {
     const insight = this.getCurrentInsight()
     if (!insight) return ''
@@ -560,23 +292,23 @@ Please provide specific, actionable advice for improvement.`
     
     const healthGrade = this.getHealthGrade(insight.stats.maintainabilityScore)
     
-    return `# 🔍 Smart Dependency Analysis Report
+    return `# 📊 Project Dependency Analysis
 
-## 📊 Project Overview
+## Overview
 - **Generated**: ${new Date().toISOString()}
 - **Total Files**: ${insight.stats.totalFiles}
 - **Total Dependencies**: ${insight.stats.totalDependencies}
 - **Average Imports/File**: ${insight.stats.averageImportsPerFile}
 - **Health Grade**: ${healthGrade}
 
-## 🎯 Health Metrics
+## Health Metrics
 | Metric | Score | Status |
 |--------|-------|--------|
 | Reusability | ${insight.stats.reuseabilityScore}% | ${this.getScoreStatus(insight.stats.reuseabilityScore)} |
 | Complexity | ${insight.stats.complexityScore}% | ${this.getScoreStatus(insight.stats.complexityScore)} |
 | Maintainability | ${insight.stats.maintainabilityScore}% | ${this.getScoreStatus(insight.stats.maintainabilityScore)} |
 
-## 🔥 Critical Files (Hotspots)
+## Critical Files (Hotspots)
 ${insight.hotspots.length > 0 
   ? insight.hotspots.map((file, i) => 
     `${i + 1}. **${file.name}** \`${file.path}\`
@@ -586,13 +318,13 @@ ${insight.hotspots.length > 0
   : 'No critical dependencies found.'
 }
 
-## ⚠️ Issues Detected
+## Issues Detected
 ${insight.suggestions.length > 0 
   ? insight.suggestions.map(s => `- ${s}`).join('\n')
   : '✅ No issues detected!'
 }
 
-## 🔄 Circular Dependencies
+## Circular Dependencies
 ${insight.cycles.length > 0 
   ? insight.cycles.map((cycle, i) => 
     `### Cycle ${i + 1}
@@ -603,20 +335,11 @@ ${cycle.join(' → ')}
   : '✅ No circular dependencies found.'
 }
 
-## 🗑️ Unused Files
+## Unused Files
 ${insight.orphans.length > 0 
   ? insight.orphans.map(f => `- \`${f.path}\``).join('\n')
   : '✅ No unused files found.'
-}
-
-## 💡 Recommendations
-1. **Focus on hotspots** - Review files with high dependency counts
-2. **Clean up orphans** - Remove unused files to reduce maintenance overhead
-3. **Break cycles** - Refactor circular dependencies for better modularity
-4. **Monitor depth** - Keep dependency chains shallow for better maintainability
-
----
-*Generated by Smart Dependency Analyzer*`
+}`
   }
   
   generateCompactJSON(): string {
@@ -656,7 +379,8 @@ ${insight.orphans.length > 0
       cycles: this.detectSimpleCycles(),
       depth: this.calculateMaxDepth(),
       suggestions: this.generateSuggestions(),
-      stats: this.calculateProjectStats()
+      stats: this.calculateProjectStats(),
+      errors: []
     }
   }
   
@@ -677,7 +401,6 @@ ${insight.orphans.length > 0
     return '❌ Poor'
   }
   
-  // New: Change Impact Analysis
   getChangeImpact(filePath: string): {
     directDependents: string[]
     indirectDependents: string[]
@@ -694,9 +417,8 @@ ${insight.orphans.length > 0
     const indirectDependents: string[] = []
     const visited = new Set<string>()
 
-    // Find indirect dependents (files that depend on files that depend on this file)
     const findIndirectDependents = (nodeId: string, depth = 0) => {
-      if (depth > 3 || visited.has(nodeId)) return // Limit depth to avoid infinite loops
+      if (depth > 3 || visited.has(nodeId)) return
       visited.add(nodeId)
 
       const node = this.files.get(nodeId)
@@ -720,7 +442,6 @@ ${insight.orphans.length > 0
     }
   }
 
-  // New: Generate Impact Report for specific file
   generateImpactReport(filePath: string): string {
     const target = this.files.get(filePath)
     if (!target) {
@@ -736,7 +457,6 @@ ${insight.orphans.length > 0
     report += `**Type**: ${target.type}\n`
     report += `**Risk Level**: ${target.risk}\n\n`
 
-    // Files you need to include when working on this file
     if (impact.requiredFiles.length > 0) {
       report += `## 📋 Required Files (Dependencies)\n`
       report += `**Include these files when modifying \`${fileName}\`:**\n\n`
@@ -748,7 +468,6 @@ ${insight.orphans.length > 0
       report += '\n'
     }
 
-    // Files that will be affected by changes
     if (impact.directDependents.length > 0) {
       report += `## ⚠️ Direct Impact (Files Using This File)\n`
       report += `**These files will be directly affected:**\n\n`
@@ -771,7 +490,6 @@ ${insight.orphans.length > 0
       report += '\n'
     }
 
-    // Summary for AI sharing
     const allRelatedFiles = [...impact.requiredFiles, ...impact.allAffectedFiles]
     if (allRelatedFiles.length > 0) {
       report += `## 🤖 AI Sharing Summary\n`
@@ -784,7 +502,6 @@ ${insight.orphans.length > 0
       report += `**Total context size**: ~${Math.ceil(allRelatedFiles.length * 100 / 4)} tokens (estimated)\n\n`
     }
 
-    // No dependencies case
     if (impact.requiredFiles.length === 0 && impact.allAffectedFiles.length === 0) {
       report += `## ✅ Isolated File\n`
       report += `This file has no dependencies and is not used by other files.\n`
@@ -794,13 +511,11 @@ ${insight.orphans.length > 0
     return report
   }
 
-  // New: Generate Relationship Map (lightweight graph as text)
   generateRelationshipMap(): string {
     let report = `# Project Relationship Map\n\n`
     report += `**Generated**: ${new Date().toISOString()}\n`
     report += `**Files**: ${this.files.size}\n\n`
 
-    // Group by file type for better organization
     const filesByType = {
       'page': [] as string[],
       'component': [] as string[],
@@ -813,7 +528,6 @@ ${insight.orphans.length > 0
       filesByType[file.type].push(file.path)
     })
 
-    // Show relationships by type
     Object.entries(filesByType).forEach(([type, files]) => {
       if (files.length === 0) return
 
@@ -822,16 +536,17 @@ ${insight.orphans.length > 0
       files.forEach(filePath => {
         const file = this.files.get(filePath)!
         const fileName = filePath.split('/').pop() || filePath
+        const directory = filePath.substring(0, filePath.lastIndexOf('/')) || 'root'
         
-        // Only show files with relationships
         if (file.imports.length > 0 || file.importedBy.length > 0) {
-          report += `### \`${fileName}\`\n`
+          report += `### \`${fileName}\` [${directory}]\n`
           
           if (file.imports.length > 0) {
             report += `**Imports** (${file.imports.length}):\n`
             file.imports.forEach(imp => {
               const impName = imp.split('/').pop() || imp
-              report += `  ↳ ${impName}\n`
+              const impDir = imp.substring(0, imp.lastIndexOf('/')) || 'root'
+              report += `  ↳ ${impName} [${impDir}]\n`
             })
           }
           
@@ -839,7 +554,8 @@ ${insight.orphans.length > 0
             report += `**Imported by** (${file.importedBy.length}):\n`
             file.importedBy.forEach(imp => {
               const impName = imp.split('/').pop() || imp
-              report += `  ↰ ${impName}\n`
+              const impDir = imp.substring(0, imp.lastIndexOf('/')) || 'root'
+              report += `  ↰ ${impName} [${impDir}]\n`
             })
           }
           
@@ -851,7 +567,6 @@ ${insight.orphans.length > 0
     return report
   }
 
-  // Token estimation for AI sharing
   estimateTokens(format: 'markdown' | 'json' | 'prompt' | 'impact' | 'relationship'): number {
     let content = ''
     switch (format) {
@@ -872,7 +587,6 @@ ${insight.orphans.length > 0
         break
     }
     
-    // Rough estimation: ~4 characters per token
     return Math.ceil(content.length / 4)
   }
 }

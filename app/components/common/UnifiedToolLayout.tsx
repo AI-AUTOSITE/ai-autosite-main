@@ -1,0 +1,156 @@
+// app/components/common/UnifiedToolLayout.tsx
+'use client'
+
+import { ReactNode, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { X, Info } from 'lucide-react'
+// PeopleAlsoUseを正しくインポート
+import { PeopleAlsoUse } from '../CrossSell'
+import { getToolByUrl, getCategoryById, Tool, Category } from '../../lib/categories.config'
+import ToolInfoSidebar from './ToolInfoSidebar'
+import RelatedTools from './RelatedTools'
+
+interface UnifiedToolLayoutProps {
+  children: ReactNode
+  toolId?: string
+  showCrossSell?: boolean
+  showToolInfo?: boolean
+  showSidebar?: boolean
+  containerWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
+}
+
+/**
+ * UnifiedToolLayout - Simplified Version
+ * 
+ * Purpose: Provide consistent tool-specific layouts without duplicating
+ * the base layout from app/tools/layout.tsx
+ * 
+ * What it handles:
+ * - Tool information sidebar
+ * - Related tools section
+ * - Cross-sell components
+ * - Container sizing
+ * 
+ * What it doesn't handle (delegated to app/tools/layout.tsx):
+ * - Header/Footer
+ * - Breadcrumbs
+ * - Background effects
+ * - Base page structure
+ */
+export default function UnifiedToolLayout({
+  children,
+  toolId,
+  showCrossSell = true,
+  showToolInfo = true,
+  showSidebar = true,
+  containerWidth = 'xl'
+}: UnifiedToolLayoutProps) {
+  const pathname = usePathname()
+  const [tool, setTool] = useState<Tool | undefined>()
+  const [category, setCategory] = useState<Category | undefined>()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    // Get tool info from URL or toolId
+    const currentTool = toolId ? 
+      getToolByUrl(`/tools/${toolId}`) : 
+      getToolByUrl(pathname)
+    
+    if (currentTool) {
+      setTool(currentTool)
+      const cat = getCategoryById(currentTool.category)
+      setCategory(cat)
+    }
+  }, [pathname, toolId])
+
+  // Container width classes
+  const containerClasses = {
+    'sm': 'max-w-sm',
+    'md': 'max-w-3xl',
+    'lg': 'max-w-5xl',
+    'xl': 'max-w-7xl',
+    '2xl': 'max-w-[1600px]',
+    'full': 'max-w-full'
+  }
+
+  return (
+    <div className={`${containerClasses[containerWidth]} mx-auto px-4 py-8`}>
+      {/* Mobile menu button for sidebar */}
+      {showSidebar && tool && (
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden fixed bottom-4 right-4 z-50 bg-cyan-500 text-white rounded-full p-3 shadow-lg hover:bg-cyan-600 transition-colors"
+          aria-label="Toggle tool information"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Info className="w-6 h-6" />}
+        </button>
+      )}
+
+      {/* Tool header */}
+      {tool && (
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+            {tool.name}
+          </h1>
+          {tool.description && (
+            <p className="text-lg text-gray-400">
+              {tool.description}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Main layout with optional sidebar */}
+      <div className={`flex gap-8 ${showSidebar && tool ? 'lg:flex-row flex-col' : ''}`}>
+        {/* Main content area */}
+        <div className="flex-1">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 md:p-8">
+            {children}
+          </div>
+
+          {/* Related tools (when no sidebar) */}
+          {tool && category && !showSidebar && (
+            <RelatedTools currentTool={tool} category={category} />
+          )}
+        </div>
+
+        {/* Desktop sidebar */}
+        {showSidebar && showToolInfo && tool && category && (
+          <aside className="hidden lg:block lg:w-80">
+            <ToolInfoSidebar tool={tool} category={category} />
+          </aside>
+        )}
+
+        {/* Mobile sidebar overlay */}
+        {showSidebar && showToolInfo && tool && category && isMobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm">
+            <div className="absolute right-0 top-0 bottom-0 w-80 bg-slate-900 p-4 overflow-y-auto">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                aria-label="Close sidebar"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="mt-12">
+                <ToolInfoSidebar tool={tool} category={category} />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Cross-sell section - PeopleAlsoUseを使用 */}
+      {showCrossSell && tool && (
+        <div className="mt-12">
+          <PeopleAlsoUse currentToolId={tool.id} />
+        </div>
+      )}
+
+      {/* Related tools (with sidebar) */}
+      {tool && category && showSidebar && (
+        <RelatedTools currentTool={tool} category={category} />
+      )}
+    </div>
+  )
+}

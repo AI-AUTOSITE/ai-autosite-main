@@ -2,32 +2,56 @@ import Papa from 'papaparse';
 import { AnalyzedSoftware, RawFileData, Priority } from './types';
 import { identifySoftware, getCategoryFromPath } from './softwareDatabase';
 
-// Format bytes to human readable
+// Constants
+const SIZE_UNITS = ['B', 'KB', 'MB', 'GB'] as const;
+const SIZE_DIVISOR = 1024;
+const TIME_UNITS = {
+  DAY: 1000 * 60 * 60 * 24,
+  WEEK: 7,
+  MONTH: 30,
+  YEAR: 365
+} as const;
+
+// Error messages
+const ERROR_MESSAGES = {
+  PARSE_ERROR: 'Failed to parse CSV file. Please check the file format.',
+  ANALYSIS_ERROR: 'An error occurred during analysis. Please try again.',
+  INVALID_DATA: 'Invalid data format detected in the CSV file.'
+} as const;
+
+/**
+ * Format bytes to human readable string
+ */
 export function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  
+  const index = Math.floor(Math.log(bytes) / Math.log(SIZE_DIVISOR));
+  const value = bytes / Math.pow(SIZE_DIVISOR, index);
+  
+  return `${parseFloat(value.toFixed(2))} ${SIZE_UNITS[index]}`;
 }
 
-// Format date difference
+/**
+ * Format date difference to relative time string
+ */
 export function formatDateDifference(date: Date | null): string {
-  if (!date) return '不明';
+  if (!date) return 'Unknown';
   
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor(diffMs / TIME_UNITS.DAY);
   
-  if (diffDays === 0) return '今日';
-  if (diffDays === 1) return '昨日';
-  if (diffDays < 7) return `${diffDays}日前`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}週間前`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}ヶ月前`;
-  return `${Math.floor(diffDays / 365)}年前`;
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < TIME_UNITS.WEEK) return `${diffDays} days ago`;
+  if (diffDays < TIME_UNITS.MONTH) return `${Math.floor(diffDays / TIME_UNITS.WEEK)} weeks ago`;
+  if (diffDays < TIME_UNITS.YEAR) return `${Math.floor(diffDays / TIME_UNITS.MONTH)} months ago`;
+  return `${Math.floor(diffDays / TIME_UNITS.YEAR)} years ago`;
 }
 
-// Determine priority based on usage
+/**
+ * Determine priority based on usage patterns
+ */
 function determinePriority(lastUsed: Date | null, category: string): Priority {
   if (category === 'system') return 'critical';
   
@@ -35,15 +59,17 @@ function determinePriority(lastUsed: Date | null, category: string): Priority {
   
   const now = new Date();
   const diffMs = now.getTime() - lastUsed.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor(diffMs / TIME_UNITS.DAY);
   
-  if (diffDays < 7) return 'high';
-  if (diffDays < 30) return 'medium';
-  if (diffDays < 90) return 'low';
+  if (diffDays < TIME_UNITS.WEEK) return 'high';
+  if (diffDays < TIME_UNITS.MONTH) return 'medium';
+  if (diffDays < TIME_UNITS.MONTH * 3) return 'low';
   return 'removable';
 }
 
-// Group files by directory
+/**
+ * Group files by directory for aggregation
+ */
 function groupFilesByDirectory(files: RawFileData[]): Map<string, RawFileData[]> {
   const grouped = new Map<string, RawFileData[]>();
   
@@ -58,31 +84,59 @@ function groupFilesByDirectory(files: RawFileData[]): Map<string, RawFileData[]>
   return grouped;
 }
 
-// Aggregate software information
-function aggregateSoftware(files: RawFileData[]): AnalyzedSoftware {
-  // Find main executable
-  const mainExe = files.find(f => !f.Name.includes('uninstall') && !f.Name.includes('update')) || files[0];
-  const identified = identifySoftware(mainExe.Name, mainExe.DirectoryName);
+/**
+ * Parse date string safely
+ */
+function parseDate(dateString: string | undefined): Date | null {
+  if (!dateString) return null;
   
-  // Calculate total size
-  const totalSize = files.reduce((sum, file) => {
-    const size = parseInt(file.Length || '0');
+  try {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? null : date;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Calculate total size safely
+ */
+function calculateTotalSize(files: RawFileData[]): number {
+  return files.reduce((sum, file) => {
+    const size = parseInt(file.Length || '0', 10);
     return sum + (isNaN(size) ? 0 : size);
   }, 0);
-  
-  // Get most recent access time
+}
+
+/**
+ * Find most recent access time from files
+ */
+function findMostRecentAccess(files: RawFileData[]): Date | null {
   let mostRecentAccess: Date | null = null;
+  
   files.forEach(file => {
-    if (file.LastAccessTime) {
-      const accessDate = new Date(file.LastAccessTime);
-      if (!isNaN(accessDate.getTime())) {
-        if (!mostRecentAccess || accessDate > mostRecentAccess) {
-          mostRecentAccess = accessDate;
-        }
-      }
+    const accessDate = parseDate(file.LastAccessTime);
+    if (accessDate && (!mostRecentAccess || accessDate > mostRecentAccess)) {
+      mostRecentAccess = accessDate;
     }
   });
   
+  return mostRecentAccess;
+}
+
+/**
+ * Aggregate software information from grouped files
+ */
+function aggregateSoftware(files: RawFileData[]): AnalyzedSoftware {
+  // Find main executable (exclude uninstaller and updater)
+  const mainExe = files.find(f => 
+    !f.Name.toLowerCase().includes('uninstall') && 
+    !f.Name.toLowerCase().includes('update')
+  ) || files[0];
+  
+  const identified = identifySoftware(mainExe.Name, mainExe.DirectoryName);
+  const totalSize = calculateTotalSize(files);
+  const mostRecentAccess = findMostRecentAccess(files);
   const category = identified?.category || getCategoryFromPath(mainExe.DirectoryName);
   
   return {
@@ -98,22 +152,25 @@ function aggregateSoftware(files: RawFileData[]): AnalyzedSoftware {
     priority: determinePriority(mostRecentAccess, category),
     isStartup: identified?.isStartup || false,
     cacheSize: identified?.estimatedCacheSize,
-    cacheSizeFormatted: identified?.estimatedCacheSize ? formatBytes(identified.estimatedCacheSize) : undefined,
+    cacheSizeFormatted: identified?.estimatedCacheSize 
+      ? formatBytes(identified.estimatedCacheSize) 
+      : undefined,
     description: identified?.description,
     tips: identified?.tips,
   };
 }
 
-// Extract software name from path
+/**
+ * Extract software name from directory path
+ */
 function extractSoftwareName(path: string): string {
   const parts = path.split('\\');
+  const ignoredNames = /^(Program Files|bin|x86|x64|\d+\.\d+)$/i;
   
-  // Try to find a meaningful name from the path
+  // Find meaningful name from path components
   for (let i = parts.length - 1; i >= 0; i--) {
     const part = parts[i];
-    if (part && 
-        !part.match(/^(Program Files|bin|x86|x64|\d+\.\d+)$/i) &&
-        part.length > 2) {
+    if (part && !part.match(ignoredNames) && part.length > 2) {
       return part;
     }
   }
@@ -121,7 +178,23 @@ function extractSoftwareName(path: string): string {
   return parts[parts.length - 1] || 'Unknown';
 }
 
-// Main analysis function
+/**
+ * Validate CSV data structure
+ */
+function validateCsvData(data: any[]): data is RawFileData[] {
+  if (!Array.isArray(data) || data.length === 0) {
+    return false;
+  }
+  
+  const requiredFields = ['Name', 'DirectoryName', 'Length'];
+  const firstItem = data[0];
+  
+  return requiredFields.every(field => field in firstItem);
+}
+
+/**
+ * Main analysis function with improved error handling
+ */
 export async function analyzeFiles(csvContent: string): Promise<AnalyzedSoftware[]> {
   return new Promise((resolve, reject) => {
     Papa.parse(csvContent, {
@@ -129,6 +202,11 @@ export async function analyzeFiles(csvContent: string): Promise<AnalyzedSoftware
       skipEmptyLines: true,
       complete: (result) => {
         try {
+          // Validate CSV data
+          if (!validateCsvData(result.data)) {
+            throw new Error(ERROR_MESSAGES.INVALID_DATA);
+          }
+          
           const files = result.data as RawFileData[];
           
           // Group files by directory
@@ -137,8 +215,13 @@ export async function analyzeFiles(csvContent: string): Promise<AnalyzedSoftware
           // Aggregate each software
           const analyzed: AnalyzedSoftware[] = [];
           grouped.forEach((files, directory) => {
-            const software = aggregateSoftware(files);
-            analyzed.push(software);
+            try {
+              const software = aggregateSoftware(files);
+              analyzed.push(software);
+            } catch (error) {
+              console.warn(`Failed to analyze directory: ${directory}`, error);
+              // Continue processing other directories
+            }
           });
           
           // Sort by size (largest first)
@@ -147,12 +230,16 @@ export async function analyzeFiles(csvContent: string): Promise<AnalyzedSoftware
           resolve(analyzed);
         } catch (error) {
           console.error('Analysis error:', error);
-          reject(error);
+          reject(new Error(
+            error instanceof Error 
+              ? error.message 
+              : ERROR_MESSAGES.ANALYSIS_ERROR
+          ));
         }
       },
       error: (error) => {
         console.error('Parse error:', error);
-        reject(error);
+        reject(new Error(ERROR_MESSAGES.PARSE_ERROR));
       },
     });
   });

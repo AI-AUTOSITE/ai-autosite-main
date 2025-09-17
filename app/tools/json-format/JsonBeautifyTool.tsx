@@ -1,182 +1,318 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { Braces, Copy, Check, RefreshCw, Download, Upload, AlertCircle, CheckCircle, Minimize2, Maximize2 } from 'lucide-react'
+import { useState, useRef, useCallback, useMemo } from 'react'
+import { 
+  Braces, 
+  Copy, 
+  Check, 
+  RefreshCw, 
+  Download, 
+  Upload, 
+  AlertCircle, 
+  CheckCircle, 
+  Minimize2, 
+  Maximize2 
+} from 'lucide-react'
 
+// ========== Type Definitions ==========
+type ProcessMode = 'beautify' | 'minify'
+
+interface JsonStats {
+  keys: number
+  arrays: number
+  objects: number
+  size: number
+}
+
+interface ProcessResult {
+  success: boolean
+  output: string
+  error?: string
+}
+
+// ========== Constants ==========
+const SAMPLE_JSON = {
+  name: "AI AutoSite",
+  version: "1.0.0",
+  description: "Instant tools for developers",
+  features: [
+    "JSON Beautify",
+    "Text Case Converter",
+    "Code Analysis"
+  ],
+  settings: {
+    theme: "dark",
+    autoSave: true,
+    indentSize: 2
+  },
+  metadata: {
+    created: "2024-01-01",
+    updated: "2024-12-31",
+    author: {
+      name: "Developer",
+      email: "dev@example.com"
+    }
+  }
+}
+
+const INDENT_OPTIONS = [2, 4, 8] as const
+const MESSAGE_TIMEOUT = 2000
+
+// ========== Utility Functions ==========
+const processJsonData = (
+  text: string, 
+  mode: ProcessMode, 
+  indentSize: number
+): ProcessResult => {
+  if (!text.trim()) {
+    return { success: true, output: '' }
+  }
+
+  try {
+    const parsed = JSON.parse(text)
+    const output = mode === 'beautify' 
+      ? JSON.stringify(parsed, null, indentSize)
+      : JSON.stringify(parsed)
+    
+    return { 
+      success: true, 
+      output 
+    }
+  } catch (err) {
+    return { 
+      success: false, 
+      output: '',
+      error: `Invalid JSON: ${err instanceof Error ? err.message : 'Unknown error'}`
+    }
+  }
+}
+
+const calculateJsonStats = (jsonString: string): JsonStats => {
+  try {
+    if (!jsonString) {
+      return { keys: 0, arrays: 0, objects: 0, size: 0 }
+    }
+
+    const parsed = JSON.parse(jsonString)
+    const stringified = JSON.stringify(parsed, null, 0)
+    
+    const keys = stringified.match(/"[^"]+"\s*:/g) || []
+    const arrays = stringified.match(/\[/g) || []
+    const objects = stringified.match(/\{/g) || []
+    const size = new Blob([jsonString]).size
+    
+    return {
+      keys: keys.length,
+      arrays: arrays.length,
+      objects: objects.length,
+      size
+    }
+  } catch {
+    return { keys: 0, arrays: 0, objects: 0, size: 0 }
+  }
+}
+
+const formatFileSize = (bytes: number): string => {
+  if (bytes > 1024) {
+    return `${(bytes / 1024).toFixed(1)}KB`
+  }
+  return `${bytes}B`
+}
+
+// ========== Sub Components ==========
+interface MessageDisplayProps {
+  error?: string
+  success?: string
+}
+
+const MessageDisplay: React.FC<MessageDisplayProps> = ({ error, success }) => {
+  if (!error && !success) return <div className="h-12 mb-4" />
+  
+  return (
+    <div className="h-12 mb-4">
+      {error && (
+        <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-xl p-3 flex items-center space-x-2">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
+      
+      {success && (
+        <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-3 flex items-center space-x-2">
+          <CheckCircle className="w-5 h-5 text-green-400" />
+          <p className="text-green-400 text-sm">{success}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface StatsDisplayProps {
+  stats: JsonStats
+  className?: string
+}
+
+const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, className = "" }) => (
+  <div className={className}>
+    <div className="text-center">
+      <p className="text-xl font-bold text-green-400">{stats.keys}</p>
+      <p className="text-xs text-gray-500">Keys</p>
+    </div>
+    <div className="text-center">
+      <p className="text-xl font-bold text-emerald-400">{stats.arrays}</p>
+      <p className="text-xs text-gray-500">Arrays</p>
+    </div>
+    <div className="text-center">
+      <p className="text-xl font-bold text-cyan-400">{stats.objects}</p>
+      <p className="text-xs text-gray-500">Objects</p>
+    </div>
+    <div className="text-center">
+      <p className="text-xl font-bold text-blue-400">
+        {formatFileSize(stats.size)}
+      </p>
+      <p className="text-xs text-gray-500">Size</p>
+    </div>
+  </div>
+)
+
+// ========== Main Component ==========
 export default function JsonBeautify() {
+  // State management
   const [inputJson, setInputJson] = useState('')
   const [outputJson, setOutputJson] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [copied, setCopied] = useState(false)
-  const [indentSize, setIndentSize] = useState(2)
-  const [mode, setMode] = useState<'beautify' | 'minify'>('beautify')
+  const [indentSize, setIndentSize] = useState<2 | 4 | 8>(2)
+  const [mode, setMode] = useState<ProcessMode>('beautify')
+  
+  // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const successTimeoutRef = useRef<NodeJS.Timeout>()
+  const copiedTimeoutRef = useRef<NodeJS.Timeout>()
 
-  // Validate and format JSON
-  const processJson = (text: string, currentMode: string = mode, currentIndent: number = indentSize) => {
+  // Memoized calculations
+  const stats = useMemo(() => calculateJsonStats(outputJson), [outputJson])
+
+  // Clear timeouts on unmount
+  const clearTimeouts = useCallback(() => {
+    if (successTimeoutRef.current) {
+      clearTimeout(successTimeoutRef.current)
+    }
+    if (copiedTimeoutRef.current) {
+      clearTimeout(copiedTimeoutRef.current)
+    }
+  }, [])
+
+  // Process JSON with proper cleanup
+  const processJson = useCallback((
+    text: string, 
+    currentMode: ProcessMode = mode, 
+    currentIndent: number = indentSize
+  ) => {
+    clearTimeouts()
     setError('')
     setSuccess('')
     
-    if (!text.trim()) {
-      setOutputJson('')
-      return
-    }
-
-    try {
-      // Parse JSON to validate it
-      const parsed = JSON.parse(text)
-      
-      // Format based on mode
-      let formatted: string
-      if (currentMode === 'beautify') {
-        formatted = JSON.stringify(parsed, null, currentIndent)
-      } else {
-        formatted = JSON.stringify(parsed)
+    const result = processJsonData(text, currentMode, currentIndent)
+    
+    if (result.success) {
+      setOutputJson(result.output)
+      if (result.output) {
+        setSuccess('JSON is valid!')
+        successTimeoutRef.current = setTimeout(() => setSuccess(''), MESSAGE_TIMEOUT)
       }
-      
-      setOutputJson(formatted)
-      setSuccess('JSON is valid!')
-      
-      // Clear success message after 2 seconds
-      setTimeout(() => setSuccess(''), 2000)
-    } catch (err) {
-      setError(`Invalid JSON: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } else {
       setOutputJson('')
+      setError(result.error || '')
     }
-  }
+  }, [mode, indentSize, clearTimeouts])
 
-  // Handle input change
-  const handleInputChange = (text: string) => {
+  // Event handlers
+  const handleInputChange = useCallback((text: string) => {
     setInputJson(text)
     processJson(text)
-  }
+  }, [processJson])
 
-  // Handle mode change
-  const handleModeChange = (newMode: 'beautify' | 'minify') => {
+  const handleModeChange = useCallback((newMode: ProcessMode) => {
     setMode(newMode)
     processJson(inputJson, newMode)
-  }
+  }, [inputJson, processJson])
 
-  // Handle indent size change
-  const handleIndentChange = (size: number) => {
+  const handleIndentChange = useCallback((size: 2 | 4 | 8) => {
     setIndentSize(size)
     if (mode === 'beautify') {
       processJson(inputJson, mode, size)
     }
-  }
+  }, [inputJson, mode, processJson])
 
-  // Copy to clipboard
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(outputJson)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
+      
+      if (copiedTimeoutRef.current) {
+        clearTimeout(copiedTimeoutRef.current)
+      }
+      copiedTimeoutRef.current = setTimeout(() => setCopied(false), MESSAGE_TIMEOUT)
+    } catch {
       setError('Failed to copy to clipboard')
     }
-  }
+  }, [outputJson])
 
-  // Clear all
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
+    clearTimeouts()
     setInputJson('')
     setOutputJson('')
     setError('')
     setSuccess('')
-  }
+  }, [clearTimeouts])
 
-  // Download as JSON file
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     const blob = new Blob([outputJson], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `formatted-${mode === 'beautify' ? 'beautified' : 'minified'}.json`
-    a.click()
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `formatted-${mode === 'beautify' ? 'beautified' : 'minified'}.json`
+    link.click()
     URL.revokeObjectURL(url)
-  }
+  }, [outputJson, mode])
 
-  // Upload JSON file
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = (e) => {
         const text = e.target?.result as string
         handleInputChange(text)
       }
+      reader.onerror = () => {
+        setError('Failed to read file')
+      }
       reader.readAsText(file)
     }
-  }
+  }, [handleInputChange])
 
-  // Sample JSON for demo
-  const loadSample = () => {
-    const sample = {
-      "name": "AI AutoSite",
-      "version": "1.0.0",
-      "description": "Instant tools for developers",
-      "features": [
-        "JSON Beautify",
-        "Text Case Converter",
-        "Code Analysis"
-      ],
-      "settings": {
-        "theme": "dark",
-        "autoSave": true,
-        "indentSize": 2
-      },
-      "metadata": {
-        "created": "2024-01-01",
-        "updated": "2024-12-31",
-        "author": {
-          "name": "Developer",
-          "email": "dev@example.com"
-        }
-      }
-    }
-    handleInputChange(JSON.stringify(sample))
-  }
-
-  // Calculate JSON stats
-  const getJsonStats = () => {
-    try {
-      if (outputJson) {
-        const parsed = JSON.parse(outputJson)
-        const keys = JSON.stringify(parsed, null, 0).match(/"[^"]+"\s*:/g) || []
-        const arrays = JSON.stringify(parsed).match(/\[/g) || []
-        const objects = JSON.stringify(parsed).match(/\{/g) || []
-        
-        return {
-          keys: keys.length,
-          arrays: arrays.length,
-          objects: objects.length,
-          size: new Blob([outputJson]).size
-        }
-      }
-    } catch {
-      // Silent fail
-    }
-    return { keys: 0, arrays: 0, objects: 0, size: 0 }
-  }
-
-  const stats = getJsonStats()
+  const loadSample = useCallback(() => {
+    handleInputChange(JSON.stringify(SAMPLE_JSON))
+  }, [handleInputChange])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 relative overflow-hidden">
       {/* Background animation */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
       </div>
 
       {/* Main content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Title and Stats */}
+        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-3">
             <div className="relative">
               <Braces className="w-10 h-10 text-green-400" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse" />
             </div>
             <div>
               <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 bg-clip-text text-transparent">
@@ -186,31 +322,16 @@ export default function JsonBeautify() {
             </div>
           </div>
           
-          {/* Stats */}
+          {/* Desktop Stats */}
           {outputJson && (
-            <div className="hidden sm:flex items-center space-x-4">
-              <div className="text-center">
-                <p className="text-xl font-bold text-green-400">{stats.keys}</p>
-                <p className="text-xs text-gray-500">Keys</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-emerald-400">{stats.arrays}</p>
-                <p className="text-xs text-gray-500">Arrays</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-cyan-400">{stats.objects}</p>
-                <p className="text-xs text-gray-500">Objects</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xl font-bold text-blue-400">
-                  {stats.size > 1024 ? `${(stats.size / 1024).toFixed(1)}KB` : `${stats.size}B`}
-                </p>
-                <p className="text-xs text-gray-500">Size</p>
-              </div>
-            </div>
+            <StatsDisplay 
+              stats={stats} 
+              className="hidden sm:flex items-center space-x-4" 
+            />
           )}
         </div>
-         {/* Controls */}
+
+        {/* Control Panel */}
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Mode selection */}
@@ -239,12 +360,12 @@ export default function JsonBeautify() {
               </button>
             </div>
 
-            {/* Indent size (only for beautify) */}
+            {/* Indent size */}
             {mode === 'beautify' && (
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-400">Indent:</span>
                 <div className="flex gap-1">
-                  {[2, 4, 8].map((size) => (
+                  {INDENT_OPTIONS.map((size) => (
                     <button
                       key={size}
                       onClick={() => handleIndentChange(size)}
@@ -288,31 +409,18 @@ export default function JsonBeautify() {
         </div>
 
         {/* Messages */}
-        <div className="h-12 mb-4">
-          {error && (
-            <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-xl p-3 flex items-center space-x-2">
-              <AlertCircle className="w-5 h-5 text-red-400" />
-              <p className="text-red-400 text-sm">{error}</p>
-            </div>
-          )}
-          
-          {success && (
-            <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-3 flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <p className="text-green-400 text-sm">{success}</p>
-            </div>
-          )}
-        </div>
+        <MessageDisplay error={error} success={success} />
 
-        {/* Text areas */}
+        {/* Editors */}
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Input */}
+          {/* Input Editor */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-lg font-semibold text-white">Input JSON</h3>
               <button
                 onClick={handleClear}
                 className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Clear all"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
@@ -323,10 +431,11 @@ export default function JsonBeautify() {
               placeholder='{"key": "value"}'
               className="w-full h-96 p-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors resize-none font-mono text-sm"
               spellCheck={false}
+              aria-label="JSON input"
             />
           </div>
 
-          {/* Output */}
+          {/* Output Editor */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <div className="flex justify-between items-center mb-3">
               <h3 className="text-lg font-semibold text-white">
@@ -337,6 +446,7 @@ export default function JsonBeautify() {
                   onClick={handleCopy}
                   disabled={!outputJson}
                   className="text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+                  aria-label="Copy to clipboard"
                 >
                   {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
                 </button>
@@ -344,6 +454,7 @@ export default function JsonBeautify() {
                   onClick={handleDownload}
                   disabled={!outputJson}
                   className="text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+                  aria-label="Download JSON"
                 >
                   <Download className="w-4 h-4" />
                 </button>
@@ -355,34 +466,19 @@ export default function JsonBeautify() {
               placeholder="Formatted JSON will appear here..."
               className="w-full h-96 p-4 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 resize-none font-mono text-sm"
               spellCheck={false}
+              aria-label="JSON output"
             />
           </div>
         </div>
 
-        {/* Mobile stats */}
+        {/* Mobile Stats */}
         {outputJson && (
           <div className="sm:hidden mt-6">
             <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
-              <div className="grid grid-cols-4 gap-2">
-                <div className="text-center">
-                  <p className="text-lg font-bold text-green-400">{stats.keys}</p>
-                  <p className="text-xs text-gray-500">Keys</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-emerald-400">{stats.arrays}</p>
-                  <p className="text-xs text-gray-500">Arrays</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-cyan-400">{stats.objects}</p>
-                  <p className="text-xs text-gray-500">Objects</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-blue-400">
-                    {stats.size > 1024 ? `${(stats.size / 1024).toFixed(1)}KB` : `${stats.size}B`}
-                  </p>
-                  <p className="text-xs text-gray-500">Size</p>
-                </div>
-              </div>
+              <StatsDisplay 
+                stats={stats} 
+                className="grid grid-cols-4 gap-2" 
+              />
             </div>
           </div>
         )}
@@ -419,4 +515,4 @@ export default function JsonBeautify() {
       </footer>
     </div>
   )
-}   
+}

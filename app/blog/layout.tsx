@@ -1,5 +1,18 @@
-import Header from '@/app/components/Header'
-import Footer from '@/app/components/Footer'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Knowledge Hub - Guides & Tutorials | AI AutoSite',
+  description: 'Expert guides on AI tools, development, and productivity. Learn how to use our free tools effectively.',
+  keywords: 'AI tools guide, developer tutorials, productivity tips, tech blog',
+  openGraph: {
+    title: 'Knowledge Hub - AI AutoSite Blog',
+    description: 'Expert guides and tutorials for modern development tools',
+    type: 'website',
+    url: 'https://ai-autosite.com/blog',
+  }
+}
 
 export default function BlogLayout({
   children,

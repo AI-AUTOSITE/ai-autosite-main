@@ -6,20 +6,14 @@ import {
   FileCode, 
   ChevronRight, 
   ChevronDown, 
-  Copy, 
-  Download,
   Filter,
-  GitBranch,
   Package,
   FileText,
   Settings,
-  FileJson,
-  Hash,
-  Brain,
   Eye,
-  EyeOff
+  EyeOff,
+  Search
 } from 'lucide-react'
-import { SmartDependencyAnalyzer } from '../lib/smart-dependency-analyzer'
 
 interface FileAnalysis {
   fileName: string
@@ -62,7 +56,7 @@ export default function FileTree({
 }: FileTreeProps) {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState('')
-  const [exportFormat, setExportFormat] = useState<'ai-prompt' | 'markdown' | 'json'>('ai-prompt')
+  const [showSearch, setShowSearch] = useState(false)
 
   const toggleDir = (dir: string) => {
     const newExpanded = new Set(expandedDirs)
@@ -77,15 +71,15 @@ export default function FileTree({
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
       case 'page':
-        return <FileText className="text-purple-400" size={16} />
+        return <FileText className="text-purple-400" size={14} />
       case 'component':
-        return <Package className="text-blue-400" size={16} />
+        return <Package className="text-blue-400" size={14} />
       case 'util':
-        return <Settings className="text-green-400" size={16} />
+        return <Settings className="text-green-400" size={14} />
       case 'type':
-        return <FileCode className="text-yellow-400" size={16} />
+        return <FileCode className="text-yellow-400" size={14} />
       default:
-        return <FileCode className="text-gray-400" size={16} />
+        return <FileCode className="text-gray-400" size={14} />
     }
   }
 
@@ -98,87 +92,6 @@ export default function FileTree({
       'other': 'Other'
     }
     return labels[type] || 'Other'
-  }
-
-  const copyAllFiles = () => {
-    const activeFiles = Object.keys(allFiles).filter(path => !excludedFiles.has(path))
-    const output = activeFiles.map(path => {
-      return `// ========== ${path} ==========\n${allFiles[path]}`
-    }).join('\n\n')
-    
-    navigator.clipboard.writeText(output)
-      .then(() => alert('All active files copied to clipboard!'))
-      .catch(() => alert('Failed to copy to clipboard'))
-  }
-
-  const downloadFiles = () => {
-    const activeFiles = Object.keys(allFiles).filter(path => !excludedFiles.has(path))
-    const output = activeFiles.map(path => {
-      return `// ========== ${path} ==========\n${allFiles[path]}`
-    }).join('\n\n')
-    
-    const blob = new Blob([output], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'project-files.txt'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const generateDependencyAnalysis = () => {
-    const analyzer = new SmartDependencyAnalyzer()
-    analyzer.analyze(fileStructure)
-    
-    switch (exportFormat) {
-      case 'markdown':
-        return analyzer.generateMarkdownReport()
-      case 'json':
-        return analyzer.generateCompactJSON()
-      case 'ai-prompt':
-      default:
-        return analyzer.generateAIPrompt()
-    }
-  }
-
-  const downloadDependencyAnalysis = () => {
-    const analysis = generateDependencyAnalysis()
-    const extension = exportFormat === 'json' ? 'json' : 'md'
-    const mimeType = exportFormat === 'json' ? 'application/json' : 'text/markdown'
-    
-    const blob = new Blob([analysis], { type: mimeType })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `dependency-analysis-${new Date().toISOString().split('T')[0]}.${extension}`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
-
-  const copyForAI = () => {
-    const analyzer = new SmartDependencyAnalyzer()
-    analyzer.analyze(fileStructure)
-    const aiPrompt = analyzer.generateAIPrompt()
-    
-    navigator.clipboard.writeText(aiPrompt)
-      .then(() => alert('AI-optimized dependency analysis copied to clipboard!'))
-      .catch(() => alert('Failed to copy to clipboard'))
-  }
-
-  const getFormatIcon = () => {
-    switch (exportFormat) {
-      case 'json':
-        return <FileJson size={16} className="text-orange-400" />
-      case 'markdown':
-        return <FileText size={16} className="text-blue-400" />
-      case 'ai-prompt':
-      default:
-        return <Brain size={16} className="text-purple-400" />
-    }
   }
 
   const filteredStructure = Object.entries(fileStructure).reduce((acc, [dir, files]) => {
@@ -195,166 +108,146 @@ export default function FileTree({
   const totalFiles = Object.values(fileStructure).flat().length
   const activeFiles = totalFiles - excludedFiles.size
 
-  return (
-    <div className="space-y-4">
-      {/* Export Format Selector */}
-      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-        <span className="text-sm text-gray-400">Export Format:</span>
-        <div className="flex items-center gap-2">
-          <select
-            value={exportFormat}
-            onChange={(e) => setExportFormat(e.target.value as 'ai-prompt' | 'markdown' | 'json')}
-            className="px-3 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400 [&>option]:bg-slate-800"
-          >
-            <option value="ai-prompt">AI Prompt</option>
-            <option value="markdown">Markdown Report</option>
-            <option value="json">JSON</option>
-          </select>
-          {getFormatIcon()}
+  // Expand all directories by default when searching
+  const displayDirs = searchTerm ? Object.keys(filteredStructure) : expandedDirs
+
+return (
+    <div className="p-4 space-y-4">
+      {/* Compact Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4 text-sm">
+          <span className="text-gray-400">
+            Files: <span className="font-bold text-cyan-400">{activeFiles}</span>/{totalFiles}
+          </span>
+          {excludedFiles.size > 0 && (
+            <span className="text-orange-400">
+              {excludedFiles.size} excluded
+            </span>
+          )}
         </div>
-      </div>
-      
-      {/* Enhanced Controls */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={copyAllFiles}
-          className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors flex items-center gap-2 border border-blue-500/30"
-        >
-          <Copy size={16} />
-          Copy All Code
-        </button>
         
+        {/* Search Toggle */}
         <button
-          onClick={downloadFiles}
-          className="px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors flex items-center gap-2 border border-green-500/30"
+          onClick={() => setShowSearch(!showSearch)}
+          className={`p-1.5 rounded transition-all ${
+            showSearch ? 'bg-cyan-500/20 text-cyan-400' : 'bg-white/10 text-gray-400 hover:text-white'
+          }`}
         >
-          <Download size={16} />
-          Download Files
-        </button>
-        
-        <button
-          onClick={downloadDependencyAnalysis}
-          className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors flex items-center gap-2 border border-cyan-500/30"
-        >
-          <GitBranch size={16} />
-          Smart Analysis
-        </button>
-        
-        <button
-          onClick={copyForAI}
-          className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors flex items-center gap-2 border border-purple-500/30"
-        >
-          <Brain size={16} />
-          Copy for AI
+          <Search size={16} />
         </button>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Filter files..."
-          className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
-        />
-      </div>
-
-      {/* File Summary */}
-      <div className="bg-white/5 rounded-lg p-3 text-sm">
-        <div className="flex justify-between">
-          <span className="text-gray-400">Total Files: {totalFiles}</span>
-          <span className="text-green-400 font-medium">Active: {activeFiles}</span>
-          <span className="text-orange-400">Excluded: {excludedFiles.size}</span>
+      {/* Search Bar (Collapsible) */}
+      {showSearch && (
+        <div className="relative">
+          <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Filter files..."
+            className="w-full pl-9 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
+            autoFocus
+          />
         </div>
-      </div>
+      )}
 
       {/* File Tree */}
-      <div className="border border-white/10 rounded-lg max-h-[500px] overflow-y-auto bg-white/5">
-        {Object.entries(filteredStructure).map(([dir, files]) => (
-          <div key={dir} className="border-b border-white/10 last:border-b-0">
-            <button
-              onClick={() => toggleDir(dir)}
-              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-white/10 transition-colors"
-            >
-              {expandedDirs.has(dir) ? (
-                <ChevronDown size={18} className="text-gray-400" />
-              ) : (
-                <ChevronRight size={18} className="text-gray-400" />
-              )}
-              <Folder size={18} className="text-blue-400" />
-              <span className="font-medium text-white flex-1 text-left">
-                {dir === '/' ? 'root' : dir}
-              </span>
-              <span className="text-xs text-gray-400">
-                {files.length} files
-              </span>
-            </button>
-            
-            {expandedDirs.has(dir) && (
-              <div className="pl-8 pb-2">
-                {files.map((file) => {
-                  const isExcluded = excludedFiles.has(file.path)
-                  const isSelected = selectedFile === file.path
-                  
-                  return (
-                    <div
-                      key={file.path}
-                      className={`
-                        flex items-center justify-between px-3 py-2 rounded-lg mb-1 mx-2
-                        ${isExcluded ? 'opacity-50 bg-white/5' : 'hover:bg-white/10'}
-                        ${isSelected ? 'bg-cyan-500/20 border border-cyan-500/30' : ''}
-                        transition-all cursor-pointer
-                      `}
-                      onClick={() => setSelectedFile(file.path)}
-                    >
-                      <div className="flex items-center gap-2 flex-1">
-                        {getFileIcon(file.analysis.fileType)}
-                        <span className={`text-sm ${isExcluded ? 'line-through text-gray-500' : 'text-gray-300'}`}>
-                          {file.name}
-                        </span>
-                        <span className="text-xs px-2 py-1 bg-white/10 rounded text-gray-400">
-                          {getFileTypeLabel(file.analysis.fileType)}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {file.analysis.linesOfCode} lines
-                        </span>
-                      </div>
-                      
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          isExcluded ? onIncludeFile(file.path) : onExcludeFile(file.path)
-                        }}
-                        className={`
-                          px-3 py-1 text-xs rounded-md transition-colors flex items-center gap-1
-                          ${isExcluded 
-                            ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30' 
-                            : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30'
-                          }
-                        `}
-                      >
-                        {isExcluded ? (
-                          <>
-                            <Eye size={12} />
-                            Include
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff size={12} />
-                            Exclude
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+      <div className="border border-white/10 rounded-lg max-h-[500px] overflow-y-auto bg-slate-900/50">
+        {Object.keys(filteredStructure).length === 0 ? (
+          <div className="p-8 text-center text-gray-400 text-sm">
+            {searchTerm ? 'No files match your search' : 'No files loaded'}
           </div>
-        ))}
+        ) : (
+          Object.entries(filteredStructure).map(([dir, files]) => {
+            const isExpanded = searchTerm ? true : expandedDirs.has(dir)
+            
+            return (
+              <div key={dir} className="border-b border-white/5 last:border-b-0">
+                <button
+                  onClick={() => toggleDir(dir)}
+                  className="w-full px-3 py-2.5 flex items-center gap-2 hover:bg-white/5 transition-colors"
+                >
+                  {isExpanded ? (
+                    <ChevronDown size={16} className="text-gray-400" />
+                  ) : (
+                    <ChevronRight size={16} className="text-gray-400" />
+                  )}
+                  <Folder size={16} className="text-blue-400" />
+                  <span className="font-medium text-white text-sm flex-1 text-left">
+                    {dir === '/' ? 'root' : dir.split('/').pop()}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {files.length}
+                  </span>
+                </button>
+                
+                {isExpanded && (
+                  <div className="pl-6 pb-1">
+                    {files.map((file) => {
+                      const isExcluded = excludedFiles.has(file.path)
+                      const isSelected = selectedFile === file.path
+                      
+                      return (
+                        <div
+                          key={file.path}
+                          className={`
+                            flex items-center justify-between px-3 py-1.5 rounded mx-2 mb-0.5
+                            ${isExcluded ? 'opacity-40' : 'hover:bg-white/5'}
+                            ${isSelected ? 'bg-cyan-500/20 border border-cyan-500/30' : ''}
+                            transition-all cursor-pointer group
+                          `}
+                          onClick={() => !isExcluded && setSelectedFile(file.path)}
+                        >
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            {getFileIcon(file.analysis.fileType)}
+                            <span className={`text-sm truncate ${
+                              isExcluded ? 'line-through text-gray-500' : 'text-gray-300'
+                            }`}>
+                              {file.name}
+                            </span>
+                            <span className="text-xs px-1.5 py-0.5 bg-white/5 rounded text-gray-500">
+                              {file.analysis.linesOfCode}L
+                            </span>
+                          </div>
+                          
+                          {/* Include/Exclude button - only visible on hover */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              isExcluded ? onIncludeFile(file.path) : onExcludeFile(file.path)
+                            }}
+                            className={`
+                              opacity-0 group-hover:opacity-100 transition-opacity
+                              p-1 rounded text-xs
+                              ${isExcluded 
+                                ? 'text-green-400 hover:bg-green-500/20' 
+                                : 'text-red-400 hover:bg-red-500/20'
+                              }
+                            `}
+                            title={isExcluded ? 'Include file' : 'Exclude file'}
+                          >
+                            {isExcluded ? <Eye size={14} /> : <EyeOff size={14} />}
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )
+          })
+        )}
       </div>
+
+      {/* Selected File Info */}
+      {selectedFile && (
+        <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
+          <div className="text-xs text-cyan-400 font-medium mb-1">Selected File</div>
+          <div className="text-sm text-white">{selectedFile.split('/').pop()}</div>
+          <div className="text-xs text-gray-400 mt-1">{selectedFile}</div>
+        </div>
+      )}
     </div>
   )
 }

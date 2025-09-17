@@ -1,47 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
+import React, { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 import FileUploader from './components/FileUploader';
 import AnalysisResult from './components/AnalysisResult';
 import PowerShellGuide from './components/PowerShellGuide';
-import { analyzeFiles } from './lib/analyzer';
-import { AnalyzedSoftware } from './lib/types';
+import ErrorBoundary from './components/ErrorBoundary';
+import { useFileAnalysis } from './hooks/useFileAnalysis';
 
+/**
+ * PC Optimizer Main Page Component
+ * Handles file analysis workflow and UI orchestration
+ */
 export default function PCOptimizerPage() {
-  const [analyzedData, setAnalyzedData] = useState<AnalyzedSoftware[]>([]);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
-
-  const handleFileUpload = async (fileContent: string) => {
-    setIsAnalyzing(true);
-    try {
-      const results = await analyzeFiles(fileContent);
-      setAnalyzedData(results);
-    } catch (error) {
-      console.error('Analysis error:', error);
-      alert('An error occurred while analyzing the file.');
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
+  const { 
+    analyzedData, 
+    isAnalyzing, 
+    error, 
+    handleFileUpload, 
+    clearError 
+  } = useFileAnalysis();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
-      {/* Background animation matching site theme */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      </div>
-
-      <Header />
-
+    <ErrorBoundary>
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full border border-cyan-500/20 mb-6">
-            <span className="text-sm text-cyan-400">🔧 Quick Tools</span>
+            <span className="text-sm text-cyan-400">Quick Tools</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
@@ -57,62 +44,34 @@ export default function PCOptimizerPage() {
           </p>
 
           <div className="flex justify-center gap-4 mt-8">
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
-              <p className="text-sm text-cyan-400">🔒 100% Private Processing</p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
-              <p className="text-sm text-green-400">⚡ Instant Analysis</p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
-              <p className="text-sm text-purple-400">📊 Detailed Report</p>
-            </div>
+            <FeatureBadge icon="🔒" text="100% Private Processing" color="cyan" />
+            <FeatureBadge icon="⚡" text="Instant Analysis" color="green" />
+            <FeatureBadge icon="📊" text="Detailed Report" color="purple" />
           </div>
         </div>
 
+        {/* Error Alert */}
+        {error && (
+          <div className="mb-8 bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+            <div className="flex items-start">
+              <AlertCircle className="w-5 h-5 text-red-400 mr-3 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-red-400 font-semibold mb-1">Analysis Error</h3>
+                <p className="text-red-300 text-sm">{error}</p>
+              </div>
+              <button
+                onClick={clearError}
+                className="ml-3 text-red-400 hover:text-red-300"
+                aria-label="Close error"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* How it Works Section */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            How It Works - 3 Simple Steps
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                1️⃣
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Collect Data</h3>
-              <p className="text-sm text-gray-400">
-                Run PowerShell script to gather software information from your PC
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                2️⃣
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Upload</h3>
-              <p className="text-sm text-gray-400">
-                Drag & drop the generated CSV file
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                3️⃣
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">Get Results</h3>
-              <p className="text-sm text-gray-400">
-                Review optimization suggestions and removal candidates
-              </p>
-            </div>
-          </div>
-          
-          <div className="text-center mt-8">
-            <button
-              onClick={() => setShowGuide(!showGuide)}
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
-            >
-              📋 View Data Collection Guide
-            </button>
-          </div>
-        </div>
+        <HowItWorksSection onShowGuide={() => setShowGuide(!showGuide)} />
 
         {/* PowerShell Guide */}
         {showGuide && (
@@ -137,64 +96,169 @@ export default function PCOptimizerPage() {
         )}
 
         {/* Tips Section */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h3 className="text-2xl font-bold text-white mb-6">
-            💡 PC Optimization Tips
-          </h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 p-6 rounded-lg border border-green-500/20">
-              <h4 className="font-semibold text-green-400 mb-3">Free Improvements</h4>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li>• Disable unnecessary startup apps</li>
-                <li>• Clear temporary files and cache</li>
-                <li>• Run Windows Disk Cleanup</li>
-                <li>• Uninstall unused software</li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-orange-500/10 to-amber-500/10 p-6 rounded-lg border border-orange-500/20">
-              <h4 className="font-semibold text-orange-400 mb-3">Small Investment, Big Impact</h4>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li>• Upgrade to SSD ($50+)</li>
-                <li>• Add more RAM ($30+)</li>
-                <li>• External HDD storage ($60+)</li>
-                <li>• Cloud storage ($5/month)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <TipsSection />
 
         {/* FAQ Section */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
-          <h3 className="text-2xl font-bold text-white mb-6">
-            ❓ Frequently Asked Questions
-          </h3>
-          <div className="space-y-4">
-            <details className="border border-white/10 rounded-lg p-4 bg-white/5">
-              <summary className="font-semibold cursor-pointer text-white">Is this tool safe to use?</summary>
-              <p className="mt-3 text-gray-400">
-                Yes, it's completely safe. We don't upload executable files - only file names and size information.
-                All processing happens in your browser, and no data is sent to any server.
-              </p>
-            </details>
-            <details className="border border-white/10 rounded-lg p-4 bg-white/5">
-              <summary className="font-semibold cursor-pointer text-white">Which files are candidates for removal?</summary>
-              <p className="mt-3 text-gray-400">
-                Large software unused for 3+ months, duplicate programs (multiple browsers),
-                and outdated versions are typical candidates. Final decisions are always up to you.
-              </p>
-            </details>
-            <details className="border border-white/10 rounded-lg p-4 bg-white/5">
-              <summary className="font-semibold cursor-pointer text-white">Will I accidentally delete system files?</summary>
-              <p className="mt-3 text-gray-400">
-                This tool only analyzes applications in the "Program Files" folders,
-                not Windows system files. Critical software is marked with warning labels.
-              </p>
-            </details>
-          </div>
-        </div>
+        <FAQSection />
       </main>
+    </ErrorBoundary>
+  );
+}
 
-      <Footer />
+/**
+ * Feature Badge Component
+ */
+function FeatureBadge({ icon, text, color }: { icon: string; text: string; color: string }) {
+  return (
+    <div className="bg-white/5 backdrop-blur-xl rounded-xl px-4 py-2 border border-white/10">
+      <p className={`text-sm text-${color}-400`}>
+        {icon} {text}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * How It Works Section Component
+ */
+function HowItWorksSection({ onShowGuide }: { onShowGuide: () => void }) {
+  const steps = [
+    {
+      number: '1',
+      title: 'Collect Data',
+      description: 'Run PowerShell script to gather software information from your PC',
+      color: 'from-cyan-500 to-blue-500'
+    },
+    {
+      number: '2',
+      title: 'Upload',
+      description: 'Drag & drop the generated CSV file',
+      color: 'from-purple-500 to-indigo-500'
+    },
+    {
+      number: '3',
+      title: 'Get Results',
+      description: 'Review optimization suggestions and removal candidates',
+      color: 'from-green-500 to-emerald-500'
+    }
+  ];
+
+  return (
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
+      <h2 className="text-2xl font-bold text-white mb-6 text-center">
+        How It Works - 3 Simple Steps
+      </h2>
+      <div className="grid md:grid-cols-3 gap-6">
+        {steps.map((step) => (
+          <div key={step.number} className="text-center">
+            <div className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-xl flex items-center justify-center text-2xl mx-auto mb-4`}>
+              {step.number}
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
+            <p className="text-sm text-gray-400">{step.description}</p>
+          </div>
+        ))}
+      </div>
+      
+      <div className="text-center mt-8">
+        <button
+          onClick={onShowGuide}
+          className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
+        >
+          View Data Collection Guide
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Tips Section Component
+ */
+function TipsSection() {
+  return (
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
+      <h3 className="text-2xl font-bold text-white mb-6">
+        PC Optimization Tips
+      </h3>
+      <div className="grid md:grid-cols-2 gap-6">
+        <TipCard
+          title="Free Improvements"
+          color="green"
+          tips={[
+            'Disable unnecessary startup apps',
+            'Clear temporary files and cache',
+            'Run Windows Disk Cleanup',
+            'Uninstall unused software'
+          ]}
+        />
+        <TipCard
+          title="Small Investment, Big Impact"
+          color="orange"
+          tips={[
+            'Upgrade to SSD ($50+)',
+            'Add more RAM ($30+)',
+            'External HDD storage ($60+)',
+            'Cloud storage ($5/month)'
+          ]}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Tip Card Component
+ */
+function TipCard({ title, color, tips }: { title: string; color: string; tips: string[] }) {
+  return (
+    <div className={`bg-gradient-to-br from-${color}-500/10 to-${color === 'green' ? 'emerald' : 'amber'}-500/10 p-6 rounded-lg border border-${color}-500/20`}>
+      <h4 className={`font-semibold text-${color}-400 mb-3`}>{title}</h4>
+      <ul className="space-y-2 text-sm text-gray-300">
+        {tips.map((tip, index) => (
+          <li key={index}>• {tip}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * FAQ Section Component
+ */
+function FAQSection() {
+  const faqs = [
+    {
+      question: 'Is this tool safe to use?',
+      answer: 'Yes, it\'s completely safe. We don\'t upload executable files - only file names and size information. All processing happens in your browser, and no data is sent to any server.'
+    },
+    {
+      question: 'Which files are candidates for removal?',
+      answer: 'Large software unused for 3+ months, duplicate programs (multiple browsers), and outdated versions are typical candidates. Final decisions are always up to you.'
+    },
+    {
+      question: 'Will I accidentally delete system files?',
+      answer: 'This tool only analyzes applications in the "Program Files" folders, not Windows system files. Critical software is marked with warning labels.'
+    }
+  ];
+
+  return (
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+      <h3 className="text-2xl font-bold text-white mb-6">
+        Frequently Asked Questions
+      </h3>
+      <div className="space-y-4">
+        {faqs.map((faq, index) => (
+          <details key={index} className="border border-white/10 rounded-lg p-4 bg-white/5">
+            <summary className="font-semibold cursor-pointer text-white">
+              {faq.question}
+            </summary>
+            <p className="mt-3 text-gray-400">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
     </div>
   );
 }

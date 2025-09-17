@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Github, GitBranch, Loader2, X } from 'lucide-react'
+import { Github, GitBranch, Loader2, X, AlertCircle } from 'lucide-react'
 
 interface GitHubFetcherProps {
   onFilesProcessed: (files: Record<string, string>, structure: any) => void
@@ -21,6 +21,9 @@ export default function GitHubFetcher({
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
   const [isCancelled, setIsCancelled] = useState(false)
+  const [currentFile, setCurrentFile] = useState('')
+  const [filesProcessed, setFilesProcessed] = useState(0)
+  const [totalFiles, setTotalFiles] = useState(0)
 
   const isAllowedFile = (path: string): boolean => {
     const ext = path.split('.').pop()?.toLowerCase()
@@ -29,8 +32,11 @@ export default function GitHubFetcher({
   }
 
   const shouldIgnorePath = (path: string): boolean => {
-    const ignoredFolders = ['node_modules', '.git', '.next', 'dist', 'build', 'coverage']
-    return ignoredFolders.some(folder => path.includes(folder))
+    const ignoredFolders = ['node_modules', '.git', '.next', 'dist', 'build', 'coverage', '.cache', 'vendor']
+    
+    // パスの各部分をチェック（より効率的）
+    const pathParts = path.split('/')
+    return pathParts.some(part => ignoredFolders.includes(part))
   }
 
   const analyzeFileContent = (path: string, content: string) => {
@@ -73,6 +79,8 @@ export default function GitHubFetcher({
   const handleFetch = async () => {
     setError('')
     setIsCancelled(false)
+    setFilesProcessed(0)
+    setTotalFiles(0)
     
     if (!repoInput) {
       setError('Please enter a repository')
@@ -86,7 +94,8 @@ export default function GitHubFetcher({
     }
 
     setIsLoading(true)
-    setProgress(10)
+    setProgress(5)
+    setCurrentFile('Fetching repository structure...')
 
     try {
       // Check if cancelled before fetch
@@ -110,12 +119,18 @@ export default function GitHubFetcher({
       }
       
       const treeData = await treeResponse.json()
-      setProgress(30)
+      setProgress(20)
+      setCurrentFile('Filtering files...')
       
-      // Filter for code files
+      // Filter for code files EFFICIENTLY - skip ignored paths early
       const codeFiles = treeData.tree.filter((item: any) => {
+        // Skip non-files first
         if (item.type !== 'blob') return false
+        
+        // Skip ignored paths immediately (before checking extensions)
         if (shouldIgnorePath(item.path)) return false
+        
+        // Finally check if it's an allowed file type
         return isAllowedFile(item.path)
       })
       
@@ -123,13 +138,19 @@ export default function GitHubFetcher({
         throw new Error('No code files found in repository')
       }
       
-      setProgress(40)
+      // Log statistics for debugging
+      console.log(`Total items in repo: ${treeData.tree.length}`)
+      console.log(`Code files after filtering: ${codeFiles.length}`)
+      
+      setProgress(30)
+      setTotalFiles(Math.min(codeFiles.length, 50))
+      setCurrentFile(`Processing ${Math.min(codeFiles.length, 50)} files...`)
       
       // Process files
       const allFiles: Record<string, string> = {}
       const fileStructure: any = {}
       
-      // Fetch file contents (limiting to first 50 files for demo)
+      // Fetch file contents (limiting to first 50 files)
       const filesToFetch = codeFiles.slice(0, 50)
       
       for (let i = 0; i < filesToFetch.length; i++) {
@@ -137,11 +158,16 @@ export default function GitHubFetcher({
         if (isCancelled) {
           setIsLoading(false)
           setProgress(0)
+          setCurrentFile('')
           return
         }
 
         const file = filesToFetch[i]
-        const currentProgress = 40 + ((i / filesToFetch.length) * 50)
+        const fileName = file.path.split('/').pop() || file.path
+        setCurrentFile(fileName)
+        setFilesProcessed(i + 1)
+        
+        const currentProgress = 30 + ((i / filesToFetch.length) * 60)
         setProgress(currentProgress)
         
         try {
@@ -168,14 +194,15 @@ export default function GitHubFetcher({
           console.error(`Error fetching ${file.path}:`, err)
         }
         
-        // Small delay to avoid rate limiting
-        if (i % 10 === 0) {
-          await new Promise(resolve => setTimeout(resolve, 100))
+        // Small delay to avoid rate limiting - only every 5 files now
+        if (i % 5 === 0 && i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 50))
         }
       }
       
       if (!isCancelled) {
         setProgress(100)
+        setCurrentFile('Complete!')
         onFilesProcessed(allFiles, fileStructure)
       }
       
@@ -187,6 +214,9 @@ export default function GitHubFetcher({
       setIsLoading(false)
       setProgress(0)
       setIsCancelled(false)
+      setCurrentFile('')
+      setFilesProcessed(0)
+      setTotalFiles(0)
     }
   }
 
@@ -239,7 +269,16 @@ export default function GitHubFetcher({
       {isLoading && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Processing repository...</span>
+            <div className="flex-1">
+              <span className="text-sm text-gray-400">
+                {currentFile ? `Processing: ${currentFile}` : 'Initializing...'}
+              </span>
+              {filesProcessed > 0 && totalFiles > 0 && (
+                <span className="text-xs text-gray-500 ml-3">
+                  ({filesProcessed}/{totalFiles} files)
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-cyan-400">{Math.round(progress)}%</span>
               {onCancel && (
@@ -262,9 +301,15 @@ export default function GitHubFetcher({
         </div>
       )}
       
-      <div className="text-xs text-gray-400 flex items-center">
-        <GitBranch size={12} className="inline mr-1" />
-        Note: Limited to 50 files to avoid API rate limits. For larger repos, use local upload.
+      <div className="flex items-center gap-4 text-xs text-gray-400">
+        <div className="flex items-center gap-1">
+          <GitBranch size={12} />
+          <span>Limited to 50 files to avoid API rate limits</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <AlertCircle size={12} />
+          <span>node_modules and build folders are automatically excluded</span>
+        </div>
       </div>
     </div>
   )
