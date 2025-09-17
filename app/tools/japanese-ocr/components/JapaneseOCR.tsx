@@ -5,6 +5,8 @@ import React, { useState, useRef, useCallback } from 'react'
 import { Upload, Image, FileText, Loader2, RefreshCw, Camera } from 'lucide-react'
 import { processTesseract, type OCRResult } from '../lib/tesseract-helper'
 import OCRResultDisplay from './OCRResult'
+import { processTesseractWithTranslation } from '../lib/tesseract-helper'
+
 
 export default function JapaneseOCR() {
   const [imageData, setImageData] = useState<string>('')
@@ -37,20 +39,22 @@ export default function JapaneseOCR() {
   }, [])
 
   // OCR実行
-  const performOCR = async (imageUrl: string) => {
-    setIsProcessing(true)
-    setError('')
-    setResult(null)
+// OCR実行（翻訳付き）
+const performOCR = async (imageUrl: string) => {
+  setIsProcessing(true)
+  setError('')
+  setResult(null)
 
-    try {
-      const ocrResult = await processTesseract(imageUrl)
-      setResult(ocrResult)
-    } catch (err: any) {
-      setError(err.message || 'OCR processing failed')
-    } finally {
-      setIsProcessing(false)
-    }
+  try {
+    // 翻訳付きでOCR実行
+    const ocrResult = await processTesseractWithTranslation(imageUrl, true)
+    setResult(ocrResult)
+  } catch (err: any) {
+    setError(err.message || 'OCR processing failed')
+  } finally {
+    setIsProcessing(false)
   }
+}
 
   // ドラッグ&ドロップハンドラー
   const handleDrop = useCallback((e: React.DragEvent) => {

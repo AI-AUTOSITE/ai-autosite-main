@@ -178,10 +178,11 @@ function aggressiveJSCompression(code: string): string {
     .replace(/;\n/g, ';')
     .replace(/,\n/g, ',')
   
-  // Final cleanup - ensure minimum readability for AI
+  // Final cleanup - remove ALL newlines for maximum compression
   compressed = compressed
-    .replace(/([})]);]+/g, '$1\n') // Break after closing brackets
-    .replace(/\n+/g, '\n') // Remove multiple newlines
+    .replace(/\n/g, ' ') // Replace all newlines with single space
+    .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+    .trim()
   
   return compressed
 }

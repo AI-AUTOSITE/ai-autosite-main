@@ -17,7 +17,7 @@ export const allBlogPosts: BlogPost[] = [
   ...studyToolsPosts,
   ...devToolsPosts,
   ...quickToolsPosts,
-  ...learningPosts
+  ...learningPosts,
 ]
 
 // カテゴリ別の記事数を取得

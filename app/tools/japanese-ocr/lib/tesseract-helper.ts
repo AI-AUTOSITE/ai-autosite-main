@@ -1,5 +1,46 @@
 // app/tools/japanese-ocr/lib/tesseract-helper.ts
 import { createWorker, PSM } from 'tesseract.js'
+import { translateToEnglish } from './translation-helper'
+
+
+export interface OCRResult {
+  text: string
+  confidence: number
+  translation?: string
+}
+
+// 翻訳付きOCR処理
+export async function processTesseractWithTranslation(
+  imageData: string,
+  autoTranslate: boolean = true
+): Promise<OCRResult> {
+  const worker = await createWorker(['jpn', 'eng'])
+
+  try {
+    const { data } = await worker.recognize(imageData)
+    const extractedText = data.text.trim()
+    
+    let translation: string | undefined = undefined
+    
+    // 自動翻訳が有効で、日本語テキストが検出された場合
+    if (autoTranslate && extractedText && /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(extractedText)) {
+      try {
+        translation = await translateToEnglish(extractedText)
+      } catch (error) {
+        console.error('Translation failed:', error)
+        translation = 'Translation failed. Please try again later.'
+      }
+    }
+    
+    return {
+      text: extractedText,
+      confidence: data.confidence / 100,
+      translation
+    }
+  } finally {
+    await worker.terminate()
+  }
+}
 
 export interface OCRResult {
   text: string

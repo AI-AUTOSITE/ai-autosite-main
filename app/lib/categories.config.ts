@@ -406,6 +406,25 @@ export const TOOLS: Tool[] = [
     dependencies: ['pdfjs-dist']
   },
   {
+  id: 'japanese-ocr',
+  name: 'Japanese OCR & Translation',
+  description: 'Extract and translate Japanese text from images',
+  category: 'study-tools',
+  icon: '🇯🇵',
+  color: 'from-red-500 to-pink-500',
+  status: 'live',
+  url: '/tools/japanese-ocr',
+  tags: ['ocr', 'japanese', 'translation', 'text-extraction', 'image-to-text'],
+  difficulty: 'Simple',
+  timeToUse: '30 seconds',
+  users: '5.2k',
+  featured: true,
+  new: true,
+  pricing: 'free',
+  apiRequired: false,
+  dataProcessing: 'local'
+},
+  {
     id: 'flashcard-maker',
     name: 'Flashcard Maker',
     description: 'Create smart flashcards from any text or PDF',

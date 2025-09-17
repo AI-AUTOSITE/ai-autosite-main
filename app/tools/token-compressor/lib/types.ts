@@ -11,6 +11,7 @@ export interface ProcessedFile {
   path?: string
   isImage?: boolean
   imageData?: string
+  compressedImageData?: string
 }
 
 export interface SecurityIssue {

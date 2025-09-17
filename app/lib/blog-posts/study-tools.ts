@@ -43,5 +43,19 @@ export const studyToolsPosts: BlogPost[] = [
       name: 'PDF Summarizer',
       url: '/tools/pdf-summarizer'
     }
+  },
+    {
+    id: 'japanese-ocr-guide',
+    title: 'Extract Japanese Text from Images with AI OCR',
+    description: 'Learn how to use our free Japanese OCR tool to extract and translate text from images with 99% accuracy using advanced AI technology.',
+    readTime: '5 min',
+    publishDate: 'January 2025',
+    icon: FileText,
+    featured: true,
+    status: 'published',
+    relatedTool: {
+      name: 'Japanese OCR',
+      url: '/tools/japanese-ocr'
+    }
   }
 ]

@@ -47,16 +47,28 @@ export default function TokenCompressor() {
       let compTokens = 0
       
       for (const file of processedFiles) {
-        const originalTokens = await countTokens(file.content)
-        const compressed = await compressFiles([file])
-        const compressedTokens = await countTokens(compressed[0].content)
+        if (file.isImage) {
+          // For images, use file size as token approximation
+          const originalSize = file.imageData ? file.imageData.length : file.size
+          const compressedSize = file.compressedImageData ? file.compressedImageData.length : originalSize
+          
+          // Convert size to token approximation (1 token ≈ 4 characters for base64)
+          file.originalTokens = Math.ceil(originalSize / 4)
+          file.compressedTokens = Math.ceil(compressedSize / 4)
+          file.compressedContent = file.compressedImageData || file.imageData || ''
+        } else {
+          // For text files
+          const originalTokens = await countTokens(file.content)
+          const compressed = await compressFiles([file])
+          const compressedTokens = await countTokens(compressed[0].content)
+          
+          file.originalTokens = originalTokens
+          file.compressedTokens = compressedTokens
+          file.compressedContent = compressed[0].content
+        }
         
-        file.originalTokens = originalTokens
-        file.compressedTokens = compressedTokens
-        file.compressedContent = compressed[0].content
-        
-        origTokens += originalTokens
-        compTokens += compressedTokens
+        origTokens += file.originalTokens || 0
+        compTokens += file.compressedTokens || 0
       }
       
       // Update total tokens
@@ -152,12 +164,23 @@ export default function TokenCompressor() {
     
     files.forEach(file => {
       markdown += `## ${file.name}\n\n`
-      markdown += `- Original Tokens: ${file.originalTokens?.toLocaleString()}\n`
-      markdown += `- Compressed Tokens: ${file.compressedTokens?.toLocaleString()}\n`
-      markdown += `- Type: ${file.type}\n\n`
-      markdown += '```' + (file.type.split('/')[1] || '') + '\n'
-      markdown += file.compressedContent || file.content
-      markdown += '\n```\n\n---\n\n'
+      
+      if (file.isImage && file.compressedImageData) {
+        markdown += `- Type: Image (compressed)\n`
+        markdown += `- Format: JPEG (quality: 70%)\n`
+        markdown += `- Data URL:\n\n`
+        markdown += '```\n'
+        markdown += file.compressedImageData
+        markdown += '\n```\n\n'
+      } else {
+        markdown += `- Original Tokens: ${file.originalTokens?.toLocaleString()}\n`
+        markdown += `- Compressed Tokens: ${file.compressedTokens?.toLocaleString()}\n`
+        markdown += `- Type: ${file.type}\n\n`
+        markdown += '```' + (file.type.split('/')[1] || '') + '\n'
+        markdown += file.compressedContent || file.content
+        markdown += '\n```\n\n'
+      }
+      markdown += '---\n\n'
     })
     
     return markdown
