@@ -177,9 +177,10 @@ Please provide a well-structured summary in Markdown format.`
   }
 }
 
-// シンプルな要約生成（フォールバック用）
+
 function generateSimpleSummary(text: string, length: string): string {
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || []
+  const sentenceMatches = text.match(/[^.!?]+[.!?]+/g)
+  const sentences: string[] = sentenceMatches || []
   const words = text.split(/\s+/)
   
   const summaryLengths = {
@@ -189,8 +190,8 @@ function generateSimpleSummary(text: string, length: string): string {
   }
   
   const numSentences = summaryLengths[length as keyof typeof summaryLengths] || 10
-  const selectedSentences = sentences
-    .filter(s => s.length > 30 && s.length < 300)
+    const selectedSentences = sentences
+    .filter((s: string) => s.length > 30 && s.length < 300)
     .slice(0, numSentences)
 
   const summary = {
