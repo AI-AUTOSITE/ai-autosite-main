@@ -18,61 +18,7 @@ export const metadata: Metadata = {
 export default function StackRecommenderPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
-      {/* Background animation */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      </div>
-
-      {/* Simple Header */}
-      <header className="relative z-10 bg-white/5 backdrop-blur-md border-b border-white/10">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/tools" className="text-xl font-bold text-white hover:text-cyan-400 transition-colors">
-            ← Back to Tools
-          </Link>
-          <Link 
-            href="/tools/tech-stack-analyzer"
-            className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-          >
-            Want detailed comparison? →
-          </Link>
-        </nav>
-      </header>
-
-      {/* Hero Section - Simplified */}
-      <section className="relative z-10 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 text-purple-400 rounded-full text-sm font-medium mb-6 border border-purple-500/20">
-            <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-            AI-Powered
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
-            Stack Recommender
-            <span className="block text-2xl sm:text-3xl mt-2 text-gray-400 font-normal">
-              Your perfect tech stack in 30 seconds
-            </span>
-          </h1>
-
-          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-            Describe your project idea. Get personalized recommendations based on your budget, timeline, and experience.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            <span className="px-4 py-2 bg-white/10 text-cyan-300 rounded-full text-sm font-medium border border-white/20">
-              🚀 30 Second Results
-            </span>
-            <span className="px-4 py-2 bg-white/10 text-green-300 rounded-full text-sm font-medium border border-white/20">
-              💰 Budget-Aware
-            </span>
-            <span className="px-4 py-2 bg-white/10 text-purple-300 rounded-full text-sm font-medium border border-white/20">
-              🎯 Personalized
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Tool */}
+{/* Main Tool */}
       <main className="relative z-10 pb-20">
         <AIStackRecommender />
       </main>

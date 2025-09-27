@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Clock, Users, Shield, Star, ExternalLink } from 'lucide-react'
-import { Tool, Category } from '../../lib/categories.config'
+import type { Tool, Category } from '../../lib/categories'
 
 interface ToolInfoSidebarProps {
   tool: Tool
@@ -31,7 +31,7 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
               <span className={`px-2 py-1 text-xs rounded-full ${
                 tool.status === 'live' 
                   ? 'bg-green-500/20 text-green-400'
-                  : tool.status === 'beta'
+                  : tool.status === 'coming'
                   ? 'bg-yellow-500/20 text-yellow-400'
                   : 'bg-gray-500/20 text-gray-400'
               }`}>
@@ -59,16 +59,16 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-400 flex items-center gap-1">
                   <Users className="w-3 h-3" />
-                  Active users
+                  Difficulty
                 </span>
-                <span className="text-white">{tool.users}</span>
+                <span className="text-white">{tool.difficulty}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-400 flex items-center gap-1">
                   <Shield className="w-3 h-3" />
                   Data processing
                 </span>
-                <span className="text-white capitalize">{tool.dataProcessing || 'Local'}</span>
+                <span className="text-white capitalize">{tool.dataProcessing || 'local'}</span>
               </div>
             </div>
 
@@ -113,13 +113,13 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
             <div className="mb-6">
               <p className="text-xs text-gray-400 mb-2">Pricing</p>
               <div className={`inline-block px-3 py-1 text-sm rounded-full ${
-                tool.pricing === 'free'
+                tool.pricing === 'free' || !tool.pricing
                   ? 'bg-green-500/20 text-green-400'
                   : tool.pricing === 'freemium'
                   ? 'bg-blue-500/20 text-blue-400'
                   : 'bg-purple-500/20 text-purple-400'
               }`}>
-                {tool.pricing === 'free' ? 'Free Forever' : 
+                {!tool.pricing || tool.pricing === 'free' ? 'Free Forever' : 
                  tool.pricing === 'freemium' ? 'Free + Premium' : 'Premium'}
               </div>
             </div>

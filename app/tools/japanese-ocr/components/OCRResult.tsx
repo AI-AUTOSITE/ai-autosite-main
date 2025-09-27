@@ -1,16 +1,29 @@
 // app/tools/japanese-ocr/components/OCRResult.tsx
+// Enhanced version with bidirectional translation display
+
 'use client'
 
 import React from 'react'
-import { Copy, Download, CheckCircle, Loader2 } from 'lucide-react'
+import { Copy, Download, CheckCircle, Loader2, Languages, ArrowRight } from 'lucide-react'
+import { TranslationDirection } from '../lib/translation-helper'
 
 interface OCRResultProps {
   text: string
   confidence: number
   translation?: string
+  translationDirection?: TranslationDirection | null
+  detectedLanguage?: 'japanese' | 'english' | 'unknown'
+  isTranslating?: boolean
 }
 
-export default function OCRResult({ text, confidence, translation }: OCRResultProps) {
+export default function OCRResult({ 
+  text, 
+  confidence, 
+  translation,
+  translationDirection,
+  detectedLanguage,
+  isTranslating = false
+}: OCRResultProps) {
   const [copiedText, setCopiedText] = React.useState(false)
   const [copiedTranslation, setCopiedTranslation] = React.useState(false)
 
@@ -25,43 +38,67 @@ export default function OCRResult({ text, confidence, translation }: OCRResultPr
     }
   }
 
-  const downloadText = () => {
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+  const downloadText = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `japanese-text-${Date.now()}.txt`
+    a.download = filename
     a.click()
     URL.revokeObjectURL(url)
   }
 
-  const downloadTranslation = () => {
-    if (!translation) return
-    const blob = new Blob([translation], { type: 'text/plain;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `translation-${Date.now()}.txt`
-    a.click()
-    URL.revokeObjectURL(url)
+  const getTranslationLabel = () => {
+    if (!translationDirection) return 'Translation'
+    
+    switch (translationDirection) {
+      case 'ja-en':
+        return 'Translation (Japanese → English)'
+      case 'en-ja':
+        return 'Translation (English → Japanese)'
+      default:
+        return 'Translation'
+    }
+  }
+
+  const getExtractedTextLabel = () => {
+    if (detectedLanguage === 'japanese') {
+      return 'Extracted Text (Japanese)'
+    } else if (detectedLanguage === 'english') {
+      return 'Extracted Text (English)'
+    } else {
+      return 'Extracted Text'
+    }
   }
 
   return (
     <div className="space-y-4">
-      {/* 統計情報 */}
-      <div className="flex gap-4 text-sm">
+      {/* Stats */}
+      <div className="flex flex-wrap gap-3 text-sm">
         <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
           Confidence: {Math.round(confidence * 100)}%
         </span>
         <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full">
           Characters: {text.length}
         </span>
+        {detectedLanguage && detectedLanguage !== 'unknown' && (
+          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full flex items-center gap-1">
+            <Languages className="w-3 h-3" />
+            Detected: {detectedLanguage === 'japanese' ? 'Japanese' : 'English'}
+          </span>
+        )}
+        {translationDirection && (
+          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center gap-1">
+            <ArrowRight className="w-3 h-3" />
+            {translationDirection === 'ja-en' ? 'JA → EN' : 'EN → JA'}
+          </span>
+        )}
       </div>
 
-      {/* 抽出テキスト */}
+      {/* Extracted Text */}
       <div className="bg-black/30 rounded-lg p-4">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-white font-semibold">Extracted Text (Japanese)</h3>
+          <h3 className="text-white font-semibold">{getExtractedTextLabel()}</h3>
           <div className="flex gap-2">
             <button
               onClick={() => copyToClipboard(text, 'text')}
@@ -75,7 +112,7 @@ export default function OCRResult({ text, confidence, translation }: OCRResultPr
               )}
             </button>
             <button
-              onClick={downloadText}
+              onClick={() => downloadText(text, `extracted-text-${Date.now()}.txt`)}
               className="p-2 hover:bg-white/10 rounded transition-colors"
               title="Download text"
             >
@@ -88,11 +125,19 @@ export default function OCRResult({ text, confidence, translation }: OCRResultPr
         </pre>
       </div>
 
-      {/* 翻訳結果 */}
-      {translation ? (
+      {/* Translation */}
+      {isTranslating ? (
+        <div className="bg-black/30 rounded-lg p-4">
+          <h3 className="text-white font-semibold mb-2">{getTranslationLabel()}</h3>
+          <div className="flex items-center gap-2 text-gray-400">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <p className="italic">Processing translation...</p>
+          </div>
+        </div>
+      ) : translation ? (
         <div className="bg-black/30 rounded-lg p-4">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-white font-semibold">Translation (English)</h3>
+            <h3 className="text-white font-semibold">{getTranslationLabel()}</h3>
             <div className="flex gap-2">
               <button
                 onClick={() => copyToClipboard(translation, 'translation')}
@@ -106,7 +151,7 @@ export default function OCRResult({ text, confidence, translation }: OCRResultPr
                 )}
               </button>
               <button
-                onClick={downloadTranslation}
+                onClick={() => downloadText(translation, `translation-${Date.now()}.txt`)}
                 className="p-2 hover:bg-white/10 rounded transition-colors"
                 title="Download translation"
               >
@@ -123,11 +168,8 @@ export default function OCRResult({ text, confidence, translation }: OCRResultPr
         </div>
       ) : (
         <div className="bg-black/30 rounded-lg p-4">
-          <h3 className="text-white font-semibold mb-2">Translation (English)</h3>
-          <div className="flex items-center gap-2 text-gray-400">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <p className="italic">Processing translation...</p>
-          </div>
+          <h3 className="text-white font-semibold mb-2">Translation</h3>
+          <p className="text-gray-400 italic">Translation not available</p>
         </div>
       )}
     </div>

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-// Dynamic import with loading state
+// Dynamic import for better performance
 const MinimalHomeContent = dynamic(
   () => import('./components/MinimalHomeContent'),
   {
@@ -22,18 +22,12 @@ const MinimalHomeContent = dynamic(
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col overflow-x-hidden">
-      {/* Subtle background effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 flex flex-col">
       {/* Header */}
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden">
+      <main className="flex-1">
         <Suspense fallback={
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">

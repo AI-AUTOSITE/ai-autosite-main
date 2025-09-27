@@ -1,4 +1,4 @@
-import { Type, Braces, Code, Database, GitBranch, Terminal } from 'lucide-react'
+import { Code, Globe, Type, Key, FileJson, Braces, Cpu, Database, Hash, GitBranch, Terminal, Flame, Code2} from 'lucide-react'
 import type { BlogPost } from './types'
 
 export const devToolsPosts: BlogPost[] = [
@@ -14,7 +14,102 @@ export const devToolsPosts: BlogPost[] = [
     relatedTool: {
       name: 'Text Case Converter',
       url: '/tools/text-case'
+    },
+    tags: ['text-conversion', 'case-converter', 'developer-tools', 'formatting'],
+category: 'dev-tools',
+author: 'AI AutoSite Team',
+views: 0,
+seoTitle: 'Text Case Converter - 10 Essential Formats for Developers',
+seoDescription: 'Convert text between camelCase, PascalCase, snake_case and more. Essential developer tool for code formatting. Free online converter.',
+ogImage: '/og/text-case-converter-guide.png'
+  },
+  
+{
+  id: 'base64-guide',
+  title: 'Base64 Encoding: The Developer\'s Guide',
+  description: 'Everything about Base64 encoding. Learn when to use it, how it works, and common use cases.',
+  readTime: '5 min',
+  publishDate: 'January 2025',
+  icon: Code,
+  featured: true,
+  status: 'published',
+  relatedTool: {
+    name: 'Base64 Tool',
+    url: '/tools/base64'
+  },
+  lastUpdated: '2025-01-20',
+  tags: ['base64', 'encoding', 'development', 'api'],
+  author: 'AI AutoSite Team',
+},
+// app/lib/blog-posts/dev-tools.ts に追加
+{
+  id: 'ai-project-visualizer-guide',
+  title: 'Transform Your Code into AI-Friendly Diagrams - Project Visualizer Guide',
+  description: 'Learn how to create Mermaid diagrams, tree structures, and shareable project visualizations that AI tools understand perfectly.',
+  readTime: '6 min',
+  publishDate: 'January 2025',
+  icon: GitBranch,
+  featured: true, // ⭐ AIコラボツールなので注目記事に
+  status: 'published',
+  relatedTool: {
+    name: 'AI Project Visualizer',
+    url: '/tools/ai-project-visualizer'
+  },
+  lastUpdated: '2025-01-24',
+  tags: ['developer-tools', 'AI-collaboration', 'visualization', 'mermaid', 'documentation'],
+  author: 'AI AutoSite Team'
+},
+{
+  id: 'markdown-guide',
+  title: 'Master Markdown: The Developer\'s Writing Tool',
+  description: 'Complete guide to Markdown syntax. Learn to write documentation, README files, and blog posts efficiently.',
+  readTime: '6 min',
+  publishDate: 'January 2025',
+  icon: Hash,
+  featured: true,
+  status: 'published',
+  relatedTool: {
+    name: 'Markdown to HTML',
+    url: '/tools/markdown-html'
+  },
+  lastUpdated: '2025-01-20',
+  tags: ['markdown', 'documentation', 'writing', 'github'],
+  author: 'AI AutoSite Team',
+},
+    {
+    id: 'code-roaster-guide',
+    title: 'Code Roaster: The AI Code Review Tool That Actually Makes You Laugh',
+    description: 'Discover the revolutionary AI-powered code review tool that combines humor with helpful feedback',
+    readTime: '5 min',
+    publishDate: 'January 2025',
+    icon: Flame,
+    featured: true,
+    status: 'published',
+    relatedTool: {
+      name: 'Code Roaster',
+      url: '/tools/code-roaster'
     }
+  },
+  {
+    id: 'how-to-use-code-roaster',
+    title: 'How to Use Code Roaster: Complete Guide to AI Code Reviews',
+    description: 'Step-by-step guide to using Code Roaster for AI-powered code reviews',
+    readTime: '7 min',
+    publishDate: 'January 2025',
+    icon: Code2,
+    featured: false,
+    status: 'published',
+    relatedTool: {
+      name: 'Code Roaster',
+      url: '/tools/code-roaster'
+    },
+    tags: ['code-review', 'ai', 'humor', 'feedback', 'development'],
+category: 'dev-tools',
+author: 'AI AutoSite Team',
+views: 0,
+seoTitle: 'Code Roaster Tutorial - AI Code Reviews with Humor',
+seoDescription: 'Step-by-step guide to using Code Roaster for humorous AI code reviews. Get helpful feedback while having fun. Free developer tool.',
+ogImage: '/og/code-roaster-tutorial.png'
   },
   {
     id: 'json-beautify-guide',
@@ -30,6 +125,76 @@ export const devToolsPosts: BlogPost[] = [
       url: '/tools/json-format'
     }
   },
+
+{
+  id: 'json-csv-converter-guide',
+  title: 'JSON to CSV Converter - Easy Data Conversion',
+  description: 'Convert JSON to CSV and CSV to JSON. Free online converter for developers and data analysts.',
+  readTime: '4 min',
+  publishDate: '2025-01-20',
+  icon: FileJson,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'JSON-CSV Converter',
+    url: '/tools/json-csv'
+  },
+tags: ['json', 'formatter', 'beautify', 'debug', 'developer-tools'],
+category: 'dev-tools',
+author: 'AI AutoSite Team',
+views: 0,
+seoTitle: 'JSON Beautify & Format - Debug JSON Like a Pro',
+seoDescription: 'Format, validate, and debug JSON with our free online tool. Beautify messy JSON, find errors, and improve readability instantly.',
+ogImage: '/og/json-beautify-guide.png'
+},
+{
+  id: 'favicon-generator-guide',
+  title: 'Favicon Generator - Create Website Icons',
+  description: 'Generate favicon.ico and app icons. Create all icon sizes from one image with our free tool.',
+  readTime: '4 min',
+  publishDate: '2025-01-20',
+  icon: Globe,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'Favicon Generator',
+    url: '/tools/favicon-generator'
+  },
+  tags: ['favicon', 'icon', 'website'],
+  category: 'dev-tools'
+},
+{
+  id: 'lorem-ipsum-generator-guide',
+  title: 'Lorem Ipsum Generator - Dummy Text Tool',
+  description: 'Generate Lorem Ipsum placeholder text. Essential tool for designers and developers.',
+  readTime: '3 min',
+  publishDate: '2025-01-20',
+  icon: Type,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'Lorem Ipsum Generator',
+    url: '/tools/lorem-ipsum'
+  },
+  tags: ['lorem', 'ipsum', 'text'],
+  category: 'dev-tools'
+},
+{
+  id: 'uuid-generator-guide',
+  title: 'UUID Generator - Create Unique Identifiers',
+  description: 'Generate UUIDs for databases and APIs. Create unique identifiers instantly with our free tool.',
+  readTime: '4 min',
+  publishDate: '2025-01-20',
+  icon: Key,
+  featured: true,
+  status: 'published',
+  relatedTool: {
+    name: 'UUID Generator',
+    url: '/tools/uuid-generator'
+  },
+  tags: ['uuid', 'guid', 'identifier'],
+  category: 'dev-tools'
+},
   {
     id: 'code-dependency-analysis',
     title: 'Understanding Code Dependencies',
@@ -42,8 +207,29 @@ export const devToolsPosts: BlogPost[] = [
     relatedTool: {
       name: 'Code Dependency Visualizer',
       url: '/tools/code-reader'
-    }
+    },
+    tags: ['code-analysis', 'dependencies', 'architecture', 'visualization'],
+category: 'dev-tools',
+author: 'AI AutoSite Team',
+views: 0,
+seoTitle: 'Code Dependency Visualizer - Understand Project Architecture',
+seoDescription: 'Visualize code dependencies and file relationships. Master project architecture with interactive dependency graphs. Free developer tool.',
+ogImage: '/og/code-dependency-guide.png'
   },
+{
+  id: 'ai-stack-recommender-guide',
+  title: 'AI Stack Recommender: Get Your Perfect Tech Stack in 30 Seconds',
+  description: 'Stop analysis paralysis. Get personalized tech stack recommendations based on your project, budget, and experience level.',
+  readTime: '5 min read',
+  publishDate: 'January 2025',
+  icon: Cpu,
+  featured: true, // Feature this as it's a new AI-powered tool
+  status: 'published',
+  relatedTool: {
+    name: 'AI Stack Recommender',
+    url: '/tools/stack-recommender',
+  }
+},
   {
     id: 'choosing-the-right-tech-stack',
     title: 'Choosing the Right Tech Stack in 2025',
@@ -56,6 +242,13 @@ export const devToolsPosts: BlogPost[] = [
     relatedTool: {
       name: 'Tech Stack Analyzer',
       url: '/tools/tech-stack-analyzer'
-    }
+    },
+    tags: ['tech-stack', 'frameworks', 'architecture', 'decision-making'],
+category: 'dev-tools',
+author: 'AI AutoSite Team',
+views: 0,
+seoTitle: 'Choose the Right Tech Stack in 2025 - Complete Guide',
+seoDescription: 'Select the perfect tech stack for your project. Compare frameworks, tools, and technologies. Make informed decisions with our comprehensive guide.',
+ogImage: '/og/tech-stack-guide.png'
   }
 ]

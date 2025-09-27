@@ -1,17 +1,17 @@
 import { Metadata } from 'next'
-import JsonBeautifyTool from './JsonBeautifyTool'
+import JsonFormatClient from './components/JsonFormatClient'
 
 export const metadata: Metadata = {
-  title: 'JSON Beautify - Format & Validate JSON | AI AutoSite',
-  description: 'Beautify, minify, and validate JSON online. Free JSON formatter with syntax highlighting and error detection. Works offline.',
-  keywords: 'json beautify, json formatter, json validator, json minify, json pretty print',
+  title: 'JSON Format - Pretty & Small | AI AutoSite',
+  description: 'Format JSON online. Make it pretty or small. Free tool with error checking. Works offline.',
+  keywords: 'json format, json pretty, json small, json tool, format json online',
   openGraph: {
-    title: 'JSON Beautify - Free JSON Formatter',
-    description: 'Format, validate, and minify JSON instantly',
+    title: 'JSON Format - Free Online Tool',
+    description: 'Make your JSON pretty or small instantly',
     type: 'website',
-  }
+  },
 }
 
 export default function JsonFormatPage() {
-  return <JsonBeautifyTool />
+  return <JsonFormatClient />
 }

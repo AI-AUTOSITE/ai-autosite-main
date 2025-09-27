@@ -1,4 +1,4 @@
-import { Brain, Code, Zap, BookOpen, MessageSquare, Briefcase, Palette, Shield } from 'lucide-react'
+import { Brain, Code, Zap, BookOpen, Briefcase, TrendingUp } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface BlogCategory {
@@ -42,5 +42,13 @@ export const blogCategories: BlogCategory[] = [
     icon: BookOpen,
     color: 'from-amber-500 to-orange-500',
     description: 'Interactive tutorials and guides'
+  },
+  {
+    id: 'business-tools',
+    name: 'Business Tools',
+    shortName: 'Business',
+    icon: Briefcase,
+    color: 'from-blue-500 to-purple-600',
+    description: 'Professional tools for business analysis'
   }
 ]

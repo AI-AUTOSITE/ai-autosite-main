@@ -1,380 +1,355 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ChevronDown,
-  Search,
-  Clock,
-  Users,
-  ArrowRight,
-  Sparkles,
-  Filter,
-  X,
-  MousePointer2,
-  Zap
-} from 'lucide-react'
-import { 
-  CATEGORIES, 
-  TOOLS, 
-  getEnabledCategories, 
-  getToolsByCategory 
-} from '@/lib/categories.config'
-import { 
-  getGridClassName, 
-  getCardPaddingClass, 
-  getIconSizeClass 
-} from '@/lib/grid-utils'
-
-// Badge component for tool cards
-const BadgeLabel = ({ type, label }: { type: string; label: string }) => {
-  const styles = {
-    new: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
-    live: 'bg-green-500/20 text-green-400 border-green-500/30',
-    ai: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-    featured: 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-  }
-  
-  return (
-    <span className={`px-2 py-0.5 text-xs rounded-full border ${styles[type as keyof typeof styles]}`}>
-      {label}
-    </span>
-  )
-}
+import { Search, ChevronRight, Clock, Users, Sparkles, X, AlertCircle, Monitor } from 'lucide-react'
+import { TOOLS, CATEGORIES, getEnabledCategories } from '@/lib/categories'
+import { useDeviceDetection, isToolMobileCompatible, getToolMobileInfo } from '@/lib/device-utils'
 
 export default function MinimalHomeContent() {
   const searchParams = useSearchParams()
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [showTools, setShowTools] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [visibleToolsCount, setVisibleToolsCount] = useState(6)
-  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [showMobileWarning, setShowMobileWarning] = useState(false)
   
-  const enabledCategories = getEnabledCategories()
+  // Device detection
+  const { isMobile, isTablet, isDesktop } = useDeviceDetection()
+  const categories = getEnabledCategories()
 
-  // Check if mobile
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  // Handle URL params
+  // URL params handling
   useEffect(() => {
     const categoryParam = searchParams.get('category')
-    // If category param exists and is valid, select it
-    if (categoryParam && CATEGORIES.some(c => c.id === categoryParam)) {
-      handleCategorySelect(categoryParam)
-    } else if (!categoryParam && (showTools || selectedCategory)) {
-      // If no category param but tools are showing, reset to category selection
-      setSelectedCategory(null)
-      setShowTools(false)
-      setSearchQuery('')
-      setVisibleToolsCount(6)
+    if (categoryParam && CATEGORIES.some(c => c.id === categoryParam && c.enabled)) {
+      setSelectedCategory(categoryParam)
     }
   }, [searchParams])
 
-  // Filter tools
-  const filteredTools = selectedCategory 
-    ? TOOLS.filter(tool => {
-        const matchesCategory = tool.category === selectedCategory
-        const matchesSearch = searchQuery === '' || 
-          tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-        return matchesCategory && matchesSearch && tool.status === 'live'
-      })
-    : []
+  // Tool filtering with mobile compatibility check
+  const filteredTools = TOOLS.filter(tool => {
+    if (tool.status !== 'live') return false
+    
+    const matchesCategory = selectedCategory === 'all' || tool.category === selectedCategory
+    const matchesSearch = !searchQuery || 
+      tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    return matchesCategory && matchesSearch
+  })
 
-  // Scroll navigation for mobile
-  const scrollToCategory = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 200
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      })
-    }
+  // Separate mobile compatible and incompatible tools
+  const mobileTools = filteredTools.filter(tool => isToolMobileCompatible(tool.id))
+  const desktopOnlyTools = filteredTools.filter(tool => !isToolMobileCompatible(tool.id))
+
+  // Category tool count
+  const getCategoryCount = (categoryId: string) => {
+    return TOOLS.filter(t => t.status === 'live' && t.category === categoryId).length
   }
 
-  // Handle category selection with transition
+  // Handle category change
   const handleCategorySelect = (categoryId: string) => {
-    setIsTransitioning(true)
+    setSelectedCategory(categoryId)
     
-    setTimeout(() => {
-      setSelectedCategory(categoryId)
-      setShowTools(true)
-      setVisibleToolsCount(6)
-      
-      // Update URL
-      const url = new URL(window.location.href)
-      url.searchParams.set('category', categoryId)
-      window.history.pushState({}, '', url)
-      
-      setTimeout(() => {
-        setIsTransitioning(false)
-      }, 300)
-    }, 300)
-  }
-
-  // Clear selection with transition
-  const clearSelection = () => {
-    setIsTransitioning(true)
-    
-    setTimeout(() => {
-      setSelectedCategory(null)
-      setShowTools(false)
-      setSearchQuery('')
-      
-      // Clear URL params
-      const url = new URL(window.location.href)
+    const url = new URL(window.location.href)
+    if (categoryId === 'all') {
       url.searchParams.delete('category')
-      window.history.pushState({}, '', url)
-      
-      setTimeout(() => {
-        setIsTransitioning(false)
-      }, 300)
-    }, 300)
+    } else {
+      url.searchParams.set('category', categoryId)
+    }
+    window.history.pushState({}, '', url)
   }
 
-  // Load more tools
-  const loadMoreTools = () => {
-    setVisibleToolsCount(prev => prev + 6)
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery('')
+    handleCategorySelect('all')
+  }
+
+  // Tool card component with mobile awareness
+  const ToolCard = ({ tool }: { tool: any }) => {
+    const mobileInfo = getToolMobileInfo(tool.id)
+    const isCompatible = mobileInfo.compatible
+    const showAsDisabled = (isMobile || isTablet) && !isCompatible
+    
+    if (showAsDisabled) {
+      return (
+        <div className="block p-5 bg-gray-900/50 rounded-xl border border-gray-700 opacity-60 cursor-not-allowed relative">
+          {/* Desktop Only Badge */}
+          <div className="absolute top-2 right-2 px-2 py-1 bg-gray-800 rounded flex items-center gap-1">
+            <Monitor className="w-3 h-3 text-gray-400" />
+            <span className="text-xs text-gray-400">Desktop Only</span>
+          </div>
+          
+          {/* Tool Info (Grayed Out) */}
+          <div className="flex items-start justify-between mb-3">
+            <div className={`w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center text-2xl opacity-50`}>
+              {tool.icon}
+            </div>
+          </div>
+          
+          <h3 className="text-lg font-semibold text-gray-500 mb-2">
+            {tool.name}
+          </h3>
+          
+          {/* Mobile Warning Message */}
+          <div className="bg-yellow-900/20 border border-yellow-800/30 rounded-lg p-2 mt-3">
+            <p className="text-xs text-yellow-400 flex items-start gap-1">
+              <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+              <span>{mobileInfo.alternativeMessage}</span>
+            </p>
+          </div>
+        </div>
+      )
+    }
+    
+    // Normal tool card for compatible tools
+    return (
+      <Link
+        key={tool.id}
+        href={tool.url}
+        className="block p-5 bg-white/10 rounded-xl hover:bg-white/15 hover:scale-[1.02] transition-all group focus:outline-none focus:ring-2 focus:ring-cyan-400"
+      >
+        <div className="flex items-start justify-between mb-3">
+          <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${tool.color} flex items-center justify-center text-2xl group-hover:scale-110 transition-transform`}>
+            {tool.icon}
+          </div>
+          <div className="flex gap-1">
+            {tool.new && (
+              <span className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-400 rounded font-medium">
+                NEW
+              </span>
+            )}
+            {tool.apiRequired && (
+              <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-400 rounded font-medium">
+                AI
+              </span>
+            )}
+          </div>
+        </div>
+
+        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+          {tool.name}
+        </h3>
+        <p className="text-sm text-gray-400 mb-4 line-clamp-2 leading-relaxed">
+          {tool.description}
+        </p>
+
+        <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-white/5">
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {tool.timeToUse}
+          </span>
+          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </Link>
+    )
   }
 
   return (
-    <div className={`max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 transition-all duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-      {/* Show either categories OR tools, never both */}
-      {!showTools ? (
-        /* === CATEGORY SELECTION VIEW === */
-        <>
-          {/* Hero Section - Only shown in category view */}
-          <section className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full border border-cyan-500/20 mb-6">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm text-cyan-400">Free Tools • No Signup • 100% Private</span>
-            </div>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-              What do you need
-              <span className="block text-2xl sm:text-3xl md:text-4xl mt-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                to get done today?
-              </span>
-            </h1>
-            
-            <p className="text-gray-400 mt-4 flex items-center justify-center gap-2">
-              <MousePointer2 className="w-4 h-4" />
-              Select a category to explore tools
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      {/* Simple Hero */}
+      <section className="text-center mb-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 rounded-full mb-4">
+          <Sparkles className="w-4 h-4 text-cyan-400" />
+          <span className="text-sm text-cyan-400">Free Forever • No Sign-up Required</span>
+        </div>
+        
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+          Instant Tools
+        </h1>
+        <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+          Free online tools that work instantly in your browser
+        </p>
+      </section>
+
+      {/* Mobile Device Notice */}
+      {(isMobile || isTablet) && desktopOnlyTools.length > 0 && (
+        <section className="mb-6">
+          <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-4 max-w-2xl mx-auto">
+            <p className="text-sm text-blue-400 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Some tools work better on desktop. They're marked with "Desktop Only".
             </p>
-          </section>
+          </div>
+        </section>
+      )}
 
-          {/* Category Grid - Main Selection */}
-          <section className="mb-8">
-            <div className={`grid gap-4 ${getGridClassName(enabledCategories.length)}`}>
-              {enabledCategories.map(category => {
-                const toolCount = getToolsByCategory(category.id).filter(t => t.status === 'live').length
-                const paddingClass = getCardPaddingClass(enabledCategories.length)
-                const iconSizeClass = getIconSizeClass(enabledCategories.length)
-                
-                return (
-                  <button
-                    key={category.id}
-                    onClick={() => handleCategorySelect(category.id)}
-                    className={`
-                      relative ${paddingClass} rounded-xl transition-all hover:scale-105 
-                      flex flex-col items-center justify-center min-h-[180px]
-                      bg-white/5 hover:bg-white/10 border border-white/10
-                      group cursor-pointer
-                    `}
-                  >
-                    {category.badge && (
-                      <span className="absolute top-2 right-2 px-2 py-1 text-xs bg-yellow-500 text-black rounded-lg font-bold">
-                        {category.badge}
-                      </span>
-                    )}
-                    
-                    <div className={`${iconSizeClass} mb-3 group-hover:scale-110 transition-transform`}>
-                      {category.icon}
-                    </div>
-                    <h3 className="font-semibold text-white mb-1 text-center">{category.title}</h3>
-                    <p className="text-xs text-cyan-400 mb-2 text-center">{category.tagline}</p>
-                    <p className="text-xs text-gray-400 text-center">{toolCount} tools</p>
-                  </button>
-                )
-              })}
-            </div>
-          </section>
-
-          {/* Quick Stats */}
-          <section className="text-center py-12">
-            <div className="max-w-md mx-auto">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-white/5 rounded-lg p-3">
-                  <p className="text-2xl font-bold text-cyan-400">
-                    {TOOLS.filter(t => t.status === 'live').length}
-                  </p>
-                  <p className="text-xs text-gray-400">Live Tools</p>
-                </div>
-                <div className="bg-white/5 rounded-lg p-3">
-                  <p className="text-2xl font-bold text-purple-400">100%</p>
-                  <p className="text-xs text-gray-400">Private</p>
-                </div>
-                <div className="bg-white/5 rounded-lg p-3">
-                  <p className="text-2xl font-bold text-green-400">Free</p>
-                  <p className="text-xs text-gray-400">Forever</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        </>
-      ) : (
-        /* === TOOLS VIEW === */
-        <>
-          {/* Breadcrumb / Back Navigation */}
-          <section className="mb-6">
+      {/* Search Bar */}
+      <section className="mb-8">
+        <div className="relative max-w-2xl mx-auto">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search tools..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-12 py-4 text-base bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+            aria-label="Search tools"
+          />
+          {searchQuery && (
             <button
-              onClick={clearSelection}
-              className="inline-flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-white transition-colors"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-lg transition-colors"
+              aria-label="Clear search"
             >
-              <ChevronLeft className="w-4 h-4" />
-              Back to Categories
+              <X className="w-4 h-4 text-gray-400" />
             </button>
-          </section>
+          )}
+        </div>
+      </section>
 
-          {/* Selected Category Header */}
-          <section className="mb-8">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-xl border border-cyan-500/20 p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="text-5xl">
-                  {CATEGORIES.find(c => c.id === selectedCategory)?.icon}
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-white">
-                    {CATEGORIES.find(c => c.id === selectedCategory)?.title}
-                  </h2>
-                  <p className="text-gray-400">
-                    {CATEGORIES.find(c => c.id === selectedCategory)?.description}
-                  </p>
-                  <p className="text-sm text-cyan-400 mt-1">
-                    {filteredTools.length} tools available
-                  </p>
-                </div>
-              </div>
+      {/* Category Filter */}
+      <section className="mb-8">
+        <div className="flex flex-wrap justify-center gap-2">
+          <button
+            onClick={() => handleCategorySelect('all')}
+            className={`px-4 py-3 rounded-lg transition-all font-medium min-w-[44px] min-h-[44px] ${
+              selectedCategory === 'all'
+                ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
+                : 'bg-white/10 text-gray-300 hover:bg-white/15'
+            }`}
+            aria-pressed={selectedCategory === 'all'}
+          >
+            All ({TOOLS.filter(t => t.status === 'live').length})
+          </button>
+          
+          {categories.map(category => {
+            const count = getCategoryCount(category.id)
+            return (
+              <button
+                key={category.id}
+                onClick={() => handleCategorySelect(category.id)}
+                className={`px-4 py-3 rounded-lg transition-all flex items-center gap-2 font-medium min-w-[44px] min-h-[44px] ${
+                  selectedCategory === category.id
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/15'
+                }`}
+                aria-pressed={selectedCategory === category.id}
+              >
+                <span className="text-lg">{category.icon}</span>
+                <span>{category.title}</span>
+                <span className="text-sm opacity-75">({count})</span>
+              </button>
+            )
+          })}
+        </div>
+      </section>
 
-              {/* Search within category */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder={`Search within ${CATEGORIES.find(c => c.id === selectedCategory)?.title}...`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* Tools Grid */}
-          {filteredTools.length > 0 ? (
-            <section>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredTools.slice(0, visibleToolsCount).map((tool, index) => (
-                  <Link
-                    key={tool.id}
-                    href={tool.url}
-                    className="group bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-5 hover:bg-white/10 hover:scale-105 hover:shadow-lg transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`w-10 h-10 bg-gradient-to-br ${tool.color} rounded-lg flex items-center justify-center text-xl group-hover:rotate-12 transition-transform`}>
-                        {tool.icon}
-                      </div>
-                      
-                      <div className="flex gap-1">
-                        {tool.new && <BadgeLabel type="new" label="NEW" />}
-                        {tool.apiRequired && <BadgeLabel type="ai" label="AI" />}
-                        {tool.featured && <BadgeLabel type="featured" label="★" />}
-                      </div>
+      {/* Tools Grid */}
+      <section>
+        {filteredTools.length > 0 ? (
+          <>
+            {/* Mobile/Tablet: Show compatible tools first, then desktop-only */}
+            {(isMobile || isTablet) ? (
+              <>
+                {/* Mobile Compatible Tools */}
+                {mobileTools.length > 0 && (
+                  <div className="mb-8">
+                    <h2 className="text-sm font-medium text-gray-400 mb-4 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      Works on Your Device
+                    </h2>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {mobileTools.map(tool => (
+                        <ToolCard key={tool.id} tool={tool} />
+                      ))}
                     </div>
-
-                    <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors line-clamp-1">
-                      {tool.name}
-                    </h3>
-                    
-                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                      {tool.description}
-                    </p>
-
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {tool.timeToUse}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Users className="w-3 h-3" />
-                        {tool.users}
-                      </span>
-                      <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
+                  </div>
+                )}
+                
+                {/* Desktop Only Tools (Grayed Out) */}
+                {desktopOnlyTools.length > 0 && (
+                  <div>
+                    <h2 className="text-sm font-medium text-gray-400 mb-4 flex items-center gap-2">
+                      <Monitor className="w-4 h-4" />
+                      Desktop Only
+                    </h2>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {desktopOnlyTools.map(tool => (
+                        <ToolCard key={tool.id} tool={tool} />
+                      ))}
                     </div>
-                  </Link>
+                  </div>
+                )}
+              </>
+            ) : (
+              /* Desktop: Show all tools normally */
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredTools.map(tool => (
+                  <ToolCard key={tool.id} tool={tool} />
                 ))}
               </div>
+            )}
 
-              {/* Load More Button */}
-              {visibleToolsCount < filteredTools.length && (
-                <div className="text-center mt-8">
-                  <button
-                    onClick={loadMoreTools}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/15 transition-all"
-                  >
-                    <ChevronDown className="w-4 h-4" />
-                    Show More ({filteredTools.length - visibleToolsCount} remaining)
-                  </button>
-                </div>
+            {/* Results Count */}
+            <div className="text-center mt-8 text-sm text-gray-400">
+              {filteredTools.length} tools found
+              {(isMobile || isTablet) && desktopOnlyTools.length > 0 && (
+                <span className="ml-2">
+                  ({mobileTools.length} work on mobile, {desktopOnlyTools.length} desktop only)
+                </span>
               )}
-            </section>
-          ) : (
-            /* Empty State when no tools match search */
-            <section className="text-center py-20">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-800 rounded-full mb-4">
-                <Search className="w-10 h-10 text-gray-600" />
-              </div>
-              <p className="text-gray-400 mb-4">No tools found matching your search.</p>
-              <button
-                onClick={() => setSearchQuery('')}
-                className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all"
-              >
-                Clear search
-              </button>
-            </section>
-          )}
-
-          {/* CTA Section - Also shown in tools view */}
-          <section className="mt-20 text-center">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Can't find what you need?
-              </h3>
-              <p className="text-gray-400 mb-6">
-                We're constantly adding new tools based on user feedback.
-              </p>
-              <Link
-                href="/request"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all hover:scale-105"
-              >
-                Request a Tool
-                <ArrowRight className="w-4 h-4" />
-              </Link>
             </div>
-          </section>
-        </>
-      )}
+          </>
+        ) : (
+          /* Empty State */
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-800 rounded-full mb-4">
+              <Search className="w-10 h-10 text-gray-600" />
+            </div>
+            <p className="text-lg text-gray-400 mb-2">
+              No tools found
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Try adjusting your search or filters
+            </p>
+            <button
+              onClick={clearFilters}
+              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+            >
+              Clear filters
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* CTA Section remains the same */}
+      <section className="mt-16 text-center">
+        <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl border border-white/10 p-8">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Can't find what you need?
+          </h3>
+          <p className="text-gray-400 mb-6">
+            We're constantly adding new tools based on user feedback
+          </p>
+          <Link
+            href="/request"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+          >
+            Request a Tool
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Quick Stats */}
+      <section className="mt-12">
+        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+          <div className="text-center p-4 bg-white/5 rounded-lg">
+            <p className="text-2xl font-bold text-cyan-400">
+              {TOOLS.filter(t => t.status === 'live').length}
+            </p>
+            <p className="text-xs text-gray-400 mt-1">Tools</p>
+          </div>
+          <div className="text-center p-4 bg-white/5 rounded-lg">
+            <p className="text-2xl font-bold text-green-400">100%</p>
+            <p className="text-xs text-gray-400 mt-1">Free</p>
+          </div>
+          <div className="text-center p-4 bg-white/5 rounded-lg">
+            <p className="text-2xl font-bold text-purple-400">Safe</p>
+            <p className="text-xs text-gray-400 mt-1">Private</p>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

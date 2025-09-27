@@ -1,3 +1,5 @@
+// app/tools/ai-summarizer/lib/types.ts
+
 export type SummaryLength = 'brief' | 'standard' | 'detailed'
 export type SummaryTone = 'professional' | 'casual' | 'technical'
 

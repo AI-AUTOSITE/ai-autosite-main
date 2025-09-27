@@ -4,9 +4,9 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { X, Info } from 'lucide-react'
-// PeopleAlsoUseを正しくインポート
 import { PeopleAlsoUse } from '../CrossSell'
-import { getToolByUrl, getCategoryById, Tool, Category } from '../../lib/categories.config'
+import type { Tool, Category } from '../../lib/categories'
+import { TOOLS, CATEGORIES } from '../../lib/categories'
 import ToolInfoSidebar from './ToolInfoSidebar'
 import RelatedTools from './RelatedTools'
 
@@ -19,24 +19,16 @@ interface UnifiedToolLayoutProps {
   containerWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
 }
 
-/**
- * UnifiedToolLayout - Simplified Version
- * 
- * Purpose: Provide consistent tool-specific layouts without duplicating
- * the base layout from app/tools/layout.tsx
- * 
- * What it handles:
- * - Tool information sidebar
- * - Related tools section
- * - Cross-sell components
- * - Container sizing
- * 
- * What it doesn't handle (delegated to app/tools/layout.tsx):
- * - Header/Footer
- * - Breadcrumbs
- * - Background effects
- * - Base page structure
- */
+// ヘルパー関数：URLからツールを取得
+function getToolByUrl(url: string): Tool | undefined {
+  return TOOLS.find(tool => tool.url === url)
+}
+
+// ヘルパー関数：カテゴリーIDからカテゴリーを取得
+function getCategoryById(categoryId: string): Category | undefined {
+  return CATEGORIES.find(cat => cat.id === categoryId)
+}
+
 export default function UnifiedToolLayout({
   children,
   toolId,
@@ -140,7 +132,7 @@ export default function UnifiedToolLayout({
         )}
       </div>
 
-      {/* Cross-sell section - PeopleAlsoUseを使用 */}
+      {/* Cross-sell section */}
       {showCrossSell && tool && (
         <div className="mt-12">
           <PeopleAlsoUse currentToolId={tool.id} />

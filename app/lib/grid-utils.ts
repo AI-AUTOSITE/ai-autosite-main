@@ -1,107 +1,62 @@
-// lib/grid-utils.ts
+// Dynamic grid utilities for responsive category display
 
 /**
- * カテゴリー数に応じて最適なグリッドクラスを返す
- * 拡張性を考慮し、カテゴリー数が増えても自動的に対応
+ * Get responsive grid class based on item count
  */
-export const getGridClassName = (categoryCount: number): string => {
-  // 特殊なケース（1-10個）の最適化
-  const specialCases: { [key: number]: string } = {
-    1: 'grid-cols-1 max-w-sm mx-auto',
-    2: 'grid-cols-2 max-w-2xl mx-auto',
-    3: 'grid-cols-3',
-    4: 'grid-cols-2 lg:grid-cols-4',
-    5: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5', // 5列で均等に
-    6: 'grid-cols-2 md:grid-cols-3',
-    7: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4', // 7個の場合、4-3で分割
-    8: 'grid-cols-2 md:grid-cols-4',
-    9: 'grid-cols-3',
-    10: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5',
-  }
+export function getGridClassName(itemCount: number): string {
+  if (itemCount <= 2) return 'grid-cols-1 sm:grid-cols-2'
+  if (itemCount === 3) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+  if (itemCount === 4) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+  if (itemCount === 5) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'
+  if (itemCount === 6) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+  if (itemCount === 7) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+  if (itemCount === 8) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+  return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+}
 
-  if (specialCases[categoryCount]) {
-    return specialCases[categoryCount]
-  }
+/**
+ * Get card padding class based on item count
+ */
+export function getCardPaddingClass(itemCount: number): string {
+  if (itemCount <= 3) return 'p-8'
+  if (itemCount <= 6) return 'p-6'
+  return 'p-5'
+}
 
-  // 11個以上の場合の汎用ルール
-  if (categoryCount <= 12) {
-    return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-  } else if (categoryCount <= 15) {
-    return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5'
-  } else if (categoryCount <= 18) {
-    return 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6'
-  } else {
-    // 18個以上の場合は、スクロール可能な固定レイアウト
-    return 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6'
+/**
+ * Get icon size class based on item count
+ */
+export function getIconSizeClass(itemCount: number): string {
+  if (itemCount <= 3) return 'w-12 h-12'
+  if (itemCount <= 6) return 'w-10 h-10'
+  return 'w-8 h-8'
+}
+
+/**
+ * Get optimal columns for different breakpoints
+ */
+export function getOptimalColumns(itemCount: number) {
+  return {
+    mobile: 1,
+    tablet: Math.min(2, itemCount),
+    desktop: Math.min(3, itemCount),
+    wide: Math.min(4, itemCount)
   }
 }
 
 /**
- * モバイル用のカテゴリーグリッドクラス
- * 小画面でも見やすいレイアウトを提供
+ * Calculate if horizontal scroll is needed on mobile
  */
-export const getMobileGridClassName = (categoryCount: number): string => {
-  if (categoryCount <= 2) {
-    return 'grid-cols-1'
-  } else if (categoryCount <= 4) {
-    return 'grid-cols-2'
-  } else {
-    // 5個以上はスクロール推奨だが、グリッド表示も可能
-    return 'grid-cols-2'
-  }
+export function needsMobileScroll(itemCount: number): boolean {
+  return itemCount > 3
 }
 
 /**
- * カテゴリーカードの最適なパディングサイズを返す
- * カテゴリー数が多い場合は、カードを小さくして見やすくする
+ * Get container max width based on item count
  */
-export const getCardPaddingClass = (categoryCount: number): string => {
-  if (categoryCount <= 4) {
-    return 'p-6' // 大きめのパディング
-  } else if (categoryCount <= 8) {
-    return 'p-5' // 中サイズ
-  } else if (categoryCount <= 12) {
-    return 'p-4' // 小さめ
-  } else {
-    return 'p-3' // 最小サイズ
-  }
-}
-
-/**
- * アイコンのサイズクラスを返す
- */
-export const getIconSizeClass = (categoryCount: number): string => {
-  if (categoryCount <= 4) {
-    return 'text-3xl' // 大きめ
-  } else if (categoryCount <= 8) {
-    return 'text-2xl' // 中サイズ
-  } else {
-    return 'text-xl' // 小さめ
-  }
-}
-
-/**
- * カテゴリーカードの最小高さを返す
- */
-export const getCardMinHeightClass = (categoryCount: number): string => {
-  if (categoryCount <= 4) {
-    return 'min-h-[200px]' // 大きめのカード
-  } else if (categoryCount <= 8) {
-    return 'min-h-[180px]' // 中サイズ
-  } else {
-    return 'min-h-[160px]' // コンパクト
-  }
-}
-
-/**
- * グリッドのギャップサイズを返す
- */
-export const getGridGapClass = (categoryCount: number): string => {
-  if (categoryCount <= 6) {
-    return 'gap-4' // 通常のギャップ
-  } else if (categoryCount <= 10) {
-    return 'gap-3' // 少し狭め
-  } else {
-    return 'gap-2' // 最小ギャップ
-  }
+export function getContainerMaxWidth(itemCount: number): string {
+  if (itemCount <= 2) return 'max-w-2xl'
+  if (itemCount <= 4) return 'max-w-4xl'
+  if (itemCount <= 6) return 'max-w-5xl'
+  return 'max-w-6xl'
 }

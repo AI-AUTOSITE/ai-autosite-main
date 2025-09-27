@@ -15,13 +15,6 @@
   --gray-400: #9ca3af;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111827;
-    --foreground: #f9fafb;
-  }
-}
-
 /* ===================================
    Base Styles
    =================================== */
@@ -39,6 +32,8 @@ body {
   max-width: 100vw;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px; /* Base font size for better readability */
+  line-height: 1.5;
 }
 
 /* ===================================
@@ -47,7 +42,7 @@ body {
 @layer components {
   /* Header z-index fix */
   header {
-    z-index: 9999 !important;
+    z-index: 50;
   }
 
   /* Backdrop blur effect */
@@ -56,9 +51,19 @@ body {
     -webkit-backdrop-filter: blur(16px);
   }
 
-  /* Code reader container */
-  .code-reader-container {
-    @apply bg-white rounded-2xl shadow-xl p-6;
+  /* Ensure minimum tap target size */
+  button, a {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
   }
 }
 
@@ -68,8 +73,8 @@ body {
 @layer utilities {
   /* Custom scrollbar for dark theme */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
@@ -82,50 +87,20 @@ body {
 
   /* Hide scrollbar utility */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari and Opera */
+    display: none;
   }
 }
 
 /* ===================================
-   PDF Tools Specific
-   =================================== */
-@layer components {
-  /* Tool card animations */
-  .tool-card {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  .tool-card.dragging {
-    @apply opacity-50 scale-95 cursor-grabbing;
-  }
-
-  .tool-slot.drag-over {
-    @apply bg-cyan-500/10 scale-105 border-cyan-400/50;
-  }
-
-  /* Mobile sidebar */
-  .sidebar {
-    @apply fixed md:relative z-20 w-64 h-screen;
-    @apply bg-gray-800 shadow-lg border-r border-gray-700;
-    @apply transform -translate-x-full md:translate-x-0;
-    @apply transition-transform duration-300 ease-in-out;
-  }
-
-  .sidebar.open {
-    @apply translate-x-0;
-  }
-}
-
-/* ===================================
-   Animations
+   Simple Animations (Only Essential)
    =================================== */
 @layer utilities {
-  /* Fade animations */
+  /* Simple fade in */
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -135,98 +110,50 @@ body {
     animation: fadeIn 0.3s ease-in-out;
   }
 
-  /* Slide animations */
-  @keyframes slideUp {
+  /* Simple spin for loading */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  /* Modal animations */
+  @keyframes fade-in {
     from {
-      transform: translateY(20px);
       opacity: 0;
     }
     to {
-      transform: translateY(0);
       opacity: 1;
     }
   }
 
-  @keyframes slideDown {
+  @keyframes scale-in {
     from {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: scale(0.95);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slideInRight {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideInLeft {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
-  }
-
-  .animate-slideUp {
-    animation: slideUp 0.3s ease-in-out;
-  }
-
-  .animate-slideDown {
-    animation: slideDown 0.3s ease-out;
-  }
-
-  .animate-slideInRight {
-    animation: slideInRight 0.3s ease-in-out;
-  }
-
-  .animate-slideInLeft {
-    animation: slideInLeft 0.3s ease-in-out;
-  }
-
-  /* Expand animation */
-  @keyframes expand {
-    from {
-      max-height: 0;
-      opacity: 0;
-    }
-    to {
-      max-height: 200px;
-      opacity: 1;
-    }
-  }
-
-  .animate-expand {
-    animation: expand 0.3s ease-in-out;
-  }
-
-  /* Pulse animation for buttons */
-  @keyframes pulse-subtle {
-    0%, 100% { 
-      opacity: 1; 
       transform: scale(1);
     }
-    50% { 
-      opacity: 0.9; 
-      transform: scale(1.02);
-    }
   }
 
-  .animate-pulse-subtle {
-    animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
   }
 }
-
 /* ===================================
    Text Utilities
    =================================== */
 @layer utilities {
+  /* Line clamp utilities */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -243,21 +170,85 @@ body {
 }
 
 /* ===================================
-   Focus States
+   Accessibility Improvements
    =================================== */
 @layer utilities {
-  .focus-visible-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900;
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .border-white\/10 {
+      @apply border-white/20;
+    }
+    
+    .bg-white\/5 {
+      @apply bg-white/10;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Ensure readable font sizes */
+  .text-xs {
+    font-size: 0.875rem; /* 14px minimum */
+  }
+
+  .text-sm {
+    font-size: 0.9375rem; /* 15px */
+  }
+
+  .text-base {
+    font-size: 1rem; /* 16px */
+  }
+
+  .text-lg {
+    font-size: 1.125rem; /* 18px */
   }
 }
 
 /* ===================================
-   Gradient Text
+   Print Styles
    =================================== */
-@layer utilities {
-  .gradient-text {
-    @apply bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent;
+@media print {
+  header, footer {
+    display: none;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 
-@import './tools/pdf-tools/styles/privacy.css';
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}

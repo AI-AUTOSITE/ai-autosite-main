@@ -1,13 +1,14 @@
-// app/tools/tech-stack-analyzer/components/TechStackComparison.tsx
 'use client';
 
 import { useState } from 'react';
+import { Code, Database, Cloud, Zap, Globe, Gauge } from 'lucide-react';
+
 // Tech data structure
 interface TechData {
   id: string;
   name: string;
   category: string;
-  categoryColor: string;
+  icon: React.ReactNode;
   features: string[];
   useCases: string[];
   learningCurve: 'Beginner' | 'Intermediate' | 'Advanced';
@@ -22,14 +23,14 @@ const techData: TechData[] = [
     id: 'nextjs',
     name: 'Next.js',
     category: 'Framework',
-    categoryColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    icon: <Code className="w-5 h-5" />,
     features: [
       'Full-stack React framework',
       'Built-in SSR/SSG',
       'File-based routing',
       'API Routes',
-      'Automatic image optimization',
-      'Edge runtime support'
+      'Image optimization',
+      'Edge runtime'
     ],
     useCases: [
       'SEO-critical websites',
@@ -37,7 +38,7 @@ const techData: TechData[] = [
       'Corporate websites',
       'Full-stack applications',
       'Content-heavy sites',
-      'Blogs with dynamic features'
+      'Blogs with features'
     ],
     learningCurve: 'Intermediate',
     learningNote: 'React + framework concepts',
@@ -48,22 +49,22 @@ const techData: TechData[] = [
     id: 'astro',
     name: 'Astro',
     category: 'Framework',
-    categoryColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    icon: <Code className="w-5 h-5" />,
     features: [
       'Static-site focused',
       'Multi-framework support',
       'Minimal JavaScript',
       'Component Islands',
-      'Native Markdown support',
+      'Markdown support',
       'Content collections'
     ],
     useCases: [
       'Documentation sites',
-      'Blogs & content sites',
+      'Blogs & content',
       'Landing pages',
       'Portfolio websites',
       'Marketing sites',
-      'Performance-critical sites'
+      'Fast static sites'
     ],
     learningCurve: 'Intermediate',
     learningNote: 'Unique syntax & concepts',
@@ -74,7 +75,7 @@ const techData: TechData[] = [
     id: 'sveltekit',
     name: 'SvelteKit',
     category: 'Framework',
-    categoryColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    icon: <Code className="w-5 h-5" />,
     features: [
       'Compile-time optimization',
       'No Virtual DOM',
@@ -100,14 +101,14 @@ const techData: TechData[] = [
     id: 'vite',
     name: 'Vite',
     category: 'Build Tool',
-    categoryColor: 'bg-green-500/20 text-green-300 border-green-500/30',
+    icon: <Zap className="w-5 h-5" />,
     features: [
-      'Lightning-fast dev server',
+      'Lightning-fast dev',
       'ES Modules native',
       'Instant HMR',
       'Framework agnostic',
       'Plugin ecosystem',
-      'Production optimizations'
+      'Production optimized'
     ],
     useCases: [
       'SPAs & admin panels',
@@ -115,7 +116,7 @@ const techData: TechData[] = [
       'Library development',
       'Learning projects',
       'Developer tooling',
-      'Multi-page applications'
+      'Multi-page apps'
     ],
     learningCurve: 'Beginner',
     learningNote: 'Minimal configuration',
@@ -126,18 +127,18 @@ const techData: TechData[] = [
     id: 'tailwind',
     name: 'Tailwind CSS',
     category: 'Styling',
-    categoryColor: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+    icon: <Globe className="w-5 h-5" />,
     features: [
       'Utility-first CSS',
       'Highly customizable',
       'Component-friendly',
-      'Built-in design system',
+      'Design system',
       'JIT compilation',
       'Plugin ecosystem'
     ],
     useCases: [
       'Rapid UI development',
-      'Design system consistency',
+      'Design consistency',
       'Component libraries',
       'Responsive design',
       'Team collaboration',
@@ -152,11 +153,11 @@ const techData: TechData[] = [
     id: 'supabase',
     name: 'Supabase',
     category: 'Database',
-    categoryColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    icon: <Database className="w-5 h-5" />,
     features: [
-      'PostgreSQL + auto APIs',
+      'PostgreSQL + APIs',
       'Real-time subscriptions',
-      'Built-in authentication',
+      'Built-in auth',
       'File storage',
       'Edge functions',
       'Firebase alternative'
@@ -178,9 +179,9 @@ const techData: TechData[] = [
     id: 'vercel',
     name: 'Vercel',
     category: 'Hosting',
-    categoryColor: 'bg-red-500/20 text-red-300 border-red-500/30',
+    icon: <Cloud className="w-5 h-5" />,
     features: [
-      'Zero-config deployment',
+      'Zero-config deploy',
       'Edge functions',
       'Preview deployments',
       'Analytics included',
@@ -202,56 +203,9 @@ const techData: TechData[] = [
   }
 ];
 
-// Tooltip component for technical terms
-interface TooltipProps {
-  term: string;
-  description: string;
-}
-
-const Tooltip = ({ term, description }: TooltipProps) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  return (
-    <div className="relative inline-block">
-      <span
-        className="text-cyan-400 underline decoration-dotted cursor-help"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        {term}
-      </span>
-      {showTooltip && (
-        <div className="absolute z-50 bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-white/20 whitespace-nowrap max-w-xs">
-          <p className="text-xs">{description}</p>
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
-            <div className="w-2 h-2 bg-gray-900 transform rotate-45 border-r border-b border-white/20"></div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 const TechStackComparison = () => {
   const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'compare'>('grid');
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Handle scroll for sticky header
-  useState(() => {
-    const handleScroll = () => {
-      const controlsElement = document.getElementById('compare-controls');
-      if (controlsElement) {
-        const rect = controlsElement.getBoundingClientRect();
-        setIsScrolled(rect.top <= 64); // 64px is header height
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
-  });
 
   const toggleTechSelection = (techId: string) => {
     setSelectedTechs(prev => {
@@ -268,103 +222,88 @@ const TechStackComparison = () => {
 
   const selectedTechData = techData.filter(tech => selectedTechs.includes(tech.id));
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-{/* Controls - Sticky version */}
-      <div 
-        id="compare-controls"
-        className={`sticky top-16 z-30 transition-all duration-300 ${
-          isScrolled ? '-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8' : ''
-        }`}
-      >
-        <div className={`bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 transition-all duration-300 ${
-          isScrolled ? 'py-3 px-4' : 'p-6'
-        }`}>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className={`transition-all duration-300 ${isScrolled ? 'flex items-center gap-4' : ''}`}>
-              <h2 className={`font-bold text-white transition-all duration-300 ${
-                isScrolled ? 'text-base' : 'text-xl mb-2'
-              }`}>
-                Compare Technologies
-              </h2>
-              {!isScrolled && (
-                <p className="text-sm text-gray-400">
-                  Select up to 3 technologies to compare side by side
-                </p>
-              )}
-              {isScrolled && selectedTechs.length > 0 && (
-                <div className="hidden sm:flex gap-2">
-                  {selectedTechs.map(techId => {
-                    const tech = techData.find(t => t.id === techId);
-                    return (
-                      <span key={techId} className="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs">
-                        {tech?.name}
-                      </span>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`rounded-lg font-medium transition-all ${
-                  isScrolled ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'
-                } ${
-                  viewMode === 'grid'
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                }`}
-              >
-                Grid View
-              </button>
-              <button
-                onClick={() => setViewMode('compare')}
-                className={`rounded-lg font-medium transition-all ${
-                  isScrolled ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'
-                } ${
-                  viewMode === 'compare'
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                }`}
-                disabled={selectedTechs.length === 0}
-              >
-                Compare ({selectedTechs.length})
-              </button>
-            </div>
-          </div>
+  // Get category colors
+  const getCategoryStyle = (category: string) => {
+    switch(category) {
+      case 'Framework':
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      case 'Build Tool':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'Styling':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'Database':
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+      case 'Hosting':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
+  };
 
-          {!isScrolled && selectedTechs.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {selectedTechs.map(techId => {
-                const tech = techData.find(t => t.id === techId);
-                return (
-                  <span key={techId} className="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm flex items-center gap-2">
-                    {tech?.name}
-                    <button
-                      onClick={() => toggleTechSelection(techId)}
-                      className="text-cyan-300 hover:text-white"
-                    >
-                      ×
-                    </button>
-                  </span>
-                );
-              })}
-            </div>
-          )}
+  return (
+    <div className="container mx-auto px-4 py-6 max-w-5xl">
+      {/* Controls */}
+      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-medium text-white">Compare Technologies</h2>
+            <p className="text-sm text-gray-400 mt-1">
+              Select up to 3 technologies to compare
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-cyan-600 text-white'
+                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+              }`}
+            >
+              Grid View
+            </button>
+            <button
+              onClick={() => setViewMode('compare')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                viewMode === 'compare'
+                  ? 'bg-cyan-600 text-white'
+                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+              }`}
+              disabled={selectedTechs.length === 0}
+            >
+              Compare ({selectedTechs.length})
+            </button>
+          </div>
         </div>
+
+        {selectedTechs.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {selectedTechs.map(techId => {
+              const tech = techData.find(t => t.id === techId);
+              return (
+                <span key={techId} className="px-3 py-1 bg-cyan-600/20 text-cyan-300 rounded-full text-sm flex items-center gap-2">
+                  {tech?.name}
+                  <button
+                    onClick={() => toggleTechSelection(techId)}
+                    className="text-cyan-300 hover:text-white"
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Add margin to prevent content jump */}
-      <div className="mb-8"></div>
       {/* Grid View */}
       {viewMode === 'grid' && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {techData.map(tech => (
             <div
               key={tech.id}
               onClick={() => toggleTechSelection(tech.id)}
-              className={`bg-white/5 backdrop-blur-xl rounded-xl p-6 border cursor-pointer transition-all hover:bg-white/10 ${
+              className={`bg-white/5 backdrop-blur-xl rounded-xl p-5 border cursor-pointer transition-all hover:bg-white/10 ${
                 selectedTechs.includes(tech.id)
                   ? 'border-cyan-500/50 ring-2 ring-cyan-500/20'
                   : 'border-white/10'
@@ -372,18 +311,21 @@ const TechStackComparison = () => {
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 border ${tech.categoryColor}`}>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 border ${getCategoryStyle(tech.category)}`}>
                     {tech.category}
                   </span>
-                  <h3 className="text-lg font-bold text-white">{tech.name}</h3>
+                  <h3 className="text-lg font-medium text-white flex items-center gap-2">
+                    {tech.icon}
+                    {tech.name}
+                  </h3>
                 </div>
-                <div className={`w-6 h-6 rounded-full border-2 ${
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                   selectedTechs.includes(tech.id)
-                    ? 'bg-cyan-500 border-cyan-500'
+                    ? 'bg-cyan-600 border-cyan-600'
                     : 'border-gray-500'
                 }`}>
                   {selectedTechs.includes(tech.id) && (
-                    <svg className="w-full h-full text-white p-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -393,20 +335,17 @@ const TechStackComparison = () => {
               <div className="mb-3">
                 <span className={`text-sm ${
                   tech.learningCurve === 'Beginner' ? 'text-green-400' :
-                  tech.learningCurve === 'Intermediate' ? 'text-orange-400' :
+                  tech.learningCurve === 'Intermediate' ? 'text-yellow-400' :
                   'text-red-400'
                 }`}>
+                  <Gauge className="w-3 h-3 inline mr-1" />
                   {tech.learningCurve} Level
                 </span>
               </div>
 
-              <p className="text-sm text-gray-400 mb-3 line-clamp-2">
+              <p className="text-sm text-gray-400 line-clamp-2">
                 {tech.features.slice(0, 3).join(', ')}...
               </p>
-
-              <div className="text-xs text-gray-500">
-                Click to {selectedTechs.includes(tech.id) ? 'remove from' : 'add to'} comparison
-              </div>
             </div>
           ))}
         </div>
@@ -419,14 +358,17 @@ const TechStackComparison = () => {
             <table className="w-full">
               <thead>
                 <tr className="bg-white/5 border-b border-white/20">
-                  <th className="text-left py-4 px-6 font-semibold text-gray-400 min-w-[150px]">Aspect</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-400 min-w-[150px]">Aspect</th>
                   {selectedTechData.map(tech => (
-                    <th key={tech.id} className="text-left py-4 px-6 font-semibold text-white min-w-[250px]">
-                      <div>
-                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 border ${tech.categoryColor}`}>
-                          {tech.category}
-                        </span>
-                        <div className="text-xl">{tech.name}</div>
+                    <th key={tech.id} className="text-left py-4 px-6 font-medium text-white min-w-[250px]">
+                      <div className="flex items-center gap-2">
+                        {tech.icon}
+                        <div>
+                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium mb-1 border ${getCategoryStyle(tech.category)}`}>
+                            {tech.category}
+                          </span>
+                          <div className="text-lg">{tech.name}</div>
+                        </div>
                       </div>
                     </th>
                   ))}
@@ -435,44 +377,26 @@ const TechStackComparison = () => {
               <tbody>
                 {/* Key Features */}
                 <tr className="border-b border-white/10">
-                  <td className="py-4 px-6 font-medium text-gray-400">
-                    Key Features
-                  </td>
+                  <td className="py-4 px-6 font-medium text-gray-400">Features</td>
                   {selectedTechData.map(tech => (
                     <td key={tech.id} className="py-4 px-6 text-sm text-gray-300">
                       <ul className="space-y-1">
                         {tech.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="text-cyan-400 mr-2">•</span>
-                            {feature.includes('SSR') ? (
-                              <Tooltip term="SSR" description="Server-Side Rendering: Pages are prepared on the server before sending to browser, improving SEO and initial load time" />
-                            ) : feature.includes('SSG') ? (
-                              <Tooltip term="SSG" description="Static Site Generation: Pages are built at compile time, resulting in ultra-fast loading" />
-                            ) : feature.includes('HMR') ? (
-                              <Tooltip term="HMR" description="Hot Module Replacement: See code changes instantly without page refresh" />
-                            ) : feature.includes('Virtual DOM') ? (
-                              <Tooltip term="Virtual DOM" description="A JavaScript representation of the real DOM for efficient updates" />
-                            ) : feature}
-                          </li>
+                          <li key={idx}>• {feature}</li>
                         ))}
                       </ul>
                     </td>
                   ))}
                 </tr>
 
-                {/* Best Use Cases */}
+                {/* Use Cases */}
                 <tr className="border-b border-white/10 bg-white/5">
-                  <td className="py-4 px-6 font-medium text-gray-400">
-                    Best Use Cases
-                  </td>
+                  <td className="py-4 px-6 font-medium text-gray-400">Use Cases</td>
                   {selectedTechData.map(tech => (
-                    <td key={tech.id} className="py-4 px-6 text-sm text-green-400">
+                    <td key={tech.id} className="py-4 px-6 text-sm text-cyan-400">
                       <ul className="space-y-1">
                         {tech.useCases.map((useCase, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="mr-2">•</span>
-                            {useCase}
-                          </li>
+                          <li key={idx}>• {useCase}</li>
                         ))}
                       </ul>
                     </td>
@@ -481,19 +405,17 @@ const TechStackComparison = () => {
 
                 {/* Learning Curve */}
                 <tr className="border-b border-white/10">
-                  <td className="py-4 px-6 font-medium text-gray-400">
-                    Learning Curve
-                  </td>
+                  <td className="py-4 px-6 font-medium text-gray-400">Learning</td>
                   {selectedTechData.map(tech => (
                     <td key={tech.id} className="py-4 px-6">
                       <div className={`font-medium ${
                         tech.learningCurve === 'Beginner' ? 'text-green-400' :
-                        tech.learningCurve === 'Intermediate' ? 'text-orange-400' :
+                        tech.learningCurve === 'Intermediate' ? 'text-yellow-400' :
                         'text-red-400'
                       }`}>
                         {tech.learningCurve}
                       </div>
-                      <div className="text-sm text-gray-500 mt-1">
+                      <div className="text-sm text-gray-400 mt-1">
                         {tech.learningNote}
                       </div>
                     </td>
@@ -502,24 +424,20 @@ const TechStackComparison = () => {
 
                 {/* Pros */}
                 <tr className="border-b border-white/10 bg-white/5">
-                  <td className="py-4 px-6 font-medium text-gray-400">
-                    Pros
-                  </td>
+                  <td className="py-4 px-6 font-medium text-gray-400">Pros</td>
                   {selectedTechData.map(tech => (
-                    <td key={tech.id} className="py-4 px-6 text-sm">
-                      <div className="text-green-400">✅ {tech.pros}</div>
+                    <td key={tech.id} className="py-4 px-6 text-sm text-green-400">
+                      {tech.pros}
                     </td>
                   ))}
                 </tr>
 
                 {/* Cons */}
                 <tr>
-                  <td className="py-4 px-6 font-medium text-gray-400">
-                    Cons
-                  </td>
+                  <td className="py-4 px-6 font-medium text-gray-400">Cons</td>
                   {selectedTechData.map(tech => (
-                    <td key={tech.id} className="py-4 px-6 text-sm">
-                      <div className="text-red-400">⚠️ {tech.cons}</div>
+                    <td key={tech.id} className="py-4 px-6 text-sm text-red-400">
+                      {tech.cons}
                     </td>
                   ))}
                 </tr>
@@ -529,53 +447,57 @@ const TechStackComparison = () => {
         </div>
       )}
 
-      {/* Empty State for Compare View */}
+      {/* Empty State */}
       {viewMode === 'compare' && selectedTechData.length === 0 && (
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-12 text-center">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-white mb-2">No Technologies Selected</h3>
+          <Zap className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+          <h3 className="text-xl font-medium text-white mb-2">No Technologies Selected</h3>
           <p className="text-gray-400 mb-6">
-            Switch to Grid View and select up to 3 technologies to compare them side by side
+            Switch to Grid View and select up to 3 technologies to compare
           </p>
           <button
             onClick={() => setViewMode('grid')}
-            className="px-6 py-3 bg-cyan-500/20 text-cyan-300 rounded-lg hover:bg-cyan-500/30 transition-all border border-cyan-500/30"
+            className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-all"
           >
             Switch to Grid View
           </button>
         </div>
       )}
 
-      {/* Use Case Recommendations - Keep existing */}
-      <div className="mt-16 bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-        <h2 className="text-3xl font-bold text-center mb-8 text-white">Recommended Stacks by Use Case</h2>
+      {/* Recommended Stacks */}
+      <div className="mt-8 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
+        <h3 className="text-lg font-medium text-white mb-4">Recommended Stacks</h3>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-xl border border-white/10">
-            <div className="text-xl font-bold mb-3 text-white">E-commerce Platform</div>
-            <div className="text-green-400 font-semibold mb-3">Next.js + Tailwind + Supabase + Stripe + Vercel</div>
-            <div className="text-sm text-gray-400 leading-relaxed">
-              Perfect <Tooltip term="SEO" description="Search Engine Optimization: How well search engines can find and rank your website" /> for product pages, built-in 
-              <Tooltip term="API routes" description="Backend endpoints that handle data operations like saving orders or processing payments" /> for payments, 
-              real-time inventory updates, and seamless checkout experience.
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <div className="text-sm font-medium text-white mb-2">E-commerce</div>
+            <div className="text-cyan-400 text-sm mb-2">Next.js + Tailwind + Supabase + Stripe</div>
+            <div className="text-xs text-gray-400">
+              Perfect SEO, payment integration, real-time updates
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-xl border border-white/10">
-            <div className="text-xl font-bold mb-3 text-white">SaaS Dashboard</div>
-            <div className="text-green-400 font-semibold mb-3">Vite + React + Zustand + tRPC + shadcn/ui + Vercel</div>
-            <div className="text-sm text-gray-400 leading-relaxed">
-              Fast development cycle, complex state management, <Tooltip term="type-safe APIs" description="APIs where data types are checked at compile time, preventing errors" />, 
-              and professional UI components for data visualization.
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <div className="text-sm font-medium text-white mb-2">SaaS Dashboard</div>
+            <div className="text-cyan-400 text-sm mb-2">Vite + React + Zustand + shadcn/ui</div>
+            <div className="text-xs text-gray-400">
+              Fast development, complex state management, pro UI
             </div>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-xl p-6 rounded-xl border border-white/10">
-            <div className="text-xl font-bold mb-3 text-white">Marketing Website</div>
-            <div className="text-green-400 font-semibold mb-3">Astro + Tailwind + Markdown + Cloudflare Pages</div>
-            <div className="text-sm text-gray-400 leading-relaxed">
-              Maximum performance, excellent SEO, easy content management, 
-              and cost-effective global distribution.
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <div className="text-sm font-medium text-white mb-2">Marketing Site</div>
+            <div className="text-cyan-400 text-sm mb-2">Astro + Tailwind + Cloudflare Pages</div>
+            <div className="text-xs text-gray-400">
+              Maximum performance, excellent SEO, cost-effective
+            </div>
+          </div>
+
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <div className="text-sm font-medium text-white mb-2">Blog/Portfolio</div>
+            <div className="text-cyan-400 text-sm mb-2">Astro + Markdown + Vercel</div>
+            <div className="text-xs text-gray-400">
+              Content-focused, minimal JS, easy management
             </div>
           </div>
         </div>

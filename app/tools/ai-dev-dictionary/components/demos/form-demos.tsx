@@ -1,34 +1,38 @@
 // app/tools/ai-dev-dictionary/components/demos/form-demos.tsx
-
 import type { DemoFunction } from './index'
 
 export const formDemos: Record<string, DemoFunction> = {
   // CHECKBOX DEMO
-  checkbox: (demoState, setDemoState) => (
-    <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
-      <p className="text-gray-400 text-sm mb-4">Select your preferences:</p>
-      <div className="space-y-3">
-        {['Email notifications', 'SMS alerts', 'Push notifications'].map((label, i) => (
-          <label key={i} className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={demoState.checkbox[i]}
-              onChange={() => {
-                const newCheckbox = [...demoState.checkbox]
-                newCheckbox[i] = !newCheckbox[i]
-                setDemoState({ ...demoState, checkbox: newCheckbox })
-              }}
-              className="w-5 h-5 rounded"
-            />
-            <span className="text-gray-300">{label}</span>
-          </label>
-        ))}
+  checkbox: (demoState, setDemoState) => {
+    // checkboxの初期値を確認
+    const checkboxState = demoState.checkbox || [false, false, false]
+    
+    return (
+      <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
+        <p className="text-gray-400 text-sm mb-4">Select your preferences:</p>
+        <div className="space-y-3">
+          {['Email notifications', 'SMS alerts', 'Push notifications'].map((label, i) => (
+            <label key={i} className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={checkboxState[i] || false}
+                onChange={() => {
+                  const newCheckbox = [...checkboxState]
+                  newCheckbox[i] = !newCheckbox[i]
+                  setDemoState({ ...demoState, checkbox: newCheckbox })
+                }}
+                className="w-5 h-5 rounded"
+              />
+              <span className="text-gray-300">{label}</span>
+            </label>
+          ))}
+        </div>
+        <p className="text-cyan-400 text-sm mt-4">
+          Selected: {checkboxState.filter(Boolean).length} items
+        </p>
       </div>
-      <p className="text-cyan-400 text-sm mt-4">
-        Selected: {demoState.checkbox.filter(Boolean).length} items
-      </p>
-    </div>
-  ),
+    )
+  },
 
   // RADIO BUTTON DEMO
   radio: (demoState, setDemoState) => (

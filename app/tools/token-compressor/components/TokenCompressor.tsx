@@ -1,703 +1,619 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
-import { FileText, Zap, Shield, Download, AlertTriangle, Sparkles, GitBranch, Cloud, Upload, FolderOpen, Loader2, Copy, Check, Package, TrendingDown, X, AlertCircle, Plus, Trash2 } from 'lucide-react'
-import { ProcessedFile, SecurityIssue, OutputFormat, CompressionOptions } from '../lib/types'
-import { processFiles } from '../lib/fileProcessor'
-import { checkSecurity, removeSensitiveData } from '../lib/security'
-import { compressFiles } from '../lib/compress'
-import { countTokens } from '../lib/tokenCounter'
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react'
+import {
+  Zap, Upload, Copy, Check, Download, X, Trash2,
+  AlertTriangle, Shield, Loader2, FileText, TrendingDown,
+  Sparkles, Eye, EyeOff, Sliders, ChevronDown, Info
+} from 'lucide-react'
 
-// Import JSZip and file-saver for ZIP generation
-// Note: These need to be installed: npm install jszip file-saver @types/file-saver
+// Type definitions
+interface ProcessedFile {
+  id: string
+  name: string
+  type: string
+  size: number
+  content: string
+  compressedContent?: string
+  originalTokens?: number
+  compressedTokens?: number
+  compressionLevel?: 'light' | 'standard' | 'aggressive' | 'extreme'
+}
+
+interface SecurityIssue {
+  type: 'api_key' | 'email' | 'phone' | 'private_key'
+  severity: 'high' | 'medium' | 'low'
+  count: number
+}
+
+interface ModelTokens {
+  gpt4: number
+  gpt35: number
+  claude: number
+  gemini: number
+}
+
+type OutputFormat = 'clipboard' | 'markdown' | 'json' | 'zip'
+type CompressionLevel = 'light' | 'standard' | 'aggressive' | 'extreme'
+
+// AI Model configurations
+const AI_MODELS = {
+  gpt4: { name: 'GPT-4', ratio: 4, color: 'text-green-400' },
+  gpt35: { name: 'GPT-3.5', ratio: 4, color: 'text-blue-400' },
+  claude: { name: 'Claude', ratio: 3.5, color: 'text-purple-400' },
+  gemini: { name: 'Gemini', ratio: 4, color: 'text-orange-400' }
+}
+
+// Compression levels with descriptions
+const COMPRESSION_LEVELS: Record<CompressionLevel, { name: string; description: string; icon: string }> = {
+  light: { name: 'Light', description: 'Keep readability', icon: '🌤️' },
+  standard: { name: 'Standard', description: 'Balanced', icon: '⚖️' },
+  aggressive: { name: 'Aggressive', description: 'Max compression', icon: '🔥' },
+  extreme: { name: 'Extreme', description: 'AI only', icon: '⚡' }
+}
+
+// Enhanced compression function
+function compressText(text: string, level: CompressionLevel = 'standard'): string {
+  let compressed = text
+
+  if (level === 'light') {
+    // Light: Only remove comments and excess whitespace
+    compressed = compressed
+      .replace(/\/\/.*$/gm, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\n\s*\n/g, '\n')
+      .trim()
+  } else if (level === 'standard') {
+    // Standard: Remove comments, normalize whitespace
+    compressed = compressed
+      .replace(/\/\/.*$/gm, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/#.*$/gm, '')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n\s*\n/g, '\n')
+      .replace(/^\s+/gm, '')
+      .replace(/\s+$/gm, '')
+      .trim()
+  } else if (level === 'aggressive') {
+    // Aggressive: Remove all unnecessary characters
+    compressed = compressed
+      .replace(/\/\/.*$/gm, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/#.*$/gm, '')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n+/g, ' ')
+      .replace(/\s*([{}()\[\];,:])\s*/g, '$1')
+      .replace(/\s*([=+\-*/&|<>!?])\s*/g, '$1')
+      .replace(/;\s*/g, ';')
+      .replace(/,\s*/g, ',')
+      .trim()
+  } else if (level === 'extreme') {
+    // Extreme: Single line, minimal spacing
+    compressed = compressed
+      .replace(/\/\/.*$/gm, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\s*([{}()\[\];,:=+\-*/&|<>!?])\s*/g, '$1')
+      .replace(/[^\x20-\x7E]+/g, '') // Remove non-printable
+      .replace(/\s+/g, ' ')
+      .trim()
+    
+    // Additional extreme optimizations
+    if (compressed.length > 1000) {
+      // Remove all unnecessary quotes in JSON-like structures
+      compressed = compressed.replace(/"([^"]+)":/g, '$1:')
+    }
+  }
+
+  return compressed
+}
+
+// Calculate tokens for different models
+function calculateModelTokens(text: string): ModelTokens {
+  return {
+    gpt4: Math.ceil(text.length / AI_MODELS.gpt4.ratio),
+    gpt35: Math.ceil(text.length / AI_MODELS.gpt35.ratio),
+    claude: Math.ceil(text.length / AI_MODELS.claude.ratio),
+    gemini: Math.ceil(text.length / AI_MODELS.gemini.ratio)
+  }
+}
+
+// Security check
+function checkSecurity(content: string): SecurityIssue[] {
+  const issues: SecurityIssue[] = []
+  
+  // API Keys
+  if (/(?:api[_\-]?key|apikey|token)[\s:=]+["']?[a-zA-Z0-9\-_]{20,}/gi.test(content)) {
+    issues.push({ type: 'api_key', severity: 'high', count: 1 })
+  }
+  
+  // Emails
+  const emails = content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g)
+  if (emails?.length) {
+    issues.push({ type: 'email', severity: 'medium', count: emails.length })
+  }
+  
+  // Phone numbers
+  const phones = content.match(/(\+\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g)
+  if (phones?.length) {
+    issues.push({ type: 'phone', severity: 'medium', count: phones.length })
+  }
+  
+  // Private keys
+  if (/-----BEGIN (RSA |EC )?PRIVATE KEY-----/.test(content)) {
+    issues.push({ type: 'private_key', severity: 'high', count: 1 })
+  }
+  
+  return issues
+}
+
+// Remove sensitive data
+function removeSensitiveData(content: string): string {
+  return content
+    .replace(/(?:api[_\-]?key|apikey|token)[\s:=]+["']?[a-zA-Z0-9\-_]{20,}/gi, '[REDACTED_KEY]')
+    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]')
+    .replace(/(\+\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g, '[PHONE]')
+    .replace(/-----BEGIN[\s\S]*?-----END[\s\S]*?-----/g, '[PRIVATE_KEY]')
+}
 
 export default function TokenCompressor() {
   const [files, setFiles] = useState<ProcessedFile[]>([])
+  const [compressionLevel, setCompressionLevel] = useState<CompressionLevel>('standard')
   const [isProcessing, setIsProcessing] = useState(false)
-  const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([])
-  const [showSecurityWarning, setShowSecurityWarning] = useState(false)
-  const [totalOriginalTokens, setTotalOriginalTokens] = useState(0)
-  const [totalCompressedTokens, setTotalCompressedTokens] = useState(0)
-  const [selectedFormat, setSelectedFormat] = useState<OutputFormat>('markdown')
-  const [copied, setCopied] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
-  const [uploadSource, setUploadSource] = useState<'local' | 'github' | 'gdrive' | 'dropbox'>('local')
-  const [gitUrl, setGitUrl] = useState('')
+  const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([])
+  const [showPreview, setShowPreview] = useState(false)
+  const [selectedModel, setSelectedModel] = useState<keyof typeof AI_MODELS>('gpt4')
+  const [copied, setCopied] = useState(false)
+  const [showModelDetails, setShowModelDetails] = useState(false)
+  const [autoCompress, setAutoCompress] = useState(true)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const folderInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFilesUpload = useCallback(async (uploadedFiles: File[]) => {
+  // Calculate totals
+  const totals = useMemo(() => {
+    const original = files.reduce((sum, f) => sum + (f.originalTokens || 0), 0)
+    const compressed = files.reduce((sum, f) => sum + (f.compressedTokens || 0), 0)
+    const saved = original - compressed
+    const rate = original > 0 ? Math.round((saved / original) * 100) : 0
+    
+    return { original, compressed, saved, rate }
+  }, [files])
+
+  // Process files
+  const processFiles = useCallback(async (uploadedFiles: File[]) => {
     setIsProcessing(true)
+    
     try {
-      // Process files
-      const processedFiles = await processFiles(uploadedFiles)
+      const processed: ProcessedFile[] = []
       
-      // Merge with existing files if adding more
-      const allFiles = [...files, ...processedFiles]
-      
-      // Security check on all files
-      const issues = await checkSecurity(allFiles)
-      if (issues.length > 0) {
-        setSecurityIssues(issues)
-        setShowSecurityWarning(true)
+      for (const file of uploadedFiles) {
+        const content = await file.text()
+        const id = `${Date.now()}-${Math.random()}`
+        
+        // Check security
+        const issues = checkSecurity(content)
+        if (issues.length > 0) {
+          setSecurityIssues(prev => [...prev, ...issues])
+        }
+        
+        // Calculate tokens
+        const originalTokens = Math.ceil(content.length / AI_MODELS[selectedModel].ratio)
+        const compressedContent = compressText(content, compressionLevel)
+        const compressedTokens = Math.ceil(compressedContent.length / AI_MODELS[selectedModel].ratio)
+        
+        processed.push({
+          id,
+          name: file.name,
+          type: file.type || 'text/plain',
+          size: file.size,
+          content,
+          compressedContent,
+          originalTokens,
+          compressedTokens,
+          compressionLevel
+        })
       }
       
-      // Token counting
-      let origTokens = 0
-      let compTokens = 0
-      
-      for (const file of processedFiles) {
-        const originalTokens = await countTokens(file.content)
-        const compressed = await compressFiles([file])
-        const compressedTokens = await countTokens(compressed[0].content)
-        
-        file.originalTokens = originalTokens
-        file.compressedTokens = compressedTokens
-        file.compressedContent = compressed[0].content
-        
-        origTokens += originalTokens
-        compTokens += compressedTokens
-      }
-      
-      // Update total tokens
-      setFiles(allFiles)
-      setTotalOriginalTokens(totalOriginalTokens + origTokens)
-      setTotalCompressedTokens(totalCompressedTokens + compTokens)
+      setFiles(prev => [...prev, ...processed])
     } catch (error) {
       console.error('Processing error:', error)
     } finally {
       setIsProcessing(false)
     }
-  }, [files, totalOriginalTokens, totalCompressedTokens])
+  }, [compressionLevel, selectedModel])
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }, [])
+  // Handle file upload
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files) {
+      processFiles(Array.from(files))
+    }
+  }, [processFiles])
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }, [])
-
+  // Handle drag and drop
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
     
-    const items = e.dataTransfer.items
-    const files: File[] = []
-    
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i]
-      if (item.kind === 'file') {
-        const file = item.getAsFile()
-        if (file) files.push(file)
-      }
-    }
-    
+    const files = Array.from(e.dataTransfer.files)
     if (files.length > 0) {
-      handleFilesUpload(files)
+      processFiles(files)
     }
-  }, [handleFilesUpload])
+  }, [processFiles])
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files && files.length > 0) {
-      handleFilesUpload(Array.from(files))
-    }
-  }, [handleFilesUpload])
-
-  const handleRemoveFile = (index: number) => {
-    const updatedFiles = files.filter((_, i) => i !== index)
-    const removedFile = files[index]
-    
-    // Update token counts
-    const origTokens = removedFile.originalTokens || 0
-    const compTokens = removedFile.compressedTokens || 0
-    
-    setFiles(updatedFiles)
-    setTotalOriginalTokens(Math.max(0, totalOriginalTokens - origTokens))
-    setTotalCompressedTokens(Math.max(0, totalCompressedTokens - compTokens))
-  }
-
-  const handleClearAll = () => {
-    setFiles([])
-    setTotalOriginalTokens(0)
-    setTotalCompressedTokens(0)
-    setSecurityIssues([])
-    setShowSecurityWarning(false)
-  }
-
-  const handleContinueWithWarning = () => {
-    setShowSecurityWarning(false)
-  }
-
-  const handleRemoveSensitiveData = () => {
-    const cleanedFiles = files.map(file => ({
-      ...file,
-      content: removeSensitiveData(file.content),
-      compressedContent: removeSensitiveData(file.compressedContent || '')
-    }))
-    setFiles(cleanedFiles)
-    setShowSecurityWarning(false)
-    setSecurityIssues([])
-  }
-
-  const generateMarkdown = (): string => {
-    let markdown = '# Compressed Files for AI Sharing\n\n'
-    markdown += `## Summary\n\n`
-    markdown += `- Total Files: ${files.length}\n`
-    markdown += `- Compression Rate: ${compressionRate}%\n`
-    markdown += `- Total Tokens Saved: ${files.reduce((acc, f) => acc + ((f.originalTokens || 0) - (f.compressedTokens || 0)), 0)}\n\n`
-    
-    files.forEach(file => {
-      markdown += `## ${file.name}\n\n`
-      markdown += `- Original Tokens: ${file.originalTokens?.toLocaleString()}\n`
-      markdown += `- Compressed Tokens: ${file.compressedTokens?.toLocaleString()}\n`
-      markdown += `- Type: ${file.type}\n\n`
-      markdown += '```' + (file.type.split('/')[1] || '') + '\n'
-      markdown += file.compressedContent || file.content
-      markdown += '\n```\n\n---\n\n'
-    })
-    
-    return markdown
-  }
-
-  const generateJSON = (): string => {
-    const output = {
-      metadata: {
-        totalFiles: files.length,
-        compressionRate: compressionRate,
-        timestamp: new Date().toISOString()
-      },
-      files: files.map(file => ({
-        name: file.name,
-        type: file.type,
-        originalTokens: file.originalTokens,
-        compressedTokens: file.compressedTokens,
-        content: file.compressedContent || file.content
-      }))
-    }
-    return JSON.stringify(output, null, 2)
-  }
-
-  const generateZip = async () => {
-    try {
-      // Import JSZip only
-      const JSZip = (await import('jszip')).default
-      const zip = new JSZip()
-      
-      // Add metadata
-      zip.file('metadata.json', JSON.stringify({
-        compressionRate: compressionRate,
-        totalFiles: files.length,
-        tokensSaved: totalOriginalTokens - totalCompressedTokens,
-        timestamp: new Date().toISOString()
-      }, null, 2))
-      
-      // Add compressed files
-      const compressedFolder = zip.folder('compressed')
-      files.forEach(file => {
-        if (compressedFolder) {
-          compressedFolder.file(file.name, file.compressedContent || file.content)
+  // Recompress all files when level changes
+  useEffect(() => {
+    if (autoCompress && files.length > 0) {
+      const recompressed = files.map(file => {
+        const compressedContent = compressText(file.content, compressionLevel)
+        const compressedTokens = Math.ceil(compressedContent.length / AI_MODELS[selectedModel].ratio)
+        
+        return {
+          ...file,
+          compressedContent,
+          compressedTokens,
+          compressionLevel
         }
       })
       
-      // Add original files
-      const originalFolder = zip.folder('original')
-      files.forEach(file => {
-        if (originalFolder) {
-          originalFolder.file(file.name, file.content)
-        }
-      })
-      
-      // Generate ZIP blob
-      const blob = await zip.generateAsync({ type: 'blob' })
-      
-      // Use standard browser download method
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `compressed-files-${Date.now()}.zip`
-      a.style.display = 'none'
-      document.body.appendChild(a)
-      a.click()
-      
-      // Clean up
-      setTimeout(() => {
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }, 100)
-      
-    } catch (error) {
-      console.error('ZIP generation error:', error)
-      // Fallback to text file if ZIP fails
-      const content = files.map(f => `=== ${f.name} ===\n${f.compressedContent || f.content}\n\n`).join('')
-      const blob = new Blob([content], { type: 'text/plain' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `compressed-files-${Date.now()}.txt`
-      a.style.display = 'none'
-      document.body.appendChild(a)
-      a.click()
-      setTimeout(() => {
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }, 100)
-      alert('ZIP generation failed. Downloaded as text file instead.')
+      setFiles(recompressed)
     }
-  }
+  }, [compressionLevel, selectedModel, autoCompress])
 
-  const generateText = (): string => {
-    let text = 'COMPRESSED FILES FOR AI SHARING\n'
-    text += '=' .repeat(50) + '\n\n'
-    
-    files.forEach(file => {
-      text += `FILE: ${file.name}\n`
-      text += '-'.repeat(30) + '\n'
-      text += file.compressedContent || file.content
-      text += '\n\n'
-    })
-    
-    return text
-  }
-
+  // Copy to clipboard
   const handleCopy = async () => {
-    let content = ''
-    switch (selectedFormat) {
-      case 'markdown':
-        content = generateMarkdown()
-        break
-      case 'json':
-        content = generateJSON()
-        break
-      case 'txt':
-        content = generateText()
-        break
-      default:
-        content = generateMarkdown()
-    }
+    const output = files.map(f => 
+      `### ${f.name}\n${f.compressedContent || f.content}`
+    ).join('\n\n')
     
-    await navigator.clipboard.writeText(content)
+    await navigator.clipboard.writeText(output)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleDownload = async () => {
-    if (selectedFormat === 'zip') {
-      await generateZip()
-      return
-    }
+  // Generate download
+  const handleDownload = () => {
+    const output = files.map(f => 
+      `### ${f.name}\n${f.compressedContent || f.content}`
+    ).join('\n\n---\n\n')
     
-    let content = ''
-    let filename = ''
-    let mimeType = ''
-    
-    switch (selectedFormat) {
-      case 'markdown':
-        content = generateMarkdown()
-        filename = 'compressed-files.md'
-        mimeType = 'text/markdown'
-        break
-      case 'json':
-        content = generateJSON()
-        filename = 'compressed-files.json'
-        mimeType = 'application/json'
-        break
-      case 'txt':
-        content = generateText()
-        filename = 'compressed-files.txt'
-        mimeType = 'text/plain'
-        break
-    }
-    
-    const blob = new Blob([content], { type: mimeType })
+    const blob = new Blob([output], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = filename
+    a.download = `compressed-${Date.now()}.txt`
     a.click()
     URL.revokeObjectURL(url)
   }
 
-  const compressionRate = totalOriginalTokens > 0 
-    ? Math.round((1 - totalCompressedTokens / totalOriginalTokens) * 100) 
-    : 0
+  // Remove file
+  const handleRemoveFile = (id: string) => {
+    setFiles(prev => prev.filter(f => f.id !== id))
+  }
 
-  const tokensSaved = totalOriginalTokens - totalCompressedTokens
-  const estimatedCostSaved = (tokensSaved / 1000) * 0.02
+  // Clear all
+  const handleClear = () => {
+    setFiles([])
+    setSecurityIssues([])
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Tool Title Section */}
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center justify-center mb-6">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 blur-lg opacity-50"></div>
-            <Sparkles className="relative w-16 h-16 text-cyan-400" />
+    <div className="container mx-auto px-4 py-6 max-w-5xl">
+      {/* Main Stats - Tool First */}
+      <div className="text-center mb-8">
+        {files.length === 0 ? (
+          <>
+          </>
+        ) : (
+          <div className="space-y-4">
+            {/* Big Numbers */}
+            <div className="flex justify-center items-baseline gap-8">
+              <div>
+                <div className="text-5xl font-bold text-white">
+                  {totals.compressed.toLocaleString()}
+                </div>
+                <div className="text-sm text-gray-400 mt-1">Compressed Tokens</div>
+              </div>
+              <TrendingDown className="w-8 h-8 text-green-400" />
+              <div>
+                <div className="text-5xl font-bold text-green-400">
+                  {totals.rate}%
+                </div>
+                <div className="text-sm text-gray-400 mt-1">Saved</div>
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="w-full max-w-md mx-auto">
+              <div className="flex justify-between text-xs text-gray-400 mb-1">
+                <span>{totals.original.toLocaleString()} original</span>
+                <span>{totals.saved.toLocaleString()} saved</span>
+              </div>
+              <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-cyan-400 to-green-400 transition-all duration-500"
+                  style={{ width: `${totals.rate}%` }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          AI Token Compressor
-        </h1>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-          Visualize and compress tokens from any file format. Support for Git repos, 
-          cloud storage, and batch processing with automatic security checks.
-        </p>
+        )}
       </div>
 
-      {/* Features Section */}
-      <div className="bg-black/30 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-white/10">
-        <h2 className="text-2xl font-bold text-center mb-8 text-white">
-          AI-Powered Token Optimization
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <FileText className="w-10 h-10 mx-auto mb-3 text-cyan-400" />
-            <h3 className="font-semibold mb-2 text-white">Multi-Format Support</h3>
-            <p className="text-gray-400 text-sm">
-              Code, documents, images, PDFs and more
-            </p>
-          </div>
-          <div className="text-center">
-            <Shield className="w-10 h-10 mx-auto mb-3 text-green-400" />
-            <h3 className="font-semibold mb-2 text-white">Security Scanning</h3>
-            <p className="text-gray-400 text-sm">
-              Automatic API key and PII detection
-            </p>
-          </div>
-          <div className="text-center">
-            <Zap className="w-10 h-10 mx-auto mb-3 text-yellow-400" />
-            <h3 className="font-semibold mb-2 text-white">Smart Compression</h3>
-            <p className="text-gray-400 text-sm">
-              Optimize tokens while preserving meaning
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* File Upload Section */}
+      {/* Compression Controls */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-white/10">
-        <div className="space-y-6">
-          {/* Upload Source Tabs */}
-          <div className="flex flex-wrap gap-2 justify-center">
-            <button
-              onClick={() => setUploadSource('local')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                uploadSource === 'local'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
-              }`}
-            >
-              <Upload className="inline mr-2" size={16} />
-              Local Files
-            </button>
-            <button
-              onClick={() => setUploadSource('github')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                uploadSource === 'github'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
-              }`}
-            >
-              <GitBranch className="inline mr-2" size={16} />
-              GitHub
-            </button>
-            <button
-              onClick={() => setUploadSource('gdrive')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                uploadSource === 'gdrive'
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
-              }`}
-            >
-              <Cloud className="inline mr-2" size={16} />
-              Google Drive
-            </button>
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Compression Level */}
+          <div>
+            <div className="flex items-center gap-2 h-6 mb-4">
+              <Sliders className="w-4 h-4 text-gray-400" />
+              <span className="text-sm font-medium text-gray-300">Compression Level</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.entries(COMPRESSION_LEVELS) as [CompressionLevel, any][]).map(([level, info]) => (
+                <button
+                  key={level}
+                  onClick={() => setCompressionLevel(level)}
+                  className={`h-[72px] px-4 rounded-lg transition-all flex items-center gap-3 ${
+                    compressionLevel === level
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  }`}
+                  title={info.description}
+                >
+                  <span className="text-2xl flex-shrink-0">{info.icon}</span>
+                  <div className="text-left">
+                    <div className="font-medium text-sm">{info.name}</div>
+                    <div className="text-xs opacity-70">{info.description}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Upload Area */}
-          {uploadSource === 'local' ? (
-            <div
-              className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all ${
-                isDragging 
-                  ? 'border-cyan-400 bg-cyan-400/10' 
-                  : 'border-gray-600 hover:border-gray-500'
-              }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={handleFileSelect}
-                accept="*"
-              />
-              
-              <input
-                ref={folderInputRef}
-                type="file"
-                /* @ts-ignore */
-                webkitdirectory=""
-                directory=""
-                multiple
-                className="hidden"
-                onChange={handleFileSelect}
-              />
-              
-              <div className="space-y-4">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                <p className="text-gray-300 mb-4">
-                  Drag and drop files or folders here
-                </p>
-                <div className="flex gap-3 justify-center">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isProcessing}
-                    className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50"
-                  >
-                    {isProcessing ? <Loader2 className="animate-spin" size={16} /> : 'Select Files'}
-                  </button>
-                  <button
-                    onClick={() => folderInputRef.current?.click()}
-                    disabled={isProcessing}
-                    className="px-4 py-2 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-all disabled:opacity-50"
-                  >
-                    <FolderOpen className="inline mr-2" size={16} />
-                    Select Folder
-                  </button>
-                </div>
-                <p className="text-sm text-gray-500">
-                  Supports all file types • Automatic security scanning
-                </p>
-              </div>
+          {/* AI Model Selection */}
+          <div>
+            <div className="flex items-center gap-2 h-6 mb-4">
+              <Zap className="w-4 h-4 text-gray-400" />
+              <span className="text-sm font-medium text-gray-300">AI Model</span>
+              {files.length > 0 && (
+                <button
+                  onClick={() => setShowModelDetails(!showModelDetails)}
+                  className="ml-auto text-gray-400 hover:text-cyan-400 transition-colors p-1"
+                  title="Show token comparison across models"
+                >
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showModelDetails ? 'rotate-180' : ''}`} />
+                </button>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <Cloud className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-400">
-                {uploadSource === 'github' ? 'GitHub' : uploadSource === 'gdrive' ? 'Google Drive' : 'Dropbox'} integration requires API setup. Coming soon!
-              </p>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(([model, info]) => (
+                <button
+                  key={model}
+                  onClick={() => setSelectedModel(model)}
+                  className={`h-[72px] px-4 rounded-lg transition-all flex flex-col justify-center ${
+                    selectedModel === model
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                  }`}
+                >
+                  <div className={`font-medium text-sm ${selectedModel === model ? 'text-white' : info.color}`}>
+                    {info.name}
+                  </div>
+                  <div className="text-xs mt-1 opacity-70">
+                    1 token ≈ {info.ratio} chars
+                  </div>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </div>
+
+        {/* Model Details (collapsible) */}
+        {showModelDetails && files.length > 0 && (
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <p className="text-xs text-gray-400 mb-3">Token count comparison across models</p>
+            <div className="grid grid-cols-4 gap-2">
+              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(([model, info]) => {
+                const modelTokens = files.reduce((sum, f) => {
+                  return sum + Math.ceil((f.compressedContent || f.content).length / info.ratio)
+                }, 0)
+                
+                return (
+                  <div 
+                    key={model} 
+                    className={`text-center p-3 rounded-lg ${
+                      selectedModel === model ? 'bg-white/10' : 'bg-black/20'
+                    }`}
+                  >
+                    <div className={`text-lg font-bold ${info.color}`}>
+                      {modelTokens.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">{info.name}</div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Security Warning Modal */}
-      {showSecurityWarning && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-900 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden border border-white/10">
-            <div className="p-6 border-b border-white/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <AlertTriangle className="w-6 h-6 text-yellow-500" />
-                  <h2 className="text-xl font-bold text-white">Security Warning</h2>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowSecurityWarning(false)
-                    setFiles([])
-                  }}
-                  className="text-gray-400 hover:text-white transition-colors"
+      {/* Drop Zone */}
+      <div
+        className={`relative border-2 border-dashed rounded-2xl p-8 transition-all ${
+          isDragging 
+            ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]' 
+            : files.length > 0
+            ? 'border-white/20 bg-white/5'
+            : 'border-white/20 bg-white/5 hover:border-cyan-400/50'
+        }`}
+        onDragOver={(e) => {
+          e.preventDefault()
+          setIsDragging(true)
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault()
+          setIsDragging(false)
+        }}
+        onDrop={handleDrop}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileUpload}
+          accept="*"
+        />
+        
+        {files.length === 0 ? (
+          <div className="text-center">
+            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-white font-medium mb-2">Drop files here</p>
+            <p className="text-gray-400 text-sm mb-4">or</p>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isProcessing}
+              className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50"
+            >
+              {isProcessing ? (
+                <Loader2 className="animate-spin inline" size={16} />
+              ) : (
+                'Choose Files'
+              )}
+            </button>
+            <p className="text-xs text-gray-500 mt-4">
+              All file types • Automatic compression • Security scan
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {/* File List */}
+            <div className="max-h-48 overflow-y-auto space-y-2">
+              {files.map(file => (
+                <div 
+                  key={file.id}
+                  className="flex items-center justify-between p-3 bg-black/30 rounded-lg group"
                 >
-                  <X size={24} />
-                </button>
-              </div>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
-              <p className="text-gray-300 mb-6">
-                We've detected potentially sensitive information in your files. Please review and decide how to proceed.
-              </p>
-              <div className="space-y-3">
-                {securityIssues.slice(0, 10).map((issue, index) => (
-                  <div key={index} className="bg-black/30 rounded-lg p-3 border border-yellow-500/30">
-                    <div className="text-sm text-white font-medium">{issue.description}</div>
-                    <div className="text-xs text-gray-500">Found {issue.count} instance(s)</div>
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-4 h-4 text-gray-400" />
+                    <div>
+                      <div className="text-sm text-white font-medium">{file.name}</div>
+                      <div className="text-xs text-gray-500">
+                        {file.originalTokens?.toLocaleString()} → {file.compressedTokens?.toLocaleString()} tokens
+                      </div>
+                    </div>
                   </div>
+                  
+                  <button
+                    onClick={() => handleRemoveFile(file.id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            
+            {/* Add More Button */}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full py-2 border border-dashed border-white/20 rounded-lg text-gray-400 hover:border-cyan-400 hover:text-cyan-400 transition-all"
+            >
+              + Add More Files
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Security Issues */}
+      {securityIssues.length > 0 && (
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-yellow-400 font-medium mb-2">Security Issues Found</p>
+              <div className="flex flex-wrap gap-2">
+                {securityIssues.map((issue, i) => (
+                  <span 
+                    key={i}
+                    className="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full"
+                  >
+                    {issue.count} {issue.type.replace('_', ' ')}
+                  </span>
                 ))}
               </div>
-            </div>
-            <div className="p-6 border-t border-white/10">
-              <div className="flex gap-3">
-                <button
-                  onClick={() => {
-                    setShowSecurityWarning(false)
-                    setFiles([])
-                  }}
-                  className="flex-1 px-4 py-2 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleContinueWithWarning}
-                  className="flex-1 px-4 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg font-medium hover:bg-yellow-500/30 transition-all border border-yellow-500/30"
-                >
-                  Continue Anyway
-                </button>
-                <button
-                  onClick={handleRemoveSensitiveData}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
-                >
-                  Remove & Continue
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  const cleaned = files.map(f => ({
+                    ...f,
+                    content: removeSensitiveData(f.content),
+                    compressedContent: removeSensitiveData(f.compressedContent || '')
+                  }))
+                  setFiles(cleaned)
+                  setSecurityIssues([])
+                }}
+                className="mt-3 px-4 py-1.5 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm hover:bg-yellow-500/30 transition-all"
+              >
+                Remove Sensitive Data
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Results Section */}
-      {files.length > 0 && !showSecurityWarning && (
-        <>
-          {/* Token Analysis */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-white/10">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-white">Token Analysis</h3>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-4 py-2 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-all flex items-center gap-2"
-                >
-                  <Plus size={16} />
-                  Add More Files
-                </button>
-                <button
-                  onClick={handleClearAll}
-                  className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg font-medium hover:bg-red-500/30 transition-all flex items-center gap-2"
-                >
-                  <Trash2 size={16} />
-                  Clear All
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-black/40 rounded-xl p-4 text-center">
-                <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-white">{files.length}</div>
-                <div className="text-sm text-gray-400">Files</div>
-              </div>
-              <div className="bg-black/40 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-blue-400">{totalOriginalTokens.toLocaleString()}</div>
-                <div className="text-sm text-gray-400">Original Tokens</div>
-              </div>
-              <div className="bg-black/40 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-green-400">{totalCompressedTokens.toLocaleString()}</div>
-                <div className="text-sm text-gray-400">Compressed Tokens</div>
-              </div>
-              <div className="bg-black/40 rounded-xl p-4 text-center">
-                <TrendingDown className="w-8 h-8 text-green-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-400">{compressionRate}%</div>
-                <div className="text-sm text-gray-400">Saved</div>
-              </div>
-            </div>
-            
-            {/* File List */}
-            <div className="space-y-2 mb-4 max-h-60 overflow-y-auto">
-              <h4 className="text-sm font-medium text-gray-400 mb-2">Uploaded Files</h4>
-              {files.map((file, index) => {
-                const fileCompressionRate = file.originalTokens && file.compressedTokens
-                  ? Math.round((1 - file.compressedTokens / file.originalTokens) * 100)
-                  : 0
+      {/* Actions */}
+      {files.length > 0 && (
+        <div className="flex gap-3">
+          <button
+            onClick={handleClear}
+            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+          >
+            <Trash2 className="inline mr-2" size={16} />
+            Clear
+          </button>
+          
+          <button
+            onClick={() => setShowPreview(!showPreview)}
+            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+          >
+            {showPreview ? <EyeOff className="inline mr-2" size={16} /> : <Eye className="inline mr-2" size={16} />}
+            Preview
+          </button>
+          
+          <button
+            onClick={handleCopy}
+            className="flex-1 px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+          >
+            {copied ? <Check className="inline mr-2" size={16} /> : <Copy className="inline mr-2" size={16} />}
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
+          
+          <button
+            onClick={handleDownload}
+            className="flex-1 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
+          >
+            <Download className="inline mr-2" size={16} />
+            Download
+          </button>
+        </div>
+      )}
 
-                return (
-                  <div key={index} className="bg-black/30 rounded-lg p-3 flex items-center justify-between group">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-gray-400" />
-                      <div>
-                        <div className="font-medium text-white text-sm">{file.name}</div>
-                        <div className="text-xs text-gray-500">{file.type}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <div className="text-sm text-gray-400">
-                        {file.originalTokens?.toLocaleString() || 0} → {file.compressedTokens?.toLocaleString() || 0}
-                      </div>
-                      <div className={`text-sm font-medium ${fileCompressionRate > 0 ? 'text-green-400' : 'text-gray-500'}`}>
-                        -{fileCompressionRate}%
-                      </div>
-                      <button
-                        onClick={() => handleRemoveFile(index)}
-                        className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            
-            {tokensSaved > 0 && (
-              <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl p-4 border border-green-500/20">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-gray-400">Estimated Cost Saved</div>
-                    <div className="text-xl font-bold text-green-400">${estimatedCostSaved.toFixed(2)}</div>
-                  </div>
-                  <Zap className="w-8 h-8 text-green-400" />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Output Options */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <h3 className="text-xl font-semibold text-white mb-4">Output Options</h3>
-            
-            {/* Format Selection */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-              {(['markdown', 'json', 'zip', 'txt'] as OutputFormat[]).map(format => (
-                <button
-                  key={format}
-                  onClick={() => setSelectedFormat(format)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    selectedFormat === format
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                  }`}
-                >
-                  {format.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            
-            {/* Actions */}
-            <div className="flex gap-3">
-              <button
-                onClick={handleCopy}
-                disabled={selectedFormat === 'zip'}
-                className="flex-1 px-6 py-3 bg-white/10 text-white rounded-lg font-medium hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {copied ? (
-                  <>
-                    <Check className="inline mr-2" size={20} />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="inline mr-2" size={20} />
-                    Copy to Clipboard
-                  </>
-                )}
-              </button>
-              
-              <button
-                onClick={handleDownload}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
-              >
-                <Download className="inline mr-2" size={20} />
-                Download
-              </button>
-            </div>
-          </div>
-        </>
+      {/* Preview */}
+      {showPreview && files.length > 0 && (
+        <div className="mt-6 bg-black/40 rounded-xl p-4 border border-white/10">
+          <h3 className="text-sm font-medium text-gray-400 mb-3">Compressed Output Preview</h3>
+          <pre className="text-xs text-gray-300 font-mono overflow-x-auto whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
+            {files.slice(0, 2).map(f => 
+              `### ${f.name}\n${(f.compressedContent || f.content).substring(0, 500)}${
+                (f.compressedContent || f.content).length > 500 ? '...' : ''
+              }`
+            ).join('\n\n')}
+            {files.length > 2 && `\n\n... and ${files.length - 2} more files`}
+          </pre>
+        </div>
       )}
     </div>
   )

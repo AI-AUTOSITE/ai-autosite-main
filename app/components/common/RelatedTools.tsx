@@ -2,7 +2,8 @@
 'use client'
 
 import Link from 'next/link'
-import { Tool, Category, getToolsByCategory } from '../../lib/categories.config'
+import type { Tool, Category } from '../../lib/categories'
+import { TOOLS } from '../../lib/categories'
 
 interface RelatedToolsProps {
   currentTool: Tool
@@ -10,7 +11,9 @@ interface RelatedToolsProps {
 }
 
 export default function RelatedTools({ currentTool, category }: RelatedToolsProps) {
-  const relatedTools = getToolsByCategory(category.id)
+  // TOOLSから直接フィルタリング（getToolsByCategoryの代わり）
+  const relatedTools = TOOLS
+    .filter(t => t.category === category.id)
     .filter(t => t.id !== currentTool.id && t.status === 'live')
     .slice(0, 3)
 

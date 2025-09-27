@@ -1,5 +1,15 @@
-// app/tools/pdf-tools/features/password/PasswordHandler.ts
 import { PDFDocument } from 'pdf-lib';
+
+export interface PasswordOptions {
+  userPassword: string;
+  ownerPassword?: string;
+  permissions?: {
+    printing?: boolean;
+    copying?: boolean;
+    modifying?: boolean;
+    annotating?: boolean;
+  };
+}
 
 export class PasswordHandler {
   /**
@@ -8,138 +18,89 @@ export class PasswordHandler {
   static async isPasswordProtected(file: File): Promise<boolean> {
     try {
       const arrayBuffer = await file.arrayBuffer();
-      
-      // Check if it's a valid PDF first by checking the header
-      const bytes = new Uint8Array(arrayBuffer);
-      
-      // PDF files should start with %PDF-
-      if (bytes.length < 5) {
-        console.warn('File too small to be a valid PDF');
-        return false;
-      }
-      
-      const headerString = String.fromCharCode(...bytes.slice(0, 5));
-      
-      if (!headerString.startsWith('%PDF')) {
-        console.warn('Invalid PDF file: No PDF header found');
-        return false;
-      }
-      
-      // Try to load the PDF
-      try {
-        await PDFDocument.load(arrayBuffer);
-        return false; // Successfully loaded without password
-      } catch (loadError: any) {
-        // Check if the error is related to password/encryption
-        const errorMessage = loadError.message?.toLowerCase() || '';
-        if (errorMessage.includes('password') || 
-            errorMessage.includes('encrypted') ||
-            errorMessage.includes('decrypt')) {
-          return true;
-        }
-        
-        // For any other errors, assume it's not password-related
-        console.error('Error loading PDF:', loadError);
-        return false;
-      }
+      // Try to load the PDF without password
+      await PDFDocument.load(arrayBuffer);
+      return false; // Successfully loaded, so not protected
     } catch (error: any) {
-      console.error('Error checking password protection:', error);
-      return false;
+      // If loading fails with password-related error, it's protected
+      if (error.message && error.message.includes('password')) {
+        return true;
+      }
+      // For pdf-lib, encrypted PDFs will throw an error
+      return error.message?.includes('encrypt') || false;
     }
   }
 
   /**
    * Add password protection to a PDF
+   * Note: pdf-lib doesn't support adding encryption directly
+   * This is a placeholder - you would need a different library like pdf-lib-plus
+   * or server-side processing for actual password protection
    */
-  static async addPassword(
-    file: File,
-    options: {
-      userPassword: string;
-      ownerPassword?: string;
-      permissions?: {
-        printing?: boolean;
-        modifying?: boolean;
-        copying?: boolean;
-        annotating?: boolean;
-      };
-    }
-  ): Promise<Uint8Array> {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      
-      // Note: pdf-lib doesn't support adding encryption directly
-      // You would need to use a different library like pdf-lib-encrypt
-      // or server-side processing for this functionality
-      
-      // For now, return the original PDF
-      console.warn('Password protection requires additional libraries or server-side processing');
-      return await pdfDoc.save();
-    } catch (error) {
-      console.error('Failed to add password:', error);
-      throw new Error('Failed to add password protection to PDF');
-    }
+  static async addPassword(file: File, options: PasswordOptions): Promise<Uint8Array> {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    
+    // For now, just return the original PDF
+    console.warn('Password protection requires server-side processing or additional libraries');
+    
+    // You can add metadata to indicate it should be protected
+    pdfDoc.setTitle('Protected Document');
+    pdfDoc.setKeywords(['protected', 'encrypted']);
+    
+    return await pdfDoc.save();
   }
 
   /**
    * Remove password protection from a PDF
+   * Note: pdf-lib doesn't support password-protected PDFs
+   * This is a placeholder implementation
    */
-  static async removePassword(
-    file: File,
-    password: string
-  ): Promise<Uint8Array> {
+  static async removePassword(file: File, password: string): Promise<Uint8Array> {
     try {
       const arrayBuffer = await file.arrayBuffer();
       
-      // Try to load with password
-      const pdfDoc = await PDFDocument.load(arrayBuffer, {
-        password: password
-      });
+      // pdf-lib doesn't support password-protected PDFs
+      // You would need to use a different library like pdf.js or server-side processing
+      // For now, we'll try to load normally and return an error if it fails
       
-      // Save without password
-      return await pdfDoc.save();
-    } catch (error: any) {
-      if (error.message?.includes('password') || error.message?.includes('decrypt')) {
-        throw new Error('Incorrect password. Please try again.');
+      try {
+        const pdfDoc = await PDFDocument.load(arrayBuffer);
+        // If it loads without error, it wasn't actually password protected
+        return await pdfDoc.save();
+      } catch (loadError) {
+        // If loading fails, it might be password protected
+        // We can't actually decrypt it with pdf-lib
+        throw new Error('This PDF appears to be password protected. pdf-lib does not support decrypting PDFs. Consider using a server-side solution or a library like pdf.js for handling encrypted PDFs.');
       }
-      console.error('Failed to remove password:', error);
-      throw new Error('Failed to remove password protection from PDF');
+    } catch (error: any) {
+      throw new Error('Invalid password or failed to decrypt PDF: ' + error.message);
     }
   }
 
   /**
-   * Validate PDF file before processing
+   * Validate password strength
    */
-  static async validatePDF(file: File): Promise<boolean> {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const bytes = new Uint8Array(arrayBuffer);
-      
-      // Check minimum size
-      if (bytes.length < 1024) {
-        console.warn('File too small to be a valid PDF');
-        return false;
-      }
-      
-      // Check PDF header
-      const headerString = String.fromCharCode(...bytes.slice(0, 5));
-      if (!headerString.startsWith('%PDF')) {
-        console.warn('Invalid PDF header');
-        return false;
-      }
-      
-      // Check for EOF marker (%%EOF should be near the end)
-      const lastBytes = bytes.slice(-1024);
-      const lastString = String.fromCharCode(...lastBytes);
-      if (!lastString.includes('%%EOF')) {
-        console.warn('PDF file appears to be truncated');
-        return false;
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('PDF validation error:', error);
-      return false;
+  static validatePasswordStrength(password: string): {
+    isValid: boolean;
+    message?: string;
+  } {
+    if (password.length < 4) {
+      return {
+        isValid: false,
+        message: 'Password must be at least 4 characters long'
+      };
     }
+    
+    if (password.length > 32) {
+      return {
+        isValid: false,
+        message: 'Password must be 32 characters or less'
+      };
+    }
+    
+    return {
+      isValid: true
+    };
   }
 }

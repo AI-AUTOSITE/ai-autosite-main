@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { Home, ChevronRight } from 'lucide-react'
-import { Tool, Category } from '../../lib/categories.config'
+import type { Tool, Category } from '../../lib/categories'  // ← この行を追加！
 
 interface BreadcrumbProps {
   tool: Tool | undefined

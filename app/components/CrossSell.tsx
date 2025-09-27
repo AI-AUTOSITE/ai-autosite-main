@@ -4,11 +4,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronRight, Sparkles, Users, TrendingUp, Zap } from 'lucide-react'
-import { TOOLS, getToolsByCategory, Tool } from '../lib/categories.config'
+import type { Tool } from '../lib/categories'
+import { TOOLS } from '../lib/categories'
 
 interface RelatedTool extends Tool {
   correlationScore: number
-  sharedUsers: number
   matchReasons: string[]
 }
 
@@ -45,9 +45,10 @@ const calculateCorrelation = (currentTool: Tool, targetTool: Tool): { score: num
   
   // 5. 難易度の近さ（+15点）
   const difficultyMap: Record<string, number> = {
-    'Simple': 1,
-    'Intermediate': 2,
-    'Advanced': 3
+    'Instant': 1,
+    'Simple': 2,
+    'Intermediate': 3,
+    'Advanced': 4
   }
   const currentDiff = difficultyMap[currentTool.difficulty || 'Simple']
   const targetDiff = difficultyMap[targetTool.difficulty || 'Simple']
@@ -57,11 +58,11 @@ const calculateCorrelation = (currentTool: Tool, targetTool: Tool): { score: num
   
   // 6. 補完関係の検出（特定のパターン）
   const complementaryPairs: Record<string, string[]> = {
-    'pdf-tools': ['ai-summarizer', 'pdf-summarizer'],
+    'pdf-tools': ['ai-summarizer', 'pdf-summarizer', 'pdf-to-data'],
     'ai-summarizer': ['pdf-tools', 'text-case'],
-    'code-reader': ['json-format', 'tech-stack-analyzer'],
-    'json-format': ['code-reader', 'api-testing'],
-    'text-case': ['ai-summarizer', 'json-format'],
+    'json-format': ['json-csv', 'api-testing'],
+    'json-csv': ['json-format', 'code-reader'],
+    'text-case': ['ai-summarizer', 'text-counter'],
   }
   
   if (complementaryPairs[currentTool.id]?.includes(targetTool.id)) {
@@ -82,23 +83,6 @@ const calculateCorrelation = (currentTool: Tool, targetTool: Tool): { score: num
   }
   
   return { score: Math.min(score, 100), reasons }
-}
-
-// ユーザー数の推定（実際のデータがない場合のシミュレーション）
-const estimateSharedUsers = (tool: Tool, correlationScore: number): number => {
-  // ベースユーザー数（人気度から推定）
-  const baseUsers = tool.featured ? 1000 : 
-                    tool.new ? 200 : 
-                    500
-  
-  // users プロパティから実際の数値を抽出
-  const actualUsers = tool.users ? 
-    parseInt(tool.users.replace(/[^0-9]/g, '')) * (tool.users.includes('k') ? 1000 : 1) : 
-    baseUsers
-  
-  // 相関スコアに基づいて共有ユーザー数を計算
-  const sharedPercentage = (correlationScore / 100) * 0.7 // 最大70%が重複
-  return Math.floor(actualUsers * sharedPercentage)
 }
 
 export function PeopleAlsoUse({ currentToolId }: { currentToolId: string }) {
@@ -123,12 +107,10 @@ export function PeopleAlsoUse({ currentToolId }: { currentToolId: string }) {
         .filter(t => t.id !== currentToolId && t.status === 'live')
         .map(tool => {
           const { score, reasons } = calculateCorrelation(currentTool, tool)
-          const sharedUsers = estimateSharedUsers(tool, score)
           
           return {
             ...tool,
             correlationScore: score,
-            sharedUsers,
             matchReasons: reasons
           }
         })
@@ -139,7 +121,7 @@ export function PeopleAlsoUse({ currentToolId }: { currentToolId: string }) {
       return toolsWithScores
     }
     
-    // データ取得をシミュレート（実際はすぐに計算可能）
+    // データ取得をシミュレート
     setTimeout(() => {
       setRelatedTools(calculateRelatedTools())
       setLoading(false)
@@ -207,23 +189,18 @@ export function PeopleAlsoUse({ currentToolId }: { currentToolId: string }) {
                 </div>
               </div>
               
-              <div className="text-right flex items-center gap-3">
-                <div>
-                  <div className="flex items-center gap-1 text-sm">
-                    {tool.correlationScore >= 70 ? (
-                      <Zap className="w-3 h-3 text-yellow-400" />
-                    ) : (
-                      <TrendingUp className="w-3 h-3 text-green-400" />
-                    )}
-                    <span className={`font-semibold ${
-                      tool.correlationScore >= 70 ? 'text-yellow-400' : 'text-green-400'
-                    }`}>
-                      {tool.correlationScore}%
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {tool.sharedUsers.toLocaleString()} users
-                  </div>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  {tool.correlationScore >= 70 ? (
+                    <Zap className="w-3 h-3 text-yellow-400" />
+                  ) : (
+                    <TrendingUp className="w-3 h-3 text-green-400" />
+                  )}
+                  <span className={`text-sm font-semibold ${
+                    tool.correlationScore >= 70 ? 'text-yellow-400' : 'text-green-400'
+                  }`}>
+                    {tool.correlationScore}%
+                  </span>
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all" />
               </div>
@@ -261,22 +238,25 @@ export function UsagePatterns({ toolId }: { toolId: string }) {
     const generateWorkflows = () => {
       const workflows: string[] = []
       
-      if (tool.category === 'productivity-tools') {
-        workflows.push('Import → Process → Export')
-        workflows.push('Analyze → Optimize → Save')
-      } else if (tool.category === 'developer-tools') {
-        workflows.push('Code → Analyze → Refactor')
+      if (tool.category === 'quick-tools') {
+        workflows.push('Input → Process → Result')
+        workflows.push('Upload → Transform → Download')
+      } else if (tool.category === 'dev-tools') {
+        workflows.push('Code → Analyze → Optimize')
         workflows.push('Debug → Test → Deploy')
-      } else if (tool.category === 'ai-tools') {
+      } else if (tool.category === 'creative') {
+        workflows.push('Design → Edit → Export')
+        workflows.push('Create → Refine → Publish')
+      } else if (tool.category === 'business') {
         workflows.push('Input → AI Process → Review')
         workflows.push('Generate → Edit → Finalize')
       } else {
-        workflows.push('Select → Transform → Download')
+        workflows.push('Select → Transform → Save')
         workflows.push('Upload → Process → Share')
       }
       
       if (tool.apiRequired) {
-        workflows.push('Connect → Sync → Update')
+        workflows.push('Connect → Process → Output')
       }
       
       return workflows.slice(0, 3)
@@ -284,6 +264,7 @@ export function UsagePatterns({ toolId }: { toolId: string }) {
     
     // 平均使用時間を難易度から推定
     const avgTimeMap: Record<string, string> = {
+      'Instant': '30 seconds',
       'Simple': '2-3 minutes',
       'Intermediate': '5-7 minutes',
       'Advanced': '10-15 minutes'
