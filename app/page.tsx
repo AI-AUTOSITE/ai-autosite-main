@@ -150,16 +150,8 @@ export default function ToolsPage() {
       filtered = filtered.filter(tool => tool.featured)
     }
 
-    // Sort tools
+    // Sort tools - Alphabetical order only
     filtered.sort((a, b) => {
-      if (a.featured && !b.featured) return -1
-      if (!a.featured && b.featured) return 1
-      
-      if (a.featured === b.featured) {
-        if (a.new && !b.new) return -1
-        if (!a.new && b.new) return 1
-      }
-      
       return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     })
 
@@ -388,7 +380,7 @@ export default function ToolsPage() {
               {searchQuery && <span> matching "<span className="text-white">{searchQuery}</span>"</span>}
             </div>
 
-            {/* Tools Grid/List - ここが重要!! */}
+            {/* Tools Grid/List */}
             {filteredTools.length === 0 ? (
               <div className="text-center py-12 sm:py-16">
                 <div className="text-4xl sm:text-5xl md:text-6xl mb-4">🔍</div>
@@ -396,14 +388,14 @@ export default function ToolsPage() {
                 <p className="text-sm sm:text-base text-gray-500">Try adjusting your filters or search query</p>
               </div>
             ) : viewMode === 'grid' ? (
-              // グリッドビュー - 最大3列
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+              // Grid view with uniform width
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 w-full">
                 {filteredTools.map(tool => (
                   <ToolCard key={tool.id || tool.name} tool={tool} />
                 ))}
               </div>
             ) : (
-              // リストビュー - 1行1ツール
+              // List view - one tool per row
               <div className="flex flex-col gap-2 w-full max-w-none">
                 {filteredTools.map(tool => (
                   <ToolListItem key={tool.id || tool.name} tool={tool} />
@@ -428,8 +420,8 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
     <div className="animate-fadeIn px-4 sm:px-6">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Choose a Category</h2>
       
-      {/* Category Cards - 最大3列 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-6 sm:mb-8">
+      {/* Category Cards with uniform width */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-6 sm:mb-8 w-full">
         {categories.map((cat: any) => {
           const Icon = cat.icon
           return (
@@ -438,7 +430,7 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
               onClick={() => setSelectedCategory(cat.id)}
               className="group relative overflow-hidden bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6
                        hover:bg-gray-750 transition-all duration-300 transform hover:scale-[1.02]
-                       border border-gray-700 hover:border-gray-600 text-left"
+                       border border-gray-700 hover:border-gray-600 text-left w-full"
             >
               <div className="relative z-10">
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
@@ -529,7 +521,7 @@ function QuickAccessCard({ title, icon, tools, count, onViewAll }: any) {
   )
 }
 
-// Tool Card Component - レスポンシブ最適化
+// Tool Card Component - Width uniform
 function ToolCard({ tool }: { tool: any }) {
   const getIconBgClass = () => {
     if (tool.id === 'pc-optimizer') return 'bg-gray-700'
@@ -541,11 +533,11 @@ function ToolCard({ tool }: { tool: any }) {
   }
 
   return (
-    <Link href={tool.url || `/tools/${tool.id}`}>
+    <Link href={tool.url || `/tools/${tool.id}`} className="block w-full">
       <div className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
                      hover:scale-[1.02] cursor-pointer h-full min-h-[260px]
                      flex flex-col border border-gray-700 hover:border-gray-600 group
-                     p-4 sm:p-5 lg:p-6">
+                     p-4 sm:p-5 lg:p-6 w-full">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg lg:rounded-xl ${getIconBgClass()} 
@@ -591,7 +583,7 @@ function ToolCard({ tool }: { tool: any }) {
   )
 }
 
-// Tool List Item Component - 横幅いっぱいに1行1ツール
+// Tool List Item Component - Full width, one tool per row
 function ToolListItem({ tool }: { tool: any }) {
   const getIconBgClass = () => {
     if (tool.id === 'pc-optimizer') return 'bg-gray-700'

@@ -1,6 +1,5 @@
 // app/lib/blog-posts/business-tools.ts
-import { Hash, Instagram, Youtube, MessageCircle, 
-  Sparkles, Palette, TrendingUp, BarChart3, Target, Briefcase } from 'lucide-react'
+import { Hash, MessageCircle, Sparkles, TrendingUp, FileText } from 'lucide-react'
 import type { BlogPost } from './types'
 
 export const businessToolsPosts: BlogPost[] = [
@@ -17,39 +16,7 @@ export const businessToolsPosts: BlogPost[] = [
       name: 'Competitive Tool Analyzer',
       url: '/tools/competitive-analyzer'
     },
-    category: 'business'  // 'business' → 'business'に変更
-  },
-  {
-    id: 'instagram-bio-generator-guide',
-    title: 'Instagram Bio Generator - Perfect Profiles',
-    description: 'Create engaging Instagram bios that attract followers. Free bio generator with templates.',
-    readTime: '4 min',
-    publishDate: '2025-01-20',
-    icon: Instagram,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'Instagram Bio Generator',
-      url: '/tools/instagram-bio'
-    },
-    tags: ['instagram', 'bio', 'social'],
-    category: 'business'  // 'business' → 'business'に変更
-  },
-  {
-    id: 'youtube-thumbnail-guide',
-    title: 'YouTube Thumbnail Downloader - Get HD Thumbnails',
-    description: 'Download YouTube video thumbnails in HD. Free thumbnail grabber for content creators.',
-    readTime: '3 min',
-    publishDate: '2025-01-20',
-    icon: Youtube,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'YouTube Thumbnail',
-      url: '/tools/youtube-thumbnail'
-    },
-    tags: ['youtube', 'thumbnail', 'download'],
-    category: 'business'  // 'business' → 'business'に変更
+    category: 'business'
   },
   {
     id: 'whatsapp-link-generator-guide',
@@ -61,11 +28,11 @@ export const businessToolsPosts: BlogPost[] = [
     featured: true,
     status: 'published',
     relatedTool: {
-      name: 'WhatsApp Link',
+      name: 'WhatsApp Link Generator',
       url: '/tools/whatsapp-link'
     },
-    tags: ['whatsapp', 'business', 'link'],
-    category: 'business'  // 'business' → 'business'に変更
+    tags: ['whatsapp', 'business', 'link', 'chat', 'generator'],
+    category: 'business'
   },
   {
     id: 'hashtag-generator-guide',
@@ -83,7 +50,7 @@ export const businessToolsPosts: BlogPost[] = [
       url: '/tools/hashtag-generator'
     },
     tags: ['hashtags', 'social-media', 'instagram', 'twitter', 'tiktok', 'marketing', 'engagement', 'content-strategy'],
-    category: 'business',  // 'business' → 'business'に変更
+    category: 'business',
     author: 'AI AutoSite Team',
     views: 0,
     seoTitle: 'Hashtag Generator Guide 2025 - Best Tags for Social Media',
@@ -103,24 +70,28 @@ export const businessToolsPosts: BlogPost[] = [
       name: 'AI Prompt Generator',
       url: '/tools/ai-prompt-generator'
     },
-    tags: ['ai', 'prompt', 'chatgpt'],
-    category: 'business'  // 'business' → 'business'に変更
+    tags: ['ai', 'prompt', 'chatgpt', 'claude', 'generator'],
+    category: 'business'
   },
   {
-    id: 'gradient-generator-guide',
-    title: 'Gradient Generator CSS - Beautiful Colors',
-    description: 'Create stunning CSS gradients for web design. Free gradient generator with live preview.',
-    readTime: '4 min',
-    publishDate: '2025-01-20',
-    icon: Palette,
-    featured: false,
+    id: 'ai-resume-guide',
+    title: 'AI Resume & Cover Letter Generator - Professional Documents in Minutes',
+    description: 'Create tailored resumes and cover letters with AI. Stand out in job applications with professionally crafted documents.',
+    readTime: '5 min',
+    publishDate: 'January 2025',
+    icon: FileText,
+    featured: true,
     status: 'published',
     relatedTool: {
-      name: 'Gradient Generator',
-      url: '/tools/gradient-generator'
+      name: 'AI Resume & Cover Letter',
+      url: '/tools/ai-resume'
     },
-    tags: ['gradient', 'css', 'design'],
-    category: 'business'  // 'business' → 'business'に変更
+    tags: ['resume', 'cover-letter', 'ai', 'career', 'job-search', 'claude'],
+    category: 'business',
+    author: 'AI AutoSite Team',
+    views: 0,
+    seoTitle: 'AI Resume Generator - Create Professional Resumes & Cover Letters',
+    seoDescription: 'Generate professional resumes and cover letters with AI. Tailored for your job applications. Free AI-powered career tool.',
+    ogImage: '/og/ai-resume-guide.png'
   }
-  // 注意：competitive-analyzer-guideの重複を削除しました
 ]
