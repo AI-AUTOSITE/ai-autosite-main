@@ -437,25 +437,26 @@ return (
         </div>
 
         {/* Tools Grid/List */}
-        {filteredTools.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-2xl text-gray-400 mb-2">No tools found</p>
-            <p className="text-gray-500">Try adjusting your filters or search query</p>
-          </div>
-        ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.map((tool) => (
-              <ToolCard key={tool.id || tool.name} tool={tool} />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {filteredTools.map((tool) => (
-              <ToolListItem key={tool.id || tool.name} tool={tool} />
-            ))}
-          </div>
-        )}
+{filteredTools.length === 0 ? (
+  <div className="text-center py-12 sm:py-16">
+    <div className="text-4xl sm:text-5xl md:text-6xl mb-4">🔍</div>
+    <p className="text-xl sm:text-2xl text-gray-400 mb-2">No tools found</p>
+    <p className="text-sm sm:text-base text-gray-500">Try adjusting your filters or search query</p>
+  </div>
+) : viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                {filteredTools.map(tool => (
+                  <ToolCard key={tool.id || tool.name} tool={tool} />
+                ))}
+              </div>
+) : (
+  // リストビュー - ToolListItemを使用
+  <div className="space-y-2">
+    {filteredTools.map(tool => (
+      <ToolListItem key={tool.id || tool.name} tool={tool} />
+    ))}
+  </div>
+)}
       </>
     )}
   </div>

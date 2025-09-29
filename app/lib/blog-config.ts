@@ -44,7 +44,7 @@ export const blogCategories: BlogCategory[] = [
     description: 'Interactive tutorials and guides'
   },
   {
-    id: 'business-tools',
+    id: 'business',
     name: 'Business Tools',
     shortName: 'Business',
     icon: Briefcase,

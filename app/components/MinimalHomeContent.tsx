@@ -55,7 +55,7 @@ color: 'from-green-500 to-teal-500',
 enabled: true
 },
 {
-id: 'business-tools',
+id: 'business',
 title: 'Business',
 icon: '💼',
 lucideIcon: Briefcase,

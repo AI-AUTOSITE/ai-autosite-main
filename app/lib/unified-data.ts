@@ -16,6 +16,7 @@ import { devToolsPosts } from './blog-posts/dev-tools'
 import { studyToolsPosts } from './blog-posts/study-tools'
 import { businessToolsPosts } from './blog-posts/business-tools'
 import { learningPosts } from './blog-posts/learning'
+import { creativeToolsPosts } from './blog-posts/creative-tools' 
 // ===================================
 // 型定義
 // ===================================

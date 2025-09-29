@@ -39,7 +39,8 @@ const GithubIcon = ({ className }: { className?: string }) => (
     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
   </svg>
 )
-// Categories configuration - matching screenshot style
+
+// Categories configuration
 const CATEGORIES = [
   {
     id: 'quick-tools',
@@ -130,44 +131,40 @@ export default function ToolsPage() {
     setTimeout(loadData, 100)
   }, [])
 
-
-const filteredTools = useMemo(() => {
-  if (selectedCategory === null) return []
-  
-  let filtered = selectedCategory === 'all' 
-    ? tools 
-    : getToolsByCategory(selectedCategory).filter(t => t.status === 'active')
-
-  if (searchQuery) {
-    filtered = searchTools(searchQuery)
-  }
-
-  if (showOnlyNew) {
-    filtered = filtered.filter(tool => tool.new)
-  }
-
-  if (showOnlyFeatured) {
-    filtered = filtered.filter(tool => tool.featured)
-  }
-
-  // Sort tools AFTER all filtering - this is the correct position!
-  filtered.sort((a, b) => {
-    // Featured tools always come first
-    if (a.featured && !b.featured) return -1
-    if (!a.featured && b.featured) return 1
+  const filteredTools = useMemo(() => {
+    if (selectedCategory === null) return []
     
-    // Among featured or non-featured, new tools come second
-    if (a.featured === b.featured) {
-      if (a.new && !b.new) return -1
-      if (!a.new && b.new) return 1
+    let filtered = selectedCategory === 'all' 
+      ? tools 
+      : getToolsByCategory(selectedCategory).filter(t => t.status === 'active')
+
+    if (searchQuery) {
+      filtered = searchTools(searchQuery)
     }
-    
-    // Finally, sort alphabetically by name (case-insensitive)
-    return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  })
 
-  return filtered
-}, [selectedCategory, searchQuery, showOnlyNew, showOnlyFeatured, tools])
+    if (showOnlyNew) {
+      filtered = filtered.filter(tool => tool.new)
+    }
+
+    if (showOnlyFeatured) {
+      filtered = filtered.filter(tool => tool.featured)
+    }
+
+    // Sort tools
+    filtered.sort((a, b) => {
+      if (a.featured && !b.featured) return -1
+      if (!a.featured && b.featured) return 1
+      
+      if (a.featured === b.featured) {
+        if (a.new && !b.new) return -1
+        if (!a.new && b.new) return 1
+      }
+      
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    })
+
+    return filtered
+  }, [selectedCategory, searchQuery, showOnlyNew, showOnlyFeatured, tools])
 
   // Statistics
   const stats = useMemo(() => ({
@@ -201,7 +198,7 @@ const filteredTools = useMemo(() => {
     <div className="min-h-screen bg-gray-950 text-white">
       <Header />
       
-{/* Hero Section - Black background with Minimal Padding */}
+      {/* Hero Section */}
       <div className="bg-gray-950 py-2 sm:py-3 md:py-4 border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <div className="flex justify-center gap-2 mb-1">
@@ -229,7 +226,7 @@ const filteredTools = useMemo(() => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {/* Search Bar - Reduced Spacing */}
+        {/* Search Bar */}
         <div className="mb-4 sm:mb-6">
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 sm:w-5 sm:h-5" />
@@ -274,7 +271,7 @@ const filteredTools = useMemo(() => {
         {/* Tools List View */}
         {(selectedCategory !== null || searchQuery) && (
           <>
-            {/* Controls - Reduced Spacing */}
+            {/* Controls */}
             <div className="mb-4 space-y-3">
               {/* Breadcrumb */}
               <div className="flex items-center gap-2 text-sm">
@@ -296,7 +293,7 @@ const filteredTools = useMemo(() => {
                 )}
               </div>
 
-              {/* Filter Controls - Reduced Spacing */}
+              {/* Filter Controls */}
               <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
                 {/* Quick Filters */}
                 <div className="flex flex-wrap gap-2 w-full sm:w-auto">
@@ -354,7 +351,7 @@ const filteredTools = useMemo(() => {
                 </div>
               </div>
 
-              {/* Category Pills - Horizontal Scrollable Container */}
+              {/* Category Pills */}
               <div className="w-full overflow-x-auto">
                 <div className="flex gap-2 pb-2 min-w-max">
                   <button
@@ -391,7 +388,7 @@ const filteredTools = useMemo(() => {
               {searchQuery && <span> matching "<span className="text-white">{searchQuery}</span>"</span>}
             </div>
 
-            {/* Tools Grid/List - Improved Responsive */}
+            {/* Tools Grid/List - ここが重要!! */}
             {filteredTools.length === 0 ? (
               <div className="text-center py-12 sm:py-16">
                 <div className="text-4xl sm:text-5xl md:text-6xl mb-4">🔍</div>
@@ -399,15 +396,15 @@ const filteredTools = useMemo(() => {
                 <p className="text-sm sm:text-base text-gray-500">Try adjusting your filters or search query</p>
               </div>
             ) : viewMode === 'grid' ? (
-<div className="flex flex-col gap-2 w-full">
-  {filteredTools.map(tool => (
-    <div key={tool.id || tool.name} className="w-full">
-      <ToolListItem tool={tool} />
-    </div>
-  ))}
-</div>
+              // グリッドビュー - 最大3列
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                {filteredTools.map(tool => (
+                  <ToolCard key={tool.id || tool.name} tool={tool} />
+                ))}
+              </div>
             ) : (
-              <div className="space-y-2">
+              // リストビュー - 1行1ツール
+              <div className="flex flex-col gap-2 w-full max-w-none">
                 {filteredTools.map(tool => (
                   <ToolListItem key={tool.id || tool.name} tool={tool} />
                 ))}
@@ -422,7 +419,7 @@ const filteredTools = useMemo(() => {
   )
 }
 
-// Category Grid Component - Reduced Spacing
+// Category Grid Component
 function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowOnlyFeatured, setShowOnlyNew, stats }: any) {
   const featuredTools = useMemo(() => getFeaturedTools(4), [])
   const newTools = useMemo(() => getNewTools(4), [])
@@ -431,37 +428,37 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
     <div className="animate-fadeIn px-4 sm:px-6">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Choose a Category</h2>
       
-      {/* Category Cards - Reduced Spacing */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-6 sm:mb-8">
+      {/* Category Cards - 最大3列 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 mb-6 sm:mb-8">
         {categories.map((cat: any) => {
           const Icon = cat.icon
           return (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className="group relative overflow-hidden bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 
+              className="group relative overflow-hidden bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6
                        hover:bg-gray-750 transition-all duration-300 transform hover:scale-[1.02]
                        border border-gray-700 hover:border-gray-600 text-left"
             >
               <div className="relative z-10">
-                <div className="flex items-start justify-between mb-2 sm:mb-3 h-12">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl ${cat.bgColor}`}>
-                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    <div className={`p-2 sm:p-2.5 lg:p-3 rounded-lg sm:rounded-xl ${cat.bgColor}`}>
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                     </div>
-                    <span className="text-xl sm:text-2xl">{cat.emoji}</span>
+                    <span className="text-xl sm:text-2xl lg:text-3xl">{cat.emoji}</span>
                   </div>
                   <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gray-700 rounded-full text-xs sm:text-sm font-medium text-gray-300">
                     {categoryStats[cat.id] || 0} tools
                   </span>
                 </div>
                 
-                <h3 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-white">{cat.name}</h3>
-                <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">{cat.description}</p>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-1 sm:mb-2 text-white">{cat.name}</h3>
+                <p className="text-xs sm:text-sm lg:text-base text-gray-400 mb-3 sm:mb-4">{cat.description}</p>
                 
-                <div className="flex items-center text-xs sm:text-sm font-semibold text-cyan-400 group-hover:gap-3 transition-all">
+                <div className="flex items-center text-xs sm:text-sm lg:text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
                   Browse tools 
-                  <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4" />
+                  <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </button>
@@ -469,9 +466,8 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
         })}
       </div>
 
-      {/* Quick Access Sections - Reduced Spacing */}
+      {/* Quick Access Sections */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        {/* Featured Tools */}
         <QuickAccessCard
           title="Featured Tools"
           icon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-400" />}
@@ -483,7 +479,6 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
           }}
         />
 
-        {/* New Tools */}
         <QuickAccessCard
           title="Recently Added"
           icon={<Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-cyan-400" />}
@@ -499,7 +494,7 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
   )
 }
 
-// Quick Access Card Component - Reduced Spacing
+// Quick Access Card Component
 function QuickAccessCard({ title, icon, tools, count, onViewAll }: any) {
   return (
     <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700">
@@ -534,127 +529,130 @@ function QuickAccessCard({ title, icon, tools, count, onViewAll }: any) {
   )
 }
 
-// Tool Card Component - Fixed Height for Uniformity
-// Tool Card Component - Fixed Height for Uniformity
+// Tool Card Component - レスポンシブ最適化
 function ToolCard({ tool }: { tool: any }) {
-  // Get icon background color based on tool
   const getIconBgClass = () => {
     if (tool.id === 'pc-optimizer') return 'bg-gray-700'
     if (tool.id === 'password-generator') return 'bg-yellow-500'
     if (tool.id === 'age-calculator') return 'bg-amber-700'
     
-    // Default based on category
     const category = CATEGORIES.find(c => c.id === tool.categoryId)
     return category?.bgColor || 'bg-gray-600'
   }
 
   return (
     <Link href={tool.url || `/tools/${tool.id}`}>
-      <div className="bg-gray-800 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 hover:bg-gray-750 transition-all 
-                     hover:scale-[1.01] cursor-pointer h-[240px] sm:h-[260px] w-full
-                     flex flex-col border border-gray-700 hover:border-gray-600">
-        {/* Header - Fixed Height */}
-        <div className="flex items-start justify-between mb-3 h-12">
-          <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${getIconBgClass()} flex items-center justify-center text-xl sm:text-2xl flex-shrink-0`}>
+      <div className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
+                     hover:scale-[1.02] cursor-pointer h-full min-h-[260px]
+                     flex flex-col border border-gray-700 hover:border-gray-600 group
+                     p-4 sm:p-5 lg:p-6">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg lg:rounded-xl ${getIconBgClass()} 
+                         flex items-center justify-center text-xl sm:text-2xl lg:text-3xl flex-shrink-0
+                         group-hover:scale-105 transition-transform`}>
             {tool.icon || tool.emoji || '🔧'}
           </div>
-          <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+          <div className="flex gap-1 flex-shrink-0">
             {tool.featured && (
-              <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-500/20 text-purple-400 rounded text-xs font-medium">
+              <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs font-medium">
                 Featured
               </span>
             )}
             {tool.new && (
-              <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
+              <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
                 New
               </span>
             )}
           </div>
         </div>
 
-        {/* Title - Fixed Height with 2 Line Max */}
-        <h3 className="text-base sm:text-lg font-bold mb-2 text-white line-clamp-2 min-h-[3rem] break-words">
+        {/* Title */}
+        <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-3 text-white line-clamp-2">
           {tool.name}
         </h3>
         
-        {/* Description - Fixed Height with Line Clamp */}
-        <p className="text-xs sm:text-sm text-gray-400 mb-4 line-clamp-2 flex-grow min-h-[2.5rem]">
+        {/* Description */}
+        <p className="text-xs sm:text-sm lg:text-base text-gray-400 mb-4 line-clamp-2 lg:line-clamp-3 flex-grow">
           {tool.description || 'No description available'}
         </p>
         
-        {/* Footer - Always at Bottom */}
-        <div className="flex items-center justify-between text-xs mt-auto pt-3 border-t border-gray-700">
+        {/* Footer */}
+        <div className="flex items-center justify-between text-xs sm:text-sm mt-auto pt-3 border-t border-gray-700">
           <span className="text-gray-500 flex items-center gap-1">
-            <Clock className="w-3 h-3" />
+            <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
             {tool.timeToUse || 'Instant'}
           </span>
-          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />
+          <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
+                        group-hover:translate-x-1 transition-all" />
         </div>
       </div>
     </Link>
   )
 }
 
-// Tool List Item Component - Clean and Organized
+// Tool List Item Component - 横幅いっぱいに1行1ツール
 function ToolListItem({ tool }: { tool: any }) {
-  // Get icon background color based on tool
   const getIconBgClass = () => {
     if (tool.id === 'pc-optimizer') return 'bg-gray-700'
     if (tool.id === 'password-generator') return 'bg-yellow-500'
     if (tool.id === 'age-calculator') return 'bg-amber-700'
     
-    // Default based on category
     const category = CATEGORIES.find(c => c.id === tool.categoryId)
     return category?.bgColor || 'bg-gray-600'
   }
 
   return (
-    <Link href={tool.url || `/tools/${tool.id}`}>
-      <div className="bg-gray-800 rounded-lg sm:rounded-xl hover:bg-gray-750 transition-all 
-                     cursor-pointer border border-gray-700 hover:border-gray-600">
+    <Link href={tool.url || `/tools/${tool.id}`} className="block w-full">
+      <div className="w-full bg-gray-800 rounded-lg sm:rounded-xl hover:bg-gray-750 transition-all 
+                     cursor-pointer border border-gray-700 hover:border-gray-600 group">
         <div className="p-4 sm:p-5">
-          <div className="flex items-center gap-4">
-            {/* Icon - Fixed Size */}
-            <div className={`flex-shrink-0 w-12 h-12 ${getIconBgClass()} rounded-lg flex items-center justify-center text-2xl`}>
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Icon */}
+            <div className={`flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 ${getIconBgClass()} 
+                          rounded-lg flex items-center justify-center text-2xl sm:text-2xl`}>
               {tool.icon || tool.emoji || '🔧'}
             </div>
 
-            {/* Main Content - Fixed Width */}
-            <div className="flex-grow min-w-0">
-              <div className="flex items-start justify-between gap-3">
+            {/* Content - Full Width */}
+            <div className="flex-grow min-w-0 w-full">
+              <div className="flex items-start justify-between gap-3 w-full">
                 <div className="flex-grow min-w-0">
-                  {/* Title with Badges inline */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-base sm:text-lg text-white truncate">
+                  {/* Title with Badges */}
+                  <div className="flex items-center flex-wrap gap-2 mb-1">
+                    <h3 className="font-bold text-base sm:text-lg text-white">
                       {tool.name}
                     </h3>
                     {/* Badges */}
-                    <div className="flex gap-1 flex-shrink-0">
-                      {tool.featured && (
-                        <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs font-medium">
-                          Featured
-                        </span>
-                      )}
-                      {tool.new && (
-                        <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
-                          New
-                        </span>
-                      )}
-                    </div>
+                    {(tool.featured || tool.new) && (
+                      <div className="flex gap-1 flex-shrink-0">
+                        {tool.featured && (
+                          <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs font-medium">
+                            Featured
+                          </span>
+                        )}
+                        {tool.new && (
+                          <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
+                            New
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                   {/* Description */}
-                  <p className="text-sm text-gray-400 line-clamp-1">
+                  <p className="text-sm sm:text-base text-gray-400 line-clamp-1 sm:line-clamp-2">
                     {tool.description || 'No description available'}
                   </p>
                 </div>
                 
-                {/* Time and Arrow */}
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-xs text-gray-500 hidden sm:flex items-center gap-1">
+                {/* Right Side - Time and Arrow */}
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                  <span className="text-xs sm:text-sm text-gray-500 hidden sm:flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {tool.timeToUse || 'Instant'}
                   </span>
-                  <ChevronRight className="w-5 h-5 text-gray-500" />
+                  <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-gray-300 
+                                group-hover:translate-x-1 transition-all" />
                 </div>
               </div>
             </div>
