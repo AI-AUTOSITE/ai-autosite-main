@@ -2,13 +2,24 @@ import { Metadata } from 'next'
 import AIResumeGenerator from './components/AIResumeGenerator'
 
 export const metadata: Metadata = {
-  title: 'AI Resume & Cover Letter Generator - Create Professional Documents | AI AutoSite',
-  description: 'Generate tailored resumes and cover letters instantly. No sign-up required. Professional formatting with AI-powered customization for your job applications.',
-  keywords: 'resume generator, cover letter generator, AI resume, job application, career tools, CV maker, professional resume',
+  title: 'Free AI Resume Generator - No Ads, No Sign Up | AI AutoSite',
+  description: 'Create professional resumes & cover letters instantly. 100% free, no ads, no email required. Export as PDF.',
+  keywords: 'free resume generator, no ads, cover letter, cv maker, no sign up, privacy',
   openGraph: {
-    title: 'AI Resume & Cover Letter Generator - Free Online Tool',
-    description: 'Create professional resumes and cover letters instantly with AI assistance.',
+    title: 'AI Resume Generator - Zero Ads, Zero Tracking',
+    description: 'Professional resumes without the BS. Truly free forever, export as PDF.',
     type: 'website',
+    images: [{
+      url: '/og-resume-generator.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Resume Generator - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Resume Generator - No Ads Ever',
+    description: 'Create resumes without ads or sign-ups.'
   }
 }
 

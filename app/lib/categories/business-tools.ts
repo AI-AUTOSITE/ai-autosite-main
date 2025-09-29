@@ -21,8 +21,22 @@ export const businessTools: Tool[] = [
     apiRequired: true,
     dataProcessing: 'server'
   },
-  // 既存のbusinessToolsの配列に以下を追加
-
+{
+  id: 'hashtag-generator',
+  name: 'Hashtag Generator',
+  description: 'Generate perfect hashtags for social media instantly',
+  category: 'business',
+  icon: '#️⃣',
+  color: 'from-pink-500 to-purple-500',
+  status: 'live',
+  url: '/tools/hashtag-generator',
+  tags: ['hashtag', 'social-media', 'instagram', 'twitter', 'marketing'],
+  difficulty: 'Instant',
+  timeToUse: '5 seconds',
+  featured: true,
+  new: true,
+  badge: 'HOT'
+},
 {
   id: 'whatsapp-link',
   name: 'WhatsApp Link Generator',

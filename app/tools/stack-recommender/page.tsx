@@ -3,17 +3,28 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import AIStackRecommender from './components/AIStackRecommender';
 
+
 export const metadata: Metadata = {
-  title: 'AI Stack Recommender - Get Personalized Tech Stack in 30 Seconds | AI-AutoSite',
-  description: 'Describe your project idea and get AI-powered tech stack recommendations. Perfect stack for your budget, timeline, and experience level. Free tool for developers.',
-  keywords: 'ai stack recommender, tech stack generator, project stack advisor, framework recommendation, ai development tools, stack suggestion, project architecture',
+  title: 'Free AI Stack Recommender - No Ads, No Sign Up | AI AutoSite',
+  description: 'Get personalized tech stack recommendations in 30 seconds. 100% free, no ads, no tracking.',
+  keywords: 'free stack recommender, tech stack generator, no ads, ai development, privacy, no sign up',
   openGraph: {
-    title: 'AI Stack Recommender - Personalized Tech Stack in 30 Seconds',
-    description: 'Get AI-powered recommendations for your project. Tell us your idea, budget, and timeline - receive the perfect tech stack instantly.',
+    title: 'AI Stack Recommender - Truly Free, No Ads',
+    description: 'Zero ads, zero tracking. Get perfect tech stack recommendations instantly.',
     type: 'website',
-    url: 'https://ai-autosite.com/tools/stack-recommender',
+    images: [{
+      url: '/og-stack-recommender.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Stack Recommender - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Stack Recommender - Free AI Tool',
+    description: 'Tech stack advice without ads.'
   }
-};
+}
 
 export default function StackRecommenderPage() {
   return (

@@ -2,14 +2,25 @@ import { Metadata } from 'next'
 import YoutubeThumbnailClient from './components/YoutubeThumbnailClient'
 
 export const metadata: Metadata = {
-  title: 'YouTube Thumbnail Downloader - HD Quality | AI AutoSite',
-  description: 'Download YouTube video thumbnails in HD quality. Get all thumbnail sizes instantly. Free thumbnail downloader.',
-  keywords: 'youtube thumbnail download, youtube thumbnail grabber, thumbnail downloader, youtube image download, video thumbnail',
+  title: 'Free YouTube Thumbnail Downloader - No Ads, No Sign Up | AI AutoSite',
+  description: 'Download HD thumbnails instantly. 100% free, no ads, no tracking. All sizes available.',
+  keywords: 'free youtube thumbnail, thumbnail download, no ads, HD quality, privacy, no sign up',
   openGraph: {
-    title: 'YouTube Thumbnail Downloader - Free Tool',
-    description: 'Download YouTube thumbnails in HD quality',
+    title: 'YouTube Thumbnail Downloader - Truly Free, No Ads',
+    description: 'Zero ads, zero tracking. Download HD thumbnails without the BS.',
     type: 'website',
+    images: [{
+      url: '/og-youtube-thumbnail.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free YouTube Thumbnail Downloader - No Ads'
+    }]
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'YouTube Thumbnails - Free Forever',
+    description: 'Download HD thumbnails. No ads ever.'
+  }
 }
 
 export default function YoutubeThumbnailPage() {

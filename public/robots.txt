@@ -68,4 +68,3 @@ Disallow: /
 
 # Sitemap location
 Sitemap: https://ai-autosite.com/sitemap.xml
-Sitemap: https://ai-autosite.com/sitemap-tools.xml

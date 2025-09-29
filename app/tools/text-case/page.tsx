@@ -2,14 +2,26 @@
 import { Metadata } from 'next'
 import TextCaseConverter from './components/TextCaseConverter'
 
+
 export const metadata: Metadata = {
-  title: 'Text Case Converter - Instant Case Conversion | AI AutoSite',
-  description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case and more. Free online text case converter with 10+ formats. No signup required.',
-  keywords: 'text case converter, uppercase, lowercase, camelCase, snake_case, title case, text formatter',
+  title: 'Free Text Case Converter - No Ads, No Sign Up | AI AutoSite',
+  description: 'Convert text cases instantly. 100% free, no ads, works offline. UPPERCASE, lowercase, camelCase, snake_case.',
+  keywords: 'free text case converter, no ads, camelCase, snake_case, privacy, no tracking',
   openGraph: {
-    title: 'Text Case Converter - Free Online Tool',
-    description: 'Instantly convert text between different cases',
+    title: 'Text Case Converter - Truly Free, No Ads',
+    description: 'Zero ads, zero tracking. Convert text cases without the BS.',
     type: 'website',
+    images: [{
+      url: '/og-text-case.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Text Case Converter - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Text Case Converter - 100% Private',
+    description: '10+ formats. Zero tracking.'
   }
 }
 

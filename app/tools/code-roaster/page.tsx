@@ -2,27 +2,24 @@ import { Metadata } from 'next'
 import CodeRoasterClient from './components/CodeRoasterClient'
 
 export const metadata: Metadata = {
-  title: 'Code Roaster - AI Code Review Tool | AI AutoSite',
-  description: 'Get instant, hilarious, and helpful AI-powered code reviews. Roast your code, fix bugs, and level up your programming skills with our free online tool.',
-  keywords: 'code review, AI code analysis, programming feedback, code roaster, debug code, code improvement, free code review, online code checker',
+  title: 'Free Code Roaster - No Ads, No Sign Up | AI AutoSite',
+  description: 'Get hilarious AI code reviews instantly. 100% free, no ads, no tracking. Debug and improve code with humor.',
+  keywords: 'free code review, no ads, code roaster, ai debug, privacy, no sign up, no tracking',
   openGraph: {
-    title: 'Code Roaster - AI-Powered Code Review Tool',
-    description: 'Get instant, hilarious, and helpful AI-powered code reviews. Level up your coding skills!',
+    title: 'Code Roaster - Truly Free, No Ads Ever',
+    description: 'Zero ads, zero tracking, zero BS. Get hilarious AI code reviews that actually help.',
     type: 'website',
-    images: [
-      {
-        url: '/og-code-roaster.png',
-        width: 1200,
-        height: 630,
-        alt: 'Code Roaster - AI Code Review Tool',
-      }
-    ],
+    images: [{
+      url: '/og-code-roaster.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Code Roaster - No Ads'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Code Roaster - AI-Powered Code Review',
-    description: 'Get instant, hilarious, and helpful AI-powered code reviews. Free online tool!',
-    images: ['/og-code-roaster.png'],
+    title: 'Code Roaster - Free Forever, No Ads',
+    description: 'Hilarious AI code reviews without ads or tracking.'
   },
   robots: {
     index: true,
@@ -33,11 +30,11 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
-    },
+    }
   },
   alternates: {
-    canonical: 'https://ai-autosite.com/tools/code-roaster',
-  },
+    canonical: 'https://ai-autosite.com/tools/code-roaster'
+  }
 }
 
 export default function CodeRoasterPage() {

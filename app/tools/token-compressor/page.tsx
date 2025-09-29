@@ -2,20 +2,26 @@
 import { Metadata } from 'next'
 import TokenCompressor from './components/TokenCompressor'
 
+
 export const metadata: Metadata = {
-  title: 'AI Token Compressor - Optimize Files for AI Sharing | AI AutoSite',
-  description: 'Visualize and compress tokens from any file format for efficient AI sharing. Support for multiple files, folders, Git repos, and cloud storage with security checks.',
-  keywords: 'token compression, AI optimization, file compression, token counter, AI sharing, GPT tokens, Claude tokens, file optimizer, prompt optimization, ChatGPT, Claude',
+  title: 'Free AI Token Compressor - No Ads, No Sign Up | AI AutoSite',
+  description: 'Compress files for AI sharing. 100% free, no ads, reduce tokens by 60%. Works offline.',
+  keywords: 'free token compressor, ai optimization, no ads, privacy, chatgpt tokens, claude tokens',
   openGraph: {
-    title: 'AI Token Compressor - Free Online Tool',
-    description: 'Compress and optimize your files for AI sharing with token visualization',
+    title: 'AI Token Compressor - Truly Free, No Ads',
+    description: 'Zero ads, zero tracking. Compress tokens for AI without the BS.',
     type: 'website',
-    images: ['/og-token-compressor.png'],
+    images: [{
+      url: '/og-token-compressor.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Token Compressor - No Ads'
+    }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Token Compressor - Optimize Files for AI',
-    description: 'Smart compression tool for AI interactions',
+    title: 'Token Compressor - Save 60% on AI',
+    description: 'Compress files privately. No uploads.'
   }
 }
 

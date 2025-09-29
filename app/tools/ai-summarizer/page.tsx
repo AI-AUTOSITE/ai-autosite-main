@@ -4,13 +4,24 @@ import { Metadata } from 'next'
 import AISummarizerClient from './components/AISummarizerClient'
 
 export const metadata: Metadata = {
-  title: 'AI Text Summarizer - Free Summary Tool | AI AutoSite',
-  description: 'Transform long text into concise summaries with AI. Choose summary length and tone. Free, instant, no sign-up required.',
-  keywords: 'AI summarizer, text summary, content summary, AI text tool, summarize text, quick summary',
+  title: 'Free AI Text Summarizer - No Ads, No Sign Up | AI AutoSite',
+  description: 'Summarize any text instantly with AI. 100% free, no ads, no tracking, no registration required.',
+  keywords: 'free text summarizer, no ads, ai summary, content summary, privacy, no sign up',
   openGraph: {
-    title: 'AI Text Summarizer - Free Online Tool',
-    description: 'Instantly summarize any text with AI',
+    title: 'AI Summarizer - Truly Free, No Ads Ever',
+    description: 'Zero ads, zero tracking. Summarize text without the BS.',
     type: 'website',
+    images: [{
+      url: '/og-summarizer.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free AI Summarizer - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI Text Summarizer - Free, No Tracking',
+    description: 'Instant summaries without ads.'
   }
 }
 

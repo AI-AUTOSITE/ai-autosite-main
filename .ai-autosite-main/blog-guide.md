@@ -59,7 +59,6 @@ export const [category]Posts: BlogPost[] = [
       name: 'ツール名',
       url: '/tools/tool-slug'
     },
-    // 新規オプションフィールド
     lastUpdated: '2025-01-24',   // 更新日（オプション）
     tags: ['tag1', 'tag2'],       // タグ（オプション）
     author: 'AI AutoSite Team',   // 著者（オプション）
@@ -159,7 +158,17 @@ export default function ArticlePage() {
   )
 }
 ```
-
+SEO最適化済みメタデータ
+typescriptexport const metadata: Metadata = {
+  title: `${title} - Free Guide | AI AutoSite Blog`,
+  description: `Learn ${topic}. No ads, no tracking, free forever.`,
+  keywords: 'free, no ads, guide, tutorial',
+  openGraph: {
+    type: 'article',
+    publishedTime: publishDate,
+    authors: ['AI AutoSite Team']
+  }
+}
 ## 🏷️ バッジシステム
 
 ### バッジタイプ（自動判定）

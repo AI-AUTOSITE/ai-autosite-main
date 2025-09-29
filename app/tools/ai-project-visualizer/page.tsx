@@ -17,13 +17,24 @@ const AIProjectVisualizer = dynamic(
 )
 
 export const metadata: Metadata = {
-  title: 'AI Project Visualizer - Transform File Structure into Diagrams | AI AutoSite',
-  description: 'Visualize your project structure and export it as Mermaid diagrams, tree format, JSON, or Markdown for better AI collaboration and documentation.',
-  keywords: 'project structure, file tree, mermaid diagram, AI tools, visualization, directory structure, export diagram, developer tools',
+  title: 'Free Project Visualizer - No Ads, No Sign Up | AI AutoSite',
+  description: 'Transform file structures into diagrams instantly. 100% free, no ads, works offline. Export to Mermaid, JSON, Markdown.',
+  keywords: 'free project visualizer, no ads, mermaid diagram, file tree, privacy, no tracking',
   openGraph: {
-    title: 'AI Project Visualizer - Better AI Collaboration',
-    description: 'Transform your project structure into shareable diagrams for AI tools',
+    title: 'AI Project Visualizer - Zero Ads, Zero BS',
+    description: 'Visualize projects without ads or sign-ups. Export anywhere, keep everything private.',
     type: 'website',
+    images: [{
+      url: '/og-project-visualizer.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Project Visualizer - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Project Visualizer - Truly Free, No Ads',
+    description: 'Transform files to diagrams. 100% private.'
   }
 }
 

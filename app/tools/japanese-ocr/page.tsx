@@ -3,13 +3,24 @@ import { Metadata } from 'next'
 import JapaneseOCR from './components/JapaneseOCR'
 
 export const metadata: Metadata = {
-  title: 'Japanese OCR & Translation - Extract Text from Images | AI AutoSite',
-  description: 'Free online Japanese OCR tool. Extract Japanese text from images and translate to English. Supports vertical and horizontal text with 99% accuracy.',
-  keywords: 'japanese ocr, image to text, japanese translation, tesseract, text extraction, 日本語OCR',
+  title: 'Free Japanese OCR - No Ads, No Sign Up | AI AutoSite',
+  description: 'Extract Japanese text from images instantly. 100% free, no ads, works offline. 99% accuracy.',
+  keywords: 'free japanese ocr, no ads, text extraction, 日本語OCR, privacy, no tracking',
   openGraph: {
-    title: 'Japanese OCR & Translation Tool',
-    description: 'Extract and translate Japanese text from images instantly',
+    title: 'Japanese OCR - Truly Free, No Ads Ever',
+    description: 'Zero ads, zero tracking. Extract Japanese text with 99% accuracy.',
     type: 'website',
+    images: [{
+      url: '/og-japanese-ocr.png',
+      width: 1200,
+      height: 630,
+      alt: 'Free Japanese OCR Tool - No Ads'
+    }]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Japanese OCR - 100% Free & Private',
+    description: 'Extract text offline. No uploads needed.'
   }
 }
 
