@@ -1,25 +1,82 @@
-  // app/sitemap.ts
+// app/sitemap.ts
 import { MetadataRoute } from 'next'
 
+// ツールリストをインポート
+const tools = [
+  'age-calculator', 'ai-dev-dictionary', 'ai-project-visualizer',
+  'ai-prompt-generator', 'ai-resume', 'ai-summarizer',
+  'base64', 'blurtap', 'bmi-calculator',
+  'code-dependency-visualizer', 'code-roaster', 'color-palette',
+  'competitive-analyzer', 'countdown-timer', 'debate-trainer',
+  'favicon-generator', 'gradient-generator', 'hashtag-generator',
+  'image-compress', 'image-grid-maker', 'image-splitter',
+  'instagram-bio', 'japanese-ocr', 'json-csv', 'json-format',
+  'lorem-ipsum', 'markdown-html', 'password-generator',
+  'pc-optimizer', 'pdf-summarizer', 'pdf-to-data', 'pdf-tools',
+  'percentage-calculator', 'qr-code', 'stack-recommender',
+  'tech-stack-analyzer', 'text-case', 'text-counter',
+  'token-compressor', 'twitter-counter', 'unit-converter',
+  'uuid-generator', 'whatsapp-link', 'youtube-thumbnail'
+]
+
+// 優先度の高いツール
+const highPriorityTools = [
+  'ai-dev-dictionary', 'pdf-tools', 'ai-summarizer',
+  'code-roaster', 'stack-recommender'
+]
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const baseUrl = 'https://ai-autosite.com'
+  
+  // 基本ページ
+  const staticPages = [
     {
-      url: 'https://ai-autosite.com',
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 1,
     },
     {
-      url: 'https://ai-autosite.com/tools',
+      url: `${baseUrl}/tools`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
     },
     {
-      url: 'https://ai-autosite.com/blog',
+      url: `${baseUrl}/blog`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
   ]
+  
+  // 全ツールページ
+  const toolPages = tools.map(tool => ({
+    url: `${baseUrl}/tools/${tool}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: highPriorityTools.includes(tool) ? 0.9 : 0.8,
+  }))
+  
+  // ブログ記事（ガイド）
+  const blogPages = tools.map(tool => ({
+    url: `${baseUrl}/blog/${tool}-guide`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+  
+  return [...staticPages, ...toolPages, ...blogPages]
 }

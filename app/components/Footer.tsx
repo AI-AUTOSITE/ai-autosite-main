@@ -5,13 +5,14 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
   
   // Simple footer links
-  const footerLinks = [
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'Privacy', href: '/privacy-policy' },
-    { label: 'Terms', href: '/terms-of-service' },
-  ]
+const footerLinks = [
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Privacy', href: '/privacy-policy' },
+  { label: 'Terms', href: '/terms-of-service' },
+  { label: 'GitHub', href: 'https://github.com/ai-autosite' },
+]
   
   return (
     <footer className="mt-auto bg-gray-900/50 border-t border-gray-800">
