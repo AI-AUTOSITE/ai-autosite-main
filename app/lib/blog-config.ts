@@ -1,4 +1,4 @@
-import { Brain, Code, Zap, BookOpen, Briefcase, TrendingUp } from 'lucide-react'
+import { Brain, Palette, Code, Zap, BookOpen, Briefcase, TrendingUp } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface BlogCategory {
@@ -19,6 +19,14 @@ export const blogCategories: BlogCategory[] = [
     color: 'from-green-500 to-teal-500',
     description: 'AI-powered learning and debate tools'
   },
+  {
+  id: 'creative',
+  name: 'Creative Tools',
+  shortName: 'Creative',
+  icon: Palette,
+  color: 'from-pink-500 to-purple-500',
+  description: 'Design and creative content tools'
+},
   {
     id: 'dev-tools',
     name: 'Developer Tools',

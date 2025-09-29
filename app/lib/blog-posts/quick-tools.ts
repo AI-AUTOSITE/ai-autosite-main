@@ -146,10 +146,8 @@ export const quickToolsPosts: BlogPost[] = [
     tags: ['color-palette', 'design', 'web-design', 'branding'],
     author: 'AI AutoSite Team',
   },
-
-  // ID修正: password-security-guide → password-generator-guide
   {
-    id: 'password-generator-guide',  // 修正済み
+    id: 'password-generator-guide',
     title: 'How to Create Strong Passwords in 2025',
     description: 'Your complete guide to password security. Learn what makes passwords strong and how to protect accounts.',
     readTime: '5 min',
@@ -208,9 +206,8 @@ export const quickToolsPosts: BlogPost[] = [
     author: 'AI AutoSite Team',
   },
 
-  // ID修正: image-grid-maker-complete-guide → image-grid-maker-guide
   {
-    id: 'image-grid-maker-guide',  // 修正済み
+    id: 'image-grid-maker-guide',
     title: 'How to Create Numbered Image Grids in Seconds',
     description: 'Learn to merge multiple images into professional grids for comparisons and tutorials.',
     readTime: '5 min',
@@ -230,10 +227,8 @@ export const quickToolsPosts: BlogPost[] = [
     seoDescription: 'Merge multiple images into professional grids. Perfect for comparisons, tutorials, and presentations. Free online tool.',
     ogImage: '/og/image-grid-maker-guide.png'
   },
-
-  // ID修正: image-splitter-paper-sizes → image-splitter-guide
   {
-    id: 'image-splitter-guide',  // 修正済み
+    id: 'image-splitter-guide',
     title: 'Split Large Images for Perfect Printing',
     description: 'Transform any image into printable paper sizes for posters and banners.',
     readTime: '6 min',
@@ -297,10 +292,6 @@ export const quickToolsPosts: BlogPost[] = [
     seoDescription: 'Compress AI tokens intelligently. Save 70% on API costs while maintaining quality. Essential tool for AI developers.',
     ogImage: '/og/token-compressor-guide.png'
   },
-
-  // === 新規追加記事 ===
-
-  // QR Code Generator用の記事を追加
   {
     id: 'qr-code-guide',
     title: 'QR Code Generator - Create Custom QR Codes Instantly',
@@ -323,7 +314,6 @@ export const quickToolsPosts: BlogPost[] = [
     ogImage: '/og/qr-code-guide.png'
   },
 
-  // BlurTap用の記事を追加
   {
     id: 'blurtap-guide',
     title: 'BlurTap - Protect Privacy in Screenshots with One Click',
@@ -345,8 +335,6 @@ export const quickToolsPosts: BlogPost[] = [
     seoDescription: 'Blur sensitive information in screenshots with one click. Protect privacy when sharing images online. Free privacy tool.',
     ogImage: '/og/blurtap-guide.png'
   },
-
-  // PDF to Data用の記事を追加
   {
     id: 'pdf-to-data-guide',
     title: 'PDF to CSV/Excel Converter - Extract Tables with AI',
@@ -367,5 +355,18 @@ export const quickToolsPosts: BlogPost[] = [
     seoTitle: 'PDF to CSV/Excel Converter - AI-Powered Data Extraction',
     seoDescription: 'Extract tables from PDFs to CSV or Excel. AI-powered conversion for accurate data extraction. Free online tool.',
     ogImage: '/og/pdf-to-data-guide.png'
-  }
+  },
+{
+  id: 'privacy-in-development',
+  title: 'Privacy-First Development Practices',
+  description: 'Build applications that respect user privacy from the ground up.',
+  readTime: '15 min',
+  publishDate: 'January 2025',
+  icon: Shield,
+  featured: true,
+  status: 'published',
+  tags: ['privacy', 'gdpr', 'development', 'security'],
+  category: 'quick-tools',
+  author: 'AI AutoSite Team'
+}
 ]
