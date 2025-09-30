@@ -53,8 +53,9 @@ export default function Header() {
   // ESCキーでガイドを閉じる
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && showGuide) {
-        setShowGuide(false)
+      if (e.key === 'Escape') {
+        if (showGuide) setShowGuide(false)
+        if (mobileMenuOpen) setMobileMenuOpen(false)
       }
     }
     
@@ -62,13 +63,36 @@ export default function Header() {
       document.addEventListener('keydown', handleEsc)
       // スクロールを防ぐ
       document.body.style.overflow = 'hidden'
+    } else if (mobileMenuOpen) {
+      document.addEventListener('keydown', handleEsc)
     }
     
     return () => {
       document.removeEventListener('keydown', handleEsc)
       document.body.style.overflow = ''
     }
-  }, [showGuide])
+  }, [showGuide, mobileMenuOpen])
+
+  // モバイルメニューの外側クリック検知
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      // ヘッダー内のクリックは無視
+      if (target.closest('header')) return
+      setMobileMenuOpen(false)
+    }
+
+    if (mobileMenuOpen) {
+      // 少し遅延を入れて、メニューボタンのクリックイベントと競合しないようにする
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside)
+      }, 100)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [mobileMenuOpen])
 
   const navItems = [
     { href: '/', label: 'Home' },
@@ -81,10 +105,17 @@ export default function Header() {
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+            {/* Logo - 修正版 */}
             <Link 
               href="/" 
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+              onClick={(e) => {
+                    console.log('Logo clicked!', e); 
+                // モバイルメニューを閉じる
+                setMobileMenuOpen(false)
+                // ガイドモーダルを閉じる
+                setShowGuide(false)
+              }}
             >
               <div className="relative">
                 <Shield className="w-10 h-10 text-cyan-400" />
@@ -149,51 +180,60 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu with Overlay */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-700 bg-gray-900/95 backdrop-blur-xl">
-            <nav className="px-4 py-4 space-y-2">
-              {/* Mobile Guide button */}
-              {isToolPage && GuideComponent && (
-                <button
-                  onClick={() => {
-                    setShowGuide(true)
-                    setMobileMenuOpen(false)
-                  }}
-                  className="flex items-center gap-2 w-full px-4 py-3 rounded-lg text-base font-medium bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 transition-all"
-                >
-                  <HelpCircle className="w-5 h-5" />
-                  <span>Tool Guide</span>
-                </button>
-              )}
-              
-              {navItems.map((item) => {
-                const isActive = pathname === item.href || 
-                               (item.href === '/blog' && pathname.startsWith('/blog'))
-                
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`
-                      block px-4 py-3 rounded-lg text-base font-medium transition-all
-                      ${isActive 
-                        ? 'bg-cyan-500/20 text-cyan-400' 
-                        : 'text-gray-300 bg-gray-800/50 hover:bg-gray-700/50'
-                      }
-                    `}
+          <>
+            {/* 背景オーバーレイ（クリックで閉じる） */}
+            <div 
+              className="md:hidden fixed inset-0 bg-black/30 z-40"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu overlay"
+            />
+            {/* メニュー本体 */}
+            <div className="md:hidden fixed right-0 top-16 left-0 z-50 border-t border-gray-700 bg-gray-900/95 backdrop-blur-xl animate-slide-down">
+              <nav className="px-4 py-4 space-y-2">
+                {/* Mobile Guide button */}
+                {isToolPage && GuideComponent && (
+                  <button
+                    onClick={() => {
+                      setShowGuide(true)
+                      setMobileMenuOpen(false)
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-3 rounded-lg text-base font-medium bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 transition-all"
                   >
-                    {item.label}
-                  </Link>
-                )
-              })}
-            </nav>
-          </div>
+                    <HelpCircle className="w-5 h-5" />
+                    <span>Tool Guide</span>
+                  </button>
+                )}
+                
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href || 
+                                 (item.href === '/blog' && pathname.startsWith('/blog'))
+                  
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`
+                        block px-4 py-3 rounded-lg text-base font-medium transition-all
+                        ${isActive 
+                          ? 'bg-cyan-500/20 text-cyan-400' 
+                          : 'text-gray-300 bg-gray-800/50 hover:bg-gray-700/50'
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </nav>
+            </div>
+          </>
         )}
       </header>
 
-      {/* Guide Modal - 修正版 */}
+      {/* Guide Modal */}
       {showGuide && GuideComponent && (
         <>
           {/* 背景オーバーレイ（クリックで閉じる） */}

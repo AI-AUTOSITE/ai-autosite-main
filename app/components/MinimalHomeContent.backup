@@ -25,9 +25,9 @@ getFeaturedTools,
 getNewTools,
 searchTools,
 getStatistics
-} from '@/lib/unified-data'
+} from '../lib/unified-data'
 // デバイス検出（既存のまま使用）
-import { useDeviceDetection, isToolMobileCompatible, getToolMobileInfo } from '@/lib/device-utils'
+import { useDeviceDetection, isToolMobileCompatible, getToolMobileInfo } from '../lib/device-utils'
 // 統一カテゴリー定義
 const UNIFIED_CATEGORIES = [
 {
