@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Stack Recommender - Free AI Tool',
     description: 'Tech stack advice without ads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/stack-recommender'
   }
 }
 

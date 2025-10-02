@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Prompt Generator - Free Forever',
     description: 'Perfect prompts without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/ai-prompt-generator'
   }
 }
 

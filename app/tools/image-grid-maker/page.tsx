@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Image Grid Maker - 100% Private',
     description: 'Photo grids without ads or uploads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/image-grid-maker'
   }
 }
 

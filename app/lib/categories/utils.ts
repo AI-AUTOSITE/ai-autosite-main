@@ -1,6 +1,6 @@
 // app/lib/categories/utils.ts
 import type { Tool, Category } from './types'
-import { CATEGORIES } from './categories'
+import { CATEGORIES } from '../categories-config'
 
 // ===================================
 // Category Functions

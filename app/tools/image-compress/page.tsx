@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Image Compress - Free Forever, Private',
     description: 'Compress images offline. Zero uploads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/image-compress'
   }
 }
 

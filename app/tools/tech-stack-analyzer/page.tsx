@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Tech Stack Analyzer - Free Forever',
     description: 'Framework comparisons without ads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/tech-stack-analyzer'
   }
 }
 

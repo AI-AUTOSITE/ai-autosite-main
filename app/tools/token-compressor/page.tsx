@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Token Compressor - Save 60% on AI',
     description: 'Compress files privately. No uploads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/token-compressor'
   }
 }
 

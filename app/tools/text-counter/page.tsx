@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Text Counter - Free Forever',
     description: 'Count words offline. No tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/text-counter'
   }
 }
 

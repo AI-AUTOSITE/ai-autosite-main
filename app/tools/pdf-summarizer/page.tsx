@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'PDF Summarizer - Free AI Tool',
     description: 'Summarize PDFs without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/pdf-summarizer'
   }
 }
 

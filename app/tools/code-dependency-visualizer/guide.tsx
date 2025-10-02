@@ -27,17 +27,27 @@ export const toolGuide = {
   ]
 }
 
-export default function ToolGuide() {
+interface ToolGuideProps {
+  onClose?: () => void
+}
+
+export default function ToolGuide({ onClose }: ToolGuideProps) {
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md">
-      <button className="absolute top-2 right-2 p-2 hover:bg-white/10 rounded-lg transition-all">
-        <X className="w-5 h-5 text-gray-400" />
-      </button>
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md w-full relative">
+      {onClose && (
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
+          aria-label="Close guide"
+        >
+          <X className="w-5 h-5 text-gray-400 hover:text-white" />
+        </button>
+      )}
       
-      <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-        <HelpCircle className="text-cyan-400" />
-        {toolGuide.title}
-      </h3>
+      <div className="flex items-center gap-2 mb-6">
+        <HelpCircle className="w-6 h-6 text-cyan-400" />
+        <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
+      </div>
 
       {/* Steps */}
       <div className="space-y-3 mb-6">

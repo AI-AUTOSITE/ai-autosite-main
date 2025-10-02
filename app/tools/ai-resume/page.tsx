@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Resume Generator - No Ads Ever',
     description: 'Create resumes without ads or sign-ups.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/ai-resume'
   }
 }
 

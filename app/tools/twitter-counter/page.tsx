@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Twitter Counter - 100% Private',
     description: 'Count characters offline. No tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/twitter-counter'
   }
 }
 

@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'PC Optimizer - Free Forever',
     description: 'Analyze storage privately. No uploads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/pc-optimizer'
   }
 }
 

@@ -35,6 +35,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Project Visualizer - Truly Free, No Ads',
     description: 'Transform files to diagrams. 100% private.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/ai-project-visualizer'
   }
 }
 

@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Hashtag Generator - 100% Free',
     description: '30 perfect tags without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/hashtag-generator'
   }
 }
 

@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Text Summarizer - Free, No Tracking',
     description: 'Instant summaries without ads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/ai-summarizer'
   }
 }
 

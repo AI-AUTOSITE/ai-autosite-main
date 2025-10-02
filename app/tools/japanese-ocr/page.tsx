@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Japanese OCR - 100% Free & Private',
     description: 'Extract text offline. No uploads needed.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/japanese-ocr'
   }
 }
 

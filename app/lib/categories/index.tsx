@@ -8,7 +8,7 @@ export type { Tool, Category } from './types'
 // ===================================
 // Category Exports
 // ===================================
-export { CATEGORIES } from './categories'
+export { CATEGORIES } from '../categories-config'
 
 // ===================================
 // Tool Collections by Category

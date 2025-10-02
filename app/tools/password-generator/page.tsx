@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Password Generator - 100% Private',
     description: 'Secure passwords. Zero storage.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/password-generator'
   }
 }
 

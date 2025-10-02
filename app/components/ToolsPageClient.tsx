@@ -320,25 +320,29 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
                        hover:bg-gray-750 transition-all duration-300 transform hover:scale-[1.02]
                        border border-gray-700 hover:border-gray-600 text-left"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-3 rounded-xl ${cat.bgColor}`}>
-                    <Icon className="w-6 h-6 text-white" />
+              {/* ⭐ この div を追加 */}
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-3 rounded-xl ${cat.bgColor}`}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-3xl">{cat.emoji}</span>
                   </div>
-                  <span className="text-3xl">{cat.emoji}</span>
+                  <span className="px-2.5 py-1 bg-gray-700 rounded-full text-sm font-medium text-gray-300">
+                    {categoryStats[cat.id] || 0} tools
+                  </span>
                 </div>
-                <span className="px-2.5 py-1 bg-gray-700 rounded-full text-sm font-medium text-gray-300">
-                  {categoryStats[cat.id] || 0} tools
-                </span>
+                
+                <h3 className="text-2xl font-bold mb-2 text-white">{cat.name}</h3>
+                <p className="text-base text-gray-400 mb-4">{cat.description}</p>
+                
+                <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
+                  Browse tools 
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
-              
-              <h3 className="text-2xl font-bold mb-2 text-white">{cat.name}</h3>
-              <p className="text-base text-gray-400 mb-4">{cat.description}</p>
-              
-              <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
-                Browse tools 
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
+              {/* ⭐ ここまで */}
             </button>
           )
         })}

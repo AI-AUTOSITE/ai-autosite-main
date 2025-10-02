@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Favicon Generator - 100% Free, No BS',
     description: 'Generate favicons without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/favicon-generator'
   }
 }
 

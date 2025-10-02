@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'UUID Generator - Free & Private',
     description: 'Generate UUIDs offline. Zero tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/uuid-generator'
   }
 }
 

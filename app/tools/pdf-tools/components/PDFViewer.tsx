@@ -1,6 +1,6 @@
 // app/tools/pdf-tools/components/PDFViewer.tsx
-import { RefObject, useState, useEffect, DragEvent } from 'react';
-import { Upload, GripVertical, CheckCircle, X } from 'lucide-react';
+import { RefObject, useState, DragEvent } from 'react';
+import { Upload, GripVertical, CheckCircle } from 'lucide-react';
 import { PageData } from '../types';
 
 interface PDFViewerProps {
@@ -16,7 +16,7 @@ interface PDFViewerProps {
   isProcessing: boolean;
   handleTouchStart: (pageId: string) => void;
   handleTouchEnd: (e: React.TouchEvent, targetPageId: string) => void;
-  onPagesReorder: (newPages: PageData[]) => void; // New prop for reordering
+  onPagesReorder: (newPages: PageData[]) => void;
 }
 
 export function PDFViewer({
@@ -34,24 +34,8 @@ export function PDFViewer({
   handleTouchEnd,
   onPagesReorder
 }: PDFViewerProps) {
-  // State for premium banner visibility
-  const [showPremiumBanner, setShowPremiumBanner] = useState(true);
   const [draggedPageId, setDraggedPageId] = useState<string | null>(null);
   const [dragOverPageId, setDragOverPageId] = useState<string | null>(null);
-
-  // Check localStorage for banner dismissal
-  useEffect(() => {
-    const isDismissed = localStorage.getItem('premiumBannerDismissed');
-    if (isDismissed === 'true') {
-      setShowPremiumBanner(false);
-    }
-  }, []);
-
-  // Handle banner dismissal
-  const handleDismissBanner = () => {
-    localStorage.setItem('premiumBannerDismissed', 'true');
-    setShowPremiumBanner(false);
-  };
 
   // Drag and drop handlers
   const handleDragStart = (e: DragEvent<HTMLDivElement>, pageId: string) => {
@@ -94,7 +78,6 @@ export function PDFViewer({
     const [movedPage] = newPages.splice(draggedIndex, 1);
     newPages.splice(targetIndex, 0, movedPage);
 
-    // Update page numbers
     const updatedPages = newPages.map((page, index) => ({
       ...page,
       pageNumber: index + 1
@@ -112,7 +95,7 @@ export function PDFViewer({
 
   return (
     <div className="flex-1 flex overflow-hidden">
-      {/* Thumbnails sidebar with drag & drop */}
+      {/* Thumbnails sidebar */}
       {file && (
         <div className={`${isMobile ? (showThumbnails ? 'w-24' : 'hidden') : 'w-48'} bg-gray-800 border-r border-gray-700 overflow-y-auto p-2`}>
           <div className="space-y-2">
@@ -162,42 +145,20 @@ export function PDFViewer({
 
       {/* Main view */}
       <div className="flex-1 bg-gray-900 p-4 md:p-8 overflow-auto">
-{!file ? (
-  <div className="h-full flex items-center justify-center">
-    <div className="text-center">
-      <Upload className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-      <p className="text-gray-400 mb-2">Upload a PDF to start editing</p>
-      <p className="text-xs text-gray-500 mb-4">
-        Max file size: 20MB • Max pages: 100
-      </p>
-      <button
-        onClick={() => fileInputRef.current?.click()}
-        className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition"
-      >
-        Choose File
-      </button>
-              
-              {!isPremium && showPremiumBanner && (
-                <div className="mt-8 p-4 bg-gray-800 rounded-lg max-w-sm mx-auto relative">
-                  <button
-                    onClick={handleDismissBanner}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-300 transition"
-                    title="Dismiss forever"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                  <h3 className="text-sm font-medium text-gray-300 mb-2 pr-6">Limited Time Offer</h3>
-                  <p className="text-xs text-gray-400 mb-3">
-                    Unlock 6 tool slots for advanced PDF editing
-                  </p>
-                  <button
-                    onClick={() => setShowUpgradeModal(true)}
-                    className="px-4 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded text-sm hover:from-amber-600 hover:to-amber-700 transition w-full"
-                  >
-                    Get Premium - $5
-                  </button>
-                </div>
-              )}
+        {!file ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <Upload className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <p className="text-gray-400 mb-2">Upload a PDF to start editing</p>
+              <p className="text-xs text-gray-500 mb-4">
+                Max file size: 20MB • Max pages: 100
+              </p>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition"
+              >
+                Choose File
+              </button>
             </div>
           </div>
         ) : (

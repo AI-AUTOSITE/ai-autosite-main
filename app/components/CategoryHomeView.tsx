@@ -70,10 +70,10 @@ export default function CategoryHomeView() {
   }, [categoryFromUrl])
 
   // Handle category selection with URL update
-  const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    router.push(`/?category=${categoryId}`)
-  }
+const handleCategorySelect = (categoryId: string) => {
+  setSelectedCategory(categoryId)
+  router.push(`/?category=${categoryId}`, { scroll: false }) 
+}
 
   // Filtered tools with alphabetical sorting
   const filteredTools = useMemo(() => {

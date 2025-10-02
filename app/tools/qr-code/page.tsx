@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'QR Code Maker - 100% Private',
     description: 'Generate QR codes offline. No tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/qr-code'
   }
 }
 

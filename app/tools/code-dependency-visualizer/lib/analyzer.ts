@@ -46,9 +46,19 @@ export function analyzeProject(files: File[]): ProjectAnalysis {
   // Generate tree markdown
   const treeMarkdown = generateTreeMarkdown(fileNodes)
 
+  // Remove duplicate dependencies
+  const uniqueDeps = Array.from(
+    new Map(
+      dependencies.map(dep => [
+        `${dep.source}:${dep.target}:${dep.type}`,
+        dep
+      ])
+    ).values()
+  )
+
   return {
     files: fileNodes,
-    dependencies,
+    dependencies: uniqueDeps,
     stats,
     treeMarkdown
   }

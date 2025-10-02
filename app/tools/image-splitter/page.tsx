@@ -23,6 +23,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Image Splitter - 100% Free, No BS',
     description: 'Split images offline. Zero uploads.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/image-splitter'
   }
 }
 

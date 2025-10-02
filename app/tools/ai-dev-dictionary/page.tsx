@@ -21,6 +21,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Dev Dictionary - Free, No Ads Ever',
     description: '100+ terms explained without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/ai-dev-dictionary'
   }
 }
 

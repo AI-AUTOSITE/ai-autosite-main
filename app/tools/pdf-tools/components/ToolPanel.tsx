@@ -1,8 +1,8 @@
 // app/tools/pdf-tools/components/ToolPanel.tsx
 import { Tool } from '../types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { 
-  Plus, X, Lock, CheckCircle, CreditCard, Settings2
+  Plus, X, Lock, CheckCircle, CreditCard, MoreVertical, Edit3, Trash2, Settings
 } from 'lucide-react';
 
 interface ToolPanelProps {
@@ -37,23 +37,21 @@ export function ToolPanel({
   handleToolSelect
 }: ToolPanelProps) {
   const MAX_FREE_SLOTS = 3;
+  const [showManageModal, setShowManageModal] = useState(false);
   
   // Handle body scroll lock when tool selector is open
   useEffect(() => {
-    if (isSelectingTool !== null) {
-      // Disable body scroll
+    if (isSelectingTool !== null || showManageModal) {
       document.body.style.overflow = 'hidden';
       
-      // Handle click outside
       const handleClickOutside = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
-        // Check if click is outside the tool selector
-        if (!target.closest('.tool-selector-modal')) {
+        if (!target.closest('.tool-selector-modal') && !target.closest('.manage-tools-modal')) {
           setIsSelectingTool(null);
+          setShowManageModal(false);
         }
       };
       
-      // Add event listener after a short delay to prevent immediate closing
       const timer = setTimeout(() => {
         document.addEventListener('click', handleClickOutside);
       }, 100);
@@ -64,10 +62,9 @@ export function ToolPanel({
         document.body.style.overflow = '';
       };
     } else {
-      // Re-enable body scroll
       document.body.style.overflow = '';
     }
-  }, [isSelectingTool, setIsSelectingTool]);
+  }, [isSelectingTool, showManageModal, setIsSelectingTool]);
   
   // Filter out already selected tools
   const getAvailableToolsForSlot = () => {
@@ -76,6 +73,22 @@ export function ToolPanel({
       .map(tool => tool!.id);
     
     return availableTools.filter(tool => !selectedToolIds.includes(tool.id));
+  };
+
+  const handleRemoveTool = (index: number) => {
+    const newSlots = [...activeToolSlots];
+    newSlots[index] = null;
+    handleToolSelect(null as any, index);
+  };
+
+  const handleAddTool = (index: number) => {
+    setShowManageModal(false);
+    setIsSelectingTool(index);
+  };
+
+  const handleChangeTool = (index: number) => {
+    setShowManageModal(false);
+    setIsSelectingTool(index);
   };
   
   return (
@@ -93,22 +106,22 @@ export function ToolPanel({
       )}
       
       <div className="p-2 space-y-2">
-        <div className="text-center mb-2">
-          <div className="text-xs text-gray-500">
-            {isPremium ? (
-              <span className="text-green-400">Premium ✓</span>
-            ) : (
-              <span>Free (3/6)</span>
-            )}
-          </div>
-        </div>
+        {/* Global Manage Button */}
+        <button
+          onClick={() => setShowManageModal(true)}
+          className="w-12 h-12 rounded-lg flex items-center justify-center bg-gray-700 hover:bg-gray-600 transition"
+          title="Manage all tools"
+        >
+          <MoreVertical className="w-5 h-5 text-gray-300" />
+        </button>
         
+        {/* Tool Slots */}
         {Array(6).fill(null).map((_, index) => {
           const tool = activeToolSlots[index];
           const isLocked = index >= MAX_FREE_SLOTS && !isPremium;
           
           return (
-            <div key={index} className="relative group">
+            <div key={index} className="relative">
               <button
                 onClick={() => handleSlotClick(index)}
                 className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all relative ${
@@ -118,7 +131,13 @@ export function ToolPanel({
                       ? 'bg-gray-700 hover:bg-gray-600 text-white' 
                       : 'bg-gray-900 border-2 border-dashed border-gray-600 hover:border-cyan-400'
                 }`}
-                title={isLocked ? 'Unlock with Premium' : (tool ? tool.name : 'Add Tool')}
+                title={
+                  isLocked 
+                    ? 'Unlock with Premium' 
+                    : tool 
+                      ? tool.name 
+                      : 'Add Tool'
+                }
               >
                 {isLocked ? (
                   <Lock className="w-4 h-4 text-gray-600" />
@@ -129,124 +148,201 @@ export function ToolPanel({
                   <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
                 )}
               </button>
-              
-              {/* Change tool button - only show for slots with tools and not locked */}
-              {tool && !isLocked && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSelectingTool(index);
-                  }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-600 border border-gray-600"
-                  title="Change tool"
-                >
-                  <Settings2 className="w-3 h-3 text-gray-300" />
-                </button>
-              )}
             </div>
           );
         })}
-        
-        <button
-          onClick={isPremium ? showLicenseStatus : () => setShowUpgradeModal(true)}
-          className={`w-12 py-2 rounded-lg text-xs transition flex flex-col items-center justify-center ${
-            isPremium
-              ? 'bg-green-600/20 text-green-400 hover:bg-green-600/30'
-              : 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700'
-          }`}
-          disabled={isLoadingPayment}
-        >
-          {isLoadingPayment ? (
-            '...'
-          ) : isPremium ? (
-            <CheckCircle className="w-4 h-4" />
-          ) : (
-            <>
-              <CreditCard className="w-4 h-4 mb-0.5" />
-              <span className="text-[10px]">PRO</span>
-            </>
-          )}
-        </button>
       </div>
 
-{isSelectingTool !== null && (
-  <>
-    {/* Backdrop for mobile */}
-    {isMobile && (
-      <div 
-        className="fixed inset-0 bg-black/50 z-[9997]"
-        onClick={() => setIsSelectingTool(null)}
-      />
-    )}
-    
-    {/* Tool selector modal - トップ位置を調整 */}
-    <div 
-      className={`tool-selector-modal fixed ${
-        isMobile 
-          ? 'inset-x-4 top-1/2 -translate-y-1/2' 
-          : 'left-20 top-20'  // top-2 から top-20 に変更（ヘッダー分下げる）
-      } z-[9998] w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-[70vh] overflow-hidden flex flex-col`}
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* ヘッダー部分を固定 */}
-      <div className="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 className="text-sm font-medium text-gray-300">
-          Select Tool for Slot {isSelectingTool + 1}
-        </h3>
-        <button 
-          onClick={() => setIsSelectingTool(null)}
-          className="text-gray-400 hover:text-gray-300 p-1 rounded hover:bg-gray-700"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
-      
-      {/* スクロール可能なコンテンツ */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="space-y-2">
-          {getAvailableToolsForSlot().length > 0 ? (
-            getAvailableToolsForSlot().map(tool => (
-              <button
-                key={tool.id}
-                onClick={() => {
-                  handleToolSelect(tool, isSelectingTool);
-                  setIsSelectingTool(null);
-                }}
-                className="w-full text-left p-3 rounded hover:bg-gray-700 flex items-center gap-3 text-gray-300 transition"
-              >
-                <div className="flex-shrink-0">{tool.icon}</div>
-                <span className="text-sm">{tool.name}</span>
-              </button>
-            ))
-          ) : (
-            <div className="text-gray-400 text-sm text-center py-4">
-              All available tools are already added
-            </div>
-          )}
+      {/* Manage Tools Modal */}
+      {showManageModal && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-[9997]"
+            onClick={() => setShowManageModal(false)}
+          />
           
-          {/* Remove tool option */}
-          {activeToolSlots[isSelectingTool] && (
-            <>
-              <div className="border-t border-gray-700 my-2"></div>
-              <button
-                onClick={() => {
-                  const newSlots = [...activeToolSlots];
-                  newSlots[isSelectingTool] = null;
-                  handleToolSelect(null as any, isSelectingTool);
-                  setIsSelectingTool(null);
-                }}
-                className="w-full text-left p-3 rounded hover:bg-red-600/20 flex items-center gap-3 text-red-400 transition"
+          <div 
+            className={`manage-tools-modal fixed ${
+              isMobile 
+                ? 'inset-x-4 top-1/2 -translate-y-1/2' 
+                : 'left-20 top-20'
+            } z-[9998] w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-[80vh] overflow-hidden flex flex-col`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <div className="flex items-center gap-2">
+                <Settings className="w-4 h-4 text-cyan-400" />
+                <h3 className="text-sm font-medium text-gray-300">
+                  Manage Tools
+                </h3>
+              </div>
+              <button 
+                onClick={() => setShowManageModal(false)}
+                className="text-gray-400 hover:text-gray-300 p-1 rounded hover:bg-gray-700"
               >
                 <X className="w-4 h-4" />
-                <span className="text-sm">Remove Tool</span>
               </button>
-            </>
+            </div>
+            
+            {/* Slots List */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {Array(6).fill(null).map((_, index) => {
+                const tool = activeToolSlots[index];
+                const isLocked = index >= MAX_FREE_SLOTS && !isPremium;
+                
+                return (
+                  <div 
+                    key={index}
+                    className={`p-3 rounded-lg border ${
+                      isLocked 
+                        ? 'bg-gray-900 border-gray-700' 
+                        : 'bg-gray-700/50 border-gray-600'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-gray-400">Slot {index + 1}</span>
+                      {isLocked && (
+                        <Lock className="w-3 h-3 text-gray-600" />
+                      )}
+                    </div>
+                    
+                    {isLocked ? (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">Locked</span>
+                        <button
+                          onClick={() => {
+                            setShowManageModal(false);
+                            setShowUpgradeModal(true);
+                          }}
+                          className="px-3 py-1 text-xs bg-amber-500 text-white rounded hover:bg-amber-600 transition"
+                        >
+                          Upgrade
+                        </button>
+                      </div>
+                    ) : tool ? (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="text-white">{tool.icon}</div>
+                          <span className="text-sm text-gray-300">{tool.name}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleChangeTool(index)}
+                            className="p-1.5 text-cyan-400 hover:bg-gray-700 rounded transition"
+                            title="Change tool"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => handleRemoveTool(index)}
+                            className="p-1.5 text-red-400 hover:bg-gray-700 rounded transition"
+                            title="Remove tool"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleAddTool(index)}
+                        className="w-full px-3 py-2 bg-gray-600 hover:bg-gray-500 text-gray-300 rounded text-sm transition flex items-center justify-center gap-2"
+                      >
+                        <Plus className="w-3 h-3" />
+                        Add Tool
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-700 bg-gray-900/50">
+              <div className="text-xs text-gray-400 text-center">
+                {isPremium ? (
+                  <span className="text-green-400">✓ Premium: 6 slots unlocked</span>
+                ) : (
+                  <span>Free: 3 of 6 slots available</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Tool Selector Modal */}
+      {isSelectingTool !== null && (
+        <>
+          {isMobile && (
+            <div 
+              className="fixed inset-0 bg-black/50 z-[9997]"
+              onClick={() => setIsSelectingTool(null)}
+            />
           )}
-        </div>
-      </div>
-    </div>
-  </>
-)}
+          
+          <div 
+            className={`tool-selector-modal fixed ${
+              isMobile 
+                ? 'inset-x-4 top-1/2 -translate-y-1/2' 
+                : 'left-20 top-20'
+            } z-[9998] w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-[70vh] overflow-hidden flex flex-col`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 border-b border-gray-700">
+              <h3 className="text-sm font-medium text-gray-300">
+                Select Tool for Slot {isSelectingTool + 1}
+              </h3>
+              <button 
+                onClick={() => setIsSelectingTool(null)}
+                className="text-gray-400 hover:text-gray-300 p-1 rounded hover:bg-gray-700"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-2">
+                {getAvailableToolsForSlot().length > 0 ? (
+                  getAvailableToolsForSlot().map(tool => (
+                    <button
+                      key={tool.id}
+                      onClick={() => {
+                        handleToolSelect(tool, isSelectingTool);
+                        setIsSelectingTool(null);
+                      }}
+                      className="w-full text-left p-3 rounded hover:bg-gray-700 flex items-center gap-3 text-gray-300 transition"
+                    >
+                      <div className="flex-shrink-0">{tool.icon}</div>
+                      <span className="text-sm">{tool.name}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm text-center py-4">
+                    All available tools are already added
+                  </div>
+                )}
+                
+                {activeToolSlots[isSelectingTool] && (
+                  <>
+                    <div className="border-t border-gray-700 my-2"></div>
+                    <button
+                      onClick={() => {
+                        handleRemoveTool(isSelectingTool);
+                        setIsSelectingTool(null);
+                      }}
+                      className="w-full text-left p-3 rounded hover:bg-red-600/20 flex items-center gap-3 text-red-400 transition"
+                    >
+                      <X className="w-4 h-4" />
+                      <span className="text-sm">Remove Tool</span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

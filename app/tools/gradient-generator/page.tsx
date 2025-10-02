@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Gradient Generator - Free Forever',
     description: 'CSS gradients without ads or sign-ups.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/gradient-generator'
   }
 }
 

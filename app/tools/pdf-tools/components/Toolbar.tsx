@@ -8,8 +8,7 @@ import {
   HelpCircle, 
   Undo, 
   Redo, 
-  X, 
-  Shield 
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,7 +29,6 @@ interface ToolbarProps {
   canUndo: boolean;
   canRedo: boolean;
   handleClearFile: () => void;
-  togglePrivacyDashboard?: () => void;
 }
 
 export function Toolbar({
@@ -49,8 +47,7 @@ export function Toolbar({
   handleRedo,
   canUndo,
   canRedo,
-  handleClearFile,
-  togglePrivacyDashboard
+  handleClearFile
 }: ToolbarProps) {
   return (
     <div className="bg-gray-800 border-b border-gray-700 px-4 py-2">
@@ -147,26 +144,6 @@ export function Toolbar({
 
         {/* Right side - Info and actions */}
         <div className="flex items-center gap-2">
-          {/* Privacy Dashboard */}
-          {togglePrivacyDashboard && (
-            <button
-              onClick={togglePrivacyDashboard}
-              className="p-2 text-gray-400 hover:text-gray-300 transition"
-              title="Privacy Dashboard"
-            >
-              <Shield className="w-4 h-4" />
-            </button>
-          )}
-          
-          {/* License Status */}
-          <button
-            onClick={showLicenseStatus}
-            className="p-2 text-gray-400 hover:text-gray-300 transition"
-            title="License Status"
-          >
-            <Info className="w-4 h-4" />
-          </button>
-
           {/* Help Link */}
           <Link
             href="/tools/pdf-tools/help"

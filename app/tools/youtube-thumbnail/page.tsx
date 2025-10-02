@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'YouTube Thumbnails - Free Forever',
     description: 'Download HD thumbnails. No ads ever.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/youtube-thumbnail'
   }
 }
 

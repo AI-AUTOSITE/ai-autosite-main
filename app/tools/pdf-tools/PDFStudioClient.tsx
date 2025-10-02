@@ -1,6 +1,6 @@
 'use client';
 
-import './styles/pdf-tools.css';  // Add CSS import
+import './styles/pdf-tools.css';
 
 import {useState,useEffect,useRef} from 'react';
 import {PDFDocument,degrees} from 'pdf-lib';
@@ -20,8 +20,6 @@ import {Toolbar} from './components/Toolbar';
 import {PDFViewer} from './components/PDFViewer';
 import {UpgradeModal} from './components/UpgradeModal';
 import {LicenseStatusModal} from './components/LicenseStatusModal';
-import {PrivacyDashboard} from './components/PrivacyDashboard';
-import {PrivacyIntegration} from './components/PrivacyIntegration';
 
 // Features
 import {PasswordHandler} from './features/password/PasswordHandler';
@@ -34,7 +32,7 @@ import {ConvertUI} from './features/convert/ConvertUI';
 import {availableTools,MAX_FREE_SLOTS} from './constants/tools';
 import {Tool} from './types';
 
-//Helpers
+// Helpers
 import { uint8ArrayToBlob } from './utils/pdfHelpers';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -81,10 +79,7 @@ export default function PDFStudioClient() {
   const [draggedPage, setDraggedPage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [convertFormat, setConvertFormat] = useState<'word' | 'excel'>('word');
-  const [filesProcessedCount, setFilesProcessedCount] = useState(0);
-  const [processedFile, setProcessedFile] = useState<Blob | null>(null);
   const [showLicenseModal, setShowLicenseModal] = useState(false);
-  const [showPrivacyDashboard, setShowPrivacyDashboard] = useState(true);
   const [isSelectingTool, setIsSelectingTool] = useState<number | null>(null);
   const [keepSelection, setKeepSelection] = useState(true);
 
@@ -110,8 +105,7 @@ export default function PDFStudioClient() {
   };
 
   const handleProcessComplete = (blob: Blob) => {
-    setProcessedFile(blob);
-    setFilesProcessedCount(prev => prev + 1);
+    // Process completion handler (for future use)
   };
 
   // Tool handlers hook
@@ -188,10 +182,6 @@ export default function PDFStudioClient() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [file, pages]);
 
-  const togglePrivacyDashboard = () => {
-    setShowPrivacyDashboard(prev => !prev);
-  };
-
   const handleShowLicenseStatus = () => {
     setShowLicenseModal(true);
   };
@@ -255,22 +245,22 @@ export default function PDFStudioClient() {
   };
 
   const handleUndo = () => {
-  if (canUndo) {
-    undo();
-    if (!keepSelection) {  // 設定に応じて選択をクリア
-      clearSelection();
+    if (canUndo) {
+      undo();
+      if (!keepSelection) {
+        clearSelection();
+      }
     }
-  }
-};
+  };
 
-const handleRedo = () => {
-  if (canRedo) {
-    redo();
-    if (!keepSelection) {  // 設定に応じて選択をクリア
-      clearSelection();
+  const handleRedo = () => {
+    if (canRedo) {
+      redo();
+      if (!keepSelection) {
+        clearSelection();
+      }
     }
-  }
-};
+  };
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -286,7 +276,6 @@ const handleRedo = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canUndo, canRedo]);
 
   const handleToolSelect = (tool: Tool | null, slotIndex: number) => {
@@ -406,7 +395,7 @@ const handleRedo = () => {
     try {
       const pdfBytes = await createPDFFromPages();
       downloadPDF(pdfBytes, `edited_${file.name}`);
-handleProcessComplete(uint8ArrayToBlob(pdfBytes));
+      handleProcessComplete(uint8ArrayToBlob(pdfBytes));
     } catch (error) {
       console.error('Download error:', error);
       alert('Failed to prepare download');
@@ -423,7 +412,7 @@ handleProcessComplete(uint8ArrayToBlob(pdfBytes));
     
     try {
       const pdfBytes = await createPDFFromPages();
-const blob = uint8ArrayToBlob(pdfBytes);
+      const blob = uint8ArrayToBlob(pdfBytes);
       const fileURL = URL.createObjectURL(blob);
       
       const printWindow = window.open(fileURL);
@@ -521,7 +510,6 @@ const blob = uint8ArrayToBlob(pdfBytes);
           handleDownload={handleDownload}
           toggleFullscreen={toggleFullscreen}
           showLicenseStatus={handleShowLicenseStatus}
-          togglePrivacyDashboard={togglePrivacyDashboard}
           isProcessing={isProcessing}
           handleUndo={handleUndo}
           handleRedo={handleRedo}
@@ -529,17 +517,19 @@ const blob = uint8ArrayToBlob(pdfBytes);
           canRedo={canRedo}
           handleClearFile={handleClearFile}
         />
-{/* ↓ ここに追加 */}
-{file && pages.length > 0 && (
-  <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center gap-4">
-    <button
-      onClick={() => setKeepSelection(!keepSelection)}
-      className={`text-sm ${keepSelection ? 'text-cyan-400' : 'text-gray-400'}`}
-    >
-      {keepSelection ? '🔒 Keep Selection' : '🔓 Auto Clear'}
-    </button>
-  </div>
-)}
+
+        {/* Keep Selection Toggle */}
+        {file && pages.length > 0 && (
+          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center gap-4">
+            <button
+              onClick={() => setKeepSelection(!keepSelection)}
+              className={`text-sm ${keepSelection ? 'text-cyan-400' : 'text-gray-400'}`}
+            >
+              {keepSelection ? '🔒 Keep Selection' : '🔓 Auto Clear'}
+            </button>
+          </div>
+        )}
+
         <PDFViewer
           file={file}
           pages={pages}
@@ -590,13 +580,6 @@ const blob = uint8ArrayToBlob(pdfBytes);
         />
       )}
 
-      {showPrivacyDashboard && (
-        <PrivacyDashboard
-          filesProcessed={filesProcessedCount}
-          currentFile={file}
-        />
-      )}
-
       {showLicenseModal && (
         <LicenseStatusModal
           isOpen={showLicenseModal}
@@ -611,12 +594,6 @@ const blob = uint8ArrayToBlob(pdfBytes);
         setShowUpgradeModal={setShowUpgradeModal}
         handleUpgradeToPremium={handleUpgradeToPremium}
         isLoadingPayment={isLoadingPayment}
-      />
-
-      <PrivacyIntegration
-        processedFile={processedFile}
-        fileName={file?.name || 'processed.pdf'}
-        filesProcessedCount={filesProcessedCount}
       />
 
       <PWAInstaller />

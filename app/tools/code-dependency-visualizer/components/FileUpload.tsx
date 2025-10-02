@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useRef, DragEvent } from 'react'
+import { useState, useRef, DragEvent, useEffect } from 'react'
 import { Upload, Folder, AlertCircle, Loader2 } from 'lucide-react'
 
 interface FileUploadProps {
@@ -13,8 +13,31 @@ interface FileUploadProps {
 export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState<string>('')
+  const [isWaitingForFiles, setIsWaitingForFiles] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const folderInputRef = useRef<HTMLInputElement>(null)
+  
+  // Add global cursor style when waiting
+  useEffect(() => {
+    if (isWaitingForFiles) {
+      document.body.style.cursor = 'wait'
+      return () => {
+        document.body.style.cursor = ''
+      }
+    }
+  }, [isWaitingForFiles])
+  
+  const handleButtonClick = (type: 'file' | 'folder') => {
+    setError('')
+    setIsWaitingForFiles(true)
+    
+    // Trigger file input
+    if (type === 'file') {
+      fileInputRef.current?.click()
+    } else {
+      folderInputRef.current?.click()
+    }
+  }
   
   const handleDragEnter = (e: DragEvent) => {
     e.preventDefault()
@@ -38,6 +61,7 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
     e.stopPropagation()
     setIsDragging(false)
     setError('')
+    setIsWaitingForFiles(true)
     
     const items = Array.from(e.dataTransfer.items)
     const files: File[] = []
@@ -53,6 +77,8 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
     
     if (files.length > 0) {
       onFilesSelect(files)
+    } else {
+      setIsWaitingForFiles(false)
     }
   }
   
@@ -60,7 +86,6 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
     if (entry.isFile) {
       return new Promise((resolve) => {
         entry.file((file: File) => {
-          // Create file with relative path
           const fileWithPath = new File([file], path + file.name, {
             type: file.type,
             lastModified: file.lastModified
@@ -85,29 +110,27 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
   }
   
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError('')
+    
     const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       onFilesSelect(files)
-      setError('')
+    } else {
+      setIsWaitingForFiles(false)
     }
   }
   
-  const validateFiles = (files: File[]): boolean => {
-    const MAX_SIZE = 100 * 1024 * 1024 // 100MB total
-    const totalSize = files.reduce((sum, file) => sum + file.size, 0)
-    
-    if (totalSize > MAX_SIZE) {
-      setError(`Total size exceeds 100MB. Your files: ${(totalSize / 1024 / 1024).toFixed(1)}MB`)
-      return false
-    }
-    
-    if (files.length > 1000) {
-      setError(`Too many files. Maximum: 1000, Your files: ${files.length}`)
-      return false
-    }
-    
-    return true
+  // Reset when dialog is cancelled
+  const handleInputClick = () => {
+    // User cancelled if no files selected after a delay
+    setTimeout(() => {
+      if (fileInputRef.current?.files?.length === 0 && folderInputRef.current?.files?.length === 0) {
+        setIsWaitingForFiles(false)
+      }
+    }, 100)
   }
+  
+  const isLoading = isProcessing || isWaitingForFiles
   
   return (
     <div className="space-y-4">
@@ -123,8 +146,9 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
             'border-cyan-400 bg-cyan-400/10 scale-[1.02]' : 
             'border-white/20 bg-white/5 hover:border-cyan-400/50'
           }
-          ${isProcessing ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          ${isLoading ? 'opacity-50' : ''}
         `}
+        style={{ cursor: isWaitingForFiles ? 'wait' : 'default' }}
       >
         {/* Hidden File Inputs */}
         <input
@@ -133,26 +157,33 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
           multiple
           accept=".ts,.tsx,.js,.jsx,.json,.css,.md"
           onChange={handleFileInput}
-          disabled={isProcessing}
+          onClick={handleInputClick}
+          disabled={isLoading}
           className="hidden"
         />
         
         <input
           ref={folderInputRef}
           type="file"
-          // @ts-ignore - webkitdirectory is not in the type definition
+          // @ts-ignore
           webkitdirectory=""
           multiple
           onChange={handleFileInput}
-          disabled={isProcessing}
+          onClick={handleInputClick}
+          disabled={isLoading}
           className="hidden"
         />
         
         <div className="text-center">
-          {isProcessing ? (
+          {isLoading ? (
             <>
               <Loader2 className="w-12 h-12 text-cyan-400 mx-auto mb-4 animate-spin" />
-              <p className="text-white font-medium">Processing files...</p>
+              <p className="text-white font-medium">
+                {isWaitingForFiles ? 'Preparing files...' : 'Processing files...'}
+              </p>
+              <p className="text-gray-400 text-sm mt-2">
+                {isWaitingForFiles ? 'This may take a few seconds for large folders' : 'Please wait'}
+              </p>
             </>
           ) : (
             <>
@@ -160,25 +191,26 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
               <p className="text-white font-medium mb-2">
                 Drop files or folder here
               </p>
-              <p className="text-gray-400 text-sm mb-4">
-                Supports: TS, TSX, JS, JSX, JSON, CSS, MD
-              </p>
               
               {/* Action Buttons */}
               <div className="flex gap-3 justify-center">
                 <button
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => handleButtonClick('file')}
+                  disabled={isLoading}
                   className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg 
-                           hover:bg-cyan-500/30 transition-colors flex items-center gap-2"
+                           hover:bg-cyan-500/30 transition-colors flex items-center gap-2
+                           disabled:opacity-50 disabled:cursor-wait"
                 >
                   <Upload className="w-4 h-4" />
                   Select Files
                 </button>
                 
                 <button
-                  onClick={() => folderInputRef.current?.click()}
+                  onClick={() => handleButtonClick('folder')}
+                  disabled={isLoading}
                   className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg 
-                           hover:bg-purple-500/30 transition-colors flex items-center gap-2"
+                           hover:bg-purple-500/30 transition-colors flex items-center gap-2
+                           disabled:opacity-50 disabled:cursor-wait"
                 >
                   <Folder className="w-4 h-4" />
                   Select Folder
@@ -193,18 +225,22 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
       <div className="flex justify-center gap-6 text-sm text-gray-400">
         <span>• Max total size: 100MB</span>
         <span>• Max files: 1000</span>
-        <span>• Auto-skips: node_modules, .git</span>
       </div>
       
       {/* Error Message */}
-      {error && (
-        <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-          <div className="flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-red-400 mt-0.5" />
-            <p className="text-sm text-red-400">{error}</p>
-          </div>
-        </div>
-      )}
+{error && (
+  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg animate-fade-in">
+    <div className="flex items-start gap-2">
+      <AlertCircle className="w-4 h-4 text-red-400 mt-0.5" />
+      <div>
+        <p className="text-sm text-red-400">{error}</p>
+        <p className="text-xs text-red-400/70 mt-1">
+          Supported formats: TS, TSX, JS, JSX, JSON, CSS, MD
+        </p>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   )
 }

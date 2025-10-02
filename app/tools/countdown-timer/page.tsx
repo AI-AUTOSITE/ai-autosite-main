@@ -19,6 +19,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Countdown Timer - Free Forever',
     description: 'Event timers without ads or tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/countdown-timer'
   }
 }
 

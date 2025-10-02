@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Age Calculator - No Ads, No Tracking',
     description: 'Calculate exact age without ads or sign-ups.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/age-calculator'
   }
 }
 

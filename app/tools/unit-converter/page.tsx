@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Unit Converter - 100% Free Forever',
     description: 'Convert units offline. No tracking.'
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: 'https://ai-autosite.com/tools/unit-converter'
   }
 }
 
