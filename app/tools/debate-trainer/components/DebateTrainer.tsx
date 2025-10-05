@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { Download, History, Info, Lightbulb } from 'lucide-react'
 
 interface ChatMessage {
   role: 'user' | 'gpt' | 'system'
@@ -15,6 +16,43 @@ interface Scores {
   "Rebuttal Resilience": number
 }
 
+interface DebateHistory {
+  id: string
+  topic: string
+  style: string
+  date: string
+  scores: Scores
+  turns: number
+}
+
+// サンプルトピック
+const SAMPLE_TOPICS = [
+  "Should social media be regulated by governments?",
+  "Is artificial intelligence a threat to humanity?",
+  "Should college education be free for everyone?",
+  "Is remote work better than office work?",
+  "Should we colonize Mars?",
+  "Is cryptocurrency the future of money?",
+  "Should animals have legal rights?",
+  "Is cancel culture harmful to society?",
+]
+
+const SCORE_LABELS: Record<string, string> = {
+  "Logical Consistency": "Logic",
+  "Persuasiveness": "Persuasion",
+  "Factual Accuracy": "Facts",
+  "Structural Coherence": "Structure",
+  "Rebuttal Resilience": "Resilience"
+}
+
+const SCORE_DESCRIPTIONS: Record<string, string> = {
+  "Logical Consistency": "Are the premises valid? Does the conclusion logically follow from the arguments presented?",
+  "Persuasiveness": "How compelling is the argument both emotionally and rationally? Would it convince a skeptical audience?",
+  "Factual Accuracy": "Are the claims supported by evidence or reasonable assumptions? Are there any factual errors?",
+  "Structural Coherence": "Is the argument well-organized, easy to follow, and properly structured?",
+  "Rebuttal Resilience": "How well would this argument hold up against counterarguments and challenges?"
+}
+
 export default function DebateTrainer() {
   const [isStarted, setIsStarted] = useState(false)
   const [topic, setTopic] = useState('')
@@ -23,13 +61,51 @@ export default function DebateTrainer() {
   const [userInput, setUserInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [turns, setTurns] = useState(0)
-  const [evaluation, setEvaluation] = useState<{scores: Scores, feedback: string} | null>(null)
+  const [evaluation, setEvaluation] = useState<{
+    scores: Scores
+    scoreExplanations?: Record<string, string>
+    feedback: string
+  } | null>(null)
   const [isTyping, setIsTyping] = useState(false)
   const [currentTypingText, setCurrentTypingText] = useState('')
+  const [showHistory, setShowHistory] = useState(false)
+  const [history, setHistory] = useState<DebateHistory[]>([])
+  const [hoveredScore, setHoveredScore] = useState<string | null>(null)
+  const [showTopicSuggestions, setShowTopicSuggestions] = useState(false)
+  
   const chatLogRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const maxTurns = 5
+
+  // 履歴をローカルストレージから読み込み
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('debate_history')
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory))
+      } catch (error) {
+        console.error('Failed to load history:', error)
+      }
+    }
+  }, [])
+
+  const saveToHistory = () => {
+    if (!evaluation || !topic) return
+    
+    const newEntry: DebateHistory = {
+      id: Date.now().toString(),
+      topic,
+      style,
+      date: new Date().toISOString(),
+      scores: evaluation.scores,
+      turns
+    }
+    
+    const updatedHistory = [newEntry, ...history].slice(0, 10) // 最新10件まで保存
+    setHistory(updatedHistory)
+    localStorage.setItem('debate_history', JSON.stringify(updatedHistory))
+  }
 
   const startDebate = () => {
     if (!topic.trim()) {
@@ -40,6 +116,7 @@ export default function DebateTrainer() {
     setMessages([])
     setTurns(0)
     setEvaluation(null)
+    setShowTopicSuggestions(false)
   }
 
   const sendMessage = async () => {
@@ -76,7 +153,7 @@ export default function DebateTrainer() {
         throw new Error(data.error || 'API error')
       }
 
-      await typeMessage(data.reply, data.scores, data.feedback)
+      await typeMessage(data.reply, data.scores, data.scoreExplanations, data.feedback)
       
       setTurns(prev => prev + 1)
 
@@ -97,7 +174,12 @@ export default function DebateTrainer() {
     }
   }
 
-  const typeMessage = async (text: string, scores: Scores, feedback: string) => {
+  const typeMessage = async (
+    text: string, 
+    scores: Scores, 
+    scoreExplanations: Record<string, string> | undefined,
+    feedback: string
+  ) => {
     const responseMatch = text.match(/RESPONSE:\s*([\s\S]*?)(?:SCORES:|FEEDBACK:|$)/i)
     const displayText = responseMatch 
       ? responseMatch[1].trim()
@@ -125,8 +207,51 @@ export default function DebateTrainer() {
     setIsTyping(false)
     
     if (scores && feedback) {
-      setEvaluation({ scores, feedback })
+      setEvaluation({ scores, scoreExplanations, feedback })
     }
+  }
+
+  const downloadResults = () => {
+    if (!evaluation) return
+    
+    const content = `
+DEBATE RESULTS
+==============
+
+Topic: ${topic}
+Opponent Style: ${getStyleInfo().label}
+Date: ${new Date().toLocaleString()}
+Rounds Completed: ${turns}/${maxTurns}
+
+PERFORMANCE SCORES
+==================
+${Object.entries(evaluation.scores).map(([key, value]) => {
+  const explanation = evaluation.scoreExplanations?.[key] || ''
+  return `${key}: ${value}/5${explanation ? ` - ${explanation}` : ''}`
+}).join('\n')}
+
+FEEDBACK
+========
+${evaluation.feedback}
+
+CONVERSATION HISTORY
+====================
+${messages.map(msg => {
+  if (msg.role === 'user') return `You: ${msg.content}`
+  if (msg.role === 'gpt') return `AI: ${msg.content}`
+  return `System: ${msg.content}`
+}).join('\n\n')}
+    `.trim()
+    
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `debate-${Date.now()}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   const getStyleInfo = () => {
@@ -153,6 +278,12 @@ export default function DebateTrainer() {
     }
   }, [messages, currentTypingText])
 
+  useEffect(() => {
+    if (evaluation && turns >= maxTurns) {
+      saveToHistory()
+    }
+  }, [evaluation, turns])
+
   const styleInfo = getStyleInfo()
 
   const patternStyle = {
@@ -160,30 +291,98 @@ export default function DebateTrainer() {
     opacity: 0.2
   }
 
-  if (!isStarted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="absolute inset-0" style={patternStyle}></div>
+if (!isStarted) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="absolute inset-0" style={patternStyle}></div>
+      
+      <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-10 max-w-md w-full border border-white/20">
+        <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-2xl opacity-50"></div>
+        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full blur-2xl opacity-50"></div>
         
-        <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-10 max-w-md w-full border border-white/20">
-          <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-2xl opacity-50"></div>
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full blur-2xl opacity-50"></div>
+        <div className="relative">
+          {/* History Button */}
+          {history.length > 0 && (
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all"
+              >
+                <History className="w-5 h-5 text-white" />
+              </button>
+            </div>
+          )}
           
-          <div className="relative">
-            <div className="flex items-center justify-center mb-6">
-              <div className="p-4 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl shadow-lg">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
+          {showHistory ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-semibold">Recent Debates</h3>
+                <button
+                  onClick={() => setShowHistory(false)}
+                  className="text-white/60 hover:text-white text-sm"
+                >
+                  Back
+                </button>
+              </div>
+              
+              <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                {history.map(entry => (
+                  <div
+                    key={entry.id}
+                    className="p-3 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                    onClick={() => {
+                      setTopic(entry.topic)
+                      setStyle(entry.style)
+                      setShowHistory(false)
+                    }}
+                  >
+                    <div className="text-white text-sm font-medium mb-1 truncate">
+                      {entry.topic}
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-white/60">
+                      <span>{new Date(entry.date).toLocaleDateString()}</span>
+                      <span>
+                        Avg: {(Object.values(entry.scores).reduce((a, b) => a + b, 0) / 5).toFixed(1)}/5
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-            
-            <h1 className="text-3xl font-bold mb-2 text-center text-white">Debate Arena</h1>
-            <p className="text-center text-white/70 mb-8 text-sm">Master the art of argumentation with AI</p>
-            
+          ) : (
             <div className="space-y-4">
               <div>
-                <label className="block text-white/90 text-sm font-medium mb-2">Debate Topic</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-white/90 text-sm font-medium">Debate Topic</label>
+                  <button
+                    onClick={() => setShowTopicSuggestions(!showTopicSuggestions)}
+                    className="text-xs text-purple-300 hover:text-purple-200 flex items-center gap-1"
+                  >
+                    <Lightbulb className="w-3 h-3" />
+                    Suggestions
+                  </button>
+                </div>
+                
+                {showTopicSuggestions && (
+                  <div className="mb-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                    <div className="text-xs text-white/60 mb-2">Click to use:</div>
+                    <div className="space-y-1">
+                      {SAMPLE_TOPICS.map((sampleTopic, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setTopic(sampleTopic)
+                            setShowTopicSuggestions(false)
+                          }}
+                          className="w-full text-left text-xs text-white/80 hover:text-white hover:bg-white/10 p-2 rounded transition-all"
+                        >
+                          {sampleTopic}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
                 <input
                   type="text"
                   placeholder="e.g., Should AI replace human workers?"
@@ -214,18 +413,19 @@ export default function DebateTrainer() {
                 Enter the Arena
               </button>
             </div>
-            
-            <div className="mt-6 pt-6 border-t border-white/10">
-              <p className="text-xs text-white/50 text-center leading-relaxed">
-                Your debates are processed anonymously. AI responses may vary in accuracy.
-                <br/>Practice critical thinking and verify important claims.
-              </p>
-            </div>
+          )}
+          
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <p className="text-xs text-white/50 text-center leading-relaxed">
+              Your debates are processed anonymously. AI responses may vary in accuracy.
+              <br/>Practice critical thinking and verify important claims.
+            </p>
           </div>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-0 md:p-4">
@@ -304,14 +504,28 @@ export default function DebateTrainer() {
 
         {evaluation && turns >= maxTurns && (
           <div className="p-4 md:p-6 bg-gradient-to-r from-slate-800/90 to-slate-900/90 backdrop-blur border-t border-slate-700/50">
-            <h3 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-              <span className="text-2xl">📊</span> Performance Analysis
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-bold text-lg flex items-center gap-2">
+                <span className="text-2xl">📊</span> Performance Analysis
+              </h3>
+              <button
+                onClick={downloadResults}
+                className="px-3 py-1.5 bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all text-sm flex items-center gap-2 border border-blue-400/50"
+              >
+                <Download className="w-4 h-4" />
+                Download
+              </button>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
               {Object.entries(evaluation.scores).map(([key, value]) => (
-                <div key={key} className="bg-slate-700/30 rounded-xl p-3 border border-slate-600/30">
-                  <div className="text-white/60 text-xs mb-1">{key}</div>
+                <div 
+                  key={key} 
+                  className="bg-slate-700/30 rounded-xl p-3 border border-slate-600/30 relative group cursor-help"
+                  onMouseEnter={() => setHoveredScore(key)}
+                  onMouseLeave={() => setHoveredScore(null)}
+                >
+                  <div className="text-white/60 text-xs mb-1">{SCORE_LABELS[key] || key}</div>
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-white">{value}</span>
                     <span className="text-white/40">/5</span>
@@ -322,6 +536,24 @@ export default function DebateTrainer() {
                       style={{ width: `${(value / 5) * 100}%` }}
                     />
                   </div>
+                  
+                  {/* Tooltip */}
+                  {hoveredScore === key && (
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-3 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-10 w-64">
+                      <div className="text-sm font-semibold text-white mb-2">{key}</div>
+                      <div className="flex items-start gap-2 mb-2">
+                        <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
+                        <div className="text-xs text-white/80 leading-relaxed">
+                          {SCORE_DESCRIPTIONS[key]}
+                        </div>
+                      </div>
+                      {evaluation.scoreExplanations?.[key] && (
+                        <div className="text-xs text-purple-300 mt-2 pt-2 border-t border-slate-700">
+                          {evaluation.scoreExplanations[key]}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

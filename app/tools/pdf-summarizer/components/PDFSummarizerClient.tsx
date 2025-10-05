@@ -1,13 +1,10 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Upload, FileText, Sparkles, Download, Copy, Check, Loader2, AlertCircle, HelpCircle } from 'lucide-react'
-import dynamic from 'next/dynamic'
-
-const ToolGuide = dynamic(() => import('../guide'), { ssr: false })
-
-type SummaryLength = 'short' | 'medium' | 'long'
-type ProcessingStage = 'idle' | 'uploading' | 'processing' | 'done' | 'error'
+import { Upload, FileText, Sparkles, Download, Copy, Check, Loader2, AlertCircle, Info, X } from 'lucide-react'
+import { SummaryLength, ProcessingStage, ErrorDetail } from '../../../lib/types'
+import { SUMMARY_CONFIGS, UI_TEXT, STAGE_MESSAGES } from '../../../lib/constants'
+import { validateFile, formatFileSize, parseApiError } from '../../../lib/utils/errorHandler'
 
 export default function PDFSummarizerClient() {
   const [file, setFile] = useState<File | null>(null)
@@ -16,28 +13,22 @@ export default function PDFSummarizerClient() {
   const [progress, setProgress] = useState(0)
   const [summaryLength, setSummaryLength] = useState<SummaryLength>('medium')
   const [copied, setCopied] = useState(false)
-  const [showGuide, setShowGuide] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [error, setError] = useState<ErrorDetail | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
   const handleFileSelect = (selectedFile: File) => {
     // Reset states
     setSummary('')
     setStage('idle')
-    setErrorMessage('')
+    setError(null)
     setProgress(0)
 
-    // Validate file type
-    if (selectedFile.type !== 'application/pdf') {
-      setErrorMessage('Please select a PDF file')
-      return
-    }
-
-    // Validate file size
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      setErrorMessage(`File too large. Maximum size is 10MB, your file is ${(selectedFile.size / 1024 / 1024).toFixed(1)}MB`)
+    // Validate file
+    const validation = validateFile(selectedFile)
+    
+    if (!validation.valid) {
+      setError(validation.error!)
       return
     }
 
@@ -53,6 +44,8 @@ export default function PDFSummarizerClient() {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    setIsDragging(false)
+    
     const droppedFile = e.dataTransfer.files[0]
     if (droppedFile) {
       handleFileSelect(droppedFile)
@@ -61,156 +54,82 @@ export default function PDFSummarizerClient() {
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+    setIsDragging(true)
   }
 
-const handleSummarize = async () => {
-  if (!file) return
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
 
-  setStage('uploading')
-  setProgress(0)  // 明確に0からスタート
-  setErrorMessage('')
+  const handleSummarize = async () => {
+    if (!file) return
 
-  try {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('summaryLength', summaryLength)
-
-    // アップロード進捗を0から段階的に
-    await new Promise<void>((resolve) => {
-      let currentProgress = 0
-      const uploadInterval = setInterval(() => {
-        currentProgress += 5
-        if (currentProgress >= 30) {
-          setProgress(30)
-          clearInterval(uploadInterval)
-          resolve()
-        } else {
-          setProgress(currentProgress)
-        }
-      }, 100)  // 100msごとに5%ずつ = 600msで30%に到達
-    })
-
-    // API処理開始
-    setStage('processing')
-    
-    const response = await fetch('/api/summarize', {
-      method: 'POST',
-      body: formData,
-    })
-
-    // 処理進捗を30%から90%まで
-    await new Promise<void>((resolve) => {
-      let currentProgress = 30
-      const processInterval = setInterval(() => {
-        currentProgress += 10
-        if (currentProgress >= 90) {
-          setProgress(90)
-          clearInterval(processInterval)
-          resolve()
-        } else {
-          setProgress(currentProgress)
-        }
-      }, 200)
-    })
-
-    if (!response.ok) {
-      throw new Error('Summarization failed')
-    }
-
-    const data = await response.json()
-    
-    if (data.error) {
-      throw new Error(data.error)
-    }
-
-    // 最後の10%
-    setProgress(100)
-    setSummary(data.summary)
-    setStage('done')
-    
-  } catch (error) {
-    console.error('Error:', error)
-    setErrorMessage(error instanceof Error ? error.message : 'Failed to summarize PDF')
-    setStage('error')
+    setStage('uploading')
     setProgress(0)
-  }
-}
+    setError(null)
 
-  const generateDemoSummary = (length: SummaryLength): string => {
-    const summaries = {
-      short: `# Key Points
-- Main finding: Significant correlation between variables
-- Method: Quantitative analysis with 500 participants
-- Result: 78% improvement in measured outcomes
-- Conclusion: Further research recommended`,
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('summaryLength', summaryLength)
+
+      // Upload progress simulation
+      await new Promise<void>((resolve) => {
+        let currentProgress = 0
+        const uploadInterval = setInterval(() => {
+          currentProgress += 5
+          if (currentProgress >= 30) {
+            setProgress(30)
+            clearInterval(uploadInterval)
+            resolve()
+          } else {
+            setProgress(currentProgress)
+          }
+        }, 100)
+      })
+
+      // Start API processing
+      setStage('processing')
       
-      medium: `# Executive Summary
+      const response = await fetch('/api/summarize', {
+        method: 'POST',
+        body: formData,
+      })
 
-This document presents a comprehensive analysis of the research findings.
+      // Processing progress simulation
+      await new Promise<void>((resolve) => {
+        let currentProgress = 30
+        const processInterval = setInterval(() => {
+          currentProgress += 10
+          if (currentProgress >= 90) {
+            setProgress(90)
+            clearInterval(processInterval)
+            resolve()
+          } else {
+            setProgress(currentProgress)
+          }
+        }, 200)
+      })
 
-## Key Findings
-- **Primary Discovery**: The study reveals significant patterns in data trends
-- **Methodology**: Mixed-methods approach with quantitative and qualitative analysis
-- **Sample Size**: 500 participants across diverse demographics
+      const data = await response.json()
 
-## Results
-The analysis demonstrates:
-1. 78% improvement in primary metrics
-2. Strong correlation between key variables
-3. Consistent patterns across all test groups
+      if (!response.ok || data.error) {
+        throw { response: data }
+      }
 
-## Recommendations
-- Implement proposed framework immediately
-- Monitor progress quarterly
-- Expand research scope for validation`,
+      // Final 10%
+      setProgress(100)
+      setSummary(data.summary)
+      setStage('done')
       
-      long: `# Comprehensive Document Summary
-
-## Introduction
-This document provides an in-depth analysis of the research conducted over a 12-month period, focusing on key performance indicators and their correlation with proposed methodologies.
-
-## Methodology
-The study employed a mixed-methods approach:
-- **Quantitative Analysis**: Statistical modeling of 500+ data points
-- **Qualitative Research**: In-depth interviews with 50 participants
-- **Longitudinal Study**: 12-month observation period
-
-## Key Findings
-
-### Primary Discoveries
-1. **Correlation Analysis**: Strong positive correlation (r=0.85) between implementation and outcomes
-2. **Performance Metrics**: 78% improvement in efficiency metrics
-3. **User Satisfaction**: 92% positive feedback from participants
-
-### Secondary Observations
-- Unexpected benefits in adjacent areas
-- Potential for scalability confirmed
-- Cost-effectiveness validated
-
-## Detailed Results
-The comprehensive analysis reveals multiple layers of insight:
-- Time-series data shows consistent improvement
-- Cross-sectional analysis confirms broad applicability
-- Regression models predict continued positive trends
-
-## Implications
-These findings have significant implications for:
-- Industry best practices
-- Policy recommendations
-- Future research directions
-
-## Recommendations
-Based on the analysis:
-1. Immediate implementation of core strategies
-2. Quarterly review cycles for optimization
-3. Extended pilot programs in new sectors
-4. Investment in supporting infrastructure
-
-## Conclusion
-The research conclusively demonstrates the viability and effectiveness of the proposed approach, with strong evidence supporting widespread adoption.`
+    } catch (err) {
+      console.error('Error:', err)
+      const errorDetail = parseApiError(err)
+      setError(errorDetail)
+      setStage('error')
+      setProgress(0)
     }
-    
-    return summaries[length]
   }
 
   const handleCopy = async () => {
@@ -228,7 +147,7 @@ The research conclusively demonstrates the viability and effectiveness of the pr
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `summary-${Date.now()}.md`
+    a.download = `summary-${file?.name.replace('.pdf', '')}-${Date.now()}.md`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -240,11 +159,14 @@ The research conclusively demonstrates the viability and effectiveness of the pr
     setSummary('')
     setStage('idle')
     setProgress(0)
-    setErrorMessage('')
+    setError(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
   }
+
+  const isProcessing = stage === 'processing' || stage === 'uploading'
+  const config = SUMMARY_CONFIGS[summaryLength]
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-6xl">
@@ -253,14 +175,28 @@ The research conclusively demonstrates the viability and effectiveness of the pr
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-white">Upload PDF</h2>
+            {file && (
+              <button
+                onClick={handleClear}
+                className="text-gray-400 hover:text-white transition-colors"
+                title="Clear file"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
           {/* Drop Zone */}
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
-              file ? 'border-green-500/50 bg-green-500/5' : 'border-gray-600 hover:border-gray-500'
+              isDragging 
+                ? 'border-green-400 bg-green-500/10 scale-105' 
+                : file 
+                  ? 'border-green-500/50 bg-green-500/5' 
+                  : 'border-gray-600 hover:border-gray-500'
             }`}
           >
             <input
@@ -270,24 +206,30 @@ The research conclusively demonstrates the viability and effectiveness of the pr
               onChange={handleFileChange}
               className="hidden"
               id="pdf-upload"
-              disabled={stage !== 'idle' && stage !== 'done'}
+              disabled={isProcessing}
             />
             <label
               htmlFor="pdf-upload"
-              className={`cursor-pointer ${stage === 'processing' || stage === 'uploading' ? 'pointer-events-none' : ''}`}
+              className={`cursor-pointer ${isProcessing ? 'pointer-events-none' : ''}`}
             >
               {!file ? (
                 <>
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-white font-medium mb-1">Drop PDF here or click to upload</p>
-                  <p className="text-sm text-gray-400">Maximum file size: 10MB</p>
+                  <Upload className={`w-12 h-12 mx-auto mb-4 transition-colors ${
+                    isDragging ? 'text-green-400' : 'text-gray-400'
+                  }`} />
+                  <p className="text-white font-medium mb-1">
+                    {isDragging ? UI_TEXT.uploadZone.dragActive : UI_TEXT.uploadZone.empty}
+                  </p>
+                  <p className="text-sm text-gray-400">{UI_TEXT.uploadZone.maxSize}</p>
                 </>
               ) : (
                 <>
                   <FileText className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                  <p className="text-green-400 font-medium">{file.name}</p>
-                  <p className="text-sm text-gray-400">
-                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  <p className="text-green-400 font-medium truncate max-w-full px-4" title={file.name}>
+                    {file.name}
+                  </p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    {formatFileSize(file.size)}
                   </p>
                 </>
               )}
@@ -295,10 +237,17 @@ The research conclusively demonstrates the viability and effectiveness of the pr
           </div>
 
           {/* Error Message */}
-          {errorMessage && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-red-400 text-sm">{errorMessage}</p>
+          {error && (
+            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-red-400 font-medium mb-1">{error.userMessage}</p>
+                  {error.technicalMessage && (
+                    <p className="text-red-400/70 text-sm">{error.technicalMessage}</p>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -310,33 +259,45 @@ The research conclusively demonstrates the viability and effectiveness of the pr
                 <button
                   key={length}
                   onClick={() => setSummaryLength(length)}
-                  disabled={stage === 'processing' || stage === 'uploading'}
-                  className={`py-2 rounded-lg capitalize transition-all ${
+                  disabled={isProcessing}
+                  className={`py-3 rounded-lg capitalize transition-all relative group ${
                     summaryLength === length
-                      ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white'
+                      ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/20'
                       : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-                  } ${stage === 'processing' || stage === 'uploading' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={SUMMARY_CONFIGS[length].description}
                 >
                   {length}
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                    <div className="font-medium mb-1">{SUMMARY_CONFIGS[length].description}</div>
+                    <div className="text-gray-400">~{SUMMARY_CONFIGS[length].estimatedTime}</div>
+                  </div>
                 </button>
               ))}
+            </div>
+            <div className="mt-2 flex items-start gap-2 text-xs text-gray-400">
+              <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <p>{config.description} • Est. {config.estimatedTime}</p>
             </div>
           </div>
 
           {/* Progress Bar */}
-          {(stage === 'uploading' || stage === 'processing') && (
+          {isProcessing && (
             <div className="mt-6">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-gray-400">
-                  {stage === 'uploading' ? 'Uploading...' : 'Processing...'}
+                <span className="text-gray-300 font-medium">
+                  {STAGE_MESSAGES[stage]}
                 </span>
-                <span className="text-cyan-400">{progress}%</span>
+                <span className="text-green-400 font-semibold">{progress}%</span>
               </div>
-              <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-gray-700/50 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-green-400 to-teal-400 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-green-400 via-teal-400 to-cyan-400 transition-all duration-300 relative"
                   style={{ width: `${progress}%` }}
-                />
+                >
+                  <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                </div>
               </div>
             </div>
           )}
@@ -345,32 +306,32 @@ The research conclusively demonstrates the viability and effectiveness of the pr
           <div className="grid grid-cols-2 gap-3 mt-6">
             <button
               onClick={handleSummarize}
-              disabled={!file || stage === 'processing' || stage === 'uploading'}
+              disabled={!file || isProcessing}
               className={`py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
-                file && stage !== 'processing' && stage !== 'uploading'
-                  ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white hover:opacity-90'
+                file && !isProcessing
+                  ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white hover:shadow-lg hover:shadow-green-500/30 hover:scale-105'
                   : 'bg-gray-700 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {stage === 'processing' || stage === 'uploading' ? (
+              {isProcessing ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Processing...
+                  {UI_TEXT.buttons.processing}
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  Summarize
+                  {UI_TEXT.buttons.summarize}
                 </>
               )}
             </button>
             
             <button
               onClick={handleClear}
-              disabled={stage === 'processing' || stage === 'uploading'}
+              disabled={isProcessing}
               className="py-3 bg-white/5 text-gray-400 rounded-xl hover:bg-white/10 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Clear
+              {UI_TEXT.buttons.clear}
             </button>
           </div>
         </div>
@@ -392,12 +353,12 @@ The research conclusively demonstrates the viability and effectiveness of the pr
                   {copied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      Copied!
+                      {UI_TEXT.buttons.copied}
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      Copy
+                      {UI_TEXT.buttons.copy}
                     </>
                   )}
                 </button>
@@ -406,23 +367,31 @@ The research conclusively demonstrates the viability and effectiveness of the pr
                   className="px-4 py-1.5 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 hover:text-white transition-all flex items-center gap-1.5 text-sm"
                 >
                   <Download className="w-4 h-4" />
-                  Download
+                  {UI_TEXT.buttons.download}
                 </button>
               </div>
             )}
           </div>
 
-          {!summary ? (
-            <div className="h-[400px] flex items-center justify-center">
+          {!summary && !isProcessing ? (
+            <div className="h-[500px] flex items-center justify-center">
               <div className="text-center">
-                <FileText className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                <p className="text-gray-500">Your summary will appear here</p>
+                <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">{UI_TEXT.summary.placeholder}</p>
+              </div>
+            </div>
+          ) : isProcessing ? (
+            <div className="h-[500px] flex items-center justify-center">
+              <div className="text-center">
+                <Loader2 className="w-16 h-16 text-green-400 mx-auto mb-4 animate-spin" />
+                <p className="text-gray-300 text-lg font-medium">{UI_TEXT.summary.processing}</p>
+                <p className="text-gray-500 text-sm mt-2">This may take {config.estimatedTime}</p>
               </div>
             </div>
           ) : (
-            <div className="bg-black/30 rounded-xl p-6 max-h-[400px] overflow-y-auto">
+            <div className="bg-black/30 rounded-xl p-6 max-h-[500px] overflow-y-auto custom-scrollbar">
               <div className="prose prose-invert max-w-none">
-                <div className="whitespace-pre-wrap text-gray-300 text-sm">
+                <div className="whitespace-pre-wrap text-gray-300 text-sm leading-relaxed">
                   {summary}
                 </div>
               </div>
@@ -430,6 +399,23 @@ The research conclusively demonstrates the viability and effectiveness of the pr
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+      `}</style>
     </div>
   )
 }

@@ -15,6 +15,14 @@ const nextConfig = {
 
   // Webpack設定のカスタマイズ
   webpack: (config, { dev, isServer }) => {
+    // サーバーサイドでpdf-parseのcanvas依存を外部化
+    if (isServer) {
+      config.externals = config.externals || []
+      config.externals.push({
+        canvas: 'canvas',
+      })
+    }
+
     // 開発環境でのロギングレベルを制御
     if (dev && !isServer) {
       config.infrastructureLogging = {
@@ -99,7 +107,7 @@ const nextConfig = {
     optimizeCss: true,
     
     // サーバーコンポーネントの最適化
-    serverComponentsExternalPackages: ['pdf-lib', 'pdfjs-dist', 'tesseract.js'],
+    serverComponentsExternalPackages: ['pdf-lib', 'pdfjs-dist', 'tesseract.js', 'canvas', 'pdf-parse'],
   },
 
   // パフォーマンス設定

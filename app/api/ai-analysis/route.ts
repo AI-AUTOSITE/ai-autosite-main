@@ -8,22 +8,26 @@ const anthropic = new Anthropic({
 
 export async function POST(request: Request) {
   try {
-    const { feature, context } = await request.json()
+    const { action, projectStructure, question } = await request.json()
     
-    // Build prompt based on feature
-    const prompt = buildPrompt(feature, context)
+    if (!projectStructure) {
+      return NextResponse.json(
+        { error: 'Project structure is required' },
+        { status: 400 }
+      )
+    }
+    
+    const prompt = buildPrompt(action, projectStructure, question)
     
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 2000,
+      model: 'claude-3-5-haiku-20241022',
+      max_tokens: 4000,
       messages: [{ role: 'user', content: prompt }],
     })
     
-    // Extract text from content block
     const textContent = message.content[0]
     const responseText = textContent.type === 'text' ? textContent.text : ''
     
-    // Return result with correct usage properties
     return NextResponse.json({
       result: responseText,
       tokens: {
@@ -41,12 +45,70 @@ export async function POST(request: Request) {
   }
 }
 
-function buildPrompt(feature: string, context: string): string {
+function buildPrompt(action: string, structure: string, question?: string): string {
   const prompts: Record<string, string> = {
-    refactor: `Based on this code analysis:\n${context}\n\nProvide specific refactoring suggestions...`,
-    architecture: `Generate a comprehensive architecture document...`,
-    chat: `You are a code review expert. Based on this analysis:\n${context}\n\nLet's discuss...`
+    analyze: `You are a software architect. Analyze this project structure and provide insights.
+
+Project Structure:
+\`\`\`
+${structure}
+\`\`\`
+
+Provide a concise analysis with:
+
+**Project Type**: Identify the framework/technology (e.g., Next.js, React, Python)
+
+**Structure Quality**: Rate as Good / Fair / Needs Improvement
+
+**Key Observations**: 
+- Notable patterns or conventions
+- Potential issues or concerns
+
+**Recommendations**: 
+1. [First specific improvement]
+2. [Second specific improvement]
+3. [Optional third improvement]
+
+Keep it actionable and under 300 words.`,
+
+    readme: `Generate a README.md for this project based on its structure.
+
+Project Structure:
+\`\`\`
+${structure}
+\`\`\`
+
+Create a professional README with:
+
+# Project Name
+
+Brief description of what this project does.
+
+## Directory Structure
+
+Explain the main folders and their purpose.
+
+## Key Files
+
+List important files and what they do.
+
+## Getting Started
+
+Basic setup instructions (if structure suggests it).
+
+Use clear markdown formatting.`,
+
+    chat: `You are a project structure expert. Answer questions about this project based on its file structure.
+
+Project Structure:
+\`\`\`
+${structure}
+\`\`\`
+
+User Question: ${question}
+
+Provide a clear, helpful answer based only on what you can see in the structure. If you cannot determine something from the structure alone, say so.`
   }
   
-  return prompts[feature] || 'Please provide analysis for the given context.'
+  return prompts[action] || prompts.analyze
 }

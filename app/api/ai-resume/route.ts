@@ -1,7 +1,6 @@
 // app/api/ai-resume/route.ts
 import Anthropic from '@anthropic-ai/sdk'
 
-// Claude client initialization
 const anthropic = process.env.ANTHROPIC_API_KEY 
   ? new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
@@ -21,7 +20,7 @@ export async function POST(req: Request) {
       return Response.json({ error: 'Please fill in all required fields.' }, { status: 400 })
     }
 
-    // Claude APIが利用可能な場合
+    // Claude API available
     if (anthropic) {
       try {
         const prompt = `Create a professional resume and cover letter for the following person:
@@ -30,17 +29,29 @@ Name: ${name}
 Target Job Title: ${jobTitle}
 Experience: ${experience}
 Skills: ${skills}
-Cover Letter Notes: ${coverDraft || 'Create a compelling cover letter highlighting their experience and skills'}
+${coverDraft ? `Cover Letter Notes: ${coverDraft}` : ''}
 
-Please generate:
-1. A well-formatted, ATS-friendly resume that highlights achievements with metrics where possible
-2. A compelling cover letter that connects their experience to the target role
+Generate a complete, professional package with:
 
-Format the output with clear sections using lines and headers. Make it professional and ready to use.`
+**RESUME**
+- Clean, ATS-friendly format
+- Professional summary highlighting key strengths
+- Experience section with bullet points
+- Skills section organized by category
+- Use metrics and achievements where possible
+
+**COVER LETTER**
+- Professional business format with today's date
+- Compelling opening that connects experience to the role
+- 2-3 body paragraphs highlighting relevant achievements
+- Strong closing with call to action
+- Professional signature
+
+Format both documents with clear headers and sections. Make them ready to use immediately.`
 
         const response = await anthropic.messages.create({
-          model: 'claude-opus-4-1-20250805', // Claude Opus 4.1最新モデル
-          max_tokens: 2000,
+          model: 'claude-3-5-haiku-20241022', // ✅ Haiku使用
+          max_tokens: 4000, // ✅ より長い出力用
           temperature: 0.7,
           messages: [
             {
@@ -54,37 +65,44 @@ Format the output with clear sections using lines and headers. Make it professio
           ? response.content[0].text 
           : 'Failed to generate content'
 
-        return Response.json({ result, aiPowered: true })
+        return Response.json({ 
+          result, 
+          aiPowered: true,
+          tokens: {
+            input: response.usage.input_tokens,
+            output: response.usage.output_tokens
+          }
+        })
         
       } catch (aiError) {
         console.error('Claude API error:', aiError)
-        // AIエラーの場合はフォールバック処理へ
+        // Fallback to template
       }
     }
 
-    // フォールバック：Claude APIが利用できない場合の基本的なテンプレート生成
+    // Fallback: Template-based generation
     const resume = `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╔═══════════════════════════════════════════════════╗
 
                     ${name.toUpperCase()}
                     ${jobTitle}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════════════════════════════╝
 
 PROFESSIONAL SUMMARY
-────────────────────
+────────────────────────────────────────────────────
 Experienced ${jobTitle} with expertise in ${skills.split(',').slice(0, 3).join(', ')}. 
 Proven track record of delivering high-quality results and driving business success.
 
 PROFESSIONAL EXPERIENCE
-────────────────────
+────────────────────────────────────────────────────
 ${experience}
 
 CORE COMPETENCIES
-────────────────────
+────────────────────────────────────────────────────
 ${skills.split(',').map(skill => `• ${skill.trim()}`).join('\n')}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════════════════════════════╝
 `
 
     const coverLetter = `
@@ -103,17 +121,17 @@ I would welcome the opportunity to discuss how my background and skills can cont
 Sincerely,
 ${name}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════════════════════════════╝
 `
 
-    const result = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const result = `╔═══════════════════════════════════════════════════╗
                     RESUME
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════════════════════════════╝
 ${resume}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╔═══════════════════════════════════════════════════╗
                  COVER LETTER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════════════════════════════╝
 ${coverLetter}`
 
     return Response.json({ result, aiPowered: false })
@@ -130,6 +148,6 @@ export async function GET() {
     ok: true, 
     service: 'AI Resume Generator API',
     aiEnabled: hasAI,
-    model: hasAI ? 'claude-opus-4.1' : 'template-based'
+    model: hasAI ? 'claude-3-5-haiku' : 'template-based'
   })
-}
+} 

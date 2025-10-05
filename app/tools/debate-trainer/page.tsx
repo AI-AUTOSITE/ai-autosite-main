@@ -38,31 +38,5 @@ export const metadata: Metadata = {
 }
 
 export default function DebateTrainerPage() {
-  return (
-    <>
-      {/* 構造化データ for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'SoftwareApplication',
-            name: 'AI Debate Trainer',
-            applicationCategory: 'EducationalApplication',
-            offers: {
-              '@type': 'Offer',
-              price: '0',
-              priceCurrency: 'USD',
-            },
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: '4.8',
-              reviewCount: '127',
-            },
-          }),
-        }}
-      />
-      <DebateTrainer />
-    </>
-  )
+  return <DebateTrainer />
 }

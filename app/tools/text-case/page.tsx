@@ -22,7 +22,8 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Text Case Converter - 100% Private',
     description: '10+ formats. Zero tracking.'
-  },
+  }
+,
   robots: {
     index: true,
     follow: true

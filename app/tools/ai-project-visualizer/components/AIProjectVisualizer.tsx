@@ -1,12 +1,13 @@
-// app/tools/ai-project-visualizer/components/AIProjectVisualizerClient.tsx
+// app/tools/ai-project-visualizer/components/AIProjectVisualizer.tsx
 
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { 
   Upload, FileText, FolderOpen, Copy, Check, 
-  ChevronDown, ChevronRight, ArrowRight, Trash2,
-  Shield, Download, FileUp, FolderPlus
+  ChevronDown, ChevronRight, Trash2,
+  Shield, Download, FileUp, FolderPlus,
+  Sparkles, Loader2, FileDown
 } from 'lucide-react'
 
 // Types
@@ -25,6 +26,7 @@ interface ProjectData {
 }
 
 type FormatType = 'tree' | 'mermaid' | 'json' | 'markdown'
+type AIAction = 'analyze' | 'readme'
 
 export default function AIProjectVisualizerClient() {
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
@@ -34,6 +36,13 @@ export default function AIProjectVisualizerClient() {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState('')
+  
+  // AI state
+  const [aiAnalysis, setAiAnalysis] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [aiError, setAiError] = useState('')
+  const [showAiPanel, setShowAiPanel] = useState(false)
+  
   const fileInputRef = useRef<HTMLInputElement>(null)
   const folderInputRef = useRef<HTMLInputElement>(null)
 
@@ -131,11 +140,69 @@ export default function AIProjectVisualizerClient() {
     }
   }, [toTree, toMermaid, toJSON, toMarkdown])
 
+  // AI Analysis
+  const handleAIAnalysis = async (action: AIAction) => {
+    if (!projectData) return
+    
+    setIsAnalyzing(true)
+    setAiError('')
+    setShowAiPanel(true)
+    
+    try {
+      const structureText = toTree(projectData.structure)
+      
+      const response = await fetch('/api/ai-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action,
+          projectStructure: structureText
+        })
+      })
+      
+      if (!response.ok) {
+        throw new Error('AI analysis failed')
+      }
+      
+      const data = await response.json()
+      
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      
+      setAiAnalysis(data.result)
+      
+    } catch (err) {
+      console.error('AI Analysis error:', err)
+      setAiError('Failed to analyze project. Please try again.')
+    } finally {
+      setIsAnalyzing(false)
+    }
+  }
+
+  // Copy AI analysis
+  const handleCopyAI = async () => {
+    if (!aiAnalysis) return
+    
+    try {
+      await navigator.clipboard.writeText(aiAnalysis)
+      // Show brief success feedback
+      const originalText = aiAnalysis
+      setAiAnalysis('✓ Copied to clipboard!')
+      setTimeout(() => setAiAnalysis(originalText), 1500)
+    } catch {
+      setAiError('Failed to copy')
+    }
+  }
+
   // Process files
   const processFiles = useCallback(async (files: FileList | null) => {
     if (!files || files.length === 0) return
 
     setError('')
+    setAiAnalysis('')
+    setShowAiPanel(false)
+    
     const fileTree: { [key: string]: any } = {}
     let fileCount = 0
     let folderCount = 0
@@ -292,6 +359,8 @@ export default function AIProjectVisualizerClient() {
     setOutput('')
     setError('')
     setExpandedNodes(new Set())
+    setAiAnalysis('')
+    setShowAiPanel(false)
   }
 
   // Load sample
@@ -330,6 +399,8 @@ export default function AIProjectVisualizerClient() {
     
     setProjectData(sample)
     setExpandedNodes(new Set(['root', '1', '2']))
+    setAiAnalysis('')
+    setShowAiPanel(false)
   }
 
   // Toggle node expansion
@@ -384,7 +455,7 @@ export default function AIProjectVisualizerClient() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Hidden inputs */}
       <input
         ref={fileInputRef}
@@ -406,11 +477,11 @@ export default function AIProjectVisualizerClient() {
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
         
-        {/* Input/Output Grid with clear separation */}
+        {/* Input/Output Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-4">
-          {/* Input Section - Import Area */}
+
+          {/* Input Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-cyan-500/20">
-            {/* Import Header */}
             <div className="mb-3">
               <label className="text-white font-semibold text-sm flex items-center gap-2 mb-3">
                 <Upload className="w-4 h-4 text-cyan-400" />
@@ -440,7 +511,6 @@ export default function AIProjectVisualizerClient() {
               </div>
             </div>
 
-            {/* File Tree Display */}
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="text-xs text-gray-400">
@@ -487,28 +557,51 @@ export default function AIProjectVisualizerClient() {
               )}
             </div>
 
-            {/* Quick actions with consistent button styling */}
+            {/* ✅ AI Analysis Buttons - 目立つように変更 */}
             {projectData && (
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-4 space-y-2">
+                {/* 大きなプライマリボタン */}
                 <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-1.5 text-xs bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg transition-all font-medium border border-white/10"
+                  onClick={() => handleAIAnalysis('analyze')}
+                  disabled={isAnalyzing}
+                  className="w-full px-4 py-3 text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all font-bold shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  Add More
+                  {isAnalyzing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Analyzing with AI...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Analyze with AI
+                    </>
+                  )}
                 </button>
-                <button
-                  onClick={loadSample}
-                  className="px-3 py-1.5 text-xs bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg transition-all font-medium border border-white/10"
-                >
-                  Reset
-                </button>
+
+                {/* セカンダリアクション */}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => handleAIAnalysis('readme')}
+                    disabled={isAnalyzing}
+                    className="px-3 py-2 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all font-medium border border-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                  >
+                    <FileDown className="w-3 h-3" />
+                    Generate README
+                  </button>
+                  <button
+                    onClick={loadSample}
+                    className="px-3 py-2 text-xs bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg transition-all font-medium border border-white/10"
+                  >
+                    Load Sample
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Output Section - Export Area */}
+          {/* Output Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-purple-500/20">
-            {/* Format Selector */}
             <div className="mb-3">
               <label className="text-white font-semibold text-sm flex items-center gap-2 mb-3">
                 <Download className="w-4 h-4 text-purple-400" />
@@ -558,7 +651,6 @@ export default function AIProjectVisualizerClient() {
               </div>
             </div>
 
-            {/* Export Output */}
             <div>
               <div className="flex justify-between items-center mb-3">
                 <label className="text-xs text-gray-400">
@@ -609,6 +701,47 @@ export default function AIProjectVisualizerClient() {
           </div>
         </div>
 
+        {/* AI Analysis Panel */}
+        {showAiPanel && (
+          <div className="mt-6 p-4 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
+            <div className="flex justify-between items-center mb-3">
+              <label className="text-white font-semibold text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                AI Analysis
+              </label>
+              {aiAnalysis && !isAnalyzing && (
+                <button
+                  onClick={handleCopyAI}
+                  className="px-3 py-1.5 text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy
+                </button>
+              )}
+            </div>
+
+            {isAnalyzing ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
+                  <p className="text-gray-400 text-sm">Analyzing your project structure...</p>
+                  <p className="text-gray-500 text-xs mt-1">This may take a few seconds</p>
+                </div>
+              </div>
+            ) : aiError ? (
+              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm">{aiError}</p>
+              </div>
+            ) : aiAnalysis ? (
+              <div className="prose prose-invert prose-sm max-w-none">
+                <div className="text-gray-300 text-sm whitespace-pre-wrap">
+                  {aiAnalysis}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        )}
+
         {/* Error */}
         {error && (
           <div className={`mt-4 p-3 rounded-lg animate-fadeIn ${
@@ -631,7 +764,7 @@ export default function AIProjectVisualizerClient() {
 
       {/* Tips */}
       <p className="text-center text-xs text-gray-500 mt-4">
-        💡 Best for AI: Tree format for Claude/ChatGPT • Mermaid for GitHub/Notion
+        Best for AI: Tree format for Claude/ChatGPT • Mermaid for GitHub/Notion
       </p>
     </div>
   )

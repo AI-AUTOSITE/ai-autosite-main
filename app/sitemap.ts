@@ -41,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'qr-code',
     'stack-recommender',
     'tech-stack-analyzer',
+    'test-file-generator',
     'text-case',
     'text-counter',
     'token-compressor',

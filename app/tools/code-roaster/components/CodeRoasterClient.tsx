@@ -9,11 +9,41 @@ import {
   Copy, 
   Check, 
   Sparkles, 
-  X,
-  AlertCircle
+  AlertCircle,
+  Download,
+  FileCode,
+  RefreshCw
 } from 'lucide-react'
-import { validateInput, checkSubmissionLimit, incrementSubmissionCount } from '../lib/submission-guard'
+import { 
+  validateInput, 
+  checkSubmissionLimit, 
+  incrementSubmissionCount,
+  detectLanguage
+} from '../lib/submission-guard'
 import { showToast } from '../lib/toast'
+
+// サンプルコード
+const SAMPLE_CODES = {
+  javascript: `function calculateTotal(items) {
+  var total = 0
+  for(var i=0; i<items.length; i++) {
+    total = total + items[i].price
+  }
+  return total
+}`,
+  python: `def find_max(numbers):
+    max = numbers[0]
+    for i in range(len(numbers)):
+        if numbers[i] > max:
+            max = numbers[i]
+    return max`,
+  buggy: `function divide(a, b) {
+  return a / b
+}
+
+console.log(divide(10, 0))
+console.log(divide(10))`,
+}
 
 export default function CodeRoasterClient() {
   const [code, setCode] = useState('')
@@ -22,8 +52,9 @@ export default function CodeRoasterClient() {
   const [activeMode, setActiveMode] = useState<'roast' | 'explain' | 'fix' | null>(null)
   const [copied, setCopied] = useState(false)
   const [attemptsLeft, setAttemptsLeft] = useState(3)
+  const [detectedLanguage, setDetectedLanguage] = useState<string>('')
 
-  // Check remaining attempts on mount
+  // 残り試行回数をチェック
   useEffect(() => {
     const checkAttempts = () => {
       const data = JSON.parse(localStorage.getItem('code_roaster_daily_count') || '{}')
@@ -33,10 +64,19 @@ export default function CodeRoasterClient() {
     }
     
     checkAttempts()
-    // Check every minute for date change
     const interval = setInterval(checkAttempts, 60000)
     return () => clearInterval(interval)
   }, [])
+
+  // コードが変更されたら言語を自動検出
+  useEffect(() => {
+    if (code.trim().length > 10) {
+      const lang = detectLanguage(code)
+      setDetectedLanguage(lang)
+    } else {
+      setDetectedLanguage('')
+    }
+  }, [code])
 
   const handleAction = async (mode: 'roast' | 'explain' | 'fix') => {
     const error = validateInput(code)
@@ -55,7 +95,6 @@ export default function CodeRoasterClient() {
     setOutput('Processing your code...')
     incrementSubmissionCount()
     
-    // Update attempts counter
     setAttemptsLeft(prev => Math.max(0, prev - 1))
 
     try {
@@ -94,22 +133,77 @@ export default function CodeRoasterClient() {
     }
   }
 
+  const handleDownload = () => {
+    if (!output) return
+    
+    const timestamp = new Date().toISOString().split('T')[0]
+    const modeText = activeMode || 'result'
+    const blob = new Blob([output], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `code-roaster-${modeText}-${timestamp}.txt`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
+  const loadSample = (type: keyof typeof SAMPLE_CODES) => {
+    setCode(SAMPLE_CODES[type])
+    setOutput('')
+    showToast(`Sample ${type} code loaded!`)
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Main Content Grid - Directly start with the tool */}
+      {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Panel */}
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <Code2 className="w-6 h-6 text-purple-400" />
-              Input Code
-            </h3>
+            <div className="flex items-center gap-3">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                <Code2 className="w-6 h-6 text-purple-400" />
+                Input Code
+              </h3>
+              {detectedLanguage && (
+                <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-400/50">
+                  <FileCode className="w-3 h-3 inline mr-1" />
+                  {detectedLanguage}
+                </span>
+              )}
+            </div>
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500" />
               <div className="w-3 h-3 rounded-full bg-yellow-500" />
               <div className="w-3 h-3 rounded-full bg-green-500" />
             </div>
+          </div>
+
+          {/* Sample Code Buttons */}
+          <div className="mb-3 flex gap-2">
+            <button
+              onClick={() => loadSample('javascript')}
+              disabled={isLoading}
+              className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50 disabled:opacity-50"
+            >
+              Sample JS
+            </button>
+            <button
+              onClick={() => loadSample('python')}
+              disabled={isLoading}
+              className="px-3 py-1.5 text-xs bg-green-500/20 text-green-300 hover:bg-green-500/30 rounded-lg transition-all border border-green-400/50 disabled:opacity-50"
+            >
+              Sample Python
+            </button>
+            <button
+              onClick={() => loadSample('buggy')}
+              disabled={isLoading}
+              className="px-3 py-1.5 text-xs bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded-lg transition-all border border-red-400/50 disabled:opacity-50"
+            >
+              Buggy Code
+            </button>
           </div>
 
           <div className="relative mb-4">
@@ -205,56 +299,91 @@ export default function CodeRoasterClient() {
               </div>
             </button>
           </div>
+
+          {/* Daily Limit Warning */}
+          {attemptsLeft === 0 && (
+            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-2">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-red-300">
+                <p className="font-semibold">Daily limit reached!</p>
+                <p className="text-xs mt-1">Come back tomorrow for 3 more attempts.</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Output Panel */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-2xl animate-pulse">🤖</span>
-              AI Response
-            </h3>
-            <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
-              <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse" 
-                   style={{ animationDelay: '0.3s' }} />
-              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" 
-                   style={{ animationDelay: '0.6s' }} />
-            </div>
-          </div>
+{/* Output Panel */}
+<div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+  <div className="flex items-center justify-between mb-4">
+    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+      <span className="text-2xl">🤖</span>
+      AI Response
+    </h3>
+    <div className="flex gap-2">
+      <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
+      <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse" 
+           style={{ animationDelay: '0.3s' }} />
+      <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" 
+           style={{ animationDelay: '0.6s' }} />
+    </div>
+  </div>
 
-          <div className="relative">
-            {output && !isLoading && (
-              <button
-                onClick={handleCopy}
-                className={`absolute top-3 right-3 z-10 px-3 py-1.5 rounded-lg text-xs 
-                          font-semibold transition-all duration-300 backdrop-blur-sm ${
-                  copied
-                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                    : 'bg-purple-500/20 text-purple-400 border border-purple-500/30 hover:bg-purple-500/30'
-                }`}
-              >
-                {copied ? (
-                  <><Check className="w-3 h-3 inline mr-1" />Copied!</>
-                ) : (
-                  <><Copy className="w-3 h-3 inline mr-1" />Copy</>
-                )}
-              </button>
-            )}
+  {/* アクションボタン（テキストエリアの上） */}
+  {output && !isLoading && (
+    <div className="mb-3 flex gap-2">
+      <button
+        onClick={handleDownload}
+        className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50"
+      >
+        <Download className="w-3 h-3 inline mr-1" />
+        Download
+      </button>
+      <button
+        onClick={handleCopy}
+        className={`px-3 py-1.5 text-xs rounded-lg transition-all border ${
+          copied
+            ? 'bg-green-500/20 text-green-300 border-green-400/50'
+            : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
+        }`}
+      >
+        {copied ? (
+          <>
+            <Check className="w-3 h-3 inline mr-1" />
+            Copied
+          </>
+        ) : (
+          <>
+            <Copy className="w-3 h-3 inline mr-1" />
+            Copy
+          </>
+        )}
+      </button>
+    </div>
+  )}
 
-            <div className="w-full h-[400px] p-4 pr-20 rounded-xl bg-black/40 backdrop-blur-sm 
-                          border-2 border-orange-500/30 text-white font-mono text-sm overflow-auto">
-              {isLoading ? (
-                <div className="flex items-center gap-2 text-orange-400">
-                  <Sparkles className="w-5 h-5 animate-spin" />
-                  <span className="animate-pulse">AI is thinking...</span>
-                </div>
-              ) : output || (
-                <span className="text-gray-400">Your AI feedback will appear here...</span>
-              )}
-            </div>
-          </div>
+  {/* テキストエリア */}
+  <div className="relative">
+    <div className="w-full h-[400px] p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+                  border-2 border-orange-500/30 text-white font-mono text-sm overflow-auto whitespace-pre-wrap">
+      {isLoading ? (
+        <div className="flex items-center gap-2 text-orange-400">
+          <Sparkles className="w-5 h-5 animate-spin" />
+          <span className="animate-pulse">AI is thinking...</span>
         </div>
+      ) : output || (
+        <span className="text-gray-400">Your AI feedback will appear here...</span>
+      )}
+    </div>
+  </div>
+</div>
+      </div>
+
+      {/* Quick Tip */}
+      <div className="mt-6 text-center">
+        <p className="text-xs text-gray-400">
+          💡 Try loading a sample code to see how Code Roaster works
+        </p>
       </div>
     </div>
   )

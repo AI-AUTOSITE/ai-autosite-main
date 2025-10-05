@@ -1,4 +1,4 @@
-import { Code, Globe, Type, Key, FileJson, Braces, Cpu, Database, Hash, GitBranch, Terminal, Flame, Code2} from 'lucide-react'
+import { Code, Globe, Type, FileText, Key, FileJson, Braces, Cpu, Database, Hash, GitBranch, Terminal, Flame, Code2} from 'lucide-react'
 import type { BlogPost } from './types'
 
 export const devToolsPosts: BlogPost[] = [
@@ -23,6 +23,23 @@ seoTitle: 'Text Case Converter - 10 Essential Formats for Developers',
 seoDescription: 'Convert text between camelCase, PascalCase, snake_case and more. Essential developer tool for code formatting. Free online converter.',
 ogImage: '/og/text-case-converter-guide.png'
   },
+{
+  id: 'test-file-generator-guide',
+  title: 'How to Use Test File Generator',
+  description: 'Complete guide to generating custom test files for development and testing. Learn how to create PDFs with exact size and content specifications.',
+  readTime: '5 min',
+  publishDate: 'October 2025',
+  icon: FileText,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'Test File Generator',
+    url: '/tools/test-file-generator'
+  },
+  lastUpdated: '2025-10-05',
+  tags: ['testing', 'development', 'pdf', 'files', 'upload'],
+  author: 'AI AutoSite Team'
+},
   
 {
   id: 'base64-guide',

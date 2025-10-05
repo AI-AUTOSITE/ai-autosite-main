@@ -1,30 +1,26 @@
+// app/api/debate/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 
-// Anthropic APIクライアントの初期化
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
-// シンプルなインメモリレート制限
 const requestCounts = new Map<string, { count: number; resetTime: number }>()
 
-// IPアドレスの取得
 function getClientIp(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for')
   const ip = forwarded ? forwarded.split(',')[0] : 'unknown'
   return ip
 }
 
-// レート制限チェック
 function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: number } {
   const now = Date.now()
-  const limit = 10 // 1時間あたり10回まで
-  const window = 60 * 60 * 1000 // 1時間
+  const limit = 10
+  const window = 60 * 60 * 1000
 
   const record = requestCounts.get(identifier)
   
-  // 古いレコードをクリーンアップ
   if (record && now > record.resetTime) {
     requestCounts.delete(identifier)
   }
@@ -40,7 +36,7 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: numbe
   }
 
   if (current.count >= limit) {
-    const resetIn = Math.ceil((current.resetTime - now) / 1000 / 60) // 分単位
+    const resetIn = Math.ceil((current.resetTime - now) / 1000 / 60)
     return { allowed: false, resetIn }
   }
 
@@ -48,11 +44,10 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: numbe
   return { allowed: true }
 }
 
-// スタイル別のプロンプト（簡略版）
 const stylePrompts = {
-  kind: `You are a supportive debate coach. Be encouraging and constructive.`,
-  teacher: `You are a logical debate professor. Be educational and analytical.`,
-  devil: `You are a sharp debate critic. Challenge arguments directly but respectfully.`
+  kind: `You are a supportive debate coach. Be encouraging, constructive, and positive while providing honest feedback. Focus on strengths first, then gently point out areas for improvement.`,
+  teacher: `You are a logical debate professor. Be educational, analytical, and thorough. Provide detailed reasoning for your scores and help the debater understand logical principles.`,
+  devil: `You are a sharp debate critic playing devil's advocate. Challenge arguments directly and rigorously, but remain respectful and educational. Your goal is to strengthen the debater's skills through tough but fair critique.`
 }
 
 export async function POST(request: NextRequest) {
@@ -60,7 +55,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { theme, message, style, user_token, is_new_session } = body
 
-    // 基本的な入力検証
     if (!theme || !message || !style) {
       return NextResponse.json(
         { error: 'Please provide all required fields' },
@@ -68,7 +62,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 入力サイズ制限
     if (theme.length > 200 || message.length > 2000) {
       return NextResponse.json(
         { error: 'Input too long. Please keep your arguments concise.' },
@@ -76,7 +69,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // IPベースのレート制限
     const clientIp = getClientIp(request)
     const ipIdentifier = `ip:${clientIp}`
     const ipCheck = checkRateLimit(ipIdentifier)
@@ -88,7 +80,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // ユーザートークンベースの追加制限（新セッション時）
     if (is_new_session && user_token) {
       const userIdentifier = `user:${user_token}`
       const userCheck = checkRateLimit(userIdentifier)
@@ -101,31 +92,38 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // プロンプトの準備
     const roleInstruction = stylePrompts[style as keyof typeof stylePrompts] || stylePrompts.teacher
     
-    const userPrompt = `Evaluate this debate argument and respond with:
-1. A brief counterargument (2-3 sentences)
-2. Scores (1-5) for each criterion
-3. One constructive feedback point
-
-Format your response exactly like this:
-RESPONSE: [Your counterargument]
-SCORES:
-Logical Consistency: x/5
-Persuasiveness: x/5
-Factual Accuracy: x/5
-Structural Coherence: x/5
-Rebuttal Resilience: x/5
-FEEDBACK: [One improvement suggestion]
+const userPrompt = `Evaluate this debate argument CRITICALLY and provide honest scores.
 
 Topic: "${theme}"
-Argument: "${message}"`
+Argument: "${message}"
 
-    // Claude API呼び出し（Haikuモデル）
+IMPORTANT: Be strict in your evaluation. Poor arguments should receive LOW scores (1-2/5).
+
+Provide your response in this EXACT format:
+
+RESPONSE: [Your 2-4 sentence counterargument]
+
+SCORES:
+Logical Consistency: x/5 - [Why this score]
+Persuasiveness: x/5 - [Why this score]
+Factual Accuracy: x/5 - [Why this score]
+Structural Coherence: x/5 - [Why this score]
+Rebuttal Resilience: x/5 - [Why this score]
+
+FEEDBACK: [One specific improvement suggestion]
+
+SCORING GUIDELINES:
+1/5 = Severely flawed (major logical errors, unsupported claims, incoherent)
+2/5 = Poor (multiple issues, weak reasoning, lacks evidence)
+3/5 = Mediocre (some valid points but significant weaknesses)
+4/5 = Good (solid argument with minor issues)
+5/5 = Excellent (well-reasoned, supported, coherent)`
+
     const completion = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 800, // Haikuは短めでも十分
+      model: 'claude-3-5-haiku-20241022', // 最新のHaiku
+      max_tokens: 1500, // より詳細な評価用
       temperature: 0.7,
       system: roleInstruction,
       messages: [
@@ -136,12 +134,10 @@ Argument: "${message}"`
       ]
     })
 
-    // レスポンスを取得
     const rawResponse = completion.content[0].type === 'text' 
       ? completion.content[0].text 
       : ''
 
-    // レスポンスのパース
     let scores = {
       "Logical Consistency": 3,
       "Persuasiveness": 3,
@@ -149,27 +145,39 @@ Argument: "${message}"`
       "Structural Coherence": 3,
       "Rebuttal Resilience": 3
     }
+    
+    let scoreExplanations: Record<string, string> = {}
     let feedback = "Keep practicing your argumentation skills!"
 
-    // スコアを抽出
-    const scoreMatches = Array.from(rawResponse.matchAll(
-      /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*(\d)\/5/g
-    ))
-    for (const match of scoreMatches) {
-      const key = match[1] as keyof typeof scores
-      const value = parseInt(match[2], 10)
-      if (value >= 1 && value <= 5) {
-        scores[key] = value
-      }
-    }
+    // スコアと説明を抽出
+// スコアを抽出（よりシンプルに）
+const scoreMatches = Array.from(rawResponse.matchAll(
+  /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*(\d)\/5/g
+))
 
-    // フィードバックを抽出
-    const feedbackMatch = rawResponse.match(/FEEDBACK:\s*([\s\S]+?)(?:\n|$)/)
+for (const match of scoreMatches) {
+  const key = match[1] as keyof typeof scores
+  const value = parseInt(match[2], 10)
+  
+  if (value >= 1 && value <= 5) {
+    scores[key] = value
+  }
+}
+
+// 説明を別途抽出
+const explanationPattern = /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*\d\/5\s*-\s*([^\n]+)/g
+const explanationMatches = Array.from(rawResponse.matchAll(explanationPattern))
+
+for (const match of explanationMatches) {
+  const key = match[1] as keyof typeof scores
+  scoreExplanations[key] = match[2].trim()
+}
+
+    const feedbackMatch = rawResponse.match(/FEEDBACK:\s*([\s\S]+?)(?:\n\n|$)/)
     if (feedbackMatch) {
-      feedback = feedbackMatch[1].trim().slice(0, 200) // 長さ制限
+      feedback = feedbackMatch[1].trim().slice(0, 300)
     }
 
-    // 定期的にメモリをクリーンアップ（100リクエストごと）
     if (Math.random() < 0.01) {
       const now = Date.now()
       for (const [key, value] of requestCounts.entries()) {
@@ -182,13 +190,13 @@ Argument: "${message}"`
     return NextResponse.json({
       reply: rawResponse,
       scores,
+      scoreExplanations,
       feedback
     })
 
   } catch (error: any) {
     console.error('Debate API error:', error)
     
-    // エラーメッセージの簡略化
     if (error.status === 401) {
       return NextResponse.json(
         { error: 'Configuration error. Please contact support.' },

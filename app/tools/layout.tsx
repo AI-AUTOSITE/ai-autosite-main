@@ -12,6 +12,7 @@ const getToolTitle = (pathname: string) => {
   const toolMap: Record<string, string> = {
     '/tools/pdf-to-data': 'PDF → CSV/Excel',
     '/tools/pc-optimizer': 'PC Optimizer',
+    '/tools/test-file-generator': 'Test File Generator',
     '/tools/ai-summarizer': 'AI Text Summarizer',
     '/tools/text-case': 'Text Case Converter',
     '/tools/json-format': 'JSON Formatter',
