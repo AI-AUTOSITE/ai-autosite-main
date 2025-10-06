@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://ai-autosite.com'
-
-  // 44個のツール
+  
+  // 46個のツール（新しく2つ追加）
   const tools = [
     'age-calculator',
     'ai-dev-dictionary',
@@ -42,6 +42,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'stack-recommender',
     'tech-stack-analyzer',
     'test-file-generator',
+    'test-image-generator',  // ← 新規追加
+    'test-text-generator',   // ← 新規追加
     'text-case',
     'text-counter',
     'token-compressor',
@@ -49,10 +51,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter',
     'uuid-generator',
     'whatsapp-link',
-    'youtube-thumbnail',
+    'youtube-thumbnail'
   ]
 
-  // ブログ記事
+  // ブログ記事（新しく2つ追加）
   const blogPosts = [
     'age-calculator-guide',
     'ai-dev-dictionary',
@@ -90,6 +92,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'percentage-calculator-guide',
     'privacy-in-development',
     'qr-code-guide',
+    'test-file-generator-guide',
+    'test-image-generator-guide',  // ← 新規追加
+    'test-text-generator-guide',   // ← 新規追加
     'text-case-converter',
     'text-counter-guide',
     'token-compressor-guide',
@@ -97,7 +102,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter-guide',
     'uuid-generator-guide',
     'whatsapp-link-generator-guide',
-    'youtube-thumbnail-guide',
+    'youtube-thumbnail-guide'
   ]
 
   // 高優先度ツール
@@ -113,9 +118,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'pdf-summarizer',
     'pdf-tools',
     'stack-recommender',
-    'tech-stack-analyzer',
+    'tech-stack-analyzer'
   ]
-
+  
   return [
     {
       url: baseUrl,
@@ -136,18 +141,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     // ツールページ（優先度別）
-    ...tools.map((tool) => ({
+    ...tools.map(tool => ({
       url: `${baseUrl}/tools/${tool}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: highPriorityTools.includes(tool) ? 0.9 : 0.7,
     })),
     // ブログ記事
-    ...blogPosts.map((slug) => ({
+    ...blogPosts.map(slug => ({
       url: `${baseUrl}/blog/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
-    })),
+    }))
   ]
 }

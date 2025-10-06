@@ -77,6 +77,23 @@ export const devToolsPosts: BlogPost[] = [
     tags: ['testing', 'images', 'compression', 'development'],
     author: 'AI AutoSite Team',
   },
+{
+  id: 'test-text-generator-guide',
+  title: 'Test Text Generator Guide',
+  description: 'Complete guide to generating test text with custom length and complexity for development testing.',
+  readTime: '5 min',
+  publishDate: 'October 2025',
+  icon: FileText,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'Test Text Generator',
+    url: '/tools/test-text-generator'
+  },
+  lastUpdated: '2025-10-06',
+  tags: ['testing', 'text', 'lorem ipsum', 'development'],
+  author: 'AI AutoSite Team'
+},
   {
     id: 'base64-guide',
     title: "Base64 Encoding: The Developer's Guide",
