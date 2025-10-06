@@ -18,13 +18,63 @@ const searchDirs = ['app', 'components', 'lib', 'utils']
 // File extensions to check
 const extensions = ['.ts', '.tsx', '.js', '.jsx']
 
-// Patterns to remove (excluding console.error and console.warn for production debugging)
-const patterns = [
-  /console\.log\([^)]*\);?\s*\n?/g,
-  /console\.debug\([^)]*\);?\s*\n?/g,
-  /console\.info\([^)]*\);?\s*\n?/g,
-  /console\.table\([^)]*\);?\s*\n?/g,
-]
+// Helper function to safely remove console statements
+function removeConsoleStatements(content, type) {
+  const lines = content.split('\n')
+  const result = []
+  let skip = false
+  let bracketCount = 0
+  let inConsole = false
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const trimmed = line.trim()
+    
+    // Check if line starts a console statement we want to remove
+    const startsConsole = new RegExp(`console\\.(${type})\\(`).test(trimmed)
+    
+    if (startsConsole && !inConsole) {
+      inConsole = true
+      skip = true
+      bracketCount = 0
+      
+      // Count brackets in current line
+      for (const char of line) {
+        if (char === '(') bracketCount++
+        if (char === ')') bracketCount--
+      }
+      
+      // If brackets are balanced in same line, reset
+      if (bracketCount === 0) {
+        inConsole = false
+        skip = false
+      }
+      continue
+    }
+    
+    // If we're inside a console statement, track brackets
+    if (inConsole) {
+      for (const char of line) {
+        if (char === '(') bracketCount++
+        if (char === ')') bracketCount--
+      }
+      
+      // When brackets are balanced, console statement is complete
+      if (bracketCount === 0) {
+        inConsole = false
+        skip = false
+      }
+      continue
+    }
+    
+    // Keep line if not skipping
+    if (!skip) {
+      result.push(line)
+    }
+  }
+  
+  return result.join('\n')
+}
 
 let totalFiles = 0
 let modifiedFiles = 0
@@ -47,13 +97,17 @@ function removeConsoleFromFile(filePath) {
   try {
     let content = fs.readFileSync(filePath, 'utf8')
     let originalContent = content
-    let removedCount = 0
-
-    patterns.forEach((pattern) => {
-      const matches = content.match(pattern) || []
-      removedCount += matches.length
-      content = content.replace(pattern, '')
-    })
+    
+    // Remove console.log, debug, info, table (preserve error and warn)
+    content = removeConsoleStatements(content, 'log')
+    content = removeConsoleStatements(content, 'debug')
+    content = removeConsoleStatements(content, 'info')
+    content = removeConsoleStatements(content, 'table')
+    
+    // Count how many were removed
+    const originalLines = originalContent.split('\n').length
+    const newLines = content.split('\n').length
+    const removedCount = originalLines - newLines
 
     // Remove excessive blank lines (more than 2 consecutive)
     content = content.replace(/\n\n\n+/g, '\n\n')
@@ -62,7 +116,7 @@ function removeConsoleFromFile(filePath) {
       fs.writeFileSync(filePath, content, 'utf8')
       modifiedFiles++
       totalRemoved += removedCount
-      console.log(`${colors.green}✓${colors.reset} ${colors.gray}${filePath}${colors.reset} ${colors.yellow}(removed ${removedCount})${colors.reset}`)
+      console.log(`${colors.green}✓${colors.reset} ${colors.gray}${filePath}${colors.reset} ${colors.yellow}(removed ${removedCount} lines)${colors.reset}`)
     }
 
     totalFiles++
