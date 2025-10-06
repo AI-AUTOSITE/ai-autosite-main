@@ -4,8 +4,10 @@ import { ArrowLeft, Twitter, MessageSquare, Hash, Link2 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Twitter Character Counter - Stay Within X/Twitter Limits | AI AutoSite',
-  description: 'Count characters for Twitter/X posts in real-time. Never exceed the 280 character limit. Free Twitter character counter tool.',
-  keywords: 'twitter character counter, x character limit, tweet counter, 280 characters, twitter limit checker',
+  description:
+    'Count characters for Twitter/X posts in real-time. Never exceed the 280 character limit. Free Twitter character counter tool.',
+  keywords:
+    'twitter character counter, x character limit, tweet counter, 280 characters, twitter limit checker',
   openGraph: {
     title: 'Twitter/X Character Counter Guide',
     description: 'Master Twitter character limits and optimize your tweets',
@@ -20,8 +22,8 @@ export default function TwitterCounterGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function TwitterCounterGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
-            Quick Tools
-          </span>
+          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">Quick Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function TwitterCounterGuidePage() {
           Twitter/X Character Counter Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Optimize your tweets with our character counter. Stay within limits 
-          while maximizing engagement on Twitter/X.
+          Optimize your tweets with our character counter. Stay within limits while maximizing
+          engagement on Twitter/X.
         </p>
       </header>
 
@@ -131,25 +131,29 @@ export default function TwitterCounterGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-blue-400">🎯</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Sweet spot:</strong> 71-100 characters get 17% more engagement
+                  <strong className="text-white">Sweet spot:</strong> 71-100 characters get 17% more
+                  engagement
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400">🎯</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Use threads:</strong> Break long content into multiple tweets
+                  <strong className="text-white">Use threads:</strong> Break long content into
+                  multiple tweets
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400">🎯</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Front-load:</strong> Put important info in first 100 chars
+                  <strong className="text-white">Front-load:</strong> Put important info in first
+                  100 chars
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400">🎯</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Use abbreviations:</strong> w/ instead of "with", & instead of "and"
+                  <strong className="text-white">Use abbreviations:</strong> w/ instead of "with", &
+                  instead of "and"
                 </p>
               </li>
             </ul>
@@ -162,27 +166,19 @@ export default function TwitterCounterGuidePage() {
           <ul className="space-y-3">
             <li className="flex items-start gap-2">
               <span className="text-blue-400 mt-1">•</span>
-              <p className="text-gray-300">
-                Use 1-2 hashtags maximum for best engagement
-              </p>
+              <p className="text-gray-300">Use 1-2 hashtags maximum for best engagement</p>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-400 mt-1">•</span>
-              <p className="text-gray-300">
-                Place hashtags at the end, not in the middle
-              </p>
+              <p className="text-gray-300">Place hashtags at the end, not in the middle</p>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-400 mt-1">•</span>
-              <p className="text-gray-300">
-                Research trending hashtags in your niche
-              </p>
+              <p className="text-gray-300">Research trending hashtags in your niche</p>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-400 mt-1">•</span>
-              <p className="text-gray-300">
-                Create branded hashtags for campaigns
-              </p>
+              <p className="text-gray-300">Create branded hashtags for campaigns</p>
             </li>
           </ul>
         </div>
@@ -190,14 +186,12 @@ export default function TwitterCounterGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Count Your Tweet Characters
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Count Your Tweet Characters</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free Twitter/X character counter with real-time updates and optimization tips.
         </p>
-        <Link 
-          href="/tools/twitter-counter" 
+        <Link
+          href="/tools/twitter-counter"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Twitter className="mr-2" size={20} />

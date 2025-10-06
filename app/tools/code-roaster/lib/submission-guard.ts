@@ -28,11 +28,11 @@ export function incrementSubmissionCount(): void {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
     const todayKey = getTodayKey()
-    
+
     const threeDaysAgo = new Date()
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
-    
-    Object.keys(data).forEach(key => {
+
+    Object.keys(data).forEach((key) => {
       const keyDate = new Date(key)
       if (keyDate < threeDaysAgo) {
         delete data[key]
@@ -53,7 +53,7 @@ export function getRemainingAttempts(): number {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
     const todayKey = getTodayKey()
     const todayCount = data[todayKey] || 0
-    
+
     return Math.max(0, MAX_DAILY_ATTEMPTS - todayCount)
   } catch (error) {
     console.error('Error getting remaining attempts:', error)
@@ -63,96 +63,103 @@ export function getRemainingAttempts(): number {
 
 export function validateInput(text: string): string | null {
   const trimmed = text.trim()
-  
+
   if (!trimmed || trimmed.length < 5) {
     return 'Please enter meaningful code (at least 5 characters)'
   }
-  
+
   if (trimmed.length > 10000) {
     return 'Code is too long (max 10,000 characters)'
   }
-  
+
   return null
 }
 
 // 言語検出機能
 export function detectLanguage(code: string): string {
   const trimmed = code.trim().toLowerCase()
-  
+
   // Python
-  if (/^(def|class|import|from|print|if __name__|async def)/.test(trimmed) || 
-      /:\s*$/.test(code.split('\n')[0])) {
+  if (
+    /^(def|class|import|from|print|if __name__|async def)/.test(trimmed) ||
+    /:\s*$/.test(code.split('\n')[0])
+  ) {
     return 'Python'
   }
-  
+
   // JavaScript/TypeScript
-  if (/^(const|let|var|function|import|export|async|class)/.test(trimmed) ||
-      /=>/.test(code) || /console\.log/.test(code)) {
-    return trimmed.includes('interface') || trimmed.includes(': string') || trimmed.includes(': number') 
-      ? 'TypeScript' 
+  if (
+    /^(const|let|var|function|import|export|async|class)/.test(trimmed) ||
+    /=>/.test(code) ||
+    /console\.log/.test(code)
+  ) {
+    return trimmed.includes('interface') ||
+      trimmed.includes(': string') ||
+      trimmed.includes(': number')
+      ? 'TypeScript'
       : 'JavaScript'
   }
-  
+
   // Java
-  if (/^(public|private|protected|class|interface|import java)/.test(trimmed) ||
-      /System\.out\.println/.test(code)) {
+  if (
+    /^(public|private|protected|class|interface|import java)/.test(trimmed) ||
+    /System\.out\.println/.test(code)
+  ) {
     return 'Java'
   }
-  
+
   // C/C++
-  if (/^(#include|int main|void main|using namespace)/.test(trimmed) ||
-      /printf|cout|cin/.test(code)) {
+  if (
+    /^(#include|int main|void main|using namespace)/.test(trimmed) ||
+    /printf|cout|cin/.test(code)
+  ) {
     return code.includes('iostream') || code.includes('cout') ? 'C++' : 'C'
   }
-  
+
   // Go
-  if (/^(package|func|import|var|type|const)/.test(trimmed) ||
-      /fmt\.Print/.test(code)) {
+  if (/^(package|func|import|var|type|const)/.test(trimmed) || /fmt\.Print/.test(code)) {
     return 'Go'
   }
-  
+
   // Rust
-  if (/^(fn|use|let|struct|impl|pub|mod)/.test(trimmed) ||
-      /println!/.test(code)) {
+  if (/^(fn|use|let|struct|impl|pub|mod)/.test(trimmed) || /println!/.test(code)) {
     return 'Rust'
   }
-  
+
   // Ruby
   if (/^(def|class|module|require|puts|end)/.test(trimmed)) {
     return 'Ruby'
   }
-  
+
   // PHP
   if (/^<\?php/.test(trimmed) || /\$\w+/.test(code)) {
     return 'PHP'
   }
-  
+
   // Swift
-  if (/^(func|var|let|class|struct|import|print)/.test(trimmed) && 
-      /->/.test(code)) {
+  if (/^(func|var|let|class|struct|import|print)/.test(trimmed) && /->/.test(code)) {
     return 'Swift'
   }
-  
+
   // Kotlin
-  if (/^(fun|val|var|class|interface|import)/.test(trimmed) &&
-      /\bfun\b/.test(code)) {
+  if (/^(fun|val|var|class|interface|import)/.test(trimmed) && /\bfun\b/.test(code)) {
     return 'Kotlin'
   }
-  
+
   // HTML
   if (/^<!DOCTYPE|^<html|^<\w+/.test(trimmed)) {
     return 'HTML'
   }
-  
+
   // CSS
   if (/^[\w\-\.#]+\s*\{/.test(trimmed) || /^@media|^@import/.test(trimmed)) {
     return 'CSS'
   }
-  
+
   // SQL
   if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)/i.test(trimmed)) {
     return 'SQL'
   }
-  
+
   return 'Code'
 }

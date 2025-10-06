@@ -1,15 +1,18 @@
 # ブログ作成ガイド - AI AutoSite
 
 ## 📋 システム概要
+
 このブログシステムは「**カテゴリ駆動型コンテンツ管理システム（Category-Driven CMS）**」を採用しています。
 
 ### アーキテクチャの特徴
+
 - **分散型データ管理**: カテゴリごとにファイル分離
 - **疎結合設計**: UI層とデータ層の完全分離
 - **スケーラブル構造**: カテゴリ追加が容易
 - **コンポーネント化**: 再利用可能なUIコンポーネント
 
 ## 📁 ディレクトリ構造
+
 ```
 app/
 ├── components/
@@ -39,6 +42,7 @@ app/
 ## ✅ 新規記事作成の3ステップ
 
 ### Step 1: カテゴリファイルにデータ追加
+
 ```typescript
 // app/lib/blog-posts/[category].ts
 import { IconName } from 'lucide-react'
@@ -50,12 +54,12 @@ export const [category]Posts: BlogPost[] = [
     id: 'article-slug',           // URLパス（/blog/article-slug）
     title: '記事タイトル',
     description: '150文字程度の説明',
-    readTime: '5 min',            
-    publishDate: 'January 2025',  
+    readTime: '5 min',
+    publishDate: 'January 2025',
     icon: IconName,               // lucide-reactアイコン
     featured: false,              // ⭐バッジ表示
     status: 'published',          // published | coming-soon | draft
-    relatedTool: {               
+    relatedTool: {
       name: 'ツール名',
       url: '/tools/tool-slug'
     },
@@ -67,12 +71,14 @@ export const [category]Posts: BlogPost[] = [
 ```
 
 ### Step 2: 記事ページ作成
+
 ```bash
 mkdir app/blog/article-slug
 touch app/blog/article-slug/page.tsx
 ```
 
 ### Step 3: 記事コンテンツ実装
+
 ```typescript
 // app/blog/article-slug/page.tsx
 import Link from 'next/link'
@@ -104,8 +110,8 @@ export default function ArticlePage() {
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back Navigation */}
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -123,11 +129,11 @@ export default function ArticlePage() {
           <span>•</span>
           <span>{readTime}</span>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
           記事タイトル
         </h1>
-        
+
         <p className="text-xl text-gray-300 leading-relaxed">
           記事の概要説明
         </p>
@@ -158,28 +164,32 @@ export default function ArticlePage() {
   )
 }
 ```
+
 SEO最適化済みメタデータ
 typescriptexport const metadata: Metadata = {
-  title: `${title} - Free Guide | AI AutoSite Blog`,
-  description: `Learn ${topic}. No ads, no tracking, free forever.`,
-  keywords: 'free, no ads, guide, tutorial',
-  openGraph: {
-    type: 'article',
-    publishedTime: publishDate,
-    authors: ['AI AutoSite Team']
-  }
+title: `${title} - Free Guide | AI AutoSite Blog`,
+description: `Learn ${topic}. No ads, no tracking, free forever.`,
+keywords: 'free, no ads, guide, tutorial',
+openGraph: {
+type: 'article',
+publishedTime: publishDate,
+authors: ['AI AutoSite Team']
 }
+}
+
 ## 🏷️ バッジシステム
 
 ### バッジタイプ（自動判定）
-| バッジ | 条件 | 表示 | カラー |
-|-------|------|------|--------|
-| ⭐ Featured | `featured: true` | 注目記事 | 黄色 |
-| 🆕 New | 最新月の記事 | 新着 | 緑色 |
-| 🔥 Popular | ビュー数上位/指定記事 | 人気 | オレンジ |
-| 🔄 Updated | 7日以内に更新 | 更新 | 青色 |
+
+| バッジ      | 条件                  | 表示     | カラー   |
+| ----------- | --------------------- | -------- | -------- |
+| ⭐ Featured | `featured: true`      | 注目記事 | 黄色     |
+| 🆕 New      | 最新月の記事          | 新着     | 緑色     |
+| 🔥 Popular  | ビュー数上位/指定記事 | 人気     | オレンジ |
+| 🔄 Updated  | 7日以内に更新         | 更新     | 青色     |
 
 ### バッジロジックのカスタマイズ
+
 ```typescript
 // app/lib/blog-utils.ts 内で管理
 import { getPostBadge, BADGE_TYPES } from '@/lib/blog-utils'
@@ -192,6 +202,7 @@ const badge = badgeType ? BADGE_TYPES[badgeType] : null
 ## 🧩 新コンポーネントシステム
 
 ### コンポーネント構成
+
 ```typescript
 // BlogPostCard - 記事カード表示
 import { BlogPostCard } from '@/components/blog/BlogPostCard'
@@ -203,7 +214,7 @@ import { BlogStats } from '@/components/blog/BlogStats'
 
 // CategoryGrid - カテゴリグリッド
 import { CategoryGrid } from '@/components/blog/CategoryGrid'
-<CategoryGrid 
+<CategoryGrid
   categories={blogCategories}
   onSelectCategory={handleSelect}
   isMobile={isMobile}
@@ -211,13 +222,14 @@ import { CategoryGrid } from '@/components/blog/CategoryGrid'
 ```
 
 ### ユーティリティ関数
+
 ```typescript
 // app/lib/blog-utils.ts
-import { 
-  searchPosts,      // 記事検索
-  sortPosts,        // ソート
-  getRelatedPosts,  // 関連記事取得
-  paginatePosts     // ページネーション
+import {
+  searchPosts, // 記事検索
+  sortPosts, // ソート
+  getRelatedPosts, // 関連記事取得
+  paginatePosts, // ページネーション
 } from '@/lib/blog-utils'
 
 // 使用例
@@ -229,30 +241,33 @@ const paginated = paginatePosts(sorted, page, 6)
 ## 📊 カテゴリ管理
 
 ### 新カテゴリ追加手順
+
 1. **blog-config.ts**にカテゴリ定義追加
 2. **blog-posts/new-category.ts**作成
 3. **index.ts**にインポート追加
 
 ### カテゴリ設定例
+
 ```typescript
 // app/lib/blog-config.ts
 import { IconComponent } from 'lucide-react'
 
 export const blogCategories: BlogCategory[] = [
   {
-    id: 'category-id',        // 内部ID（URLセーフ）
-    name: 'Display Name',     // 表示名
-    shortName: 'Short',       // モバイル表示用
-    icon: IconComponent,      // lucide-reactアイコン
-    color: 'from-color1 to-color2',  // グラデーション
-    description: '説明文'
-  }
+    id: 'category-id', // 内部ID（URLセーフ）
+    name: 'Display Name', // 表示名
+    shortName: 'Short', // モバイル表示用
+    icon: IconComponent, // lucide-reactアイコン
+    color: 'from-color1 to-color2', // グラデーション
+    description: '説明文',
+  },
 ]
 ```
 
 ## 💡 ベストプラクティス
 
 ### コンテンツ設計
+
 - **記事の長さ**: 4-6セクション（縦長回避）
 - **段落**: 3-4文まで
 - **ビジュアル**: アイコンとカードで視覚的に
@@ -260,13 +275,15 @@ export const blogCategories: BlogCategory[] = [
 - **画像**: WebP形式推奨、遅延読み込み実装
 
 ### SEO最適化
+
 - **タイトル**: 50-60文字
-- **説明**: 150-160文字  
+- **説明**: 150-160文字
 - **キーワード**: 5-10個
 - **内部リンク**: 最低3つ
 - **構造化データ**: Article schemaを実装
 
 ### パフォーマンス
+
 - **画像最適化**: next/imageコンポーネント使用
 - **コードスプリット**: 動的インポート活用
 - **キャッシュ戦略**: 静的生成（SSG）を活用
@@ -275,6 +292,7 @@ export const blogCategories: BlogCategory[] = [
 ## 📝 記事テンプレート集
 
 ### 1. ツール紹介記事
+
 ```typescript
 // 構成例
 - イントロダクション（問題提起）
@@ -287,30 +305,33 @@ export const blogCategories: BlogCategory[] = [
 ```
 
 ### 2. ハウツー記事
+
 ```typescript
 // 構成例
-- 問題の定義
-- 解決策の概要
-- ステップバイステップガイド
-- トラブルシューティング
-- プロのヒント
-- 関連ツールの紹介
+;-問題の定義 -
+  解決策の概要 -
+  ステップバイステップガイド -
+  トラブルシューティング -
+  プロのヒント -
+  関連ツールの紹介
 ```
 
 ### 3. 技術解説記事
+
 ```typescript
 // 構成例
-- 技術の背景
-- 基本概念の説明
-- 実装例・コードサンプル
-- ベストプラクティス
-- よくある間違い
-- 参考リソース
+;-技術の背景 -
+  基本概念の説明 -
+  実装例・コードサンプル -
+  ベストプラクティス -
+  よくある間違い -
+  参考リソース
 ```
 
 ## 📋 チェックリスト
 
 ### 記事公開前チェック
+
 - [ ] メタデータ（title, description, keywords）設定済み
 - [ ] OGP画像設定済み
 - [ ] 内部リンク3つ以上
@@ -321,6 +342,7 @@ export const blogCategories: BlogCategory[] = [
 - [ ] featured/newフラグの設定
 
 ### SEOチェック
+
 - [ ] URLスラッグが適切（英語、ハイフン区切り）
 - [ ] H1タグが1つのみ
 - [ ] 画像のalt属性設定
@@ -329,30 +351,34 @@ export const blogCategories: BlogCategory[] = [
 
 ## 🔄 更新履歴
 
-| Ver | 日付 | 内容 |
-|-----|------|------|
+| Ver | 日付       | 内容                                   |
+| --- | ---------- | -------------------------------------- |
 | 4.0 | 2025-01-24 | コンポーネント化・リファクタリング完了 |
-| 3.1 | 2025-01-24 | Business Tools追加、テンプレート拡充 |
-| 3.0 | 2025-01-24 | バッジシステム追加、UI簡略化 |
-| 2.0 | 2025-01-24 | カテゴリ分離構造 |
-| 1.0 | 2025-01-21 | 初版 |
+| 3.1 | 2025-01-24 | Business Tools追加、テンプレート拡充   |
+| 3.0 | 2025-01-24 | バッジシステム追加、UI簡略化           |
+| 2.0 | 2025-01-24 | カテゴリ分離構造                       |
+| 1.0 | 2025-01-21 | 初版                                   |
 
 ## 🔀 既存システムからの移行ガイド
 
 ### 移行手順
+
 1. **コンポーネントの追加**
+
    ```bash
    mkdir -p app/components/blog
    # BlogPostCard.tsx, BlogStats.tsx, CategoryGrid.tsx を配置
    ```
 
 2. **ユーティリティの追加**
+
    ```bash
    # app/lib/blog-utils.ts を追加
    # app/lib/grid-utils.ts を追加
    ```
 
 3. **型定義の更新**
+
    ```bash
    # app/lib/blog-posts/types.ts を拡張版に更新
    ```
@@ -363,6 +389,7 @@ export const blogCategories: BlogCategory[] = [
    ```
 
 ### 互換性
+
 - 既存の記事データはそのまま使用可能
 - 新しいオプションフィールドは段階的に追加可能
 - バックワードコンパティビリティ保証

@@ -1,7 +1,16 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Book, Code, Zap, Shield, ChevronRight, ExternalLink, PlayCircle, FileText } from 'lucide-react'
+import {
+  Book,
+  Code,
+  Zap,
+  Shield,
+  ChevronRight,
+  ExternalLink,
+  PlayCircle,
+  FileText,
+} from 'lucide-react'
 
 export default function DocumentationPage() {
   const tools = [
@@ -12,10 +21,10 @@ export default function DocumentationPage() {
       status: 'live',
       features: [
         'Framework comparison matrix',
-        'AI-powered recommendations', 
+        'AI-powered recommendations',
         'Performance metrics analysis',
-        'Learning curve assessment'
-      ]
+        'Learning curve assessment',
+      ],
     },
     {
       name: 'Code Dependency Visualizer',
@@ -26,8 +35,8 @@ export default function DocumentationPage() {
         'Upload ZIP files or connect GitHub',
         'Interactive dependency tree',
         'File relationship mapping',
-        'Project structure analysis'
-      ]
+        'Project structure analysis',
+      ],
     },
     {
       name: 'BlurTap',
@@ -38,9 +47,9 @@ export default function DocumentationPage() {
         'One-click sensitive data masking',
         'Customizable blur intensity',
         'Multiple mask shapes',
-        'Instant download'
-      ]
-    }
+        'Instant download',
+      ],
+    },
   ]
 
   const guides = [
@@ -52,8 +61,8 @@ export default function DocumentationPage() {
         'No account needed for basic features',
         'All tools work in your browser',
         'Your data stays private and local',
-        'Export results anytime'
-      ]
+        'Export results anytime',
+      ],
     },
     {
       title: 'Privacy & Security',
@@ -63,8 +72,8 @@ export default function DocumentationPage() {
         'Minimal data collection',
         'No tracking or analytics',
         'Client-side processing',
-        'Optional cloud integration'
-      ]
+        'Optional cloud integration',
+      ],
     },
     {
       title: 'Best Practices',
@@ -74,9 +83,9 @@ export default function DocumentationPage() {
         'Use specific, detailed inputs',
         'Check results with your context',
         'Combine multiple tools for workflows',
-        'Save important results locally'
-      ]
-    }
+        'Save important results locally',
+      ],
+    },
   ]
 
   return (
@@ -140,7 +149,10 @@ export default function DocumentationPage() {
             </h2>
             <div className="grid lg:grid-cols-2 gap-6">
               {tools.map((tool, index) => (
-                <div key={index} className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+                <div
+                  key={index}
+                  className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-semibold text-white mb-2">{tool.name}</h3>
@@ -150,7 +162,7 @@ export default function DocumentationPage() {
                       {tool.status.toUpperCase()}
                     </span>
                   </div>
-                  
+
                   <div className="mb-6">
                     <h4 className="text-sm font-semibold text-gray-300 mb-3">Key Features:</h4>
                     <ul className="space-y-1">
@@ -162,9 +174,9 @@ export default function DocumentationPage() {
                       ))}
                     </ul>
                   </div>
-                  
+
                   <div className="flex gap-3">
-                    <Link 
+                    <Link
                       href={tool.href}
                       className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all text-sm"
                     >
@@ -185,46 +197,62 @@ export default function DocumentationPage() {
             </h2>
             <div className="space-y-4">
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">Do I need to create an account?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  Do I need to create an account?
+                </h3>
                 <p className="text-gray-300">
-                  No! All our tools work without registration. You only need an account for premium features 
-                  or to sync data across devices. We use social login (Google/Microsoft/Apple) - no passwords to remember.
+                  No! All our tools work without registration. You only need an account for premium
+                  features or to sync data across devices. We use social login
+                  (Google/Microsoft/Apple) - no passwords to remember.
                 </p>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">Is my data safe and private?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  Is my data safe and private?
+                </h3>
                 <p className="text-gray-300">
-                  Absolutely. Most processing happens in your browser - your files never leave your device. 
-                  We store minimal account data (just email for login) and never track or sell your information. 
-                  <Link href="/privacy-policy" className="text-cyan-400 hover:text-cyan-300 underline ml-1">
+                  Absolutely. Most processing happens in your browser - your files never leave your
+                  device. We store minimal account data (just email for login) and never track or
+                  sell your information.
+                  <Link
+                    href="/privacy-policy"
+                    className="text-cyan-400 hover:text-cyan-300 underline ml-1"
+                  >
                     Learn more in our Privacy Policy
-                  </Link>.
+                  </Link>
+                  .
                 </p>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
                 <h3 className="text-lg font-semibold text-white mb-3">Are there usage limits?</h3>
                 <p className="text-gray-300">
-                  Our free tier is generous - you can process most files and use all core features without limits. 
-                  Premium features (like larger file support or advanced AI analysis) may have fair usage policies 
-                  to keep the service running smoothly for everyone.
+                  Our free tier is generous - you can process most files and use all core features
+                  without limits. Premium features (like larger file support or advanced AI
+                  analysis) may have fair usage policies to keep the service running smoothly for
+                  everyone.
                 </p>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">Can I use these tools for commercial projects?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  Can I use these tools for commercial projects?
+                </h3>
                 <p className="text-gray-300">
-                  Yes! All our tools can be used for both personal and commercial projects. 
-                  You own the results and outputs - we never claim rights to your work.
+                  Yes! All our tools can be used for both personal and commercial projects. You own
+                  the results and outputs - we never claim rights to your work.
                 </p>
               </div>
-              
+
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">What browsers are supported?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  What browsers are supported?
+                </h3>
                 <p className="text-gray-300">
-                  Our tools work in all modern browsers (Chrome, Firefox, Safari, Edge) on desktop and mobile. 
-                  For the best experience, we recommend using the latest version of your preferred browser.
+                  Our tools work in all modern browsers (Chrome, Firefox, Safari, Edge) on desktop
+                  and mobile. For the best experience, we recommend using the latest version of your
+                  preferred browser.
                 </p>
               </div>
             </div>
@@ -237,11 +265,11 @@ export default function DocumentationPage() {
                 <Code className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-white mb-4">API & Integrations</h2>
                 <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
-                  Want to integrate our tools into your workflow? We're working on APIs and integrations 
-                  to make our tools available wherever you need them.
+                  Want to integrate our tools into your workflow? We're working on APIs and
+                  integrations to make our tools available wherever you need them.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a 
+                  <a
                     href="https://github.com/ai-autosite"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -250,7 +278,7 @@ export default function DocumentationPage() {
                     <span>View on GitHub</span>
                     <ExternalLink className="w-4 h-4 ml-2" />
                   </a>
-                  <a 
+                  <a
                     href="mailto:aiautosite@gmail.com?subject=API%20Access%20Request"
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                   >
@@ -266,22 +294,23 @@ export default function DocumentationPage() {
             <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 text-center">
               <h2 className="text-2xl font-bold text-white mb-4">Need Help?</h2>
               <p className="text-gray-400 mb-6">
-                Can't find what you're looking for? We're here to help you get the most out of our tools.
+                Can't find what you're looking for? We're here to help you get the most out of our
+                tools.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
+                <a
                   href="mailto:aiautosite@gmail.com"
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                 >
                   <span>Email Support</span>
                 </a>
-                <Link 
+                <Link
                   href="/contact"
                   className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
                 >
                   <span>Contact Page</span>
                 </Link>
-                <Link 
+                <Link
                   href="/blog"
                   className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
                 >

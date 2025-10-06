@@ -1,49 +1,49 @@
 // pdf-tools/types/privacy.ts
 
 export interface ShareDestination {
-  id: string;
-  name: string;
-  icon: string;
-  url: string;
-  privacyScore: number; // 0-10 (10 = most private)
-  warning?: string;
+  id: string
+  name: string
+  icon: string
+  url: string
+  privacyScore: number // 0-10 (10 = most private)
+  warning?: string
 }
 
 export interface NetworkActivity {
-  timestamp: number;
-  url: string;
-  method: string;
-  type: 'internal' | 'external' | 'blocked';
-  size?: number;
+  timestamp: number
+  url: string
+  method: string
+  type: 'internal' | 'external' | 'blocked'
+  size?: number
 }
 
 export interface PrivacyGateConfig {
-  destination: ShareDestination;
+  destination: ShareDestination
   fileInfo: {
-    name: string;
-    size: number;
-    type: string;
-  };
-  onConfirm: () => void;
-  onCancel: () => void;
+    name: string
+    size: number
+    type: string
+  }
+  onConfirm: () => void
+  onCancel: () => void
 }
 
 export interface PrivacyStatus {
-  mode: 'local' | 'sharing' | 'processing';
-  filesProcessed: number;
-  dataTransmitted: number;
-  externalConnections: number;
-  lastActivity?: NetworkActivity;
+  mode: 'local' | 'sharing' | 'processing'
+  filesProcessed: number
+  dataTransmitted: number
+  externalConnections: number
+  lastActivity?: NetworkActivity
 }
 
 export const SHARE_DESTINATIONS: ShareDestination[] = [
-      {
+  {
     id: 'onedrive',
     name: 'OneDrive',
     icon: '☁️',
     url: 'https://api.onedrive.com',
     privacyScore: 4,
-    warning: 'File will be uploaded to Microsoft servers'
+    warning: 'File will be uploaded to Microsoft servers',
   },
   {
     id: 'download',
@@ -58,7 +58,7 @@ export const SHARE_DESTINATIONS: ShareDestination[] = [
     icon: '📝',
     url: 'https://api.notion.com',
     privacyScore: 4,
-    warning: 'File will be uploaded to Notion servers'
+    warning: 'File will be uploaded to Notion servers',
   },
   {
     id: 'gdrive',
@@ -66,7 +66,7 @@ export const SHARE_DESTINATIONS: ShareDestination[] = [
     icon: '📁',
     url: 'https://drive.google.com',
     privacyScore: 3,
-    warning: 'File will be uploaded to Google servers'
+    warning: 'File will be uploaded to Google servers',
   },
   {
     id: 'dropbox',
@@ -74,6 +74,6 @@ export const SHARE_DESTINATIONS: ShareDestination[] = [
     icon: '📦',
     url: 'https://api.dropboxapi.com',
     privacyScore: 4,
-    warning: 'File will be uploaded to Dropbox servers'
-  }
-];
+    warning: 'File will be uploaded to Dropbox servers',
+  },
+]

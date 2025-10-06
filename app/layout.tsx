@@ -40,8 +40,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Instant Tools - Free Online Tools',
-    description:
-      'Free instant tools that work in your browser. No sign-up required.',
+    description: 'Free instant tools that work in your browser. No sign-up required.',
     images: ['/og-image.png'],
   },
 
@@ -63,8 +62,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'Instant Tools',
-  description:
-    'Collection of free instant tools for privacy, productivity, and creativity',
+  description: 'Collection of free instant tools for privacy, productivity, and creativity',
   url: siteUrl,
   potentialAction: {
     '@type': 'SearchAction',
@@ -85,15 +83,14 @@ const jsonLd = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
         <script
           type="application/ld+json"
           // 注意: 直接オブジェクトを入れず JSON.stringify する

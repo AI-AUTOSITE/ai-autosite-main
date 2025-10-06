@@ -1,34 +1,24 @@
-import { RefObject } from 'react';
-import { 
-  Upload, 
-  Download, 
-  Printer, 
-  Maximize2, 
-  Info, 
-  HelpCircle, 
-  Undo, 
-  Redo, 
-  X
-} from 'lucide-react';
-import Link from 'next/link';
+import { RefObject } from 'react'
+import { Upload, Download, Printer, Maximize2, Info, HelpCircle, Undo, Redo, X } from 'lucide-react'
+import Link from 'next/link'
 
 interface ToolbarProps {
-  file: File | null;
-  pages: any[];
-  selectedPages: Set<string>;
-  isMobile: boolean;
-  fileInputRef: RefObject<HTMLInputElement>;
-  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handlePrint: () => void;
-  handleDownload: () => void;
-  toggleFullscreen: () => void;
-  showLicenseStatus: () => void;
-  isProcessing: boolean;
-  handleUndo: () => void;
-  handleRedo: () => void;
-  canUndo: boolean;
-  canRedo: boolean;
-  handleClearFile: () => void;
+  file: File | null
+  pages: any[]
+  selectedPages: Set<string>
+  isMobile: boolean
+  fileInputRef: RefObject<HTMLInputElement>
+  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handlePrint: () => void
+  handleDownload: () => void
+  toggleFullscreen: () => void
+  showLicenseStatus: () => void
+  isProcessing: boolean
+  handleUndo: () => void
+  handleRedo: () => void
+  canUndo: boolean
+  canRedo: boolean
+  handleClearFile: () => void
 }
 
 export function Toolbar({
@@ -47,7 +37,7 @@ export function Toolbar({
   handleRedo,
   canUndo,
   canRedo,
-  handleClearFile
+  handleClearFile,
 }: ToolbarProps) {
   return (
     <div className="bg-gray-800 border-b border-gray-700 px-4 py-2">
@@ -62,7 +52,7 @@ export function Toolbar({
             onChange={handleFileUpload}
             className="hidden"
           />
-          
+
           {/* Upload button */}
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -76,7 +66,7 @@ export function Toolbar({
             <>
               {/* Separator */}
               <div className="w-px h-6 bg-gray-600 mx-1" />
-              
+
               {/* Undo/Redo */}
               <div className="flex items-center gap-1">
                 <button
@@ -167,5 +157,5 @@ export function Toolbar({
         </div>
       </div>
     </div>
-  );
+  )
 }

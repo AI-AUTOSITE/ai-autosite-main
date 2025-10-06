@@ -1,45 +1,45 @@
 // app/tools/pc-optimizer/components/PCOptimizerClient.tsx
 
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { Upload } from 'lucide-react';  // HelpCircle削除
-import AnalysisResult from './AnalysisResult';
-import ErrorBoundary from './ErrorBoundary';
-import { useFileAnalysis } from '../hooks/useFileAnalysis';
+import React, { useState } from 'react'
+import { Upload } from 'lucide-react' // HelpCircle削除
+import AnalysisResult from './AnalysisResult'
+import ErrorBoundary from './ErrorBoundary'
+import { useFileAnalysis } from '../hooks/useFileAnalysis'
 // PowerShellGuideのインポート削除
 
 export default function PCOptimizerClient() {
-  const [isDragging, setIsDragging] = useState(false);
+  const [isDragging, setIsDragging] = useState(false)
   // showGuide削除 - layout.tsxで管理されるため
-  const { analyzedData, isAnalyzing, error, handleFileUpload, clearError } = useFileAnalysis();
+  const { analyzedData, isAnalyzing, error, handleFileUpload, clearError } = useFileAnalysis()
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    
-    const file = e.dataTransfer.files[0];
+    e.preventDefault()
+    setIsDragging(false)
+
+    const file = e.dataTransfer.files[0]
     if (file && file.name.endsWith('.csv')) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (event) => {
-        const content = event.target?.result as string;
-        handleFileUpload(content);
-      };
-      reader.readAsText(file, 'UTF-8');
+        const content = event.target?.result as string
+        handleFileUpload(content)
+      }
+      reader.readAsText(file, 'UTF-8')
     }
-  };
+  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file && file.name.endsWith('.csv')) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (event) => {
-        const content = event.target?.result as string;
-        handleFileUpload(content);
-      };
-      reader.readAsText(file, 'UTF-8');
+        const content = event.target?.result as string
+        handleFileUpload(content)
+      }
+      reader.readAsText(file, 'UTF-8')
     }
-  };
+  }
 
   // If showing results, render results view
   if (analyzedData.length > 0) {
@@ -57,7 +57,7 @@ export default function PCOptimizerClient() {
           </div>
         </div>
       </ErrorBoundary>
-    );
+    )
   }
 
   // Main drop zone view - クリーンにシンプルに
@@ -70,7 +70,9 @@ export default function PCOptimizerClient() {
         {error && (
           <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 bg-red-500/90 text-white px-4 py-2 rounded-lg text-sm animate-fadeIn">
             {error}
-            <button onClick={clearError} className="ml-2">✕</button>
+            <button onClick={clearError} className="ml-2">
+              ✕
+            </button>
           </div>
         )}
 
@@ -86,11 +88,11 @@ export default function PCOptimizerClient() {
               className="hidden"
               disabled={isAnalyzing}
             />
-            
+
             <div
               onDragOver={(e) => {
-                e.preventDefault();
-                setIsDragging(true);
+                e.preventDefault()
+                setIsDragging(true)
               }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
@@ -99,9 +101,10 @@ export default function PCOptimizerClient() {
                 flex flex-col items-center justify-center cursor-pointer
                 transition-all duration-200
                 shadow-2xl
-                ${isDragging 
-                  ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02] shadow-cyan-400/20' 
-                  : 'border-gray-500 bg-gray-800/20 hover:border-cyan-400 hover:bg-cyan-400/5 hover:shadow-cyan-400/10'
+                ${
+                  isDragging
+                    ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02] shadow-cyan-400/20'
+                    : 'border-gray-500 bg-gray-800/20 hover:border-cyan-400 hover:bg-cyan-400/5 hover:shadow-cyan-400/10'
                 }
                 ${isAnalyzing ? 'cursor-wait opacity-70' : ''}
               `}
@@ -115,25 +118,27 @@ export default function PCOptimizerClient() {
               ) : (
                 <>
                   <Upload className="w-24 h-24 text-gray-500 mb-6" />
-                  <h2 className="text-3xl font-medium text-gray-300 mb-2">
-                    Drop CSV file here
-                  </h2>
-                  <p className="text-base text-gray-400 mb-8">
-                    or click to select
-                  </p>
-                  
+                  <h2 className="text-3xl font-medium text-gray-300 mb-2">Drop CSV file here</h2>
+                  <p className="text-base text-gray-400 mb-8">or click to select</p>
+
                   {/* Mini steps inside drop zone */}
                   <div className="absolute bottom-8 flex gap-8 text-xs text-gray-400">
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">1</span>
+                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
+                        1
+                      </span>
                       <span>Run PowerShell script</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">2</span>
+                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
+                        2
+                      </span>
                       <span>Drop CSV here</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">3</span>
+                      <span className="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center">
+                        3
+                      </span>
                       <span>Get results</span>
                     </div>
                   </div>
@@ -149,5 +154,5 @@ export default function PCOptimizerClient() {
         </div>
       </div>
     </ErrorBoundary>
-  );
+  )
 }

@@ -9,26 +9,26 @@ export const toolGuide = {
     { icon: '2', text: 'Choose summary length (brief/standard/detailed)' },
     { icon: '3', text: 'Select tone (professional/casual/technical)' },
     { icon: '4', text: 'Click "Generate Summary"' },
-    { icon: '5', text: 'Copy your summary' }
+    { icon: '5', text: 'Copy your summary' },
   ],
   tips: [
     'Works best with 200+ words',
     'Maximum 50,000 characters',
     'AI analyzes key points automatically',
     'Summary preserves main ideas',
-    'Perfect for long articles and documents'
+    'Perfect for long articles and documents',
   ],
   useCases: [
     { title: 'Study Notes', desc: 'Summarize textbooks' },
     { title: 'Research', desc: 'Extract key findings' },
     { title: 'News Articles', desc: 'Get quick overview' },
-    { title: 'Reports', desc: 'Create executive summaries' }
+    { title: 'Reports', desc: 'Create executive summaries' },
   ],
   troubleshooting: [
     { problem: 'Summary too short', solution: 'Try "detailed" mode' },
     { problem: 'Missing context', solution: 'Include more source text' },
-    { problem: 'Wrong tone', solution: 'Adjust tone setting' }
-  ]
+    { problem: 'Wrong tone', solution: 'Adjust tone setting' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -48,13 +48,13 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
         <Sparkles className="w-6 h-6 text-purple-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Steps */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Quick Steps</h4>
@@ -67,7 +67,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       {/* Use Cases */}
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Perfect For</h4>
@@ -80,17 +80,19 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           ))}
         </div>
       </div>
-      
+
       {/* Tips */}
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Pro Tips</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       {/* Info Notice */}
       <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
         <p className="text-xs text-purple-400">

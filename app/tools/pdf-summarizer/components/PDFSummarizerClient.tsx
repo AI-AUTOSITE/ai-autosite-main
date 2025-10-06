@@ -1,7 +1,18 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Upload, FileText, Sparkles, Download, Copy, Check, Loader2, AlertCircle, Info, X } from 'lucide-react'
+import {
+  Upload,
+  FileText,
+  Sparkles,
+  Download,
+  Copy,
+  Check,
+  Loader2,
+  AlertCircle,
+  Info,
+  X,
+} from 'lucide-react'
 import { SummaryLength, ProcessingStage, ErrorDetail } from '../../../lib/types'
 import { SUMMARY_CONFIGS, UI_TEXT, STAGE_MESSAGES } from '../../../lib/constants'
 import { validateFile, formatFileSize, parseApiError } from '../../../lib/utils/errorHandler'
@@ -26,7 +37,7 @@ export default function PDFSummarizerClient() {
 
     // Validate file
     const validation = validateFile(selectedFile)
-    
+
     if (!validation.valid) {
       setError(validation.error!)
       return
@@ -45,7 +56,7 @@ export default function PDFSummarizerClient() {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsDragging(false)
-    
+
     const droppedFile = e.dataTransfer.files[0]
     if (droppedFile) {
       handleFileSelect(droppedFile)
@@ -91,7 +102,7 @@ export default function PDFSummarizerClient() {
 
       // Start API processing
       setStage('processing')
-      
+
       const response = await fetch('/api/summarize', {
         method: 'POST',
         body: formData,
@@ -122,7 +133,6 @@ export default function PDFSummarizerClient() {
       setProgress(100)
       setSummary(data.summary)
       setStage('done')
-      
     } catch (err) {
       console.error('Error:', err)
       const errorDetail = parseApiError(err)
@@ -134,7 +144,7 @@ export default function PDFSummarizerClient() {
 
   const handleCopy = async () => {
     if (!summary) return
-    
+
     await navigator.clipboard.writeText(summary)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -142,7 +152,7 @@ export default function PDFSummarizerClient() {
 
   const handleDownload = () => {
     if (!summary) return
-    
+
     const blob = new Blob([summary], { type: 'text/markdown' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -192,10 +202,10 @@ export default function PDFSummarizerClient() {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
-              isDragging 
-                ? 'border-green-400 bg-green-500/10 scale-105' 
-                : file 
-                  ? 'border-green-500/50 bg-green-500/5' 
+              isDragging
+                ? 'border-green-400 bg-green-500/10 scale-105'
+                : file
+                  ? 'border-green-500/50 bg-green-500/5'
                   : 'border-gray-600 hover:border-gray-500'
             }`}
           >
@@ -214,9 +224,11 @@ export default function PDFSummarizerClient() {
             >
               {!file ? (
                 <>
-                  <Upload className={`w-12 h-12 mx-auto mb-4 transition-colors ${
-                    isDragging ? 'text-green-400' : 'text-gray-400'
-                  }`} />
+                  <Upload
+                    className={`w-12 h-12 mx-auto mb-4 transition-colors ${
+                      isDragging ? 'text-green-400' : 'text-gray-400'
+                    }`}
+                  />
                   <p className="text-white font-medium mb-1">
                     {isDragging ? UI_TEXT.uploadZone.dragActive : UI_TEXT.uploadZone.empty}
                   </p>
@@ -225,12 +237,13 @@ export default function PDFSummarizerClient() {
               ) : (
                 <>
                   <FileText className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                  <p className="text-green-400 font-medium truncate max-w-full px-4" title={file.name}>
+                  <p
+                    className="text-green-400 font-medium truncate max-w-full px-4"
+                    title={file.name}
+                  >
                     {file.name}
                   </p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    {formatFileSize(file.size)}
-                  </p>
+                  <p className="text-sm text-gray-400 mt-1">{formatFileSize(file.size)}</p>
                 </>
               )}
             </label>
@@ -278,7 +291,9 @@ export default function PDFSummarizerClient() {
             </div>
             <div className="mt-2 flex items-start gap-2 text-xs text-gray-400">
               <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              <p>{config.description} • Est. {config.estimatedTime}</p>
+              <p>
+                {config.description} • Est. {config.estimatedTime}
+              </p>
             </div>
           </div>
 
@@ -286,9 +301,7 @@ export default function PDFSummarizerClient() {
           {isProcessing && (
             <div className="mt-6">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-gray-300 font-medium">
-                  {STAGE_MESSAGES[stage]}
-                </span>
+                <span className="text-gray-300 font-medium">{STAGE_MESSAGES[stage]}</span>
                 <span className="text-green-400 font-semibold">{progress}%</span>
               </div>
               <div className="w-full h-3 bg-gray-700/50 rounded-full overflow-hidden">
@@ -325,7 +338,7 @@ export default function PDFSummarizerClient() {
                 </>
               )}
             </button>
-            
+
             <button
               onClick={handleClear}
               disabled={isProcessing}

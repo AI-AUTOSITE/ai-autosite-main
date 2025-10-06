@@ -4,17 +4,17 @@ export const FILE_CONSTANTS = {
   MAX_SIZE: 10 * 1024 * 1024, // 10MB
   ACCEPTED_TYPES: '.csv',
   OUTPUT_FILENAME: 'pc_files_info.csv',
-} as const;
+} as const
 
-export const SIZE_UNITS = ['B', 'KB', 'MB', 'GB'] as const;
-export const SIZE_DIVISOR = 1024;
+export const SIZE_UNITS = ['B', 'KB', 'MB', 'GB'] as const
+export const SIZE_DIVISOR = 1024
 
 export const TIME_UNITS = {
   DAY: 1000 * 60 * 60 * 24,
   WEEK: 7,
   MONTH: 30,
   YEAR: 365,
-} as const;
+} as const
 
 export const ERROR_MESSAGES = {
   PARSE_ERROR: 'Failed to parse CSV file. Please check the file format.',
@@ -25,7 +25,7 @@ export const ERROR_MESSAGES = {
   INVALID_FILE_TYPE: 'Only CSV files are supported',
   FILE_READ_ERROR: 'Failed to read file',
   UNEXPECTED_ERROR: 'An unexpected error occurred while analyzing the file',
-} as const;
+} as const
 
 export const UI_MESSAGES = {
   UPLOAD: {
@@ -53,9 +53,10 @@ export const UI_MESSAGES = {
     SECURITY_NOTE: 'No executable content or personal information is included.',
     STEPS_TITLE: 'Steps to Run',
     PROCESSING_TIME: 'Processing Time:',
-    PROCESSING_NOTE: 'May take 1-5 minutes depending on the number of files. Wait for "File created" message to appear.',
+    PROCESSING_NOTE:
+      'May take 1-5 minutes depending on the number of files. Wait for "File created" message to appear.',
   },
-} as const;
+} as const
 
 export const PRIORITY_CONFIG = {
   critical: {
@@ -78,10 +79,11 @@ export const PRIORITY_CONFIG = {
   removable: {
     color: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
     label: 'Safe to Remove',
-    warning: "This software hasn't been used for over 3 months. Consider uninstalling to free up space.",
+    warning:
+      "This software hasn't been used for over 3 months. Consider uninstalling to free up space.",
     uninstallGuide: 'To uninstall: Settings → Apps → Apps & features → {name} → Uninstall',
   },
-} as const;
+} as const
 
 export const CATEGORY_CONFIG = {
   browser: { name: 'Browser', iconClass: 'Globe' },
@@ -94,4 +96,4 @@ export const CATEGORY_CONFIG = {
   utility: { name: 'Utility', iconClass: 'Wrench' },
   system: { name: 'System', iconClass: 'Shield' },
   unknown: { name: 'Other', iconClass: 'HelpCircle' },
-} as const;
+} as const

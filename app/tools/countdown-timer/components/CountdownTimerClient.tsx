@@ -41,7 +41,7 @@ export default function CountdownTimerClient() {
             hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
             minutes: Math.floor((difference / 1000 / 60) % 60),
             seconds: Math.floor((difference / 1000) % 60),
-            total: difference
+            total: difference,
           })
         } else {
           setTimeLeft({
@@ -49,7 +49,7 @@ export default function CountdownTimerClient() {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            total: 0
+            total: 0,
           })
           setIsActive(false)
         }
@@ -72,10 +72,10 @@ export default function CountdownTimerClient() {
     const params = new URLSearchParams({
       event: eventName,
       date: targetDate,
-      time: targetTime
+      time: targetTime,
     })
     const shareUrl = `${baseUrl}?${params.toString()}`
-    
+
     await navigator.clipboard.writeText(shareUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -94,36 +94,33 @@ export default function CountdownTimerClient() {
   }
 
   const presets = [
-    { 
-      name: 'New Year', 
-      date: new Date(new Date().getFullYear() + 1, 0, 1) 
+    {
+      name: 'New Year',
+      date: new Date(new Date().getFullYear() + 1, 0, 1),
     },
-    { 
-      name: 'Christmas', 
-      date: new Date(new Date().getFullYear(), 11, 25) 
+    {
+      name: 'Christmas',
+      date: new Date(new Date().getFullYear(), 11, 25),
     },
-    { 
-      name: 'Weekend', 
+    {
+      name: 'Weekend',
       date: (() => {
         const d = new Date()
         d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7))
         return d
-      })()
-    }
+      })(),
+    },
   ]
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-{/* Main Card */}
+      {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Quick Setup */}
         <div className="space-y-4 mb-6">
           {/* Event Name */}
           <div>
-            <label className="text-white font-medium mb-2 block text-sm">
-              Event Name
-            </label>
+            <label className="text-white font-medium mb-2 block text-sm">Event Name</label>
             <input
               type="text"
               value={eventName}
@@ -139,9 +136,7 @@ export default function CountdownTimerClient() {
           {/* Date and Time - Side by side */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-white font-medium mb-2 block text-sm">
-                Date
-              </label>
+              <label className="text-white font-medium mb-2 block text-sm">Date</label>
               <input
                 type="date"
                 value={targetDate}
@@ -156,9 +151,7 @@ export default function CountdownTimerClient() {
               />
             </div>
             <div>
-              <label className="text-white font-medium mb-2 block text-sm">
-                Time
-              </label>
+              <label className="text-white font-medium mb-2 block text-sm">Time</label>
               <input
                 type="time"
                 value={targetTime}
@@ -197,10 +190,10 @@ export default function CountdownTimerClient() {
           className={`w-full py-4 rounded-xl font-medium text-lg transition-all 
                     flex items-center justify-center gap-2 disabled:opacity-50 
                     disabled:cursor-not-allowed ${
-            isActive 
-              ? 'bg-red-500 text-white hover:bg-red-600' 
-              : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:opacity-90'
-          }`}
+                      isActive
+                        ? 'bg-red-500 text-white hover:bg-red-600'
+                        : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:opacity-90'
+                    }`}
         >
           {isActive ? (
             <>
@@ -218,10 +211,8 @@ export default function CountdownTimerClient() {
         {/* Live Countdown Display */}
         {timeLeft && isActive && (
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
-            <h2 className="text-xl font-bold text-white text-center mb-4">
-              {eventName}
-            </h2>
-            
+            <h2 className="text-xl font-bold text-white text-center mb-4">{eventName}</h2>
+
             <div className="grid grid-cols-4 gap-2">
               <div className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-cyan-400">
@@ -260,10 +251,10 @@ export default function CountdownTimerClient() {
               onClick={copyShareLink}
               className={`w-full mt-4 py-2 rounded-lg text-sm transition-all 
                         flex items-center justify-center gap-2 ${
-                copied 
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
-              }`}
+                          copied
+                            ? 'bg-green-500 text-white'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                        }`}
             >
               {copied ? (
                 <>

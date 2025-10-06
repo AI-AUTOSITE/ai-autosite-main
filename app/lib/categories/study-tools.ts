@@ -19,7 +19,7 @@ export const studyTools: Tool[] = [
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'hybrid',
-    dependencies: ['pdfjs-dist']
+    dependencies: ['pdfjs-dist'],
   },
   {
     id: 'japanese-ocr',
@@ -37,7 +37,7 @@ export const studyTools: Tool[] = [
     new: true,
     pricing: 'free',
     apiRequired: false,
-    dataProcessing: 'local'
+    dataProcessing: 'local',
   },
   {
     id: 'debate-trainer',
@@ -54,11 +54,12 @@ export const studyTools: Tool[] = [
     timeToUse: '15 minutes',
     featured: true,
     new: true,
+    badge: 'AI',
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'server',
     dependencies: ['openai'],
-    lastUpdated: '2025-01'
+    lastUpdated: '2025-01',
   },
   {
     id: 'ai-summarizer',
@@ -75,10 +76,11 @@ export const studyTools: Tool[] = [
     timeToUse: '30 seconds',
     featured: true,
     new: true,
+    badge: 'AI',
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'server',
-    lastUpdated: '2025-01'
+    lastUpdated: '2025-01',
   },
   {
     id: 'flashcard-maker',
@@ -97,7 +99,7 @@ export const studyTools: Tool[] = [
     featured: false,
     new: true,
     pricing: 'free',
-    dataProcessing: 'local'
+    dataProcessing: 'local',
   },
   {
     id: 'study-planner',
@@ -115,6 +117,6 @@ export const studyTools: Tool[] = [
     featured: false,
     new: false,
     pricing: 'free',
-    dataProcessing: 'local'
-  }
+    dataProcessing: 'local',
+  },
 ]

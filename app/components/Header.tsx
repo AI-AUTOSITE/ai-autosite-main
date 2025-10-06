@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Shield, Sparkles, Menu, X, HelpCircle } from 'lucide-react'
 import { useState, useEffect, Suspense } from 'react'
-import dynamic from 'next/dynamic'
 
 export default function Header() {
   const pathname = usePathname()
@@ -20,7 +19,7 @@ export default function Header() {
 
   // Check if tool page
   const isToolPage = pathname.startsWith('/tools/') && pathname !== '/tools'
-  
+
   // Load guide component dynamically
   useEffect(() => {
     const loadGuide = async () => {
@@ -50,7 +49,7 @@ export default function Header() {
     setShowGuide(false) // Reset when changing pages
   }, [pathname, isToolPage])
 
-  // ESCキーでガイドを閉じる
+  // Close guide/menu with ESC key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -58,32 +57,32 @@ export default function Header() {
         if (mobileMenuOpen) setMobileMenuOpen(false)
       }
     }
-    
+
     if (showGuide) {
       document.addEventListener('keydown', handleEsc)
-      // スクロールを防ぐ
+      // Prevent scroll when modal is open
       document.body.style.overflow = 'hidden'
     } else if (mobileMenuOpen) {
       document.addEventListener('keydown', handleEsc)
     }
-    
+
     return () => {
       document.removeEventListener('keydown', handleEsc)
       document.body.style.overflow = ''
     }
   }, [showGuide, mobileMenuOpen])
 
-  // モバイルメニューの外側クリック検知
+  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      // ヘッダー内のクリックは無視
+      // Ignore clicks inside header
       if (target.closest('header')) return
       setMobileMenuOpen(false)
     }
 
     if (mobileMenuOpen) {
-      // 少し遅延を入れて、メニューボタンのクリックイベントと競合しないようにする
+      // Add delay to avoid conflict with menu button click
       setTimeout(() => {
         document.addEventListener('click', handleClickOutside)
       }, 100)
@@ -105,15 +104,12 @@ export default function Header() {
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo - 修正版 */}
-            <Link 
-              href="/" 
+            {/* Logo */}
+            <Link
+              href="/"
               className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
-              onClick={(e) => {
-                    console.log('Logo clicked!', e); 
-                // モバイルメニューを閉じる
+              onClick={() => {
                 setMobileMenuOpen(false)
-                // ガイドモーダルを閉じる
                 setShowGuide(false)
               }}
             >
@@ -142,20 +138,21 @@ export default function Header() {
                   <span className="text-sm font-medium">Guide</span>
                 </button>
               )}
-              
+
               {navItems.map((item) => {
-                const isActive = pathname === item.href || 
-                               (item.href === '/blog' && pathname.startsWith('/blog'))
-                
+                const isActive =
+                  pathname === item.href || (item.href === '/blog' && pathname.startsWith('/blog'))
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={`
                       px-4 py-2 rounded-lg text-sm font-medium transition-all
-                      ${isActive 
-                        ? 'bg-cyan-500/20 text-cyan-400' 
-                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ${
+                        isActive
+                          ? 'bg-cyan-500/20 text-cyan-400'
+                          : 'text-gray-300 hover:text-white hover:bg-white/10'
                       }
                     `}
                   >
@@ -183,13 +180,13 @@ export default function Header() {
         {/* Mobile Menu with Overlay */}
         {mobileMenuOpen && (
           <>
-            {/* 背景オーバーレイ（クリックで閉じる） */}
-            <div 
+            {/* Background overlay - click to close */}
+            <div
               className="md:hidden fixed inset-0 bg-black/30 z-40"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu overlay"
             />
-            {/* メニュー本体 */}
+            {/* Menu content */}
             <div className="md:hidden fixed right-0 top-16 left-0 z-50 border-t border-gray-700 bg-gray-900/95 backdrop-blur-xl animate-slide-down">
               <nav className="px-4 py-4 space-y-2">
                 {/* Mobile Guide button */}
@@ -205,11 +202,12 @@ export default function Header() {
                     <span>Tool Guide</span>
                   </button>
                 )}
-                
+
                 {navItems.map((item) => {
-                  const isActive = pathname === item.href || 
-                                 (item.href === '/blog' && pathname.startsWith('/blog'))
-                  
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href === '/blog' && pathname.startsWith('/blog'))
+
                   return (
                     <Link
                       key={item.href}
@@ -217,9 +215,10 @@ export default function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                       className={`
                         block px-4 py-3 rounded-lg text-base font-medium transition-all
-                        ${isActive 
-                          ? 'bg-cyan-500/20 text-cyan-400' 
-                          : 'text-gray-300 bg-gray-800/50 hover:bg-gray-700/50'
+                        ${
+                          isActive
+                            ? 'bg-cyan-500/20 text-cyan-400'
+                            : 'text-gray-300 bg-gray-800/50 hover:bg-gray-700/50'
                         }
                       `}
                     >
@@ -236,26 +235,28 @@ export default function Header() {
       {/* Guide Modal */}
       {showGuide && GuideComponent && (
         <>
-          {/* 背景オーバーレイ（クリックで閉じる） */}
-          <div 
+          {/* Background overlay - click to close */}
+          <div
             className="fixed inset-0 bg-black/50 z-[100000] backdrop-blur-sm animate-fade-in"
             onClick={() => setShowGuide(false)}
             aria-label="Close modal overlay"
           />
-          
-          {/* モーダルコンテンツコンテナ */}
+
+          {/* Modal content container */}
           <div className="fixed inset-0 z-[100001] overflow-y-auto pointer-events-none">
             <div className="flex min-h-screen items-center justify-center p-4">
-              {/* モーダル本体（pointer-events-autoで独立したクリック領域に） */}
+              {/* Modal body - separate clickable area */}
               <div className="pointer-events-auto animate-scale-in">
-                <Suspense fallback={
-                  <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
-                    <div className="flex items-center justify-center">
-                      <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-                      <span className="ml-3 text-gray-300">Loading guide...</span>
+                <Suspense
+                  fallback={
+                    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10">
+                      <div className="flex items-center justify-center">
+                        <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+                        <span className="ml-3 text-gray-300">Loading guide...</span>
+                      </div>
                     </div>
-                  </div>
-                }>
+                  }
+                >
                   <GuideComponent onClose={() => setShowGuide(false)} />
                 </Suspense>
               </div>

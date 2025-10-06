@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { 
-  MAX_FILE_SIZE, 
-  ERROR_MESSAGES, 
-  ERROR_DISPLAY_DURATION, 
+import {
+  MAX_FILE_SIZE,
+  ERROR_MESSAGES,
+  ERROR_DISPLAY_DURATION,
   LONG_ERROR_DISPLAY_DURATION,
   ACCEPTED_FILE_TYPE,
   API_ENDPOINT,
-  HISTORY_CONFIG
+  HISTORY_CONFIG,
 } from '../constants'
 
 interface HistoryEntry {
@@ -79,9 +79,9 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
       fileName,
       date: new Date().toISOString(),
       customFields: customFields || undefined,
-      success
+      success,
     }
-    
+
     const updatedHistory = [newEntry, ...history].slice(0, HISTORY_CONFIG.MAX_ENTRIES)
     setHistory(updatedHistory)
     localStorage.setItem(HISTORY_CONFIG.STORAGE_KEY, JSON.stringify(updatedHistory))
@@ -97,42 +97,42 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
     setFile(pdfFile)
     setIsProcessing(true)
     setError('')
-    
+
     // Reset previous URLs
     if (csvUrl) URL.revokeObjectURL(csvUrl)
     if (excelUrl) URL.revokeObjectURL(excelUrl)
     setCsvUrl('')
     setExcelUrl('')
     setCsvPreview('')
-    
+
     try {
       const [csvBlob, excelBlob] = await Promise.all([
         extractData(pdfFile, 'csv'),
-        extractData(pdfFile, 'excel')
+        extractData(pdfFile, 'excel'),
       ])
-      
+
       if (csvBlob) {
         const url = URL.createObjectURL(csvBlob)
         setCsvUrl(url)
-        
+
         // Generate preview from CSV
         const previewText = await csvBlob.text()
         setCsvPreview(previewText)
         setShowPreview(true) // Auto-show preview
-        
+
         // Save to history as success
         saveToHistory(pdfFile.name, true)
       }
-      
+
       if (excelBlob) {
         const url = URL.createObjectURL(excelBlob)
         setExcelUrl(url)
       }
-      
+
       if (!csvBlob && !excelBlob) {
         setError(ERROR_MESSAGES.EXTRACTION_FAILED)
         setTimeout(() => setError(''), LONG_ERROR_DISPLAY_DURATION)
-        
+
         // Save to history as failure
         saveToHistory(pdfFile.name, false)
       }
@@ -143,12 +143,12 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
       setIsProcessing(false)
     }
   }
-  
+
   const extractData = async (pdfFile: File, format: 'csv' | 'excel'): Promise<Blob | null> => {
     const formData = new FormData()
     formData.append('pdf', pdfFile)
     formData.append('format', format)
-    
+
     // Add custom fields if specified
     if (customFields) {
       formData.append('customFields', customFields)
@@ -163,15 +163,15 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
       if (response.ok) {
         return await response.blob()
       }
-      
+
       // Handle API errors
       const errorData = await response.json().catch(() => ({}))
-      
+
       if (errorData.error && ERROR_MESSAGES[errorData.error as keyof typeof ERROR_MESSAGES]) {
         setError(ERROR_MESSAGES[errorData.error as keyof typeof ERROR_MESSAGES])
         setTimeout(() => setError(''), LONG_ERROR_DISPLAY_DURATION)
       }
-      
+
       return null
     } catch {
       return null
@@ -181,7 +181,7 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    
+
     const droppedFile = e.dataTransfer.files[0]
     if (droppedFile?.type === ACCEPTED_FILE_TYPE) {
       await processFile(droppedFile)
@@ -201,14 +201,14 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   const handleReset = () => {
     if (csvUrl) URL.revokeObjectURL(csvUrl)
     if (excelUrl) URL.revokeObjectURL(excelUrl)
-    
+
     setFile(null)
     setCsvUrl('')
     setExcelUrl('')
     setCsvPreview('')
     setError('')
     setShowPreview(false)
-    
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -247,6 +247,6 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
     handleFileSelect,
     handleReset,
     triggerFileInput,
-    confirmDownload
+    confirmDownload,
   }
 }

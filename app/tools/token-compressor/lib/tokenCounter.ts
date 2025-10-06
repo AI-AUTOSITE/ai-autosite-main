@@ -9,7 +9,7 @@ async function getEncoder() {
   // In production, use tiktoken library:
   // import { encoding_for_model } from 'tiktoken'
   // encoder = encoding_for_model('gpt-4')
-  
+
   // For now, we'll use a simple approximation
   return null
 }
@@ -20,36 +20,36 @@ export async function countTokens(text: string): Promise<number> {
     // const enc = await getEncoder()
     // const tokens = enc.encode(text)
     // return tokens.length
-    
+
     // Simple approximation for demonstration
     // GPT models typically use about 1 token per 4 characters for English text
     // This is a rough estimate and varies by content
-    
+
     // More accurate estimation based on common patterns
     let tokenCount = 0
-    
+
     // Count words (roughly 1 token per word)
     const words = text.split(/\s+/)
     tokenCount = words.length
-    
+
     // Add extra tokens for punctuation and special characters
     const punctuation = text.match(/[.,;:!?'"()\[\]{}<>@#$%^&*+=|\\\/~`]/g)
     if (punctuation) {
       tokenCount += punctuation.length * 0.3
     }
-    
+
     // Code tends to have more tokens due to syntax
     const codeIndicators = text.match(/[{}()\[\];=<>]/g)
     if (codeIndicators && codeIndicators.length > text.length * 0.05) {
       tokenCount *= 1.2 // Code multiplier
     }
-    
+
     // Multi-byte characters (non-ASCII) typically use more tokens
     const nonAscii = text.match(/[^\x00-\x7F]/g)
     if (nonAscii) {
       tokenCount += nonAscii.length * 0.5
     }
-    
+
     return Math.ceil(tokenCount)
   } catch (error) {
     console.error('Token counting error:', error)

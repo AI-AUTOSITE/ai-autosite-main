@@ -1,13 +1,20 @@
 // app/tools/ai-dev-dictionary/lib/terms/layout.ts
 
-import { TechTerm } from './types';
+import { TechTerm } from './types'
 
 export const layoutTerms: TechTerm[] = [
   {
     id: 'sidebar',
     term: 'Sidebar',
     category: 'layout',
-    aiSynonyms: ['Side Panel', 'Side Navigation', 'Side Menu', 'Lateral Bar', 'Side Column', 'Navigation Panel'],
+    aiSynonyms: [
+      'Side Panel',
+      'Side Navigation',
+      'Side Menu',
+      'Lateral Bar',
+      'Side Column',
+      'Navigation Panel',
+    ],
     description: 'A vertical panel on the side of the page, often used for navigation',
     beginnerTip: 'The menu on the left or right side of many apps - like your email folders list!',
     aiPhrases: [
@@ -16,7 +23,7 @@ export const layoutTerms: TechTerm[] = [
       'Implement left sidebar',
       'Make side navigation',
       'Add lateral menu bar',
-      'Build side column layout'
+      'Build side column layout',
     ],
     codeExample: `// React Sidebar Example - Side Menu!
 const Sidebar = ({ isOpen }) => {
@@ -31,7 +38,7 @@ const Sidebar = ({ isOpen }) => {
   );
 }`,
     demoType: 'sidebar',
-    relatedTerms: ['Drawer', 'Navigation', 'Layout']
+    relatedTerms: ['Drawer', 'Navigation', 'Layout'],
   },
 
   {
@@ -40,14 +47,15 @@ const Sidebar = ({ isOpen }) => {
     category: 'layout',
     aiSynonyms: ['Page Header', 'Top Bar', 'App Bar', 'Banner', 'Top Section', 'Masthead'],
     description: 'The top section of a page, usually containing logo and main navigation',
-    beginnerTip: 'The very top part of a website with the logo and main menu - like a storefront sign!',
+    beginnerTip:
+      'The very top part of a website with the logo and main menu - like a storefront sign!',
     aiPhrases: [
       'Add header with logo',
       'Create top bar navigation',
       'Implement app header',
       'Make page banner',
       'Add top section',
-      'Build masthead area'
+      'Build masthead area',
     ],
     codeExample: `// React Header Example - Top of Page!
 const Header = () => {
@@ -62,7 +70,7 @@ const Header = () => {
   );
 }`,
     demoType: 'header',
-    relatedTerms: ['Footer', 'Navigation Bar', 'Layout']
+    relatedTerms: ['Footer', 'Navigation Bar', 'Layout'],
   },
 
   {
@@ -78,7 +86,7 @@ const Header = () => {
       'Implement page footer',
       'Make copyright area',
       'Add site footer',
-      'Build bottom navigation'
+      'Build bottom navigation',
     ],
     codeExample: `// React Footer Example - Bottom Info!
 const Footer = () => {
@@ -93,14 +101,21 @@ const Footer = () => {
   );
 }`,
     demoType: 'footer',
-    relatedTerms: ['Header', 'Layout', 'Navigation']
+    relatedTerms: ['Header', 'Layout', 'Navigation'],
   },
 
   {
     id: 'grid',
     term: 'Grid Layout',
     category: 'layout',
-    aiSynonyms: ['CSS Grid', 'Grid System', 'Grid Container', 'Layout Grid', 'Column Grid', 'Responsive Grid'],
+    aiSynonyms: [
+      'CSS Grid',
+      'Grid System',
+      'Grid Container',
+      'Layout Grid',
+      'Column Grid',
+      'Responsive Grid',
+    ],
     description: 'A layout system that arranges content in rows and columns',
     beginnerTip: 'Like a checkerboard or graph paper - organize content in neat rows and columns!',
     aiPhrases: [
@@ -109,7 +124,7 @@ const Footer = () => {
       'Implement responsive grid',
       'Make column layout',
       'Add grid system',
-      'Build grid-based layout'
+      'Build grid-based layout',
     ],
     codeExample: `// React Grid Example - Organized Layout!
 const Grid = ({ items }) => {
@@ -124,23 +139,31 @@ const Grid = ({ items }) => {
   );
 }`,
     demoType: 'grid',
-    relatedTerms: ['Flexbox', 'Layout', 'Container']
+    relatedTerms: ['Flexbox', 'Layout', 'Container'],
   },
 
   {
     id: 'hero',
     term: 'Hero Section',
     category: 'layout',
-    aiSynonyms: ['Hero Banner', 'Hero Image', 'Landing Section', 'Main Banner', 'Splash Section', 'Featured Section'],
+    aiSynonyms: [
+      'Hero Banner',
+      'Hero Image',
+      'Landing Section',
+      'Main Banner',
+      'Splash Section',
+      'Featured Section',
+    ],
     description: 'The large, prominent section at the top of a homepage',
-    beginnerTip: 'The big, eye-catching area at the top of websites with a headline and call-to-action!',
+    beginnerTip:
+      'The big, eye-catching area at the top of websites with a headline and call-to-action!',
     aiPhrases: [
       'Create hero section with CTA',
       'Add hero banner',
       'Make landing hero area',
       'Implement main banner',
       'Build splash section',
-      'Design featured area'
+      'Design featured area',
     ],
     codeExample: `// React Hero Example - Make an Impact!
 const HeroSection = () => {
@@ -155,23 +178,31 @@ const HeroSection = () => {
   );
 }`,
     demoType: 'hero',
-    relatedTerms: ['Header', 'Banner', 'Landing Page']
+    relatedTerms: ['Header', 'Banner', 'Landing Page'],
   },
 
   {
     id: 'sticky-header',
     term: 'Sticky Header',
     category: 'layout',
-    aiSynonyms: ['Fixed Header', 'Persistent Header', 'Floating Header', 'Pinned Header', 'Static Header', 'Frozen Header'],
+    aiSynonyms: [
+      'Fixed Header',
+      'Persistent Header',
+      'Floating Header',
+      'Pinned Header',
+      'Static Header',
+      'Frozen Header',
+    ],
     description: 'Header that stays at the top of the page when scrolling',
-    beginnerTip: 'The header "sticks" to the top when you scroll down - always visible for easy navigation!',
+    beginnerTip:
+      'The header "sticks" to the top when you scroll down - always visible for easy navigation!',
     aiPhrases: [
       'Make the header sticky on scroll',
       'Create a fixed navigation bar',
       'Add persistent header',
       'Implement floating top bar',
       'Build pinned header',
-      'Make header stay on top'
+      'Make header stay on top',
     ],
     codeExample: `// CSS Sticky Header Example
 const StickyHeader = () => {
@@ -188,6 +219,6 @@ const StickyHeader = () => {
   );
 }`,
     demoType: 'sticky-header',
-    relatedTerms: ['Header', 'Navigation Bar', 'Fixed Position']
-  }
-];
+    relatedTerms: ['Header', 'Navigation Bar', 'Fixed Position'],
+  },
+]

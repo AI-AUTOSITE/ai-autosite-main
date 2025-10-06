@@ -6,19 +6,22 @@ export const toolGuide = {
     { icon: '1', text: 'Upload or drop your image' },
     { icon: '2', text: 'Choose click or drag mode' },
     { icon: '3', text: 'Add black masks to hide info' },
-    { icon: '4', text: 'Download the masked image' }
+    { icon: '4', text: 'Download the masked image' },
   ],
   tips: [
     'All work happens in your browser - nothing uploads',
     'Max file size is 10MB',
     'You can undo up to 25 steps',
-    'Use zoom to work on small details'
+    'Use zoom to work on small details',
   ],
   troubleshooting: [
-    { problem: 'File not loading', solution: 'Check file size (max 10MB) and format (PNG, JPEG, WebP)' },
+    {
+      problem: 'File not loading',
+      solution: 'Check file size (max 10MB) and format (PNG, JPEG, WebP)',
+    },
     { problem: 'Masks not appearing', solution: 'Make sure to click or drag on the image area' },
-    { problem: 'Download not working', solution: 'Try a different format (PNG, JPEG, or WebP)' }
-  ]
+    { problem: 'Download not working', solution: 'Try a different format (PNG, JPEG, or WebP)' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -37,12 +40,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <Shield className="w-6 h-6 text-cyan-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Steps */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
@@ -55,21 +58,24 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       {/* Tips */}
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Tips</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       {/* Privacy Notice */}
       <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
         <p className="text-xs text-green-400">
-          <strong>100% Private:</strong> Everything happens in your browser. No data leaves your device.
+          <strong>100% Private:</strong> Everything happens in your browser. No data leaves your
+          device.
         </p>
       </div>
     </div>

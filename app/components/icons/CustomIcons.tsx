@@ -1,16 +1,16 @@
 // components/icons/CustomIcons.tsx
-import { FC } from 'react';
+import { FC } from 'react'
 
 // Icon properties type definition
 export interface IconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-  strokeWidth?: number;
+  size?: number
+  color?: string
+  className?: string
+  strokeWidth?: number
 }
 
 // Icon name types
-export type IconName = 
+export type IconName =
   | 'upload'
   | 'github'
   | 'folder'
@@ -25,12 +25,12 @@ export type IconName =
   | 'copy'
   | 'check'
   | 'custom-tool'
-  | 'custom-rocket';
+  | 'custom-rocket'
 
 // Icon definitions (lucide-react style)
 const icons = {
   // Upload icon
-  'upload': (props: IconProps) => (
+  upload: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -49,7 +49,7 @@ const icons = {
   ),
 
   // GitHub icon
-  'github': (props: IconProps) => (
+  github: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -66,7 +66,7 @@ const icons = {
   ),
 
   // Folder icon
-  'folder': (props: IconProps) => (
+  folder: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -102,7 +102,7 @@ const icons = {
   ),
 
   // X (Close) icon
-  'x': (props: IconProps) => (
+  x: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -159,7 +159,7 @@ const icons = {
   ),
 
   // Save icon
-  'save': (props: IconProps) => (
+  save: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -196,7 +196,7 @@ const icons = {
   ),
 
   // Sparkles icon
-  'sparkles': (props: IconProps) => (
+  sparkles: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -217,7 +217,7 @@ const icons = {
   ),
 
   // Zap (Lightning) icon
-  'zap': (props: IconProps) => (
+  zap: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -234,7 +234,7 @@ const icons = {
   ),
 
   // Copy icon
-  'copy': (props: IconProps) => (
+  copy: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -252,7 +252,7 @@ const icons = {
   ),
 
   // Check icon
-  'check': (props: IconProps) => (
+  check: (props: IconProps) => (
     <svg
       width={props.size || 24}
       height={props.size || 24}
@@ -304,38 +304,35 @@ const icons = {
       <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </svg>
   ),
-};
+}
 
 // Main Icon component
-export const Icon: FC<{ name: IconName } & IconProps> = ({ 
-  name, 
-  ...props 
-}) => {
-  const IconComponent = icons[name];
-  
+export const Icon: FC<{ name: IconName } & IconProps> = ({ name, ...props }) => {
+  const IconComponent = icons[name]
+
   if (!IconComponent) {
-    console.warn(`Icon "${name}" not found`);
-    return null;
+    console.warn(`Icon "${name}" not found`)
+    return null
   }
-  
-  return <IconComponent {...props} />;
-};
+
+  return <IconComponent {...props} />
+}
 
 // Individual icon exports for convenience
-export const UploadIcon = (props: IconProps) => <Icon name="upload" {...props} />;
-export const GithubIcon = (props: IconProps) => <Icon name="github" {...props} />;
-export const FolderIcon = (props: IconProps) => <Icon name="folder" {...props} />;
-export const HelpCircleIcon = (props: IconProps) => <Icon name="help-circle" {...props} />;
-export const XIcon = (props: IconProps) => <Icon name="x" {...props} />;
-export const AlertCircleIcon = (props: IconProps) => <Icon name="alert-circle" {...props} />;
-export const FileCodeIcon = (props: IconProps) => <Icon name="file-code" {...props} />;
-export const SaveIcon = (props: IconProps) => <Icon name="save" {...props} />;
-export const RotateCcwIcon = (props: IconProps) => <Icon name="rotate-ccw" {...props} />;
-export const SparklesIcon = (props: IconProps) => <Icon name="sparkles" {...props} />;
-export const ZapIcon = (props: IconProps) => <Icon name="zap" {...props} />;
-export const CopyIcon = (props: IconProps) => <Icon name="copy" {...props} />;
-export const CheckIcon = (props: IconProps) => <Icon name="check" {...props} />;
+export const UploadIcon = (props: IconProps) => <Icon name="upload" {...props} />
+export const GithubIcon = (props: IconProps) => <Icon name="github" {...props} />
+export const FolderIcon = (props: IconProps) => <Icon name="folder" {...props} />
+export const HelpCircleIcon = (props: IconProps) => <Icon name="help-circle" {...props} />
+export const XIcon = (props: IconProps) => <Icon name="x" {...props} />
+export const AlertCircleIcon = (props: IconProps) => <Icon name="alert-circle" {...props} />
+export const FileCodeIcon = (props: IconProps) => <Icon name="file-code" {...props} />
+export const SaveIcon = (props: IconProps) => <Icon name="save" {...props} />
+export const RotateCcwIcon = (props: IconProps) => <Icon name="rotate-ccw" {...props} />
+export const SparklesIcon = (props: IconProps) => <Icon name="sparkles" {...props} />
+export const ZapIcon = (props: IconProps) => <Icon name="zap" {...props} />
+export const CopyIcon = (props: IconProps) => <Icon name="copy" {...props} />
+export const CheckIcon = (props: IconProps) => <Icon name="check" {...props} />
 
 // Custom icons
-export const CustomToolIcon = (props: IconProps) => <Icon name="custom-tool" {...props} />;
-export const CustomRocketIcon = (props: IconProps) => <Icon name="custom-rocket" {...props} />;
+export const CustomToolIcon = (props: IconProps) => <Icon name="custom-tool" {...props} />
+export const CustomRocketIcon = (props: IconProps) => <Icon name="custom-rocket" {...props} />

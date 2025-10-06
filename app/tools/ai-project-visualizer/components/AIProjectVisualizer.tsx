@@ -3,11 +3,22 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { 
-  Upload, FileText, FolderOpen, Copy, Check, 
-  ChevronDown, ChevronRight, Trash2,
-  Shield, Download, FileUp, FolderPlus,
-  Sparkles, Loader2, FileDown
+import {
+  Upload,
+  FileText,
+  FolderOpen,
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Trash2,
+  Shield,
+  Download,
+  FileUp,
+  FolderPlus,
+  Sparkles,
+  Loader2,
+  FileDown,
 } from 'lucide-react'
 
 // Types
@@ -36,20 +47,27 @@ export default function AIProjectVisualizerClient() {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [isDragging, setIsDragging] = useState(false)
   const [error, setError] = useState('')
-  
+
   // AI state
   const [aiAnalysis, setAiAnalysis] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [aiError, setAiError] = useState('')
   const [showAiPanel, setShowAiPanel] = useState(false)
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const folderInputRef = useRef<HTMLInputElement>(null)
 
   // Security config
   const EXCLUDED = new Set([
-    'node_modules', '.git', 'dist', 'build', '.next', 
-    '.env', '.env.local', 'credentials.json', '.DS_Store'
+    'node_modules',
+    '.git',
+    'dist',
+    'build',
+    '.next',
+    '.env',
+    '.env.local',
+    'credentials.json',
+    '.DS_Store',
   ])
 
   // Convert to Tree format
@@ -57,20 +75,20 @@ export default function AIProjectVisualizerClient() {
     const lines: string[] = []
     const connector = isLast ? '└── ' : '├── '
     const name = node.type === 'folder' ? `${node.name}/` : node.name
-    
+
     if (prefix === '') {
       lines.push(name)
     } else {
       lines.push(prefix + connector + name)
     }
-    
+
     if (node.children?.length) {
       const extension = isLast ? '    ' : '│   '
       node.children.forEach((child, index) => {
         lines.push(toTree(child, prefix + extension, index === node.children!.length - 1))
       })
     }
-    
+
     return lines.join('\n')
   }, [])
 
@@ -78,20 +96,20 @@ export default function AIProjectVisualizerClient() {
   const toMermaid = useCallback((node: TreeNode): string => {
     const lines: string[] = ['```mermaid', 'graph TD']
     let counter = 0
-    
+
     const process = (n: TreeNode, parentId: string | null = null) => {
       const id = `N${counter++}`
       const label = n.type === 'folder' ? `[${n.name}/]` : `[${n.name}]`
-      
+
       if (parentId) {
         lines.push(`    ${parentId} --> ${id}${label}`)
       } else {
         lines.push(`    ${id}${label}`)
       }
-      
-      n.children?.forEach(child => process(child, id))
+
+      n.children?.forEach((child) => process(child, id))
     }
-    
+
     process(node)
     lines.push('```')
     return lines.join('\n')
@@ -102,7 +120,7 @@ export default function AIProjectVisualizerClient() {
     const clean = (n: TreeNode): any => ({
       name: n.name,
       type: n.type,
-      ...(n.children && { children: n.children.map(clean) })
+      ...(n.children && { children: n.children.map(clean) }),
     })
     return JSON.stringify(clean(node), null, 2)
   }, [])
@@ -110,68 +128,75 @@ export default function AIProjectVisualizerClient() {
   // Convert to Markdown
   const toMarkdown = useCallback((node: TreeNode): string => {
     const lines: string[] = [`# ${node.name} Structure\n`]
-    
+
     const process = (n: TreeNode, depth = 0) => {
       const indent = '  '.repeat(depth)
       const bullet = depth === 0 ? '##' : '-'
       const name = n.type === 'folder' ? `**${n.name}/**` : n.name
-      
+
       if (depth === 0) {
         lines.push(`## Directory Structure\n`)
       } else {
         lines.push(`${indent}${bullet} ${name}`)
       }
-      
-      n.children?.forEach(child => process(child, depth + 1))
+
+      n.children?.forEach((child) => process(child, depth + 1))
     }
-    
+
     process(node)
     return lines.join('\n')
   }, [])
 
   // Export data
-  const exportData = useCallback((node: TreeNode, fmt: FormatType): string => {
-    switch (fmt) {
-      case 'tree': return toTree(node)
-      case 'mermaid': return toMermaid(node)
-      case 'json': return toJSON(node)
-      case 'markdown': return toMarkdown(node)
-      default: return ''
-    }
-  }, [toTree, toMermaid, toJSON, toMarkdown])
+  const exportData = useCallback(
+    (node: TreeNode, fmt: FormatType): string => {
+      switch (fmt) {
+        case 'tree':
+          return toTree(node)
+        case 'mermaid':
+          return toMermaid(node)
+        case 'json':
+          return toJSON(node)
+        case 'markdown':
+          return toMarkdown(node)
+        default:
+          return ''
+      }
+    },
+    [toTree, toMermaid, toJSON, toMarkdown]
+  )
 
   // AI Analysis
   const handleAIAnalysis = async (action: AIAction) => {
     if (!projectData) return
-    
+
     setIsAnalyzing(true)
     setAiError('')
     setShowAiPanel(true)
-    
+
     try {
       const structureText = toTree(projectData.structure)
-      
+
       const response = await fetch('/api/ai-analysis', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action,
-          projectStructure: structureText
-        })
+          projectStructure: structureText,
+        }),
       })
-      
+
       if (!response.ok) {
         throw new Error('AI analysis failed')
       }
-      
+
       const data = await response.json()
-      
+
       if (data.error) {
         throw new Error(data.error)
       }
-      
+
       setAiAnalysis(data.result)
-      
     } catch (err) {
       console.error('AI Analysis error:', err)
       setAiError('Failed to analyze project. Please try again.')
@@ -183,7 +208,7 @@ export default function AIProjectVisualizerClient() {
   // Copy AI analysis
   const handleCopyAI = async () => {
     if (!aiAnalysis) return
-    
+
     try {
       await navigator.clipboard.writeText(aiAnalysis)
       // Show brief success feedback
@@ -202,23 +227,23 @@ export default function AIProjectVisualizerClient() {
     setError('')
     setAiAnalysis('')
     setShowAiPanel(false)
-    
+
     const fileTree: { [key: string]: any } = {}
     let fileCount = 0
     let folderCount = 0
     let skipped = 0
 
     for (const file of Array.from(files)) {
-      const pathParts = file.webkitRelativePath 
+      const pathParts = file.webkitRelativePath
         ? file.webkitRelativePath.split('/')
         : file.name.split('/')
-      
+
       // Security check
-      if (pathParts.some(part => EXCLUDED.has(part.toLowerCase()))) {
+      if (pathParts.some((part) => EXCLUDED.has(part.toLowerCase()))) {
         skipped++
         continue
       }
-      
+
       if (file.size > 5 * 1024 * 1024) {
         skipped++
         continue
@@ -248,29 +273,29 @@ export default function AIProjectVisualizerClient() {
     // Convert to TreeNode
     const convertToNode = (obj: any, name: string, id = 'root'): TreeNode => {
       if (obj.type === 'file') return { id, name, type: 'file' }
-      
+
       const children = Object.keys(obj.children || {})
         .sort()
         .map((key, i) => convertToNode(obj.children[key], key, `${id}-${i}`))
-      
+
       return { id, name, type: 'folder', children: children.length > 0 ? children : undefined }
     }
 
     const rootName = Object.keys(fileTree)[0] || 'project'
     const structure = convertToNode(
-      fileTree[rootName] || { type: 'folder', children: fileTree }, 
+      fileTree[rootName] || { type: 'folder', children: fileTree },
       rootName
     )
-    
+
     setProjectData({
       name: rootName,
       totalFiles: fileCount,
       totalFolders: folderCount,
-      structure
+      structure,
     })
-    
+
     setExpandedNodes(new Set(['root']))
-    
+
     if (skipped > 0) {
       setError(`Processed ${fileCount} files. ${skipped} files were excluded for security.`)
     }
@@ -301,10 +326,10 @@ export default function AIProjectVisualizerClient() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    
+
     const items = e.dataTransfer.items
     const files: File[] = []
-    
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i]
       if (item.kind === 'file') {
@@ -312,10 +337,10 @@ export default function AIProjectVisualizerClient() {
         if (file) files.push(file)
       }
     }
-    
+
     if (files.length > 0) {
       const dt = new DataTransfer()
-      files.forEach(file => dt.items.add(file))
+      files.forEach((file) => dt.items.add(file))
       processFiles(dt.files)
     }
   }
@@ -323,7 +348,7 @@ export default function AIProjectVisualizerClient() {
   // Copy to clipboard
   const handleCopy = async () => {
     if (!output) return
-    
+
     try {
       await navigator.clipboard.writeText(output)
       setCopied(true)
@@ -336,12 +361,12 @@ export default function AIProjectVisualizerClient() {
   // Download file
   const handleDownload = () => {
     if (!output || !projectData) return
-    
+
     const timestamp = new Date().toISOString().split('T')[0]
     const filename = `${projectData.name}_${format}_${timestamp}.${
       format === 'json' ? 'json' : format === 'markdown' ? 'md' : 'txt'
     }`
-    
+
     const blob = new Blob([output], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -380,23 +405,21 @@ export default function AIProjectVisualizerClient() {
             type: 'folder',
             children: [
               { id: '1-1', name: 'App.tsx', type: 'file' },
-              { id: '1-2', name: 'index.tsx', type: 'file' }
-            ]
+              { id: '1-2', name: 'index.tsx', type: 'file' },
+            ],
           },
           {
             id: '2',
             name: 'public',
             type: 'folder',
-            children: [
-              { id: '2-1', name: 'index.html', type: 'file' }
-            ]
+            children: [{ id: '2-1', name: 'index.html', type: 'file' }],
           },
           { id: '3', name: 'package.json', type: 'file' },
-          { id: '4', name: 'README.md', type: 'file' }
-        ]
-      }
+          { id: '4', name: 'README.md', type: 'file' },
+        ],
+      },
     }
-    
+
     setProjectData(sample)
     setExpandedNodes(new Set(['root', '1', '2']))
     setAiAnalysis('')
@@ -421,7 +444,7 @@ export default function AIProjectVisualizerClient() {
 
     return (
       <div key={node.id}>
-        <div 
+        <div
           className={`
             flex items-center gap-2 px-2 py-1 rounded hover:bg-white/10 cursor-pointer
             ${node.type === 'folder' ? 'text-cyan-400' : 'text-gray-300'}
@@ -435,20 +458,18 @@ export default function AIProjectVisualizerClient() {
             </span>
           )}
           {!hasChildren && <span className="w-3.5" />}
-          
+
           {node.type === 'folder' ? (
             <FolderOpen size={14} className="text-yellow-400" />
           ) : (
             <FileText size={14} className="text-blue-400" />
           )}
-          
+
           <span className="text-sm">{node.name}</span>
         </div>
-        
+
         {hasChildren && isExpanded && (
-          <div>
-            {node.children!.map(child => renderNode(child, depth + 1))}
-          </div>
+          <div>{node.children!.map((child) => renderNode(child, depth + 1))}</div>
         )}
       </div>
     )
@@ -476,10 +497,8 @@ export default function AIProjectVisualizerClient() {
 
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Input/Output Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-4">
-
           {/* Input Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-cyan-500/20">
             <div className="mb-3">
@@ -532,7 +551,7 @@ export default function AIProjectVisualizerClient() {
               </div>
 
               {!projectData ? (
-                <div 
+                <div
                   className={`
                     h-56 p-3 bg-black/20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center
                     transition-all cursor-pointer hover:bg-black/30
@@ -653,16 +672,14 @@ export default function AIProjectVisualizerClient() {
 
             <div>
               <div className="flex justify-between items-center mb-3">
-                <label className="text-xs text-gray-400">
-                  Output Preview
-                </label>
+                <label className="text-xs text-gray-400">Output Preview</label>
                 {output && (
                   <div className="flex gap-2">
                     <button
                       onClick={handleCopy}
                       className={`px-3 py-1.5 text-xs rounded-lg transition-all flex items-center gap-1 font-medium ${
-                        copied 
-                          ? 'bg-green-500 text-white' 
+                        copied
+                          ? 'bg-green-500 text-white'
                           : 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-400/50'
                       }`}
                     >
@@ -734,9 +751,7 @@ export default function AIProjectVisualizerClient() {
               </div>
             ) : aiAnalysis ? (
               <div className="prose prose-invert prose-sm max-w-none">
-                <div className="text-gray-300 text-sm whitespace-pre-wrap">
-                  {aiAnalysis}
-                </div>
+                <div className="text-gray-300 text-sm whitespace-pre-wrap">{aiAnalysis}</div>
               </div>
             ) : null}
           </div>
@@ -744,14 +759,20 @@ export default function AIProjectVisualizerClient() {
 
         {/* Error */}
         {error && (
-          <div className={`mt-4 p-3 rounded-lg animate-fadeIn ${
-            error.includes('Processed') 
-              ? 'bg-yellow-500/10 border border-yellow-500/20' 
-              : 'bg-red-500/10 border border-red-500/20'
-          }`}>
-            <p className={`text-sm ${
-              error.includes('Processed') ? 'text-yellow-400' : 'text-red-400'
-            }`}>{error}</p>
+          <div
+            className={`mt-4 p-3 rounded-lg animate-fadeIn ${
+              error.includes('Processed')
+                ? 'bg-yellow-500/10 border border-yellow-500/20'
+                : 'bg-red-500/10 border border-red-500/20'
+            }`}
+          >
+            <p
+              className={`text-sm ${
+                error.includes('Processed') ? 'text-yellow-400' : 'text-red-400'
+              }`}
+            >
+              {error}
+            </p>
           </div>
         )}
 

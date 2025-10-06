@@ -1,14 +1,27 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, Braces, Code, AlertCircle, CheckCircle, Zap, Download, Globe, Database } from 'lucide-react'
+import {
+  ArrowLeft,
+  Braces,
+  Code,
+  AlertCircle,
+  CheckCircle,
+  Zap,
+  Download,
+  Globe,
+  Database,
+} from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'JSON Beautify: Master JSON Formatting for Better Development | AI AutoSite',
-  description: 'Complete guide to JSON formatting, validation, and debugging. Learn how to use our JSON Beautify tool to improve your development workflow.',
-  keywords: 'json beautify, json formatter, json validator, json minify, api debugging, json pretty print, json tools, development efficiency',
+  description:
+    'Complete guide to JSON formatting, validation, and debugging. Learn how to use our JSON Beautify tool to improve your development workflow.',
+  keywords:
+    'json beautify, json formatter, json validator, json minify, api debugging, json pretty print, json tools, development efficiency',
   openGraph: {
     title: 'JSON Beautify Tool: Format, Validate & Debug JSON Data',
-    description: 'Free JSON formatter with instant validation and error detection. Essential guide for API development.',
+    description:
+      'Free JSON formatter with instant validation and error detection. Essential guide for API development.',
     type: 'article',
     images: ['/og-json-beautify.png'],
   },
@@ -16,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'JSON Beautify Guide - Format & Debug JSON Like a Pro',
     description: 'Complete guide to JSON formatting with free online tool',
-  }
+  },
 }
 
 export default function JsonBeautifyBlogPost() {
@@ -29,32 +42,32 @@ export default function JsonBeautifyBlogPost() {
       error: 'Trailing Comma',
       example: '{"name": "John",}',
       fixed: '{"name": "John"}',
-      description: 'Remove comma after the last property'
+      description: 'Remove comma after the last property',
     },
     {
       error: 'Missing Quotes',
       example: '{name: "John"}',
       fixed: '{"name": "John"}',
-      description: 'Property names must be in double quotes'
+      description: 'Property names must be in double quotes',
     },
     {
       error: 'Single Quotes',
       example: "{'name': 'John'}",
       fixed: '{"name": "John"}',
-      description: 'JSON requires double quotes, not single'
+      description: 'JSON requires double quotes, not single',
     },
     {
       error: 'Trailing Comma in Array',
       example: '["apple", "banana",]',
       fixed: '["apple", "banana"]',
-      description: 'No comma after last array element'
+      description: 'No comma after last array element',
     },
     {
       error: 'Comments',
       example: '{"name": "John" // comment}',
       fixed: '{"name": "John"}',
-      description: 'JSON doesn\'t support comments'
-    }
+      description: "JSON doesn't support comments",
+    },
   ]
 
   const useCases = [
@@ -65,8 +78,8 @@ export default function JsonBeautifyBlogPost() {
         'Format API responses for readability',
         'Validate request payloads before sending',
         'Debug complex nested JSON structures',
-        'Compare API responses side by side'
-      ]
+        'Compare API responses side by side',
+      ],
     },
     {
       title: 'Configuration Management',
@@ -75,8 +88,8 @@ export default function JsonBeautifyBlogPost() {
         'Format package.json and config files',
         'Validate deployment configurations',
         'Minify configs for production',
-        'Debug environment variables'
-      ]
+        'Debug environment variables',
+      ],
     },
     {
       title: 'Data Analysis',
@@ -85,9 +98,9 @@ export default function JsonBeautifyBlogPost() {
         'Explore data structure quickly',
         'Count keys and nested objects',
         'Identify data patterns',
-        'Prepare data for documentation'
-      ]
-    }
+        'Prepare data for documentation',
+      ],
+    },
   ]
 
   const features = [
@@ -95,33 +108,33 @@ export default function JsonBeautifyBlogPost() {
       name: 'Instant Validation',
       description: 'Get immediate feedback on JSON syntax errors with clear error messages',
       icon: CheckCircle,
-      benefit: 'Save debugging time'
+      benefit: 'Save debugging time',
     },
     {
       name: 'Smart Formatting',
       description: 'Choose between beautified (readable) or minified (compact) output',
       icon: Braces,
-      benefit: 'Optimize for your needs'
+      benefit: 'Optimize for your needs',
     },
     {
       name: 'Statistics Dashboard',
       description: 'See key count, array count, object count, and file size at a glance',
       icon: Database,
-      benefit: 'Understand data structure'
+      benefit: 'Understand data structure',
     },
     {
       name: 'Flexible Indentation',
       description: 'Choose 2, 4, or 8 spaces for indentation to match your style guide',
       icon: Code,
-      benefit: 'Match team standards'
-    }
+      benefit: 'Match team standards',
+    },
   ]
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to Blog */}
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -135,21 +148,28 @@ export default function JsonBeautifyBlogPost() {
             Developer Tools
           </span>
           <span>•</span>
-          <time dateTime={publishDate}>{new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+          <time dateTime={publishDate}>
+            {new Date(publishDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </time>
           <span>•</span>
           <span>{readTime}</span>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
           JSON Beautify Tool:
           <span className="block text-3xl sm:text-4xl mt-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
             Format, Validate, and Debug JSON Like a Pro
           </span>
         </h1>
-        
+
         <p className="text-xl text-gray-300 leading-relaxed">
-          Working with JSON doesn't have to be painful. Our JSON Beautify tool makes formatting, validating, 
-          and debugging JSON data instant and effortless. Here's everything you need to know.
+          Working with JSON doesn't have to be painful. Our JSON Beautify tool makes formatting,
+          validating, and debugging JSON data instant and effortless. Here's everything you need to
+          know.
         </p>
       </header>
 
@@ -176,9 +196,9 @@ export default function JsonBeautifyBlogPost() {
         <h2 className="text-3xl font-bold text-white mb-6">Why JSON Formatting Matters</h2>
         <div className="prose prose-invert max-w-none">
           <p className="text-gray-300 mb-4">
-            JSON (JavaScript Object Notation) is the backbone of modern web development. It's how APIs communicate, 
-            how configurations are stored, and how data is exchanged between services. But raw JSON can be difficult 
-            to read, debug, and validate.
+            JSON (JavaScript Object Notation) is the backbone of modern web development. It's how
+            APIs communicate, how configurations are stored, and how data is exchanged between
+            services. But raw JSON can be difficult to read, debug, and validate.
           </p>
           <div className="grid md:grid-cols-3 gap-4 my-6">
             <div className="bg-white/5 p-4 rounded-lg border border-white/10">
@@ -194,7 +214,9 @@ export default function JsonBeautifyBlogPost() {
             <div className="bg-white/5 p-4 rounded-lg border border-white/10">
               <Zap className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-white font-semibold mb-1">Save Time</h3>
-              <p className="text-gray-400 text-sm">Instant validation prevents debugging headaches</p>
+              <p className="text-gray-400 text-sm">
+                Instant validation prevents debugging headaches
+              </p>
             </div>
           </div>
         </div>
@@ -230,7 +252,10 @@ export default function JsonBeautifyBlogPost() {
           {useCases.map((useCase, index) => {
             const Icon = useCase.icon
             return (
-              <div key={index} className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/10">
+              <div
+                key={index}
+                className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/10"
+              >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-green-500/20">
                     <Icon className="w-6 h-6 text-green-400" />
@@ -258,7 +283,10 @@ export default function JsonBeautifyBlogPost() {
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-green-500/30 transition-all">
+              <div
+                key={index}
+                className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-green-500/30 transition-all"
+              >
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20">
                     <Icon className="w-6 h-6 text-green-400" />
@@ -336,23 +364,38 @@ export default function JsonBeautifyBlogPost() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Always validate before deployment:</strong> Use our tool to check JSON configs before pushing to production</span>
+              <span>
+                <strong className="text-white">Always validate before deployment:</strong> Use our
+                tool to check JSON configs before pushing to production
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Use meaningful keys:</strong> Choose descriptive property names for better readability</span>
+              <span>
+                <strong className="text-white">Use meaningful keys:</strong> Choose descriptive
+                property names for better readability
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Minify for production:</strong> Reduce file size by removing unnecessary whitespace</span>
+              <span>
+                <strong className="text-white">Minify for production:</strong> Reduce file size by
+                removing unnecessary whitespace
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Keep nesting shallow:</strong> Deeply nested JSON is harder to work with</span>
+              <span>
+                <strong className="text-white">Keep nesting shallow:</strong> Deeply nested JSON is
+                harder to work with
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Use arrays for lists:</strong> Don't use object keys like item1, item2 - use arrays instead</span>
+              <span>
+                <strong className="text-white">Use arrays for lists:</strong> Don't use object keys
+                like item1, item2 - use arrays instead
+              </span>
             </li>
           </ul>
         </div>
@@ -397,7 +440,8 @@ export default function JsonBeautifyBlogPost() {
       <section className="text-center py-12 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border border-white/10">
         <h2 className="text-3xl font-bold text-white mb-4">Start Formatting JSON Now</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Stop struggling with unformatted JSON. Our tool makes it instant and painless to format, validate, and debug your JSON data.
+          Stop struggling with unformatted JSON. Our tool makes it instant and painless to format,
+          validate, and debug your JSON data.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -422,19 +466,25 @@ export default function JsonBeautifyBlogPost() {
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/tools/text-case" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-green-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">Text Case Converter</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">
+                Text Case Converter
+              </h4>
               <p className="text-gray-400 text-sm">Convert between different text cases</p>
             </div>
           </Link>
           <Link href="/tools/code-reader" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-green-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">Code Reader</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">
+                Code Reader
+              </h4>
               <p className="text-gray-400 text-sm">Analyze code dependencies</p>
             </div>
           </Link>
           <Link href="/tools/tech-stack-analyzer" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-green-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">Tech Stack Analyzer</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-green-400">
+                Tech Stack Analyzer
+              </h4>
               <p className="text-gray-400 text-sm">Compare frameworks and tools</p>
             </div>
           </Link>
@@ -451,12 +501,8 @@ export default function JsonBeautifyBlogPost() {
             <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
               Development
             </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              JSON
-            </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              Tools
-            </span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">JSON</span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">Tools</span>
           </div>
         </div>
       </footer>

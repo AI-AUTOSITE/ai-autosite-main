@@ -8,12 +8,12 @@ export interface GeneratorSettings {
   // Text settings
   language: Language
   textAmount: number // 0-100 percentage
-  
+
   // Image settings
   imageType: ImageType
   imageSize: ImageSize
   imagesPerPage: number
-  
+
   // File settings
   targetSizeMB: number // 0.1 - 10
   pageCount: number
@@ -29,7 +29,7 @@ export interface PreviewData {
 export const IMAGE_DIMENSIONS = {
   small: { width: 200, height: 200 },
   medium: { width: 400, height: 400 },
-  large: { width: 600, height: 600 }
+  large: { width: 600, height: 600 },
 } as const
 
 export const DEFAULT_SETTINGS: GeneratorSettings = {
@@ -39,5 +39,5 @@ export const DEFAULT_SETTINGS: GeneratorSettings = {
   imageSize: 'medium',
   imagesPerPage: 2,
   targetSizeMB: 2.5,
-  pageCount: 5
+  pageCount: 5,
 }

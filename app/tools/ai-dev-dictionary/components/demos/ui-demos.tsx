@@ -13,7 +13,7 @@ export const uiDemos: Record<string, DemoFunction> = {
       >
         Open Modal
       </button>
-      
+
       {demoState.modal && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
           <div className="bg-slate-800 rounded-lg p-6 max-w-sm w-full mx-4 border border-white/20">
@@ -44,10 +44,15 @@ export const uiDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10 overflow-y-auto">
       <div className="space-y-4">
         {['Product 1', 'Product 2'].map((item, i) => (
-          <div key={i} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors">
+          <div
+            key={i}
+            className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors"
+          >
             <div className="w-full h-20 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded mb-3"></div>
             <h3 className="text-white font-semibold mb-1">{item}</h3>
-            <p className="text-gray-400 text-sm mb-3">This is a card component with image, title, and description.</p>
+            <p className="text-gray-400 text-sm mb-3">
+              This is a card component with image, title, and description.
+            </p>
             <button className="text-cyan-400 text-sm hover:text-cyan-300">Learn More →</button>
           </div>
         ))}
@@ -80,8 +85,11 @@ export const uiDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
       <p className="text-gray-400 text-sm mb-4">Selected filters:</p>
       <div className="flex flex-wrap gap-2">
-        {['React', 'TypeScript', 'Tailwind', 'Next.js', 'Node.js'].map(tag => (
-          <div key={tag} className="inline-flex items-center gap-1 px-3 py-1 bg-white/10 text-gray-300 rounded-full text-sm border border-white/20">
+        {['React', 'TypeScript', 'Tailwind', 'Next.js', 'Node.js'].map((tag) => (
+          <div
+            key={tag}
+            className="inline-flex items-center gap-1 px-3 py-1 bg-white/10 text-gray-300 rounded-full text-sm border border-white/20"
+          >
             <span>{tag}</span>
             <button className="ml-1 hover:text-red-400">×</button>
           </div>
@@ -100,5 +108,5 @@ export const uiDemos: Record<string, DemoFunction> = {
       </button>
       <p className="text-gray-500 text-xs absolute bottom-20 right-4">FAB</p>
     </div>
-  )
+  ),
 }

@@ -1,7 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Copy, Check, RefreshCw, Code, PenTool, BarChart3, Lightbulb, Zap } from 'lucide-react'
+import {
+  Sparkles,
+  Copy,
+  Check,
+  RefreshCw,
+  Code,
+  PenTool,
+  BarChart3,
+  Lightbulb,
+  Zap,
+} from 'lucide-react'
 
 type TaskType = 'writing' | 'coding' | 'analysis' | 'creative' | 'learning'
 type ToneType = 'professional' | 'casual' | 'technical' | 'friendly' | 'academic'
@@ -17,7 +27,7 @@ const TASK_ICONS = {
   coding: <Code className="w-4 h-4" />,
   analysis: <BarChart3 className="w-4 h-4" />,
   creative: <Lightbulb className="w-4 h-4" />,
-  learning: <Zap className="w-4 h-4" />
+  learning: <Zap className="w-4 h-4" />,
 }
 
 const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
@@ -29,17 +39,23 @@ const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
       'The tone should be [TONE].',
       'Key points to include: [POINTS]',
       'Length: approximately [LENGTH].',
-      'Format the output with clear sections and headings.'
+      'Format the output with clear sections and headings.',
     ],
     examples: [
-      'blog post', 'article', 'email', 'report', 'proposal',
-      'social media post', 'product description', 'newsletter'
+      'blog post',
+      'article',
+      'email',
+      'report',
+      'proposal',
+      'social media post',
+      'product description',
+      'newsletter',
     ],
     tips: [
       'Be specific about your audience',
       'Include key points you want covered',
-      'Specify desired length'
-    ]
+      'Specify desired length',
+    ],
   },
   coding: {
     structure: [
@@ -49,17 +65,23 @@ const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
       '- [REQUIREMENT_1]',
       '- [REQUIREMENT_2]',
       'The code should be [QUALITY] and include comments.',
-      'Please also provide [EXTRAS].'
+      'Please also provide [EXTRAS].',
     ],
     examples: [
-      'function', 'class', 'API endpoint', 'component', 'script',
-      'algorithm', 'data structure', 'test cases'
+      'function',
+      'class',
+      'API endpoint',
+      'component',
+      'script',
+      'algorithm',
+      'data structure',
+      'test cases',
     ],
     tips: [
       'Mention the programming language',
       'List specific requirements',
-      'Ask for comments and documentation'
-    ]
+      'Ask for comments and documentation',
+    ],
   },
   analysis: {
     structure: [
@@ -70,17 +92,21 @@ const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
       '1. [INSIGHT_1]',
       '2. [INSIGHT_2]',
       'Include [DELIVERABLES] in your analysis.',
-      'Format: structured report with conclusions.'
+      'Format: structured report with conclusions.',
     ],
     examples: [
-      'market trends', 'data patterns', 'competitor analysis',
-      'SWOT analysis', 'financial metrics', 'user behavior'
+      'market trends',
+      'data patterns',
+      'competitor analysis',
+      'SWOT analysis',
+      'financial metrics',
+      'user behavior',
     ],
     tips: [
       'Provide context and data',
       'Specify what insights you need',
-      'Request specific deliverables'
-    ]
+      'Request specific deliverables',
+    ],
   },
   creative: {
     structure: [
@@ -90,17 +116,24 @@ const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
       'Mood/Tone: [MOOD]',
       'Include elements of: [ELEMENTS]',
       'Length/Format: [FORMAT]',
-      'Make it [QUALITIES].'
+      'Make it [QUALITIES].',
     ],
     examples: [
-      'story', 'poem', 'song lyrics', 'slogan', 'brand name',
-      'character', 'plot', 'dialogue', 'scene description'
+      'story',
+      'poem',
+      'song lyrics',
+      'slogan',
+      'brand name',
+      'character',
+      'plot',
+      'dialogue',
+      'scene description',
     ],
     tips: [
       'Describe the style you want',
       'Specify mood and atmosphere',
-      'Give creative constraints'
-    ]
+      'Give creative constraints',
+    ],
   },
   learning: {
     structure: [
@@ -111,24 +144,28 @@ const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
       '- Key concepts',
       '- [EXAMPLES] examples',
       '- Common mistakes to avoid',
-      'Check understanding with [ASSESSMENT].'
+      'Check understanding with [ASSESSMENT].',
     ],
     examples: [
-      'concept explanation', 'step-by-step tutorial', 'study guide',
-      'practice problems', 'summary', 'cheat sheet'
+      'concept explanation',
+      'step-by-step tutorial',
+      'study guide',
+      'practice problems',
+      'summary',
+      'cheat sheet',
     ],
     tips: [
       'Specify your current knowledge level',
       'Ask for examples and analogies',
-      'Request practice exercises'
-    ]
-  }
+      'Request practice exercises',
+    ],
+  },
 }
 
 function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: string): string {
   const template = PROMPT_TEMPLATES[task]
   let prompt = template.structure.join('\n\n')
-  
+
   // Replace placeholders based on task type
   switch (task) {
     case 'writing':
@@ -142,7 +179,7 @@ function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: 
         .replace('[POINTS]', details || 'relevant key points')
         .replace('[LENGTH]', '500-800 words')
       break
-      
+
     case 'coding':
       prompt = prompt
         .replace('[LANGUAGE]', 'full-stack')
@@ -153,7 +190,7 @@ function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: 
         .replace('[QUALITY]', tone === 'professional' ? 'production-ready' : 'well-structured')
         .replace('[EXTRAS]', 'usage examples and edge cases')
       break
-      
+
     case 'analysis':
       prompt = prompt
         .replace('[ROLE]', 'data')
@@ -164,7 +201,7 @@ function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: 
         .replace('[INSIGHT_2]', 'Recommendations')
         .replace('[DELIVERABLES]', 'charts, metrics, and actionable insights')
       break
-      
+
     case 'creative':
       prompt = prompt
         .replace('[ROLE]', 'writer')
@@ -176,7 +213,7 @@ function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: 
         .replace('[FORMAT]', 'appropriate length')
         .replace('[QUALITIES]', 'unique, memorable, and impactful')
       break
-      
+
     case 'learning':
       prompt = prompt
         .replace('[SUBJECT]', topic.split(' ')[0] || 'subject')
@@ -187,7 +224,7 @@ function generatePrompt(task: TaskType, topic: string, tone: ToneType, details: 
         .replace('[ASSESSMENT]', 'quiz questions')
       break
   }
-  
+
   return prompt
 }
 
@@ -202,14 +239,14 @@ export default function AiPromptGeneratorClient() {
 
   const handleGenerate = () => {
     if (!topic.trim()) return
-    
+
     const prompt = generatePrompt(taskType, topic, tone, details)
     setGeneratedPrompt(prompt)
   }
 
   const handleCopy = async () => {
     if (!generatedPrompt) return
-    
+
     await navigator.clipboard.writeText(generatedPrompt)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -220,7 +257,7 @@ export default function AiPromptGeneratorClient() {
       const variations = [
         `Please provide a detailed response.\n\n${generatePrompt(taskType, topic, tone, details)}`,
         `${generatePrompt(taskType, topic, tone, details)}\n\nBe thorough and comprehensive.`,
-        `Context: I need help with ${topic}.\n\n${generatePrompt(taskType, topic, tone, details)}`
+        `Context: I need help with ${topic}.\n\n${generatePrompt(taskType, topic, tone, details)}`,
       ]
       const randomVariation = variations[Math.floor(Math.random() * variations.length)]
       setGeneratedPrompt(randomVariation)
@@ -253,10 +290,8 @@ export default function AiPromptGeneratorClient() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-
       {/* Main Input Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
-        
         {/* Task Type Pills - Compact */}
         <div className="flex flex-wrap gap-2 mb-6">
           {Object.entries(TASK_ICONS).map(([key, icon]) => (
@@ -286,7 +321,7 @@ export default function AiPromptGeneratorClient() {
                        placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors
                        hover:bg-white/15"
           />
-          
+
           {/* Quick Examples - Inline */}
           <div className="flex flex-wrap gap-2 mt-3">
             {getExampleTopics().map((example, i) => (
@@ -304,19 +339,21 @@ export default function AiPromptGeneratorClient() {
 
         {/* Tone Selection - Simplified */}
         <div className="flex gap-2 mb-4">
-          {(['professional', 'casual', 'technical', 'friendly', 'academic'] as ToneType[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTone(t)}
-              className={`px-3 py-1.5 rounded-lg capitalize text-sm transition-all ${
-                tone === t
-                  ? 'bg-purple-500/30 text-purple-300 border border-purple-400'
-                  : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+          {(['professional', 'casual', 'technical', 'friendly', 'academic'] as ToneType[]).map(
+            (t) => (
+              <button
+                key={t}
+                onClick={() => setTone(t)}
+                className={`px-3 py-1.5 rounded-lg capitalize text-sm transition-all ${
+                  tone === t
+                    ? 'bg-purple-500/30 text-purple-300 border border-purple-400'
+                    : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                }`}
+              >
+                {t}
+              </button>
+            )
+          )}
         </div>
 
         {/* Optional Details - Collapsible */}
@@ -326,7 +363,7 @@ export default function AiPromptGeneratorClient() {
         >
           {showDetails ? '− Hide' : '+ Add'} details
         </button>
-        
+
         {showDetails && (
           <textarea
             value={details}
@@ -364,13 +401,13 @@ export default function AiPromptGeneratorClient() {
               <RefreshCw className="w-4 h-4" />
             </button>
           </div>
-          
+
           <div className="bg-black/30 rounded-xl p-4 mb-4">
             <pre className="text-white whitespace-pre-wrap text-sm font-mono">
               {generatedPrompt}
             </pre>
           </div>
-          
+
           <div className="flex gap-2">
             <button
               onClick={handleCopy}
@@ -392,7 +429,7 @@ export default function AiPromptGeneratorClient() {
                 </>
               )}
             </button>
-            
+
             <button
               onClick={handleClear}
               className="px-4 py-2.5 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 

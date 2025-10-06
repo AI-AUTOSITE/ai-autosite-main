@@ -33,7 +33,7 @@ export default function PdfToDataTool() {
     handleFileSelect,
     handleReset,
     triggerFileInput,
-    confirmDownload
+    confirmDownload,
   } = usePdfProcessor()
 
   return (
@@ -70,7 +70,7 @@ export default function PdfToDataTool() {
             className="hidden"
             disabled={isProcessing}
           />
-          
+
           <div
             onClick={triggerFileInput}
             onDragOver={(e) => {
@@ -83,11 +83,12 @@ export default function PdfToDataTool() {
               relative min-h-[400px] rounded-2xl border-2 border-dashed
               flex flex-col items-center justify-center
               transition-all duration-300 bg-white/5 backdrop-blur-sm
-              ${isDragging 
-                ? 'border-cyan-400 bg-cyan-400/10 scale-102' 
-                : file
-                  ? 'border-green-400 bg-green-400/5'
-                  : 'border-gray-600 hover:border-cyan-400 hover:bg-white/10 cursor-pointer'
+              ${
+                isDragging
+                  ? 'border-cyan-400 bg-cyan-400/10 scale-102'
+                  : file
+                    ? 'border-green-400 bg-green-400/5'
+                    : 'border-gray-600 hover:border-cyan-400 hover:bg-white/10 cursor-pointer'
               }
               ${isProcessing ? 'cursor-wait' : ''}
             `}
@@ -134,11 +135,7 @@ export default function PdfToDataTool() {
       />
 
       {/* History Modal */}
-      <HistoryModal
-        isOpen={showHistory}
-        onClose={() => setShowHistory(false)}
-        history={history}
-      />
+      <HistoryModal isOpen={showHistory} onClose={() => setShowHistory(false)} history={history} />
     </div>
   )
 }

@@ -16,7 +16,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onFileSelect,
   onDragOver,
   onDragLeave,
-  onDrop
+  onDrop,
 }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -110,9 +110,17 @@ interface FeatureCardProps {
   borderColor: string
 }
 
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, gradient, borderColor }) => {
+const FeatureCard: React.FC<FeatureCardProps> = ({
+  icon,
+  title,
+  description,
+  gradient,
+  borderColor,
+}) => {
   return (
-    <div className={`rounded-xl bg-gradient-to-br ${gradient} backdrop-blur-sm border ${borderColor} p-6`}>
+    <div
+      className={`rounded-xl bg-gradient-to-br ${gradient} backdrop-blur-sm border ${borderColor} p-6`}
+    >
       {icon}
       <h3 className="text-white font-semibold mb-2">{title}</h3>
       <p className="text-gray-300 text-sm">{description}</p>

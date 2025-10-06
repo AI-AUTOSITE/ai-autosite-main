@@ -18,15 +18,15 @@ export const InfoModal: React.FC<InfoModalProps> = ({ onClose }) => {
   return (
     <>
       {/* Background overlay - click to close */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 z-[100000]"
         onClick={onClose}
         aria-label="Close modal overlay"
       />
-      
+
       {/* Modal container */}
       <div className="fixed inset-0 z-[100001] overflow-y-auto flex items-center justify-center p-4">
-        <div 
+        <div
           className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-2xl p-6 max-w-md w-full border border-white/10"
           onClick={(e) => e.stopPropagation()}
         >
@@ -46,17 +46,17 @@ export const InfoModal: React.FC<InfoModalProps> = ({ onClose }) => {
               <Upload className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
               <p>Upload or drag & drop your image</p>
             </div>
-            
+
             <div className="flex items-start space-x-3">
               <MousePointer className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
               <p>Pick a mode: Click for fixed masks or Drag for custom areas</p>
             </div>
-            
+
             <div className="flex items-start space-x-3">
               <Move className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
               <p>Click or drag on the image to add black masks</p>
             </div>
-            
+
             <div className="flex items-start space-x-3">
               <Download className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
               <p>Download your masked image (PNG, JPEG, or WebP)</p>
@@ -65,7 +65,8 @@ export const InfoModal: React.FC<InfoModalProps> = ({ onClose }) => {
 
           <div className="mt-6 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
             <p className="text-xs text-yellow-400">
-              <strong>100% Private:</strong> All work happens in your browser. No uploads to any server.
+              <strong>100% Private:</strong> All work happens in your browser. No uploads to any
+              server.
             </p>
           </div>
 

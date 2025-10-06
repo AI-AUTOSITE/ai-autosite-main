@@ -1,17 +1,17 @@
 'use client'
 
 import { useState, useRef, useCallback, useMemo } from 'react'
-import { 
-  Braces, 
-  Copy, 
-  Check, 
-  RefreshCw, 
-  Download, 
-  Upload, 
-  AlertCircle, 
-  CheckCircle, 
-  Minimize2, 
-  Maximize2 
+import {
+  Braces,
+  Copy,
+  Check,
+  RefreshCw,
+  Download,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Minimize2,
+  Maximize2,
 } from 'lucide-react'
 
 // ========== Type Definitions ==========
@@ -32,57 +32,48 @@ interface ProcessResult {
 
 // ========== Constants ==========
 const SAMPLE_JSON = {
-  name: "AI AutoSite",
-  version: "1.0.0",
-  description: "Instant tools for developers",
-  features: [
-    "JSON Beautify",
-    "Text Case Converter",
-    "Code Analysis"
-  ],
+  name: 'AI AutoSite',
+  version: '1.0.0',
+  description: 'Instant tools for developers',
+  features: ['JSON Beautify', 'Text Case Converter', 'Code Analysis'],
   settings: {
-    theme: "dark",
+    theme: 'dark',
     autoSave: true,
-    indentSize: 2
+    indentSize: 2,
   },
   metadata: {
-    created: "2024-01-01",
-    updated: "2024-12-31",
+    created: '2024-01-01',
+    updated: '2024-12-31',
     author: {
-      name: "Developer",
-      email: "dev@example.com"
-    }
-  }
+      name: 'Developer',
+      email: 'dev@example.com',
+    },
+  },
 }
 
 const INDENT_OPTIONS = [2, 4, 8] as const
 const MESSAGE_TIMEOUT = 2000
 
 // ========== Utility Functions ==========
-const processJsonData = (
-  text: string, 
-  mode: ProcessMode, 
-  indentSize: number
-): ProcessResult => {
+const processJsonData = (text: string, mode: ProcessMode, indentSize: number): ProcessResult => {
   if (!text.trim()) {
     return { success: true, output: '' }
   }
 
   try {
     const parsed = JSON.parse(text)
-    const output = mode === 'beautify' 
-      ? JSON.stringify(parsed, null, indentSize)
-      : JSON.stringify(parsed)
-    
-    return { 
-      success: true, 
-      output 
+    const output =
+      mode === 'beautify' ? JSON.stringify(parsed, null, indentSize) : JSON.stringify(parsed)
+
+    return {
+      success: true,
+      output,
     }
   } catch (err) {
-    return { 
-      success: false, 
+    return {
+      success: false,
       output: '',
-      error: `Invalid JSON: ${err instanceof Error ? err.message : 'Unknown error'}`
+      error: `Invalid JSON: ${err instanceof Error ? err.message : 'Unknown error'}`,
     }
   }
 }
@@ -95,17 +86,17 @@ const calculateJsonStats = (jsonString: string): JsonStats => {
 
     const parsed = JSON.parse(jsonString)
     const stringified = JSON.stringify(parsed, null, 0)
-    
+
     const keys = stringified.match(/"[^"]+"\s*:/g) || []
     const arrays = stringified.match(/\[/g) || []
     const objects = stringified.match(/\{/g) || []
     const size = new Blob([jsonString]).size
-    
+
     return {
       keys: keys.length,
       arrays: arrays.length,
       objects: objects.length,
-      size
+      size,
     }
   } catch {
     return { keys: 0, arrays: 0, objects: 0, size: 0 }
@@ -127,7 +118,7 @@ interface MessageDisplayProps {
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({ error, success }) => {
   if (!error && !success) return <div className="h-12 mb-4" />
-  
+
   return (
     <div className="h-12 mb-4">
       {error && (
@@ -136,7 +127,7 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({ error, success }) => {
           <p className="text-red-400 text-sm">{error}</p>
         </div>
       )}
-      
+
       {success && (
         <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-3 flex items-center space-x-2">
           <CheckCircle className="w-5 h-5 text-green-400" />
@@ -152,7 +143,7 @@ interface StatsDisplayProps {
   className?: string
 }
 
-const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, className = "" }) => (
+const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, className = '' }) => (
   <div className={className}>
     <div className="text-center">
       <p className="text-xl font-bold text-green-400">{stats.keys}</p>
@@ -167,9 +158,7 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, className = "" }) =>
       <p className="text-xs text-gray-500">Objects</p>
     </div>
     <div className="text-center">
-      <p className="text-xl font-bold text-blue-400">
-        {formatFileSize(stats.size)}
-      </p>
+      <p className="text-xl font-bold text-blue-400">{formatFileSize(stats.size)}</p>
       <p className="text-xs text-gray-500">Size</p>
     </div>
   </div>
@@ -185,7 +174,7 @@ export default function JsonBeautify() {
   const [copied, setCopied] = useState(false)
   const [indentSize, setIndentSize] = useState<2 | 4 | 8>(2)
   const [mode, setMode] = useState<ProcessMode>('beautify')
-  
+
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
   const successTimeoutRef = useRef<NodeJS.Timeout>()
@@ -205,52 +194,60 @@ export default function JsonBeautify() {
   }, [])
 
   // Process JSON with proper cleanup
-  const processJson = useCallback((
-    text: string, 
-    currentMode: ProcessMode = mode, 
-    currentIndent: number = indentSize
-  ) => {
-    clearTimeouts()
-    setError('')
-    setSuccess('')
-    
-    const result = processJsonData(text, currentMode, currentIndent)
-    
-    if (result.success) {
-      setOutputJson(result.output)
-      if (result.output) {
-        setSuccess('JSON is valid!')
-        successTimeoutRef.current = setTimeout(() => setSuccess(''), MESSAGE_TIMEOUT)
+  const processJson = useCallback(
+    (text: string, currentMode: ProcessMode = mode, currentIndent: number = indentSize) => {
+      clearTimeouts()
+      setError('')
+      setSuccess('')
+
+      const result = processJsonData(text, currentMode, currentIndent)
+
+      if (result.success) {
+        setOutputJson(result.output)
+        if (result.output) {
+          setSuccess('JSON is valid!')
+          successTimeoutRef.current = setTimeout(() => setSuccess(''), MESSAGE_TIMEOUT)
+        }
+      } else {
+        setOutputJson('')
+        setError(result.error || '')
       }
-    } else {
-      setOutputJson('')
-      setError(result.error || '')
-    }
-  }, [mode, indentSize, clearTimeouts])
+    },
+    [mode, indentSize, clearTimeouts]
+  )
 
   // Event handlers
-  const handleInputChange = useCallback((text: string) => {
-    setInputJson(text)
-    processJson(text)
-  }, [processJson])
+  const handleInputChange = useCallback(
+    (text: string) => {
+      setInputJson(text)
+      processJson(text)
+    },
+    [processJson]
+  )
 
-  const handleModeChange = useCallback((newMode: ProcessMode) => {
-    setMode(newMode)
-    processJson(inputJson, newMode)
-  }, [inputJson, processJson])
+  const handleModeChange = useCallback(
+    (newMode: ProcessMode) => {
+      setMode(newMode)
+      processJson(inputJson, newMode)
+    },
+    [inputJson, processJson]
+  )
 
-  const handleIndentChange = useCallback((size: 2 | 4 | 8) => {
-    setIndentSize(size)
-    if (mode === 'beautify') {
-      processJson(inputJson, mode, size)
-    }
-  }, [inputJson, mode, processJson])
+  const handleIndentChange = useCallback(
+    (size: 2 | 4 | 8) => {
+      setIndentSize(size)
+      if (mode === 'beautify') {
+        processJson(inputJson, mode, size)
+      }
+    },
+    [inputJson, mode, processJson]
+  )
 
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(outputJson)
       setCopied(true)
-      
+
       if (copiedTimeoutRef.current) {
         clearTimeout(copiedTimeoutRef.current)
       }
@@ -278,20 +275,23 @@ export default function JsonBeautify() {
     URL.revokeObjectURL(url)
   }, [outputJson, mode])
 
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const text = e.target?.result as string
-        handleInputChange(text)
+  const handleFileUpload = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const text = e.target?.result as string
+          handleInputChange(text)
+        }
+        reader.onerror = () => {
+          setError('Failed to read file')
+        }
+        reader.readAsText(file)
       }
-      reader.onerror = () => {
-        setError('Failed to read file')
-      }
-      reader.readAsText(file)
-    }
-  }, [handleInputChange])
+    },
+    [handleInputChange]
+  )
 
   const loadSample = useCallback(() => {
     handleInputChange(JSON.stringify(SAMPLE_JSON))
@@ -321,13 +321,10 @@ export default function JsonBeautify() {
               <p className="text-gray-400 mt-1">Format, validate, and minify JSON instantly</p>
             </div>
           </div>
-          
+
           {/* Desktop Stats */}
           {outputJson && (
-            <StatsDisplay 
-              stats={stats} 
-              className="hidden sm:flex items-center space-x-4" 
-            />
+            <StatsDisplay stats={stats} className="hidden sm:flex items-center space-x-4" />
           )}
         </div>
 
@@ -448,7 +445,11 @@ export default function JsonBeautify() {
                   className="text-gray-400 hover:text-white transition-colors disabled:opacity-50"
                   aria-label="Copy to clipboard"
                 >
-                  {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                  {copied ? (
+                    <Check className="w-4 h-4 text-green-400" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
                 </button>
                 <button
                   onClick={handleDownload}
@@ -475,10 +476,7 @@ export default function JsonBeautify() {
         {outputJson && (
           <div className="sm:hidden mt-6">
             <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
-              <StatsDisplay 
-                stats={stats} 
-                className="grid grid-cols-4 gap-2" 
-              />
+              <StatsDisplay stats={stats} className="grid grid-cols-4 gap-2" />
             </div>
           </div>
         )}
@@ -490,13 +488,13 @@ export default function JsonBeautify() {
             <h3 className="text-white font-semibold mb-2">JSON Validation</h3>
             <p className="text-gray-400 text-sm">Instant syntax checking</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-emerald-600/10 to-emerald-600/5 backdrop-blur-sm border border-emerald-500/20 p-6 rounded-xl">
             <Braces className="w-8 h-8 text-emerald-400 mb-3" />
             <h3 className="text-white font-semibold mb-2">Smart Formatting</h3>
             <p className="text-gray-400 text-sm">Beautify or minify instantly</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-cyan-600/10 to-cyan-600/5 backdrop-blur-sm border border-cyan-500/20 p-6 rounded-xl">
             <Download className="w-8 h-8 text-cyan-400 mb-3" />
             <h3 className="text-white font-semibold mb-2">Export Ready</h3>
@@ -508,9 +506,7 @@ export default function JsonBeautify() {
       {/* Footer */}
       <footer className="relative z-10 mt-auto py-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500">
-            100% Private • No Data Stored • Works Offline
-          </p>
+          <p className="text-sm text-gray-500">100% Private • No Data Stored • Works Offline</p>
         </div>
       </footer>
     </div>

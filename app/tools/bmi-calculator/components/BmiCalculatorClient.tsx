@@ -15,7 +15,7 @@ const BMI_CATEGORIES = [
   { max: 18.5, category: 'Underweight', color: 'text-blue-400' },
   { max: 24.9, category: 'Normal weight', color: 'text-green-400' },
   { max: 29.9, category: 'Overweight', color: 'text-yellow-400' },
-  { max: Infinity, category: 'Obese', color: 'text-orange-400' }
+  { max: Infinity, category: 'Obese', color: 'text-orange-400' },
 ]
 
 function calculateBMI(weight: number, height: number, units: UnitSystem): number {
@@ -35,7 +35,7 @@ function getBMICategory(bmi: number): BmiResult {
       return {
         bmi,
         category: category.category,
-        color: category.color
+        color: category.color,
       }
     }
   }
@@ -53,40 +53,39 @@ export default function BmiCalculatorClient() {
 
   const handleCalculate = () => {
     setError('')
-    
+
     if (unitSystem === 'imperial') {
       if (!heightFt || !weight) {
         setError('Enter height and weight')
         return
       }
-      
+
       const ft = parseFloat(heightFt)
       const inches = parseFloat(heightIn || '0')
       const lbs = parseFloat(weight)
-      
+
       if (ft < 1 || ft > 8 || inches < 0 || inches >= 12 || lbs < 50 || lbs > 1000) {
         setError('Invalid values')
         return
       }
-      
+
       const totalInches = ft * 12 + inches
       const bmi = calculateBMI(lbs, totalInches, unitSystem)
       setResult(getBMICategory(bmi))
-      
     } else {
       if (!heightCm || !weight) {
         setError('Enter height and weight')
         return
       }
-      
+
       const cm = parseFloat(heightCm)
       const kg = parseFloat(weight)
-      
+
       if (cm < 100 || cm > 250 || kg < 20 || kg > 500) {
         setError('Invalid values')
         return
       }
-      
+
       const bmi = calculateBMI(kg, cm, unitSystem)
       setResult(getBMICategory(bmi))
     }
@@ -110,7 +109,6 @@ export default function BmiCalculatorClient() {
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Unit Toggle - Simplified */}
         <div className="flex bg-white/10 rounded-xl p-1 mb-6">
           <button
@@ -139,9 +137,7 @@ export default function BmiCalculatorClient() {
         <div className="space-y-4">
           {/* Height Input */}
           <div>
-            <label className="text-white font-medium mb-2 block">
-              Height
-            </label>
+            <label className="text-white font-medium mb-2 block">Height</label>
             {unitSystem === 'imperial' ? (
               <div className="flex gap-3">
                 <div className="flex-1">
@@ -158,7 +154,9 @@ export default function BmiCalculatorClient() {
                                 hover:bg-white/15"
                       autoFocus
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">ft</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                      ft
+                    </span>
                   </div>
                 </div>
                 <div className="flex-1">
@@ -174,7 +172,9 @@ export default function BmiCalculatorClient() {
                                 placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors pr-8
                                 hover:bg-white/15"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">in</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                      in
+                    </span>
                   </div>
                 </div>
               </div>
@@ -192,16 +192,16 @@ export default function BmiCalculatorClient() {
                             hover:bg-white/15"
                   autoFocus
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">cm</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                  cm
+                </span>
               </div>
             )}
           </div>
 
           {/* Weight Input */}
           <div>
-            <label className="text-white font-medium mb-2 block">
-              Weight
-            </label>
+            <label className="text-white font-medium mb-2 block">Weight</label>
             <div className="relative">
               <input
                 type="number"
@@ -242,12 +242,8 @@ export default function BmiCalculatorClient() {
         {result && (
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
             <div className="text-center">
-              <h2 className="text-5xl font-bold text-white mb-2">
-                {result.bmi.toFixed(1)}
-              </h2>
-              <p className={`text-2xl font-medium ${result.color}`}>
-                {result.category}
-              </p>
+              <h2 className="text-5xl font-bold text-white mb-2">{result.bmi.toFixed(1)}</h2>
+              <p className={`text-2xl font-medium ${result.color}`}>{result.category}</p>
             </div>
 
             {/* BMI Scale Visual - Simplified */}
@@ -258,17 +254,17 @@ export default function BmiCalculatorClient() {
                 <div className="flex-1 bg-yellow-500/30" title="Overweight"></div>
                 <div className="flex-1 bg-orange-500/30" title="Obese"></div>
               </div>
-              
+
               {/* Marker */}
               <div className="relative h-2">
-                <div 
+                <div
                   className="absolute top-0 h-2 w-2 bg-white rounded-full -translate-x-1/2 transition-all"
                   style={{
-                    left: `${Math.min(Math.max((result.bmi - 15) / 20 * 100, 0), 100)}%`
+                    left: `${Math.min(Math.max(((result.bmi - 15) / 20) * 100, 0), 100)}%`,
                   }}
                 />
               </div>
-              
+
               {/* Scale Labels */}
               <div className="flex justify-between mt-1 text-xs text-gray-500">
                 <span>15</span>

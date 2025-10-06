@@ -25,7 +25,7 @@ export const redrawCanvas = (
 
   // Draw black masks
   ctx.fillStyle = 'black'
-  masks.forEach(mask => {
+  masks.forEach((mask) => {
     ctx.fillRect(mask.x, mask.y, mask.w, mask.h)
   })
 }
@@ -47,8 +47,8 @@ export const getCanvasPosition = (
 export const calculateDisplayScale = (
   imageWidth: number,
   imageHeight: number,
-  maxWidthRatio = 0.7,  // Changed from 0.5 to 0.7 for larger display
-  maxHeightRatio = 0.65  // Changed from 0.5 to 0.65 for larger display
+  maxWidthRatio = 0.7, // Changed from 0.5 to 0.7 for larger display
+  maxHeightRatio = 0.65 // Changed from 0.5 to 0.65 for larger display
 ): number => {
   const maxWidth = window.innerWidth * maxWidthRatio
   const maxHeight = window.innerHeight * maxHeightRatio
@@ -56,7 +56,7 @@ export const calculateDisplayScale = (
   const scaleX = maxWidth / imageWidth
   const scaleY = maxHeight / imageHeight
 
-  return Math.min(scaleX, scaleY, 1.5)  // Allow up to 1.5x scale for small images
+  return Math.min(scaleX, scaleY, 1.5) // Allow up to 1.5x scale for small images
 }
 
 export const downloadCanvas = (
@@ -64,19 +64,22 @@ export const downloadCanvas = (
   format: 'png' | 'jpeg' | 'webp',
   filename?: string
 ): void => {
-  const mime = format === 'jpeg' ? 'image/jpeg' : 
-               format === 'webp' ? 'image/webp' : 'image/png'
-  
-  canvas.toBlob((blob) => {
-    if (!blob) return
+  const mime = format === 'jpeg' ? 'image/jpeg' : format === 'webp' ? 'image/webp' : 'image/png'
 
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename || `masked.${format}`
-    a.click()
-    URL.revokeObjectURL(url)
-  }, mime, 0.93)
+  canvas.toBlob(
+    (blob) => {
+      if (!blob) return
+
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename || `masked.${format}`
+      a.click()
+      URL.revokeObjectURL(url)
+    },
+    mime,
+    0.93
+  )
 }
 
 export const validateImageFile = (file: File): { valid: boolean; error?: string } => {

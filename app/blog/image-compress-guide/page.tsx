@@ -1,12 +1,13 @@
-
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { ArrowLeft, Image, Zap, Shield, Download } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'How to Compress Images for Web - Ultimate Guide 2025 | AI AutoSite',
-  description: 'Learn how to compress images for faster websites. Reduce JPG and PNG size by 60-80% without quality loss. Free online tool.',
-  keywords: 'image compression, compress images, reduce image size, optimize images for web, image compressor',
+  description:
+    'Learn how to compress images for faster websites. Reduce JPG and PNG size by 60-80% without quality loss. Free online tool.',
+  keywords:
+    'image compression, compress images, reduce image size, optimize images for web, image compressor',
   openGraph: {
     title: 'Image Compression Guide - Make Your Website Faster',
     description: 'Complete guide to compressing images for web performance',
@@ -21,8 +22,8 @@ export default function ImageCompressGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -31,9 +32,7 @@ export default function ImageCompressGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
-            Quick Tools
-          </span>
+          <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full">Quick Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -43,8 +42,8 @@ export default function ImageCompressGuidePage() {
           How to Compress Images Without Losing Quality
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Learn why image compression is crucial for web performance and how to reduce file sizes 
-          by 60-80% while keeping your images looking perfect.
+          Learn why image compression is crucial for web performance and how to reduce file sizes by
+          60-80% while keeping your images looking perfect.
         </p>
       </header>
 
@@ -56,29 +55,23 @@ export default function ImageCompressGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Zap className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-white font-semibold mb-1">Faster Loading</h3>
-              <p className="text-gray-400 text-sm">
-                Compressed images load 3-5x faster
-              </p>
+              <p className="text-gray-400 text-sm">Compressed images load 3-5x faster</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Shield className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-1">Save Bandwidth</h3>
-              <p className="text-gray-400 text-sm">
-                Use less data for mobile users
-              </p>
+              <p className="text-gray-400 text-sm">Use less data for mobile users</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Image className="w-8 h-8 text-blue-400 mb-2" />
               <h3 className="text-white font-semibold mb-1">Better SEO</h3>
-              <p className="text-gray-400 text-sm">
-                Google ranks faster sites higher
-              </p>
+              <p className="text-gray-400 text-sm">Google ranks faster sites higher</p>
             </div>
           </div>
           <p className="text-gray-300">
-            Large images are the #1 cause of slow websites. A single uncompressed photo can be 5-10MB, 
-            taking 10+ seconds to load on mobile. After compression, that same image might be just 200KB - 
-            loading instantly while looking identical.
+            Large images are the #1 cause of slow websites. A single uncompressed photo can be
+            5-10MB, taking 10+ seconds to load on mobile. After compression, that same image might
+            be just 200KB - loading instantly while looking identical.
           </p>
         </div>
 
@@ -127,19 +120,22 @@ export default function ImageCompressGuidePage() {
             <li className="flex items-start gap-2">
               <span className="text-green-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">80-90% Quality:</strong> Perfect for photos. No visible difference, 60% smaller files.
+                <strong className="text-white">80-90% Quality:</strong> Perfect for photos. No
+                visible difference, 60% smaller files.
               </p>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-yellow-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">60-80% Quality:</strong> Good for web graphics. Slight quality loss, 70-80% smaller.
+                <strong className="text-white">60-80% Quality:</strong> Good for web graphics.
+                Slight quality loss, 70-80% smaller.
               </p>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-orange-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">Below 60%:</strong> Only for thumbnails. Visible quality loss, 85%+ smaller.
+                <strong className="text-white">Below 60%:</strong> Only for thumbnails. Visible
+                quality loss, 85%+ smaller.
               </p>
             </li>
           </ul>
@@ -221,14 +217,13 @@ export default function ImageCompressGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Compress Your Images Now
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Compress Your Images Now</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Free online tool. No signup needed. Compress unlimited images and make your website faster today.
+          Free online tool. No signup needed. Compress unlimited images and make your website faster
+          today.
         </p>
-        <Link 
-          href="/tools/image-compress" 
+        <Link
+          href="/tools/image-compress"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Image className="mr-2" size={20} />

@@ -31,22 +31,22 @@ export default function FaviconGeneratorClient() {
     setIsProcessing(true)
     const img = new Image()
     img.onload = () => {
-      const generatedFavicons = FAVICON_SIZES.map(faviconSize => {
+      const generatedFavicons = FAVICON_SIZES.map((faviconSize) => {
         const canvas = document.createElement('canvas')
         canvas.width = faviconSize.size
         canvas.height = faviconSize.size
         const ctx = canvas.getContext('2d')!
-        
+
         ctx.imageSmoothingEnabled = true
         ctx.imageSmoothingQuality = 'high'
         ctx.drawImage(img, 0, 0, faviconSize.size, faviconSize.size)
-        
+
         return {
           ...faviconSize,
-          dataUrl: canvas.toDataURL('image/png')
+          dataUrl: canvas.toDataURL('image/png'),
         }
       })
-      
+
       setFavicons(generatedFavicons)
       setIsProcessing(false)
     }
@@ -57,12 +57,12 @@ export default function FaviconGeneratorClient() {
     if (!file.type.startsWith('image/')) {
       return
     }
-    
+
     // Check file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
       return
     }
-    
+
     const reader = new FileReader()
     reader.onload = (e) => {
       const result = e.target?.result as string
@@ -90,7 +90,7 @@ export default function FaviconGeneratorClient() {
 
   const downloadAll = async () => {
     const zip = new JSZip()
-    
+
     // Add each favicon to ZIP
     for (const favicon of favicons) {
       if (favicon.dataUrl) {
@@ -98,14 +98,14 @@ export default function FaviconGeneratorClient() {
         zip.file(favicon.name, base64, { base64: true })
       }
     }
-    
+
     // Add HTML code
     const htmlCode = `<!-- Favicon HTML -->
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">`
     zip.file('favicon.html', htmlCode)
-    
+
     // Generate and download ZIP
     const blob = await zip.generateAsync({ type: 'blob' })
     const url = URL.createObjectURL(blob)
@@ -132,9 +132,8 @@ export default function FaviconGeneratorClient() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-  {/* Main Card */}
+      {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {!favicons.length ? (
           /* Upload Area */
           <div
@@ -142,9 +141,10 @@ export default function FaviconGeneratorClient() {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             className={`border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer
-                      ${isDragging 
-                        ? 'border-blue-400 bg-blue-400/10 scale-[1.02]' 
-                        : 'border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30'
+                      ${
+                        isDragging
+                          ? 'border-blue-400 bg-blue-400/10 scale-[1.02]'
+                          : 'border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30'
                       }`}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -155,15 +155,13 @@ export default function FaviconGeneratorClient() {
               onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
               className="hidden"
             />
-            
+
             <Upload className="w-10 h-10 text-gray-400 mx-auto mb-4" />
-            <p className="text-white font-medium mb-1">
-              Drop image here or click to upload
-            </p>
+            <p className="text-white font-medium mb-1">Drop image here or click to upload</p>
             <p className="text-gray-400 text-xs">
               PNG, JPG, SVG • Square images work best • Max 5MB
             </p>
-            
+
             {isProcessing && (
               <div className="mt-4">
                 <div className="inline-flex items-center gap-2 text-cyan-400">
@@ -187,20 +185,17 @@ export default function FaviconGeneratorClient() {
                   Upload new
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-3 gap-3">
                 {favicons.map((favicon, index) => (
-                  <div
-                    key={index}
-                    className="bg-black/30 rounded-lg p-3 text-center"
-                  >
+                  <div key={index} className="bg-black/30 rounded-lg p-3 text-center">
                     <div className="bg-white rounded p-2 mb-2 inline-block">
                       <img
                         src={favicon.dataUrl}
                         alt={favicon.name}
-                        style={{ 
-                          width: Math.min(favicon.size, 48), 
-                          height: Math.min(favicon.size, 48) 
+                        style={{
+                          width: Math.min(favicon.size, 48),
+                          height: Math.min(favicon.size, 48),
                         }}
                         className="pixelated"
                       />
@@ -224,15 +219,15 @@ export default function FaviconGeneratorClient() {
                 <Download className="w-5 h-5" />
                 Download ZIP
               </button>
-              
+
               <button
                 onClick={copyHtmlCode}
                 className={`px-6 py-3 rounded-xl font-medium transition-all 
                           flex items-center justify-center gap-2 ${
-                  copied
-                    ? 'bg-green-500 text-white'
-                    : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
+                            copied
+                              ? 'bg-green-500 text-white'
+                              : 'bg-white/10 text-white hover:bg-white/20'
+                          }`}
               >
                 {copied ? (
                   <>

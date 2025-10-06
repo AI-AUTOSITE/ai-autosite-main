@@ -3,8 +3,10 @@ import { ChevronRight, Clock, Tag, User, ArrowLeft, HardDrive } from 'lucide-rea
 
 export const metadata = {
   title: 'Complete Guide to PC Optimization: Solve Storage & Performance Issues',
-  description: 'Learn how to fix Windows PC storage problems and slow performance. Identify what to delete safely with our step-by-step optimization guide.',
-  keywords: 'PC optimization, Windows optimization, storage cleanup, performance improvement, disk cleanup, startup management, PC speed up',
+  description:
+    'Learn how to fix Windows PC storage problems and slow performance. Identify what to delete safely with our step-by-step optimization guide.',
+  keywords:
+    'PC optimization, Windows optimization, storage cleanup, performance improvement, disk cleanup, startup management, PC speed up',
   openGraph: {
     title: 'Complete PC Optimization Guide - AI AutoSite',
     description: 'Fix Windows storage and performance issues with our comprehensive guide',
@@ -18,9 +20,13 @@ export default function PCOptimizerGuidePage() {
     <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
       <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-8">
-        <Link href="/" className="hover:text-cyan-400">Home</Link>
+        <Link href="/" className="hover:text-cyan-400">
+          Home
+        </Link>
         <ChevronRight className="w-4 h-4" />
-        <Link href="/blog" className="hover:text-cyan-400">Blog</Link>
+        <Link href="/blog" className="hover:text-cyan-400">
+          Blog
+        </Link>
         <ChevronRight className="w-4 h-4" />
         <span className="text-white">PC Optimization Guide</span>
       </nav>
@@ -33,7 +39,7 @@ export default function PCOptimizerGuidePage() {
             Solve Storage & Performance Issues
           </span>
         </h1>
-        
+
         <div className="flex flex-wrap gap-4 text-sm text-gray-400 mt-6">
           <span className="flex items-center">
             <User className="w-4 h-4 mr-1" />
@@ -57,10 +63,10 @@ export default function PCOptimizerGuidePage() {
           PC Optimizer Advisor Tool
         </p>
         <p className="text-gray-300 text-sm mb-4">
-          Try our automated tool that implements all the techniques described in this article.
-          Get instant analysis and optimization recommendations for your PC.
+          Try our automated tool that implements all the techniques described in this article. Get
+          instant analysis and optimization recommendations for your PC.
         </p>
-        <Link 
+        <Link
           href="/tools/pc-optimizer"
           className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
         >
@@ -72,12 +78,10 @@ export default function PCOptimizerGuidePage() {
       {/* Article Content */}
       <article className="prose prose-invert max-w-none">
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Introduction: Why PCs Slow Down
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Introduction: Why PCs Slow Down</h2>
           <p className="text-gray-300 mb-4">
-            Over time, computers gradually become slower and run out of storage space.
-            This happens due to several common causes:
+            Over time, computers gradually become slower and run out of storage space. This happens
+            due to several common causes:
           </p>
           <ul className="space-y-2 text-gray-300">
             <li>• Accumulation of unnecessary software</li>
@@ -91,9 +95,7 @@ export default function PCOptimizerGuidePage() {
           <h2 className="text-2xl font-bold text-white mb-4">
             1. Identifying Storage-Hungry Software
           </h2>
-          <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-            Manual Check Method
-          </h3>
+          <h3 className="text-xl font-semibold text-cyan-400 mb-3">Manual Check Method</h3>
           <ol className="space-y-3 text-gray-300">
             <li>
               <strong className="text-white">1.</strong> Open Settings (Windows key + I)
@@ -116,7 +118,7 @@ export default function PCOptimizerGuidePage() {
             For detailed information, use this PowerShell script:
           </p>
           <pre className="bg-gray-900/50 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm border border-gray-800">
-{`Get-ChildItem "C:\\Program Files", "C:\\Program Files (x86)" -Recurse -Include *.exe | 
+            {`Get-ChildItem "C:\\Program Files", "C:\\Program Files (x86)" -Recurse -Include *.exe | 
   Select-Object Name, DirectoryName, Length, LastAccessTime | 
   Sort-Object Length -Descending | 
   Select-Object -First 20`}
@@ -124,9 +126,7 @@ export default function PCOptimizerGuidePage() {
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            2. What to Keep vs. What to Remove
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-4">2. What to Keep vs. What to Remove</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
               <h4 className="font-semibold text-red-400 mb-2">🗑️ Safe to Remove</h4>
@@ -150,16 +150,12 @@ export default function PCOptimizerGuidePage() {
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            3. Managing Startup Applications
-          </h2>
+          <h2 className="text-2xl font-bold text-white mb-4">3. Managing Startup Applications</h2>
           <p className="text-gray-300 mb-4">
             Reduce boot time by managing applications that start with Windows.
           </p>
-          
-          <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-            Using Task Manager
-          </h3>
+
+          <h3 className="text-xl font-semibold text-cyan-400 mb-3">Using Task Manager</h3>
           <ol className="space-y-2 text-gray-300">
             <li>1. Open Task Manager (Ctrl + Shift + Esc)</li>
             <li>2. Click the "Startup" tab</li>
@@ -177,10 +173,8 @@ export default function PCOptimizerGuidePage() {
           <h2 className="text-2xl font-bold text-white mb-4">
             4. Clearing Cache and Temporary Files
           </h2>
-          
-          <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-            Windows Disk Cleanup
-          </h3>
+
+          <h3 className="text-xl font-semibold text-cyan-400 mb-3">Windows Disk Cleanup</h3>
           <ol className="space-y-2 text-gray-300 mb-4">
             <li>1. Open File Explorer → "This PC"</li>
             <li>2. Right-click C: drive → "Properties"</li>
@@ -188,13 +182,14 @@ export default function PCOptimizerGuidePage() {
             <li>4. Select files to delete → "OK"</li>
           </ol>
 
-          <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-            Application-Specific Cache
-          </h3>
+          <h3 className="text-xl font-semibold text-cyan-400 mb-3">Application-Specific Cache</h3>
           <div className="space-y-3">
             <div className="bg-white/5 rounded-lg p-3">
               <strong className="text-white">Chrome:</strong>
-              <span className="text-gray-300 text-sm"> Settings → Privacy and security → Clear browsing data</span>
+              <span className="text-gray-300 text-sm">
+                {' '}
+                Settings → Privacy and security → Clear browsing data
+              </span>
             </div>
             <div className="bg-white/5 rounded-lg p-3">
               <strong className="text-white">Discord:</strong>
@@ -202,37 +197,32 @@ export default function PCOptimizerGuidePage() {
             </div>
             <div className="bg-white/5 rounded-lg p-3">
               <strong className="text-white">Adobe:</strong>
-              <span className="text-gray-300 text-sm"> Edit → Preferences → Media Cache → Delete</span>
+              <span className="text-gray-300 text-sm">
+                {' '}
+                Edit → Preferences → Media Cache → Delete
+              </span>
             </div>
           </div>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            5. Hardware Upgrade Options
-          </h2>
-          
+          <h2 className="text-2xl font-bold text-white mb-4">5. Hardware Upgrade Options</h2>
+
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg p-4">
               <h4 className="font-semibold text-green-400 mb-2">SSD Upgrade</h4>
               <p className="text-sm text-gray-300 mb-2">Budget: $50+</p>
-              <p className="text-xs text-gray-400">
-                3-5x faster boot times vs HDD
-              </p>
+              <p className="text-xs text-gray-400">3-5x faster boot times vs HDD</p>
             </div>
             <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-lg p-4">
               <h4 className="font-semibold text-blue-400 mb-2">RAM Upgrade</h4>
               <p className="text-sm text-gray-300 mb-2">Budget: $30+</p>
-              <p className="text-xs text-gray-400">
-                8GB→16GB for smoother multitasking
-              </p>
+              <p className="text-xs text-gray-400">8GB→16GB for smoother multitasking</p>
             </div>
             <div className="bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-purple-500/20 rounded-lg p-4">
               <h4 className="font-semibold text-purple-400 mb-2">External Storage</h4>
               <p className="text-sm text-gray-300 mb-2">Budget: $60+</p>
-              <p className="text-xs text-gray-400">
-                Move files externally to free space
-              </p>
+              <p className="text-xs text-gray-400">Move files externally to free space</p>
             </div>
           </div>
         </div>
@@ -245,21 +235,27 @@ export default function PCOptimizerGuidePage() {
             PC optimization isn't a one-time task. Follow this maintenance schedule:
           </p>
           <ul className="space-y-2 text-gray-300 mb-6">
-            <li>📅 <strong className="text-white">Weekly:</strong> Clear browser cache</li>
-            <li>📅 <strong className="text-white">Monthly:</strong> Run Disk Cleanup</li>
-            <li>📅 <strong className="text-white">Quarterly:</strong> Uninstall unused software</li>
-            <li>📅 <strong className="text-white">Bi-annually:</strong> Review startup applications</li>
+            <li>
+              📅 <strong className="text-white">Weekly:</strong> Clear browser cache
+            </li>
+            <li>
+              📅 <strong className="text-white">Monthly:</strong> Run Disk Cleanup
+            </li>
+            <li>
+              📅 <strong className="text-white">Quarterly:</strong> Uninstall unused software
+            </li>
+            <li>
+              📅 <strong className="text-white">Bi-annually:</strong> Review startup applications
+            </li>
           </ul>
 
           <div className="bg-white/10 rounded-lg p-4">
-            <p className="text-white font-semibold mb-2">
-              🚀 Start Optimizing Now
-            </p>
+            <p className="text-white font-semibold mb-2">🚀 Start Optimizing Now</p>
             <p className="text-gray-300 text-sm mb-4">
-              Our PC Optimizer Advisor tool automates all these tasks,
-              making optimization quick and easy.
+              Our PC Optimizer Advisor tool automates all these tasks, making optimization quick and
+              easy.
             </p>
-            <Link 
+            <Link
               href="/tools/pc-optimizer"
               className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
             >
@@ -299,7 +295,7 @@ export default function PCOptimizerGuidePage() {
 
       {/* Back to Blog */}
       <div className="mt-12 text-center">
-        <Link 
+        <Link
           href="/blog"
           className="inline-flex items-center space-x-2 text-gray-400 hover:text-cyan-400 transition-colors"
         >
@@ -308,5 +304,5 @@ export default function PCOptimizerGuidePage() {
         </Link>
       </div>
     </main>
-  );
+  )
 }

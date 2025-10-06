@@ -5,23 +5,23 @@
 
 // ツールのステータスマッピング
 export const TOOL_STATUS_MAP = {
-  'live': 'active',
-  'coming': 'coming',
-  'maintenance': 'maintenance'
+  live: 'active',
+  coming: 'coming',
+  maintenance: 'maintenance',
 } as const
 
 // ブログ記事のステータスマッピング
 export const POST_STATUS_MAP = {
-  'published': 'active',
+  published: 'active',
   'coming-soon': 'coming',
-  'draft': 'draft'
+  draft: 'draft',
 } as const
 
 // カテゴリーIDの正規化
 export const CATEGORY_MAP = {
-  'business': 'business-tools',
-  'creative': 'creative-tools',
-  'learning': 'learning-hub'
+  business: 'business-tools',
+  creative: 'creative-tools',
+  learning: 'learning-hub',
 } as const
 
 // マッピング関数（明示的にexport）
@@ -41,5 +41,5 @@ export function mapCategoryId(category: string): string {
 console.log('status-map.ts loaded:', {
   mapToolStatus: typeof mapToolStatus,
   mapPostStatus: typeof mapPostStatus,
-  mapCategoryId: typeof mapCategoryId
+  mapCategoryId: typeof mapCategoryId,
 })

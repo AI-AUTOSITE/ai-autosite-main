@@ -4,8 +4,10 @@ import { ArrowLeft, Percent, Calculator, TrendingUp, PieChart } from 'lucide-rea
 
 export const metadata: Metadata = {
   title: 'Percentage Calculator - Quick % Calculations Made Simple | AI AutoSite',
-  description: 'Calculate percentages instantly. Find percentage increase, decrease, discount rates, and more. Free online percentage calculator.',
-  keywords: 'percentage calculator, percent calculator, discount calculator, percentage increase, percentage decrease, tip calculator',
+  description:
+    'Calculate percentages instantly. Find percentage increase, decrease, discount rates, and more. Free online percentage calculator.',
+  keywords:
+    'percentage calculator, percent calculator, discount calculator, percentage increase, percentage decrease, tip calculator',
   openGraph: {
     title: 'Percentage Calculator - Complete Guide',
     description: 'Master percentage calculations for discounts, tips, and more',
@@ -20,8 +22,8 @@ export default function PercentageCalculatorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function PercentageCalculatorGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
-            Quick Tools
-          </span>
+          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">Quick Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function PercentageCalculatorGuidePage() {
           Percentage Calculator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Master percentage calculations for shopping discounts, restaurant tips, 
-          grade calculations, and business metrics.
+          Master percentage calculations for shopping discounts, restaurant tips, grade
+          calculations, and business metrics.
         </p>
       </header>
 
@@ -154,14 +154,12 @@ export default function PercentageCalculatorGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Calculate Percentages Instantly
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Calculate Percentages Instantly</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free percentage calculator for discounts, tips, grades, and more.
         </p>
-        <Link 
-          href="/tools/percentage-calculator" 
+        <Link
+          href="/tools/percentage-calculator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Percent className="mr-2" size={20} />

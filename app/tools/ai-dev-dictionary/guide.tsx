@@ -1,12 +1,12 @@
 // app/tools/ai-dev-dictionary/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Search,
   Filter,
   Eye,
@@ -14,26 +14,26 @@ import {
   MessageSquare,
   Code,
   Lightbulb,
-  Target
-} from 'lucide-react';
+  Target,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const examplePrompts = {
-    before: "I want to create a popup thing that shows information",
-    after: "Create a Modal component with a close button and backdrop"
-  };
+    before: 'I want to create a popup thing that shows information',
+    after: 'Create a Modal component with a close button and backdrop',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -77,7 +77,7 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
             <MessageSquare className="w-5 h-5 text-purple-400" />
             Transform Your AI Prompts
           </h4>
-          
+
           <div className="space-y-3">
             {/* Before */}
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
@@ -98,7 +98,7 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
                 </button>
               </div>
             </div>
-            
+
             {/* After */}
             <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
               <div className="flex items-start justify-between">
@@ -137,7 +137,7 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -150,7 +150,7 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -187,19 +187,27 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
           </h4>
           <div className="bg-black/30 rounded-lg p-4 space-y-2">
             <div className="flex items-center gap-3">
-              <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">UI Components</span>
+              <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
+                UI Components
+              </span>
               <p className="text-xs text-gray-400">Buttons, Cards, Modals, etc.</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">Layout</span>
+              <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full">
+                Layout
+              </span>
               <p className="text-xs text-gray-400">Grid, Flexbox, Sidebar layouts</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">Navigation</span>
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
+                Navigation
+              </span>
               <p className="text-xs text-gray-400">Menus, Tabs, Breadcrumbs</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full">Forms</span>
+              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full">
+                Forms
+              </span>
               <p className="text-xs text-gray-400">Inputs, Selects, Validation</p>
             </div>
           </div>
@@ -241,13 +249,13 @@ export default function AIDevDictionaryGuide({ onClose }: GuideProps) {
         <div className="bg-gray-800/50 rounded-lg p-4">
           <p className="text-sm text-white font-medium mb-2">💡 View Modes</p>
           <p className="text-xs text-gray-400">
-            Toggle between <span className="text-cyan-400">Grid View</span> for visual browsing 
-            and <span className="text-cyan-400">List View</span> for compact scanning.
+            Toggle between <span className="text-cyan-400">Grid View</span> for visual browsing and{' '}
+            <span className="text-cyan-400">List View</span> for compact scanning.
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -255,4 +263,4 @@ export const guideMetadata = {
   title: 'AI Dev Dictionary Guide',
   icon: '📚',
   available: true,
-};
+}

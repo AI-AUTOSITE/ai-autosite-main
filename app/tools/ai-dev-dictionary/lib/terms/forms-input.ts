@@ -1,13 +1,20 @@
 // app/tools/ai-dev-dictionary/lib/terms/forms-input.ts
 
-import { TechTerm } from './types';
+import { TechTerm } from './types'
 
 export const formsInputTerms: TechTerm[] = [
   {
     id: 'checkbox',
     term: 'Checkbox',
     category: 'forms',
-    aiSynonyms: ['Check Box', 'Tick Box', 'Selection Box', 'Check Mark', 'Toggle Box', 'Multi-select'],
+    aiSynonyms: [
+      'Check Box',
+      'Tick Box',
+      'Selection Box',
+      'Check Mark',
+      'Toggle Box',
+      'Multi-select',
+    ],
     description: 'A small box that can be checked or unchecked, allowing multiple selections',
     beginnerTip: 'Like a checklist where you can select multiple items - tick as many as you want!',
     aiPhrases: [
@@ -16,7 +23,7 @@ export const formsInputTerms: TechTerm[] = [
       'Let users check multiple items',
       'Add selection boxes',
       'Implement multi-select with checkboxes',
-      'Use checkmarks for preferences'
+      'Use checkmarks for preferences',
     ],
     codeExample: `// React Checkbox Example - Check It!
 const Checkbox = ({ label, checked, onChange }) => {
@@ -32,14 +39,21 @@ const Checkbox = ({ label, checked, onChange }) => {
   );
 }`,
     demoType: 'checkbox',
-    relatedTerms: ['Radio Button', 'Switch', 'Toggle']
+    relatedTerms: ['Radio Button', 'Switch', 'Toggle'],
   },
 
   {
     id: 'radio',
     term: 'Radio Button',
     category: 'forms',
-    aiSynonyms: ['Radio', 'Option Button', 'Radio Select', 'Single Select', 'Choice Button', 'Radio Input'],
+    aiSynonyms: [
+      'Radio',
+      'Option Button',
+      'Radio Select',
+      'Single Select',
+      'Choice Button',
+      'Radio Input',
+    ],
     description: 'Circular buttons where only one option can be selected from a group',
     beginnerTip: 'Like old car radios - you can only listen to one station at a time!',
     aiPhrases: [
@@ -48,7 +62,7 @@ const Checkbox = ({ label, checked, onChange }) => {
       'Use radio inputs for choices',
       'Implement single-select options',
       'Add radio group for selection',
-      'Make mutually exclusive choices'
+      'Make mutually exclusive choices',
     ],
     codeExample: `// React Radio Button Example - Pick One!
 const RadioGroup = ({ options, selected, onChange }) => {
@@ -69,14 +83,21 @@ const RadioGroup = ({ options, selected, onChange }) => {
   );
 }`,
     demoType: 'radio',
-    relatedTerms: ['Checkbox', 'Select', 'Dropdown']
+    relatedTerms: ['Checkbox', 'Select', 'Dropdown'],
   },
 
   {
     id: 'switch',
     term: 'Switch',
     category: 'forms',
-    aiSynonyms: ['Toggle', 'Toggle Switch', 'On/Off Switch', 'Toggle Button', 'Binary Switch', 'Flip Switch'],
+    aiSynonyms: [
+      'Toggle',
+      'Toggle Switch',
+      'On/Off Switch',
+      'Toggle Button',
+      'Binary Switch',
+      'Flip Switch',
+    ],
     description: 'A sliding button that toggles between on and off states',
     beginnerTip: 'Like a light switch - flip it on or off. Perfect for settings!',
     aiPhrases: [
@@ -85,7 +106,7 @@ const RadioGroup = ({ options, selected, onChange }) => {
       'Implement toggle button',
       'Use switch for enabling features',
       'Add toggle for preferences',
-      'Make a flip switch control'
+      'Make a flip switch control',
     ],
     codeExample: `// React Switch Example - Flip It!
 const Switch = ({ isOn, onToggle }) => {
@@ -99,7 +120,7 @@ const Switch = ({ isOn, onToggle }) => {
   );
 }`,
     demoType: 'switch',
-    relatedTerms: ['Checkbox', 'Toggle', 'Button']
+    relatedTerms: ['Checkbox', 'Toggle', 'Button'],
   },
 
   {
@@ -115,7 +136,7 @@ const Switch = ({ isOn, onToggle }) => {
       'Add text input for user data',
       'Make an entry field',
       'Implement form fields',
-      'Add input boxes for information'
+      'Add input boxes for information',
     ],
     codeExample: `// React Input Example - Type Away!
 const Input = ({ label, value, onChange }) => {
@@ -132,14 +153,21 @@ const Input = ({ label, value, onChange }) => {
   );
 }`,
     demoType: 'input',
-    relatedTerms: ['Textarea', 'Select', 'Form']
+    relatedTerms: ['Textarea', 'Select', 'Form'],
   },
 
   {
     id: 'select',
     term: 'Select Box',
     category: 'forms',
-    aiSynonyms: ['Dropdown Select', 'Select Menu', 'Option Select', 'Choice Box', 'Picker', 'Select Input'],
+    aiSynonyms: [
+      'Dropdown Select',
+      'Select Menu',
+      'Option Select',
+      'Choice Box',
+      'Picker',
+      'Select Input',
+    ],
     description: 'A dropdown list where users can choose one option from many',
     beginnerTip: 'Like picking your country from a list - click and choose from the options!',
     aiPhrases: [
@@ -148,7 +176,7 @@ const Input = ({ label, value, onChange }) => {
       'Implement option selector',
       'Make a choice picker',
       'Add select input for categories',
-      'Use dropdown for selection'
+      'Use dropdown for selection',
     ],
     codeExample: `// React Select Example - Pick From List!
 const Select = ({ options, value, onChange }) => {
@@ -164,14 +192,21 @@ const Select = ({ options, value, onChange }) => {
   );
 }`,
     demoType: 'select',
-    relatedTerms: ['Dropdown', 'Radio Button', 'Input']
+    relatedTerms: ['Dropdown', 'Radio Button', 'Input'],
   },
 
   {
     id: 'datepicker',
     term: 'Date Picker',
     category: 'forms',
-    aiSynonyms: ['Calendar Input', 'Date Selector', 'Date Input', 'Calendar Picker', 'Date Field', 'Date Chooser'],
+    aiSynonyms: [
+      'Calendar Input',
+      'Date Selector',
+      'Date Input',
+      'Calendar Picker',
+      'Date Field',
+      'Date Chooser',
+    ],
     description: 'A calendar interface for selecting dates',
     beginnerTip: 'A mini calendar that pops up to let you pick a date - like booking a flight!',
     aiPhrases: [
@@ -180,7 +215,7 @@ const Select = ({ options, value, onChange }) => {
       'Implement date selector',
       'Add calendar for date selection',
       'Make a date chooser',
-      'Use date field with calendar'
+      'Use date field with calendar',
     ],
     codeExample: `// React Date Picker Example - Pick a Date!
 const DatePicker = ({ value, onChange }) => {
@@ -194,14 +229,20 @@ const DatePicker = ({ value, onChange }) => {
   );
 }`,
     demoType: 'datepicker',
-    relatedTerms: ['Time Picker', 'Calendar', 'Input']
+    relatedTerms: ['Time Picker', 'Calendar', 'Input'],
   },
 
   {
     id: 'floating-label',
     term: 'Floating Label',
     category: 'forms',
-    aiSynonyms: ['Animated Label', 'Material Label', 'Moving Label', 'Dynamic Label', 'Placeholder Label'],
+    aiSynonyms: [
+      'Animated Label',
+      'Material Label',
+      'Moving Label',
+      'Dynamic Label',
+      'Placeholder Label',
+    ],
     description: 'Input label that moves above the field when focused or filled',
     beginnerTip: 'The label starts inside the input box, then "floats" up when you start typing!',
     aiPhrases: [
@@ -210,7 +251,7 @@ const DatePicker = ({ value, onChange }) => {
       'Implement material design labels',
       'Make moving placeholders',
       'Build dynamic input labels',
-      'Add animated field labels'
+      'Add animated field labels',
     ],
     codeExample: `// React Floating Label Example
 import { useState } from 'react';
@@ -233,23 +274,31 @@ const FloatingLabel = ({ label, value, onChange }) => {
   );
 }`,
     demoType: 'floating-label',
-    relatedTerms: ['Input Field', 'Form', 'Label']
+    relatedTerms: ['Input Field', 'Form', 'Label'],
   },
 
   {
     id: 'form-validation',
     term: 'Form Validation',
     category: 'forms',
-    aiSynonyms: ['Input Validation', 'Field Validation', 'Form Checking', 'Input Verification', 'Data Validation', 'Form Errors'],
+    aiSynonyms: [
+      'Input Validation',
+      'Field Validation',
+      'Form Checking',
+      'Input Verification',
+      'Data Validation',
+      'Form Errors',
+    ],
     description: 'Checking user input for errors and showing helpful messages',
-    beginnerTip: 'Red error messages that appear when you fill out a form incorrectly - like "Please enter a valid email"!',
+    beginnerTip:
+      'Red error messages that appear when you fill out a form incorrectly - like "Please enter a valid email"!',
     aiPhrases: [
       'Add form validation',
       'Validate user input',
       'Show validation errors',
       'Implement field checking',
       'Create input verification',
-      'Add error messages to form'
+      'Add error messages to form',
     ],
     codeExample: `// React Form Validation Example
 import { useState } from 'react';
@@ -279,23 +328,31 @@ const ValidatedInput = ({ value, onChange, type }) => {
   );
 }`,
     demoType: 'form-validation',
-    relatedTerms: ['Form', 'Input', 'Error Message']
+    relatedTerms: ['Form', 'Input', 'Error Message'],
   },
 
   {
     id: 'autocomplete',
     term: 'Autocomplete',
     category: 'forms',
-    aiSynonyms: ['Auto-suggest', 'Type-ahead', 'Search Suggestions', 'Predictive Text', 'Auto-fill', 'Smart Search'],
+    aiSynonyms: [
+      'Auto-suggest',
+      'Type-ahead',
+      'Search Suggestions',
+      'Predictive Text',
+      'Auto-fill',
+      'Smart Search',
+    ],
     description: 'Suggests options as the user types, like Google search',
-    beginnerTip: 'Start typing and see suggestions appear - like when Google finishes your search for you!',
+    beginnerTip:
+      'Start typing and see suggestions appear - like when Google finishes your search for you!',
     aiPhrases: [
       'Add autocomplete to search',
       'Implement type-ahead suggestions',
       'Create auto-suggest input',
       'Build predictive text field',
       'Add search suggestions',
-      'Make smart search box'
+      'Make smart search box',
     ],
     codeExample: `// React Autocomplete Example
 import { useState } from 'react';
@@ -331,23 +388,31 @@ const Autocomplete = ({ options }) => {
   );
 }`,
     demoType: 'autocomplete',
-    relatedTerms: ['Search', 'Input', 'Suggestions']
+    relatedTerms: ['Search', 'Input', 'Suggestions'],
   },
 
   {
     id: 'multi-step-form',
     term: 'Multi-step Form',
     category: 'forms',
-    aiSynonyms: ['Wizard Form', 'Step-by-step Form', 'Progressive Form', 'Staged Form', 'Sequential Form', 'Form Wizard'],
+    aiSynonyms: [
+      'Wizard Form',
+      'Step-by-step Form',
+      'Progressive Form',
+      'Staged Form',
+      'Sequential Form',
+      'Form Wizard',
+    ],
     description: 'Form divided into multiple steps or pages',
-    beginnerTip: 'Like online checkout - shipping info → payment → review → complete. One step at a time!',
+    beginnerTip:
+      'Like online checkout - shipping info → payment → review → complete. One step at a time!',
     aiPhrases: [
       'Create multi-step form',
       'Build wizard interface',
       'Add step-by-step form',
       'Implement progressive form',
       'Make staged data collection',
-      'Design form wizard'
+      'Design form wizard',
     ],
     codeExample: `// React Multi-step Form Example
 import { useState } from 'react';
@@ -372,14 +437,21 @@ const MultiStepForm = () => {
   );
 }`,
     demoType: 'multi-step-form',
-    relatedTerms: ['Stepper', 'Form', 'Wizard']
+    relatedTerms: ['Stepper', 'Form', 'Wizard'],
   },
 
   {
     id: 'tag-input',
     term: 'Tag Input',
     category: 'forms',
-    aiSynonyms: ['Tags Field', 'Multi-tag Input', 'Keyword Input', 'Label Input', 'Tag Editor', 'Tag Selector'],
+    aiSynonyms: [
+      'Tags Field',
+      'Multi-tag Input',
+      'Keyword Input',
+      'Label Input',
+      'Tag Editor',
+      'Tag Selector',
+    ],
     description: 'Input field for adding multiple tags or keywords',
     beginnerTip: 'Type a word, press Enter, and it becomes a tag. Add multiple tags like hashtags!',
     aiPhrases: [
@@ -388,7 +460,7 @@ const MultiStepForm = () => {
       'Implement keyword input',
       'Build tag editor',
       'Make label input field',
-      'Add hashtag input'
+      'Add hashtag input',
     ],
     codeExample: `// React Tag Input Example
 import { useState } from 'react';
@@ -428,23 +500,31 @@ const TagInput = () => {
   );
 }`,
     demoType: 'tag-input',
-    relatedTerms: ['Input', 'Tags', 'Chip']
+    relatedTerms: ['Input', 'Tags', 'Chip'],
   },
 
   {
     id: 'range-slider',
     term: 'Range Slider',
     category: 'forms',
-    aiSynonyms: ['Slider Input', 'Range Input', 'Value Slider', 'Number Slider', 'Min-Max Slider', 'Dual Slider'],
+    aiSynonyms: [
+      'Slider Input',
+      'Range Input',
+      'Value Slider',
+      'Number Slider',
+      'Min-Max Slider',
+      'Dual Slider',
+    ],
     description: 'Slider for selecting a value or range between minimum and maximum',
-    beginnerTip: 'Drag the handle to pick a number - like adjusting volume or brightness on your phone!',
+    beginnerTip:
+      'Drag the handle to pick a number - like adjusting volume or brightness on your phone!',
     aiPhrases: [
       'Add range slider for price',
       'Create value slider',
       'Implement number range selector',
       'Build min-max slider',
       'Add dual handle slider',
-      'Make adjustable range input'
+      'Make adjustable range input',
     ],
     codeExample: `// React Range Slider Example
 const RangeSlider = ({ min, max, value, onChange }) => {
@@ -463,6 +543,6 @@ const RangeSlider = ({ min, max, value, onChange }) => {
   );
 }`,
     demoType: 'range-slider',
-    relatedTerms: ['Input', 'Slider', 'Number Input']
-  }
-];
+    relatedTerms: ['Input', 'Slider', 'Number Input'],
+  },
+]

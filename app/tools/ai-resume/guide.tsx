@@ -1,11 +1,11 @@
 // app/tools/ai-resume/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
   Briefcase,
   Zap,
   User,
@@ -14,28 +14,29 @@ import {
   Shield,
   Target,
   CheckCircle,
-  TrendingUp
-} from 'lucide-react';
+  TrendingUp,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function AIResumeGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const experienceExample = `• Led development of React application with 50k+ users
 • Implemented CI/CD pipeline reducing deployment time by 40%
 • Mentored team of 3 junior developers
-• Improved system performance by 60% through optimization`;
+• Improved system performance by 60% through optimization`
 
-  const skillsExample = "React, TypeScript, Node.js, SQL, AWS, Team Leadership, Agile, Problem Solving";
+  const skillsExample =
+    'React, TypeScript, Node.js, SQL, AWS, Team Leadership, Agile, Problem Solving'
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -123,7 +124,7 @@ export default function AIResumeGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -136,7 +137,7 @@ export default function AIResumeGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -150,7 +151,7 @@ export default function AIResumeGuide({ onClose }: GuideProps) {
                 <div className="bg-gray-800/50 rounded-lg p-3">
                   <div className="flex items-start justify-between">
                     <pre className="text-xs text-gray-300 whitespace-pre-wrap flex-1">
-{experienceExample}
+                      {experienceExample}
                     </pre>
                     <button
                       onClick={() => handleCopy(experienceExample, 'experience')}
@@ -250,8 +251,8 @@ export default function AIResumeGuide({ onClose }: GuideProps) {
             <div className="text-sm text-purple-300">
               <p className="font-semibold mb-1">ATS-Optimized Format</p>
               <p className="text-gray-300">
-                Our generated resumes are designed to pass Applicant Tracking Systems (ATS) 
-                with clean formatting, proper structure, and keyword optimization.
+                Our generated resumes are designed to pass Applicant Tracking Systems (ATS) with
+                clean formatting, proper structure, and keyword optimization.
               </p>
             </div>
           </div>
@@ -276,7 +277,7 @@ export default function AIResumeGuide({ onClose }: GuideProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -284,4 +285,4 @@ export const guideMetadata = {
   title: 'AI Resume Generator Guide',
   icon: '💼',
   available: true,
-};
+}

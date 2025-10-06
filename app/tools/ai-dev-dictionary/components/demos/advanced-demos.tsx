@@ -12,9 +12,11 @@ export const advancedDemos: Record<string, DemoFunction> = {
         className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors flex items-center gap-2 border border-white/20"
       >
         Options
-        <ChevronDown className={`w-4 h-4 transition-transform ${demoState.dropdown ? 'rotate-180' : ''}`} />
+        <ChevronDown
+          className={`w-4 h-4 transition-transform ${demoState.dropdown ? 'rotate-180' : ''}`}
+        />
       </button>
-      
+
       {demoState.dropdown && (
         <div className="absolute top-14 left-4 bg-slate-800 rounded-lg shadow-xl border border-white/20 overflow-hidden">
           {['Edit', 'Duplicate', 'Share', 'Delete'].map((option) => (
@@ -37,15 +39,23 @@ export const advancedDemos: Record<string, DemoFunction> = {
       {['What is this?', 'How does it work?', 'Is it free?'].map((question, index) => (
         <div key={index} className="mb-2">
           <button
-            onClick={() => setDemoState({ ...demoState, accordion: demoState.accordion === index ? null : index })}
+            onClick={() =>
+              setDemoState({
+                ...demoState,
+                accordion: demoState.accordion === index ? null : index,
+              })
+            }
             className="w-full px-4 py-3 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors flex items-center justify-between border border-white/10"
           >
             <span>{question}</span>
-            <ChevronRight className={`w-4 h-4 transition-transform ${demoState.accordion === index ? 'rotate-90' : ''}`} />
+            <ChevronRight
+              className={`w-4 h-4 transition-transform ${demoState.accordion === index ? 'rotate-90' : ''}`}
+            />
           </button>
           {demoState.accordion === index && (
             <div className="mt-2 p-4 bg-white/5 rounded-lg text-gray-300 border border-white/10">
-              This is the answer to "{question}". Accordions help organize content in collapsible sections.
+              This is the answer to "{question}". Accordions help organize content in collapsible
+              sections.
             </div>
           )}
         </div>
@@ -76,7 +86,11 @@ export const advancedDemos: Record<string, DemoFunction> = {
       </div>
       <div className="p-6">
         <div className="text-gray-300">
-          {['Overview content here', 'Features content here', 'Pricing content here'][demoState.tabs]}
+          {
+            ['Overview content here', 'Features content here', 'Pricing content here'][
+              demoState.tabs
+            ]
+          }
         </div>
       </div>
     </div>
@@ -94,7 +108,7 @@ export const advancedDemos: Record<string, DemoFunction> = {
           <Info className="w-4 h-4" />
           Hover Me
         </button>
-        
+
         {demoState.tooltip && (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-xl border border-white/20">
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900 border-r border-b border-white/20"></div>
@@ -117,10 +131,10 @@ export const advancedDemos: Record<string, DemoFunction> = {
           Open Menu
         </button>
       </div>
-      
+
       {demoState.drawer && (
         <>
-          <div 
+          <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setDemoState({ ...demoState, drawer: false })}
           />
@@ -194,7 +208,7 @@ export const advancedDemos: Record<string, DemoFunction> = {
       <p className="text-gray-400 text-sm mb-4">Drag items to reorder (demo visualization)</p>
       <div className="space-y-2">
         {['Task 1', 'Task 2', 'Task 3'].map((task, i) => (
-          <div 
+          <div
             key={task}
             className="p-3 bg-white/10 rounded-lg flex items-center gap-3 cursor-move hover:bg-white/20 transition-colors"
             draggable
@@ -248,8 +262,8 @@ export const advancedDemos: Record<string, DemoFunction> = {
   'search-filter': (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
       <div className="flex gap-2 mb-3">
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Search products..."
           className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded text-white text-sm"
         />
@@ -275,8 +289,8 @@ export const advancedDemos: Record<string, DemoFunction> = {
   // LIVE SEARCH DEMO
   'live-search': (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
-      <input 
-        type="text" 
+      <input
+        type="text"
         placeholder="Type to search instantly..."
         defaultValue="React"
         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white mb-3"
@@ -304,11 +318,17 @@ export const advancedDemos: Record<string, DemoFunction> = {
       <div className="absolute bottom-0 left-0 right-0 bg-slate-800 rounded-t-2xl border-t border-white/20 p-4">
         <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-3"></div>
         <div className="space-y-2">
-          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">Share</button>
-          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">Copy Link</button>
-          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">Delete</button>
+          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">
+            Share
+          </button>
+          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">
+            Copy Link
+          </button>
+          <button className="w-full p-3 text-left text-gray-300 hover:bg-white/10 rounded">
+            Delete
+          </button>
         </div>
       </div>
     </div>
-  )
+  ),
 }

@@ -57,7 +57,11 @@ export default function GradientGeneratorClient() {
   }
 
   const randomGradient = () => {
-    const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')
+    const randomColor = () =>
+      '#' +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')
     setColor1(randomColor())
     setColor2(randomColor())
     setAngle(Math.floor(Math.random() * 360))
@@ -65,11 +69,10 @@ export default function GradientGeneratorClient() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-    {/* Main Card */}
+      {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Live Preview - Large and Prominent */}
-        <div 
+        <div
           className="h-48 rounded-xl mb-6 shadow-xl transition-all duration-300"
           style={{ background: getGradientStyle() }}
         />
@@ -143,9 +146,7 @@ export default function GradientGeneratorClient() {
           {/* Angle Slider (only for linear) */}
           {type === 'linear' && (
             <div>
-              <label className="text-white text-sm mb-1 block">
-                Angle: {angle}°
-              </label>
+              <label className="text-white text-sm mb-1 block">Angle: {angle}°</label>
               <input
                 type="range"
                 min="0"
@@ -163,9 +164,7 @@ export default function GradientGeneratorClient() {
 
         {/* CSS Output */}
         <div className="bg-black/30 rounded-lg p-3 mb-6">
-          <code className="text-purple-400 text-xs font-mono">
-            {generateCSS()}
-          </code>
+          <code className="text-purple-400 text-xs font-mono">{generateCSS()}</code>
         </div>
 
         {/* Action Buttons */}
@@ -190,7 +189,7 @@ export default function GradientGeneratorClient() {
               </>
             )}
           </button>
-          
+
           <button
             onClick={randomGradient}
             className="px-4 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-all"
@@ -210,7 +209,7 @@ export default function GradientGeneratorClient() {
                 onClick={() => applyPreset(preset)}
                 className="h-12 rounded-lg relative overflow-hidden group hover:scale-105 transition-transform"
                 style={{
-                  background: `linear-gradient(${preset.angle}deg, ${preset.colors.join(', ')})`
+                  background: `linear-gradient(${preset.angle}deg, ${preset.colors.join(', ')})`,
                 }}
                 title={preset.name}
               >

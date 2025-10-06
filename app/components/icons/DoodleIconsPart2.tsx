@@ -1,16 +1,16 @@
 // components/icons/DoodleIconsPart2.tsx
 // Trendy hand-drawn icons - Part 2
 // Inspired by modern startup aesthetics
-import { FC } from 'react';
+import { FC } from 'react'
 
 export interface IconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-  strokeWidth?: number;
+  size?: number
+  color?: string
+  className?: string
+  strokeWidth?: number
 }
 
-export type DoodleIconName2 = 
+export type DoodleIconName2 =
   | 'doodle-message-square'
   | 'doodle-loader'
   | 'doodle-link'
@@ -25,7 +25,7 @@ export type DoodleIconName2 =
   | 'doodle-alert-circle'
   | 'doodle-check-circle'
   | 'doodle-lock'
-  | 'doodle-info';
+  | 'doodle-info'
 
 const doodleIcons2 = {
   // Message Square - chat bubble
@@ -42,15 +42,16 @@ const doodleIcons2 = {
       className={props.className}
     >
       {/* Speech bubble with tail */}
-      <path d="M4 4h16c1 0 2 1 2 2v10c0 1-1 2-2 2h-8l-4 4v-4H4c-1 0-2-1-2-2V6c0-1 1-2 2-2z" 
-            transform="rotate(-1 12 12)" />
+      <path
+        d="M4 4h16c1 0 2 1 2 2v10c0 1-1 2-2 2h-8l-4 4v-4H4c-1 0-2-1-2-2V6c0-1 1-2 2-2z"
+        transform="rotate(-1 12 12)"
+      />
       {/* Message dots */}
       <circle cx="8" cy="10" r="0.5" fill={props.color || 'currentColor'} opacity="0.6" />
       <circle cx="12" cy="10" r="0.5" fill={props.color || 'currentColor'} opacity="0.6" />
       <circle cx="16" cy="10" r="0.5" fill={props.color || 'currentColor'} opacity="0.6" />
       {/* Sketch effect */}
-      <path d="M4.2 4.2h15.6c1 0 2 1 2 2v9.8c0 1-1 2-2 2h-8l-4 4v-4H4.2" 
-            opacity="0.2" />
+      <path d="M4.2 4.2h15.6c1 0 2 1 2 2v9.8c0 1-1 2-2 2h-8l-4 4v-4H4.2" opacity="0.2" />
     </svg>
   ),
 
@@ -287,8 +288,7 @@ const doodleIcons2 = {
       className={props.className}
     >
       {/* Shield shape */}
-      <path d="M12 3l8 3v5c0 5-3 9-8 10-5-1-8-5-8-10V6l8-3z" 
-            transform="rotate(-1 12 12)" />
+      <path d="M12 3l8 3v5c0 5-3 9-8 10-5-1-8-5-8-10V6l8-3z" transform="rotate(-1 12 12)" />
       {/* Check mark inside */}
       <path d="M8 11l3 3 5-5" opacity="0.6" />
       {/* Sketch effect */}
@@ -388,36 +388,47 @@ const doodleIcons2 = {
       <circle cx="12.2" cy="12.2" r="8.8" opacity="0.3" />
     </svg>
   ),
-};
+}
 
 // Main component
-export const DoodleIcon2: FC<{ name: DoodleIconName2 } & IconProps> = ({ 
-  name, 
-  ...props 
-}) => {
-  const IconComponent = doodleIcons2[name];
-  
+export const DoodleIcon2: FC<{ name: DoodleIconName2 } & IconProps> = ({ name, ...props }) => {
+  const IconComponent = doodleIcons2[name]
+
   if (!IconComponent) {
-    console.warn(`Doodle icon "${name}" not found`);
-    return null;
+    console.warn(`Doodle icon "${name}" not found`)
+    return null
   }
-  
-  return <IconComponent {...props} />;
-};
+
+  return <IconComponent {...props} />
+}
 
 // Individual exports
-export const DoodleMessageSquareIcon = (props: IconProps) => <DoodleIcon2 name="doodle-message-square" {...props} />;
-export const DoodleLoaderIcon = (props: IconProps) => <DoodleIcon2 name="doodle-loader" {...props} />;
-export const DoodleLinkIcon = (props: IconProps) => <DoodleIcon2 name="doodle-link" {...props} />;
-export const DoodleGridIcon = (props: IconProps) => <DoodleIcon2 name="doodle-grid" {...props} />;
-export const DoodleListIcon = (props: IconProps) => <DoodleIcon2 name="doodle-list" {...props} />;
-export const DoodleBotIcon = (props: IconProps) => <DoodleIcon2 name="doodle-bot" {...props} />;
-export const DoodleUserIcon = (props: IconProps) => <DoodleIcon2 name="doodle-user" {...props} />;
-export const DoodleUploadIcon = (props: IconProps) => <DoodleIcon2 name="doodle-upload" {...props} />;
-export const DoodleDownloadIcon = (props: IconProps) => <DoodleIcon2 name="doodle-download" {...props} />;
-export const DoodleUndoIcon = (props: IconProps) => <DoodleIcon2 name="doodle-undo" {...props} />;
-export const DoodleShieldIcon = (props: IconProps) => <DoodleIcon2 name="doodle-shield" {...props} />;
-export const DoodleAlertCircleIcon = (props: IconProps) => <DoodleIcon2 name="doodle-alert-circle" {...props} />;
-export const DoodleCheckCircleIcon = (props: IconProps) => <DoodleIcon2 name="doodle-check-circle" {...props} />;
-export const DoodleLockIcon = (props: IconProps) => <DoodleIcon2 name="doodle-lock" {...props} />;
-export const DoodleInfoIcon = (props: IconProps) => <DoodleIcon2 name="doodle-info" {...props} />;
+export const DoodleMessageSquareIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-message-square" {...props} />
+)
+export const DoodleLoaderIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-loader" {...props} />
+)
+export const DoodleLinkIcon = (props: IconProps) => <DoodleIcon2 name="doodle-link" {...props} />
+export const DoodleGridIcon = (props: IconProps) => <DoodleIcon2 name="doodle-grid" {...props} />
+export const DoodleListIcon = (props: IconProps) => <DoodleIcon2 name="doodle-list" {...props} />
+export const DoodleBotIcon = (props: IconProps) => <DoodleIcon2 name="doodle-bot" {...props} />
+export const DoodleUserIcon = (props: IconProps) => <DoodleIcon2 name="doodle-user" {...props} />
+export const DoodleUploadIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-upload" {...props} />
+)
+export const DoodleDownloadIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-download" {...props} />
+)
+export const DoodleUndoIcon = (props: IconProps) => <DoodleIcon2 name="doodle-undo" {...props} />
+export const DoodleShieldIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-shield" {...props} />
+)
+export const DoodleAlertCircleIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-alert-circle" {...props} />
+)
+export const DoodleCheckCircleIcon = (props: IconProps) => (
+  <DoodleIcon2 name="doodle-check-circle" {...props} />
+)
+export const DoodleLockIcon = (props: IconProps) => <DoodleIcon2 name="doodle-lock" {...props} />
+export const DoodleInfoIcon = (props: IconProps) => <DoodleIcon2 name="doodle-info" {...props} />

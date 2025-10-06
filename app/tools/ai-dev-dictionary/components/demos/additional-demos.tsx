@@ -1,6 +1,20 @@
 // app/tools/ai-dev-dictionary/components/demos/additional-demos.tsx
 
-import { Upload, Palette, Clock, Calendar, BarChart3, Columns3, Home, Mic, QrCode, Info, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Upload,
+  Palette,
+  Clock,
+  Calendar,
+  BarChart3,
+  Columns3,
+  Home,
+  Mic,
+  QrCode,
+  Info,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 import type { DemoFunction } from './index'
 
 export const additionalDemos: Record<string, DemoFunction> = {
@@ -10,8 +24,8 @@ export const additionalDemos: Record<string, DemoFunction> = {
       <label className="text-gray-400 text-sm mb-3 block">Choose a color:</label>
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <input 
-            type="color" 
+          <input
+            type="color"
             defaultValue="#06b6d4"
             className="w-16 h-16 rounded cursor-pointer"
             onChange={(e) => setDemoState({ ...demoState, colorPicker: e.target.value })}
@@ -22,7 +36,7 @@ export const additionalDemos: Record<string, DemoFunction> = {
           </div>
         </div>
         <div className="flex gap-2">
-          {['#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ec4899'].map(color => (
+          {['#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ec4899'].map((color) => (
             <button
               key={color}
               onClick={() => setDemoState({ ...demoState, colorPicker: color })}
@@ -46,7 +60,7 @@ export const additionalDemos: Record<string, DemoFunction> = {
           onChange={(e) => setDemoState({ ...demoState, timePicker: e.target.value })}
         />
         <div className="grid grid-cols-4 gap-2">
-          {['09:00', '12:00', '15:00', '18:00'].map(time => (
+          {['09:00', '12:00', '15:00', '18:00'].map((time) => (
             <button
               key={time}
               onClick={() => setDemoState({ ...demoState, timePicker: time })}
@@ -105,7 +119,9 @@ export const additionalDemos: Record<string, DemoFunction> = {
                 <X className="w-4 h-4 text-gray-400" />
               </button>
             </div>
-            <p className="text-gray-300 text-sm">This is a popover with more detailed information than a tooltip.</p>
+            <p className="text-gray-300 text-sm">
+              This is a popover with more detailed information than a tooltip.
+            </p>
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-3 h-3 bg-slate-800 border-r border-b border-white/20"></div>
           </div>
         )}
@@ -146,7 +162,7 @@ export const additionalDemos: Record<string, DemoFunction> = {
       >
         Show Snackbar
       </button>
-      
+
       {demoState.snackbar && (
         <div className="absolute bottom-4 left-4 right-4 px-4 py-3 bg-gray-900 text-white rounded-lg shadow-xl flex items-center justify-between">
           <span>Item has been archived</span>
@@ -166,7 +182,7 @@ export const additionalDemos: Record<string, DemoFunction> = {
       <div className="flex items-end justify-around h-40 gap-2">
         {[40, 65, 30, 85, 50, 70, 45].map((height, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1">
-            <div 
+            <div
               className="w-full bg-gradient-to-t from-cyan-500 to-purple-500 rounded-t"
               style={{ height: `${height}%` }}
             ></div>
@@ -186,19 +202,26 @@ export const additionalDemos: Record<string, DemoFunction> = {
         <Calendar className="w-5 h-5 text-cyan-400" />
       </div>
       <div className="grid grid-cols-7 gap-1 text-xs">
-        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
-          <div key={day} className="text-center text-gray-500 py-1">{day}</div>
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+          <div key={day} className="text-center text-gray-500 py-1">
+            {day}
+          </div>
         ))}
         {Array.from({ length: 35 }, (_, i) => {
-          const date = i - 2; // Start from Thursday
-          const isToday = date === 15;
-          const isCurrentMonth = date > 0 && date <= 30;
+          const date = i - 2 // Start from Thursday
+          const isToday = date === 15
+          const isCurrentMonth = date > 0 && date <= 30
           return (
             <button
               key={i}
               className={`aspect-square flex items-center justify-center rounded text-xs
-                ${isToday ? 'bg-cyan-500 text-white' : 
-                  isCurrentMonth ? 'text-gray-300 hover:bg-white/10' : 'text-gray-600'}`}
+                ${
+                  isToday
+                    ? 'bg-cyan-500 text-white'
+                    : isCurrentMonth
+                      ? 'text-gray-300 hover:bg-white/10'
+                      : 'text-gray-600'
+                }`}
             >
               {isCurrentMonth ? date : ''}
             </button>
@@ -218,7 +241,10 @@ export const additionalDemos: Record<string, DemoFunction> = {
               <h4 className="text-gray-300 text-sm font-semibold mb-2">{column}</h4>
               <div className="space-y-2">
                 {Array.from({ length: colIndex === 1 ? 2 : 1 }, (_, i) => (
-                  <div key={i} className="p-2 bg-white/10 rounded text-xs text-gray-300 cursor-move hover:bg-white/20">
+                  <div
+                    key={i}
+                    className="p-2 bg-white/10 rounded text-xs text-gray-300 cursor-move hover:bg-white/20"
+                  >
                     Task {colIndex * 2 + i + 1}
                   </div>
                 ))}
@@ -233,14 +259,20 @@ export const additionalDemos: Record<string, DemoFunction> = {
   // SIDE NAVIGATION (COLLAPSIBLE) DEMO
   'side-navigation': (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg overflow-hidden border border-white/10 flex">
-      <div className={`bg-white/10 border-r border-white/10 transition-all ${
-        demoState.sideNav ? 'w-48' : 'w-12'
-      }`}>
+      <div
+        className={`bg-white/10 border-r border-white/10 transition-all ${
+          demoState.sideNav ? 'w-48' : 'w-12'
+        }`}
+      >
         <button
           onClick={() => setDemoState({ ...demoState, sideNav: !demoState.sideNav })}
           className="w-full p-3 hover:bg-white/10"
         >
-          {demoState.sideNav ? <ChevronLeft className="w-5 h-5 text-white ml-auto" /> : <ChevronRight className="w-5 h-5 text-white" />}
+          {demoState.sideNav ? (
+            <ChevronLeft className="w-5 h-5 text-white ml-auto" />
+          ) : (
+            <ChevronRight className="w-5 h-5 text-white" />
+          )}
         </button>
         <div className="p-2">
           {['Dashboard', 'Analytics', 'Reports'].map((item, i) => (
@@ -273,7 +305,7 @@ export const additionalDemos: Record<string, DemoFunction> = {
             { icon: '🔍', label: 'Search' },
             { icon: '➕', label: 'Add' },
             { icon: '💬', label: 'Chat' },
-            { icon: '👤', label: 'Profile' }
+            { icon: '👤', label: 'Profile' },
           ].map((item, i) => (
             <button
               key={item.label}
@@ -303,13 +335,15 @@ export const additionalDemos: Record<string, DemoFunction> = {
       />
       <div className="bg-white/5 rounded-lg p-2">
         <div className="grid grid-cols-10 gap-1 mb-1">
-          {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(key => (
+          {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map((key) => (
             <button
               key={key}
-              onClick={() => setDemoState({ 
-                ...demoState, 
-                virtualKeyboard: (demoState.virtualKeyboard || '') + key 
-              })}
+              onClick={() =>
+                setDemoState({
+                  ...demoState,
+                  virtualKeyboard: (demoState.virtualKeyboard || '') + key,
+                })
+              }
               className="aspect-square bg-white/10 text-gray-300 rounded text-xs hover:bg-white/20"
             >
               {key}
@@ -317,13 +351,15 @@ export const additionalDemos: Record<string, DemoFunction> = {
           ))}
         </div>
         <div className="grid grid-cols-9 gap-1 mb-1 px-4">
-          {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map(key => (
+          {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map((key) => (
             <button
               key={key}
-              onClick={() => setDemoState({ 
-                ...demoState, 
-                virtualKeyboard: (demoState.virtualKeyboard || '') + key 
-              })}
+              onClick={() =>
+                setDemoState({
+                  ...demoState,
+                  virtualKeyboard: (demoState.virtualKeyboard || '') + key,
+                })
+              }
               className="aspect-square bg-white/10 text-gray-300 rounded text-xs hover:bg-white/20"
             >
               {key}
@@ -332,19 +368,23 @@ export const additionalDemos: Record<string, DemoFunction> = {
         </div>
         <div className="flex gap-1">
           <button
-            onClick={() => setDemoState({ 
-              ...demoState, 
-              virtualKeyboard: (demoState.virtualKeyboard || '').slice(0, -1) 
-            })}
+            onClick={() =>
+              setDemoState({
+                ...demoState,
+                virtualKeyboard: (demoState.virtualKeyboard || '').slice(0, -1),
+              })
+            }
             className="flex-1 bg-white/10 text-gray-300 rounded text-xs hover:bg-white/20 py-2"
           >
             ← Delete
           </button>
           <button
-            onClick={() => setDemoState({ 
-              ...demoState, 
-              virtualKeyboard: (demoState.virtualKeyboard || '') + ' ' 
-            })}
+            onClick={() =>
+              setDemoState({
+                ...demoState,
+                virtualKeyboard: (demoState.virtualKeyboard || '') + ' ',
+              })
+            }
             className="flex-[3] bg-white/10 text-gray-300 rounded text-xs hover:bg-white/20 py-2"
           >
             Space
@@ -380,25 +420,21 @@ export const additionalDemos: Record<string, DemoFunction> = {
         <button
           onClick={() => setDemoState({ ...demoState, voiceInput: !demoState.voiceInput })}
           className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-all ${
-            demoState.voiceInput 
-              ? 'bg-red-500 animate-pulse' 
-              : 'bg-gray-700 hover:bg-gray-600'
+            demoState.voiceInput ? 'bg-red-500 animate-pulse' : 'bg-gray-700 hover:bg-gray-600'
           }`}
         >
           <Mic className={`w-10 h-10 text-white ${demoState.voiceInput ? 'animate-pulse' : ''}`} />
         </button>
-        <p className="text-white mb-2">
-          {demoState.voiceInput ? 'Listening...' : 'Tap to speak'}
-        </p>
+        <p className="text-white mb-2">{demoState.voiceInput ? 'Listening...' : 'Tap to speak'}</p>
         {demoState.voiceInput && (
           <div className="flex justify-center gap-1 mt-4">
-            {[1, 2, 3, 4, 5].map(i => (
+            {[1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
                 className="w-1 bg-cyan-400 rounded-full animate-pulse"
                 style={{
                   height: `${Math.random() * 20 + 10}px`,
-                  animationDelay: `${i * 0.1}s`
+                  animationDelay: `${i * 0.1}s`,
                 }}
               ></div>
             ))}
@@ -407,5 +443,5 @@ export const additionalDemos: Record<string, DemoFunction> = {
         <p className="text-gray-400 text-xs mt-4">Voice recognition demo</p>
       </div>
     </div>
-  )
+  ),
 }

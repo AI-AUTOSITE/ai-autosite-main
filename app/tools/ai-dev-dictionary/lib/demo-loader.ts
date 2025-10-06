@@ -7,18 +7,20 @@ export interface DemoComponentProps {
 }
 
 // 既存のallDemosを使用
-export async function loadDemo(demoType: string): Promise<React.ComponentType<DemoComponentProps> | null> {
+export async function loadDemo(
+  demoType: string
+): Promise<React.ComponentType<DemoComponentProps> | null> {
   // デバッグ用ログ
   console.log('Loading demo:', demoType)
   console.log('Available demos:', Object.keys(allDemos))
-  
+
   const demoFunction = allDemos[demoType]
-  
+
   if (!demoFunction) {
     console.warn(`Demo not found: ${demoType}`)
     return null
   }
-  
+
   // ラップして返す
   return Promise.resolve(function DemoWrapper({ state, setState }: DemoComponentProps) {
     return demoFunction(state, setState)

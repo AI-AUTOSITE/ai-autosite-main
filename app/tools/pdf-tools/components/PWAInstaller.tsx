@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { Download } from 'lucide-react';
+import { useEffect, useState } from 'react'
+import { Download } from 'lucide-react'
 
 export default function PWAInstaller() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallButton, setShowInstallButton] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [showInstallButton, setShowInstallButton] = useState(false)
 
   useEffect(() => {
     // Service Worker登録
@@ -13,42 +13,42 @@ export default function PWAInstaller() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          console.log('SW registered:', registration);
+          console.log('SW registered:', registration)
         })
         .catch((error) => {
-          console.log('SW registration failed:', error);
-        });
+          console.log('SW registration failed:', error)
+        })
     }
 
     // インストールプロンプトの処理
     const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallButton(true);
-    };
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstallButton(true)
+    }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
-  }, []);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
+  }, [])
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    }
-    
-    setDeferredPrompt(null);
-    setShowInstallButton(false);
-  };
+    if (!deferredPrompt) return
 
-  if (!showInstallButton) return null;
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt')
+    }
+
+    setDeferredPrompt(null)
+    setShowInstallButton(false)
+  }
+
+  if (!showInstallButton) return null
 
   return (
     <button
@@ -58,5 +58,5 @@ export default function PWAInstaller() {
       <Download className="w-4 h-4" />
       Install App
     </button>
-  );
+  )
 }

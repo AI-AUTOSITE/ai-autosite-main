@@ -17,7 +17,7 @@ export default function PasswordGeneratorClient() {
     uppercase: true,
     lowercase: true,
     numbers: true,
-    symbols: false // Default off for easier copying
+    symbols: false, // Default off for easier copying
   })
   const [copied, setCopied] = useState(false)
   const [strength, setStrength] = useState<'weak' | 'medium' | 'strong' | 'very-strong'>('medium')
@@ -42,7 +42,7 @@ export default function PasswordGeneratorClient() {
     // If no options selected, use lowercase by default
     if (chars === '') {
       chars = LOWERCASE
-      setOptions(prev => ({ ...prev, lowercase: true }))
+      setOptions((prev) => ({ ...prev, lowercase: true }))
     }
 
     // Generate random password
@@ -53,23 +53,23 @@ export default function PasswordGeneratorClient() {
 
     // Ensure at least one character from each selected type
     const ensureChars: string[] = []
-    if (options.uppercase && !UPPERCASE.split('').some(c => newPassword.includes(c))) {
+    if (options.uppercase && !UPPERCASE.split('').some((c) => newPassword.includes(c))) {
       ensureChars.push(UPPERCASE[Math.floor(Math.random() * UPPERCASE.length)])
     }
-    if (options.lowercase && !LOWERCASE.split('').some(c => newPassword.includes(c))) {
+    if (options.lowercase && !LOWERCASE.split('').some((c) => newPassword.includes(c))) {
       ensureChars.push(LOWERCASE[Math.floor(Math.random() * LOWERCASE.length)])
     }
-    if (options.numbers && !NUMBERS.split('').some(c => newPassword.includes(c))) {
+    if (options.numbers && !NUMBERS.split('').some((c) => newPassword.includes(c))) {
       ensureChars.push(NUMBERS[Math.floor(Math.random() * NUMBERS.length)])
     }
-    if (options.symbols && !SYMBOLS.split('').some(c => newPassword.includes(c))) {
+    if (options.symbols && !SYMBOLS.split('').some((c) => newPassword.includes(c))) {
       ensureChars.push(SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)])
     }
 
     // Replace random positions with ensured characters
     if (ensureChars.length > 0) {
       let passwordArray = newPassword.split('')
-      ensureChars.forEach(char => {
+      ensureChars.forEach((char) => {
         const randomPos = Math.floor(Math.random() * passwordArray.length)
         passwordArray[randomPos] = char
       })
@@ -127,8 +127,8 @@ export default function PasswordGeneratorClient() {
   const toggleOption = (option: keyof PasswordOptions) => {
     // Ensure at least one option is always selected
     const newOptions = { ...options, [option]: !options[option] }
-    const hasSelection = Object.values(newOptions).some(v => v)
-    
+    const hasSelection = Object.values(newOptions).some((v) => v)
+
     if (hasSelection) {
       setOptions(newOptions)
     }
@@ -137,30 +137,42 @@ export default function PasswordGeneratorClient() {
   // Get strength color
   const getStrengthColor = () => {
     switch (strength) {
-      case 'weak': return 'bg-red-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'strong': return 'bg-green-500'
-      case 'very-strong': return 'bg-cyan-500'
+      case 'weak':
+        return 'bg-red-500'
+      case 'medium':
+        return 'bg-yellow-500'
+      case 'strong':
+        return 'bg-green-500'
+      case 'very-strong':
+        return 'bg-cyan-500'
     }
   }
 
   // Get strength text
   const getStrengthText = () => {
     switch (strength) {
-      case 'weak': return 'Weak'
-      case 'medium': return 'OK'
-      case 'strong': return 'Strong'
-      case 'very-strong': return 'Excellent'
+      case 'weak':
+        return 'Weak'
+      case 'medium':
+        return 'OK'
+      case 'strong':
+        return 'Strong'
+      case 'very-strong':
+        return 'Excellent'
     }
   }
 
   // Get strength width
   const getStrengthWidth = () => {
     switch (strength) {
-      case 'weak': return '25%'
-      case 'medium': return '50%'
-      case 'strong': return '75%'
-      case 'very-strong': return '100%'
+      case 'weak':
+        return '25%'
+      case 'medium':
+        return '50%'
+      case 'strong':
+        return '75%'
+      case 'very-strong':
+        return '100%'
     }
   }
 
@@ -178,17 +190,22 @@ export default function PasswordGeneratorClient() {
         <div className="mb-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-gray-400">Strength</span>
-            <span className={`text-sm font-medium ${
-              strength === 'weak' ? 'text-red-400' :
-              strength === 'medium' ? 'text-yellow-400' :
-              strength === 'strong' ? 'text-green-400' :
-              'text-cyan-400'
-            }`}>
+            <span
+              className={`text-sm font-medium ${
+                strength === 'weak'
+                  ? 'text-red-400'
+                  : strength === 'medium'
+                    ? 'text-yellow-400'
+                    : strength === 'strong'
+                      ? 'text-green-400'
+                      : 'text-cyan-400'
+              }`}
+            >
               {getStrengthText()}
             </span>
           </div>
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-            <div 
+            <div
               className={`h-full transition-all duration-300 ${getStrengthColor()}`}
               style={{ width: getStrengthWidth() }}
             />
@@ -209,10 +226,10 @@ export default function PasswordGeneratorClient() {
             onClick={handleCopy}
             className={`py-3 rounded-xl font-medium transition-all flex items-center 
                       justify-center gap-2 ${
-              copied
-                ? 'bg-green-500 text-white'
-                : 'bg-white/5 text-gray-300 hover:bg-white/10'
-            }`}
+                        copied
+                          ? 'bg-green-500 text-white'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                      }`}
           >
             {copied ? (
               <>
@@ -245,7 +262,7 @@ export default function PasswordGeneratorClient() {
             onChange={(e) => setLength(Number(e.target.value))}
             className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer slider"
             style={{
-              background: `linear-gradient(to right, rgb(6 182 212) 0%, rgb(6 182 212) ${((length - 8) / 24) * 100}%, rgba(255, 255, 255, 0.1) ${((length - 8) / 24) * 100}%, rgba(255, 255, 255, 0.1) 100%)`
+              background: `linear-gradient(to right, rgb(6 182 212) 0%, rgb(6 182 212) ${((length - 8) / 24) * 100}%, rgba(255, 255, 255, 0.1) ${((length - 8) / 24) * 100}%, rgba(255, 255, 255, 0.1) 100%)`,
             }}
           />
           <div className="flex justify-between text-xs text-gray-400 mt-2">
@@ -259,7 +276,7 @@ export default function PasswordGeneratorClient() {
         {/* Character Options */}
         <div className="space-y-2">
           <label className="text-white font-medium block mb-3">Characters</label>
-          
+
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => toggleOption('uppercase')}

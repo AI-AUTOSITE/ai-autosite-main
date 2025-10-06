@@ -23,32 +23,41 @@ const TIP_PRESETS = [10, 15, 18, 20, 25]
 
 export default function PercentageCalculatorClient() {
   const [activeTab, setActiveTab] = useState<CalculationType>('basic')
-  
+
   // Basic: X% of Y
   const [basicPercent, setBasicPercent] = useState('')
   const [basicValue, setBasicValue] = useState('')
   const [basicResult, setBasicResult] = useState<number | null>(null)
-  
+
   // Change: From X to Y
   const [changeFrom, setChangeFrom] = useState('')
   const [changeTo, setChangeTo] = useState('')
-  const [changeResult, setChangeResult] = useState<{ percent: number; type: 'increase' | 'decrease' } | null>(null)
-  
+  const [changeResult, setChangeResult] = useState<{
+    percent: number
+    type: 'increase' | 'decrease'
+  } | null>(null)
+
   // What: X is what % of Y
   const [whatValue, setWhatValue] = useState('')
   const [whatTotal, setWhatTotal] = useState('')
   const [whatResult, setWhatResult] = useState<number | null>(null)
-  
+
   // Discount
   const [originalPrice, setOriginalPrice] = useState('')
   const [discountPercent, setDiscountPercent] = useState('')
-  const [discountResult, setDiscountResult] = useState<{ final: number; saved: number } | null>(null)
-  
+  const [discountResult, setDiscountResult] = useState<{ final: number; saved: number } | null>(
+    null
+  )
+
   // Tip
   const [billAmount, setBillAmount] = useState('')
   const [tipPercent, setTipPercent] = useState('15')
   const [splitCount, setSplitCount] = useState('1')
-  const [tipResult, setTipResult] = useState<{ tip: number; total: number; perPerson: number } | null>(null)
+  const [tipResult, setTipResult] = useState<{
+    tip: number
+    total: number
+    perPerson: number
+  } | null>(null)
 
   // Calculate Basic Percentage
   useEffect(() => {
@@ -74,7 +83,7 @@ export default function PercentageCalculatorClient() {
         const change = ((to - from) / Math.abs(from)) * 100
         setChangeResult({
           percent: Math.abs(change),
-          type: change >= 0 ? 'increase' : 'decrease'
+          type: change >= 0 ? 'increase' : 'decrease',
         })
       } else {
         setChangeResult(null)
@@ -108,7 +117,7 @@ export default function PercentageCalculatorClient() {
         const saved = (discount / 100) * price
         setDiscountResult({
           saved: saved,
-          final: price - saved
+          final: price - saved,
         })
       } else {
         setDiscountResult(null)
@@ -130,7 +139,7 @@ export default function PercentageCalculatorClient() {
         setTipResult({
           tip: tipAmount,
           total: total,
-          perPerson: total / split
+          perPerson: total / split,
         })
       } else {
         setTipResult(null)
@@ -159,7 +168,7 @@ export default function PercentageCalculatorClient() {
       {/* Tab Navigation - Tool First */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-1.5 mb-6">
         <div className="flex gap-1">
-          {TABS.map(tab => (
+          {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -207,9 +216,7 @@ export default function PercentageCalculatorClient() {
             {basicResult !== null && (
               <div className="bg-cyan-600/20 rounded-xl p-4 border border-cyan-600/30">
                 <p className="text-gray-400 text-sm mb-1">Result</p>
-                <p className="text-3xl font-bold text-white">
-                  {basicResult.toFixed(2)}
-                </p>
+                <p className="text-3xl font-bold text-white">{basicResult.toFixed(2)}</p>
                 <p className="text-gray-400 text-sm mt-1">
                   {basicPercent}% of {basicValue} = {basicResult.toFixed(2)}
                 </p>
@@ -245,11 +252,13 @@ export default function PercentageCalculatorClient() {
               </div>
             </div>
             {changeResult && (
-              <div className={`${
-                changeResult.type === 'increase' 
-                  ? 'bg-green-500/20 border-green-500/30' 
-                  : 'bg-red-500/20 border-red-500/30'
-              } rounded-xl p-4 border`}>
+              <div
+                className={`${
+                  changeResult.type === 'increase'
+                    ? 'bg-green-500/20 border-green-500/30'
+                    : 'bg-red-500/20 border-red-500/30'
+                } rounded-xl p-4 border`}
+              >
                 <p className="text-gray-400 text-sm mb-1">
                   {changeResult.type === 'increase' ? 'Increase' : 'Decrease'}
                 </p>
@@ -298,9 +307,7 @@ export default function PercentageCalculatorClient() {
             {whatResult !== null && (
               <div className="bg-cyan-600/20 rounded-xl p-4 border border-cyan-600/30">
                 <p className="text-gray-400 text-sm mb-1">Result</p>
-                <p className="text-3xl font-bold text-white">
-                  {whatResult.toFixed(2)}%
-                </p>
+                <p className="text-3xl font-bold text-white">{whatResult.toFixed(2)}%</p>
                 <p className="text-gray-400 text-sm mt-1">
                   {whatValue} is {whatResult.toFixed(2)}% of {whatTotal}
                 </p>
@@ -370,11 +377,11 @@ export default function PercentageCalculatorClient() {
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-400 text-sm mb-2">Tip %</label>
               <div className="flex gap-2 mb-3">
-                {TIP_PRESETS.map(preset => (
+                {TIP_PRESETS.map((preset) => (
                   <button
                     key={preset}
                     onClick={() => setTipPercent(preset.toString())}
@@ -396,7 +403,7 @@ export default function PercentageCalculatorClient() {
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-400 text-sm mb-1">Split Between</label>
               <input
@@ -408,21 +415,17 @@ export default function PercentageCalculatorClient() {
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
               />
             </div>
-            
+
             {tipResult && (
               <div className="bg-cyan-600/20 rounded-xl p-4 border border-cyan-600/30">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Tip</p>
-                    <p className="text-2xl font-bold text-white">
-                      ${tipResult.tip.toFixed(2)}
-                    </p>
+                    <p className="text-2xl font-bold text-white">${tipResult.tip.toFixed(2)}</p>
                   </div>
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Total</p>
-                    <p className="text-2xl font-bold text-white">
-                      ${tipResult.total.toFixed(2)}
-                    </p>
+                    <p className="text-2xl font-bold text-white">${tipResult.total.toFixed(2)}</p>
                   </div>
                   {parseInt(splitCount) > 1 && (
                     <div>

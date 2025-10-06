@@ -24,7 +24,7 @@ export default function AgeCalculatorClient() {
 
     const birth = new Date(date)
     const today = new Date()
-    
+
     // Check if date is valid and not in future
     if (birth > today) {
       setAge(null)
@@ -55,14 +55,16 @@ export default function AgeCalculatorClient() {
     if (nextBirthday < today) {
       nextBirthday.setFullYear(today.getFullYear() + 1)
     }
-    const daysUntilBirthday = Math.floor((nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+    const daysUntilBirthday = Math.floor(
+      (nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+    )
 
     setAge({
       years,
       months,
       days,
       daysUntilBirthday,
-      totalDays
+      totalDays,
     })
   }
 
@@ -74,15 +76,13 @@ export default function AgeCalculatorClient() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-
-
       {/* Date Input - Main Focus */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-purple-400" />
           <label className="text-white font-medium">Your Birthday</label>
         </div>
-        
+
         <input
           type="date"
           value={birthDate}
@@ -95,7 +95,7 @@ export default function AgeCalculatorClient() {
                      cursor-pointer hover:bg-white/10"
           placeholder="Select your birthday"
         />
-        
+
         {birthDate && new Date(birthDate) > new Date() && (
           <p className="text-red-400 text-sm mt-3 flex items-center gap-1">
             <span>⚠️</span> Please select a past date
@@ -122,12 +122,14 @@ export default function AgeCalculatorClient() {
               <p className="text-2xl font-bold text-white">{age.totalDays.toLocaleString()}</p>
               <p className="text-gray-400 text-xs">Days old</p>
             </div>
-            
+
             <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 text-center">
-              <p className="text-2xl font-bold text-white">{(age.totalDays * 24).toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">
+                {(age.totalDays * 24).toLocaleString()}
+              </p>
               <p className="text-gray-400 text-xs">Hours lived</p>
             </div>
-            
+
             <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 text-center">
               <div className="flex items-center justify-center gap-1">
                 <Gift className="w-4 h-4 text-pink-400" />

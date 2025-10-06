@@ -19,12 +19,12 @@ export default function ColorPaletteClient() {
     const baseHue = Math.floor(Math.random() * 360)
     const paletteTypes = ['analogous', 'complementary', 'triadic', 'monochromatic']
     const type = paletteTypes[Math.floor(Math.random() * paletteTypes.length)]
-    
+
     const newColors: Color[] = []
-    
+
     for (let i = 0; i < 5; i++) {
       let hue = baseHue
-      
+
       switch (type) {
         case 'analogous':
           hue = (baseHue + i * 30) % 360
@@ -40,33 +40,33 @@ export default function ColorPaletteClient() {
           hue = baseHue
           break
       }
-      
-      const saturation = type === 'monochromatic' 
-        ? 60 + (i * 8) 
-        : Math.floor(Math.random() * 30) + 50
-      const lightness = 30 + (i * 12)
-      
+
+      const saturation = type === 'monochromatic' ? 60 + i * 8 : Math.floor(Math.random() * 30) + 50
+      const lightness = 30 + i * 12
+
       // Convert HSL to HEX
       const hslToHex = (h: number, s: number, l: number): string => {
         l /= 100
-        const a = s * Math.min(l, 1 - l) / 100
+        const a = (s * Math.min(l, 1 - l)) / 100
         const f = (n: number) => {
           const k = (n + h / 30) % 12
           const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
-          return Math.round(255 * color).toString(16).padStart(2, '0')
+          return Math.round(255 * color)
+            .toString(16)
+            .padStart(2, '0')
         }
         return `#${f(0)}${f(8)}${f(4)}`
       }
-      
+
       const existingColor = colors[i]
-      
+
       newColors.push({
         id: Math.random().toString(36).substr(2, 9),
         hex: existingColor?.locked ? existingColor.hex : hslToHex(hue, saturation, lightness),
-        locked: existingColor?.locked || false
+        locked: existingColor?.locked || false,
       })
     }
-    
+
     setColors(newColors)
   }, [colors])
 
@@ -90,7 +90,7 @@ export default function ColorPaletteClient() {
 
   // Copy all colors
   const copyAllColors = async () => {
-    const allColors = colors.map(c => c.hex).join(', ')
+    const allColors = colors.map((c) => c.hex).join(', ')
     try {
       await navigator.clipboard.writeText(allColors)
       setCopiedAll(true)
@@ -102,11 +102,9 @@ export default function ColorPaletteClient() {
 
   // Toggle lock on color
   const toggleLock = (colorId: string) => {
-    setColors(prev => prev.map(color => 
-      color.id === colorId 
-        ? { ...color, locked: !color.locked }
-        : color
-    ))
+    setColors((prev) =>
+      prev.map((color) => (color.id === colorId ? { ...color, locked: !color.locked } : color))
+    )
   }
 
   // Get text color based on background
@@ -134,7 +132,6 @@ export default function ColorPaletteClient() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Color Display - Large and Prominent */}
         <div className="grid grid-cols-5 gap-3 mb-6">
           {colors.map((color) => (
@@ -155,11 +152,7 @@ export default function ColorPaletteClient() {
                            opacity-0 group-hover:opacity-100 transition-opacity"
                   style={{ color: getTextColor(color.hex) }}
                 >
-                  {color.locked ? (
-                    <Lock className="w-3 h-3" />
-                  ) : (
-                    <Unlock className="w-3 h-3" />
-                  )}
+                  {color.locked ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
                 </button>
 
                 {/* Copied indicator */}
@@ -170,8 +163,10 @@ export default function ColorPaletteClient() {
                 )}
 
                 {/* HEX code on hover */}
-                <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/40 backdrop-blur
-                              opacity-0 group-hover:opacity-100 transition-opacity">
+                <div
+                  className="absolute bottom-0 left-0 right-0 p-2 bg-black/40 backdrop-blur
+                              opacity-0 group-hover:opacity-100 transition-opacity"
+                >
                   <code className="text-white text-xs font-mono block text-center">
                     {color.hex}
                   </code>
@@ -184,7 +179,7 @@ export default function ColorPaletteClient() {
         {/* HEX codes display */}
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
           {colors.map((color) => (
-            <code 
+            <code
               key={color.id}
               onClick={() => copyColor(color)}
               className="text-white text-xs font-mono bg-black/20 px-2 py-1 rounded cursor-pointer
@@ -209,9 +204,7 @@ export default function ColorPaletteClient() {
           <button
             onClick={copyAllColors}
             className={`px-6 py-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
-              copiedAll
-                ? 'bg-green-500 text-white'
-                : 'bg-white/10 text-white hover:bg-white/20'
+              copiedAll ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
             {copiedAll ? (
@@ -235,20 +228,20 @@ export default function ColorPaletteClient() {
           {/* Simple gradient preview */}
           <div className="flex-1">
             <p className="text-xs text-gray-400 mb-2">Gradient Preview</p>
-            <div 
+            <div
               className="h-12 rounded-lg"
-              style={{ 
-                background: `linear-gradient(90deg, ${colors.map(c => c.hex).join(', ')})` 
+              style={{
+                background: `linear-gradient(90deg, ${colors.map((c) => c.hex).join(', ')})`,
               }}
             />
           </div>
-          
+
           {/* Color blocks preview */}
           <div className="flex-1 ml-4">
             <p className="text-xs text-gray-400 mb-2">UI Example</p>
             <div className="flex gap-1">
               {colors.slice(0, 3).map((color, i) => (
-                <div 
+                <div
                   key={i}
                   className="h-12 flex-1 rounded"
                   style={{ backgroundColor: color.hex }}

@@ -1,12 +1,12 @@
 // app/tools/unit-converter/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Ruler,
   Scale,
   Thermometer,
@@ -18,28 +18,28 @@ import {
   Calculator,
   Lightbulb,
   Target,
-  Info
-} from 'lucide-react';
+  Info,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function UnitConverterGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const conversionExamples = {
-    mile_to_km: "1 mile = 1.609 km",
-    pound_to_kg: "1 pound = 454 grams",
-    celsius_to_fahrenheit: "0°C = 32°F",
-    cup_to_ml: "1 cup = 237 mL"
-  };
+    mile_to_km: '1 mile = 1.609 km',
+    pound_to_kg: '1 pound = 454 grams',
+    celsius_to_fahrenheit: '0°C = 32°F',
+    cup_to_ml: '1 cup = 237 mL',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -80,10 +80,9 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
         {/* Categories Overview */}
         <div>
           <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-cyan-400" />
-            4 Conversion Categories
+            <Calculator className="w-5 h-5 text-cyan-400" />4 Conversion Categories
           </h4>
-          
+
           <div className="grid grid-cols-2 gap-3">
             {/* Length */}
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
@@ -97,16 +96,14 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
                 </div>
               </div>
             </div>
-            
+
             {/* Weight */}
             <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
               <div className="flex items-start gap-2">
                 <Scale className="w-5 h-5 text-green-400 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-white">Weight</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Kilograms, pounds, ounces, grams
-                  </p>
+                  <p className="text-xs text-gray-400 mt-1">Kilograms, pounds, ounces, grams</p>
                 </div>
               </div>
             </div>
@@ -117,9 +114,7 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
                 <Thermometer className="w-5 h-5 text-orange-400 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-white">Temperature</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Celsius, Fahrenheit, Kelvin
-                  </p>
+                  <p className="text-xs text-gray-400 mt-1">Celsius, Fahrenheit, Kelvin</p>
                 </div>
               </div>
             </div>
@@ -130,9 +125,7 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
                 <Droplets className="w-5 h-5 text-cyan-400 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-white">Volume</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Liters, gallons, cups, tablespoons
-                  </p>
+                  <p className="text-xs text-gray-400 mt-1">Liters, gallons, cups, tablespoons</p>
                 </div>
               </div>
             </div>
@@ -145,7 +138,7 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
             <Globe className="w-5 h-5 text-purple-400" />
             Most Used Conversions
           </h4>
-          
+
           <div className="space-y-2">
             {/* Mile to Km */}
             <div className="bg-gray-800/50 border border-white/10 rounded-lg p-3">
@@ -166,7 +159,7 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
                 </button>
               </div>
             </div>
-            
+
             {/* Pound to Kg */}
             <div className="bg-gray-800/50 border border-white/10 rounded-lg p-3">
               <div className="flex items-center justify-between">
@@ -192,10 +185,14 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-400 mb-1">Weather & Cooking</p>
-                  <p className="text-sm text-white font-mono">{conversionExamples.celsius_to_fahrenheit}</p>
+                  <p className="text-sm text-white font-mono">
+                    {conversionExamples.celsius_to_fahrenheit}
+                  </p>
                 </div>
                 <button
-                  onClick={() => handleCopy(conversionExamples.celsius_to_fahrenheit, 'celsius_to_fahrenheit')}
+                  onClick={() =>
+                    handleCopy(conversionExamples.celsius_to_fahrenheit, 'celsius_to_fahrenheit')
+                  }
                   className="p-1.5 hover:bg-white/10 rounded transition-colors"
                 >
                   {copiedExample === 'celsius_to_fahrenheit' ? (
@@ -244,19 +241,17 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
               </span>
               <div>
                 <p className="font-medium text-white">Enter Value</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Type the number you want to convert
-                </p>
+                <p className="text-sm text-gray-400 mt-1">Type the number you want to convert</p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -353,7 +348,7 @@ export default function UnitConverterGuide({ onClose }: GuideProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -361,4 +356,4 @@ export const guideMetadata = {
   title: 'Unit Converter Guide',
   icon: '📏',
   available: true,
-};
+}

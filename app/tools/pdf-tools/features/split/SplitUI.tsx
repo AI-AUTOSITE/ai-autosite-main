@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { Scissors } from 'lucide-react';
+import { useState } from 'react'
+import { Scissors } from 'lucide-react'
 
 interface SplitUIProps {
-  totalPages: number;
-  selectedPages: Set<string>;
-  onSplit: (mode: 'extract' | 'range' | 'single') => void;
+  totalPages: number
+  selectedPages: Set<string>
+  onSplit: (mode: 'extract' | 'range' | 'single') => void
 }
 
 export function SplitUI({ totalPages, selectedPages, onSplit }: SplitUIProps) {
-  const [range, setRange] = useState('');
-  
+  const [range, setRange] = useState('')
+
   return (
     <div className="p-4 bg-gray-800 rounded-lg">
       <div className="flex items-center mb-4">
         <Scissors className="w-5 h-5 text-orange-400 mr-2" />
         <h3 className="font-semibold">Split PDF</h3>
       </div>
-      
+
       <div className="space-y-3">
         <button
           onClick={() => onSplit('extract')}
@@ -25,22 +25,20 @@ export function SplitUI({ totalPages, selectedPages, onSplit }: SplitUIProps) {
         >
           <div className="font-medium">Extract Selected</div>
           <div className="text-sm text-gray-400">
-            {selectedPages.size > 0 
+            {selectedPages.size > 0
               ? `Extract ${selectedPages.size} selected pages`
               : 'Select pages first'}
           </div>
         </button>
-        
+
         <button
           onClick={() => onSplit('single')}
           className="w-full p-3 bg-gray-700 rounded hover:bg-gray-600 transition text-left"
         >
           <div className="font-medium">Split All Pages</div>
-          <div className="text-sm text-gray-400">
-            Create {totalPages} individual PDFs
-          </div>
+          <div className="text-sm text-gray-400">Create {totalPages} individual PDFs</div>
         </button>
-        
+
         <div>
           <input
             type="text"
@@ -58,5 +56,5 @@ export function SplitUI({ totalPages, selectedPages, onSplit }: SplitUIProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

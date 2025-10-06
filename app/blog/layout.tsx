@@ -4,21 +4,18 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Knowledge Hub - Guides & Tutorials | AI AutoSite',
-  description: 'Expert guides on AI tools, development, and productivity. Learn how to use our free tools effectively.',
+  description:
+    'Expert guides on AI tools, development, and productivity. Learn how to use our free tools effectively.',
   keywords: 'AI tools guide, developer tutorials, productivity tips, tech blog',
   openGraph: {
     title: 'Knowledge Hub - AI AutoSite Blog',
     description: 'Expert guides and tutorials for modern development tools',
     type: 'website',
     url: 'https://ai-autosite.com/blog',
-  }
+  },
 }
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col">
       {/* Background animations */}
@@ -31,9 +28,7 @@ export default function BlogLayout({
       <Header />
 
       {/* Main Content */}
-      <main className="relative z-10 flex-1">
-        {children}
-      </main>
+      <main className="relative z-10 flex-1">{children}</main>
 
       {/* Common Footer */}
       <Footer />

@@ -1,7 +1,15 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Copy, Upload, Check, Image as ImageIcon, FileText, ArrowRight, ArrowLeft } from 'lucide-react'
+import {
+  Copy,
+  Upload,
+  Check,
+  Image as ImageIcon,
+  FileText,
+  ArrowRight,
+  ArrowLeft,
+} from 'lucide-react'
 
 type Mode = 'encode' | 'decode'
 
@@ -11,7 +19,9 @@ export default function Base64Client() {
   const [output, setOutput] = useState('')
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState('')
-  const [fileInfo, setFileInfo] = useState<{ name: string; size: number; type: string } | null>(null)
+  const [fileInfo, setFileInfo] = useState<{ name: string; size: number; type: string } | null>(
+    null
+  )
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   // Encode text to Base64
@@ -46,15 +56,14 @@ export default function Base64Client() {
 
   // Check if Base64 is an image
   const isBase64Image = (base64: string): boolean => {
-    return base64.startsWith('data:image/') || 
-           (isBase64(base64) && base64.length > 100)
+    return base64.startsWith('data:image/') || (isBase64(base64) && base64.length > 100)
   }
 
   // Process input
   const processInput = useCallback(() => {
     setError('')
     setImagePreview(null)
-    
+
     if (!input.trim()) {
       setOutput('')
       return
@@ -70,7 +79,7 @@ export default function Base64Client() {
           const base64Part = input.split(',')[1]
           const decoded = decodeText(base64Part)
           setOutput(decoded)
-          
+
           // If it's an image, show preview
           if (input.startsWith('data:image/')) {
             setImagePreview(input)
@@ -78,7 +87,7 @@ export default function Base64Client() {
         } else {
           const decoded = decodeText(input)
           setOutput(decoded)
-          
+
           // Try to create image preview if it looks like image data
           if (isBase64Image(input)) {
             try {
@@ -120,20 +129,20 @@ export default function Base64Client() {
     setFileInfo({
       name: file.name,
       size: file.size,
-      type: file.type
+      type: file.type,
     })
 
     try {
       const reader = new FileReader()
-      
+
       reader.onload = (event) => {
         const result = event.target?.result
-        
+
         if (mode === 'encode') {
           if (typeof result === 'string') {
             setInput(result)
             setOutput(result.split(',')[1] || '')
-            
+
             if (file.type.startsWith('image/')) {
               setImagePreview(result)
             }
@@ -160,7 +169,7 @@ export default function Base64Client() {
   // Copy to clipboard
   const handleCopy = async () => {
     if (!output) return
-    
+
     try {
       await navigator.clipboard.writeText(output)
       setCopied(true)
@@ -182,14 +191,13 @@ export default function Base64Client() {
   // Sample texts for quick testing
   const sampleTexts = {
     encode: 'Hello, World!',
-    decode: 'SGVsbG8sIFdvcmxkIQ=='
+    decode: 'SGVsbG8sIFdvcmxkIQ==',
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Mode Selector - Simplified */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex bg-white/10 rounded-xl p-1">
@@ -261,9 +269,7 @@ export default function Base64Client() {
                 ) : (
                   <FileText className="w-4 h-4 text-gray-400" />
                 )}
-                <span className="text-xs text-gray-300 truncate">
-                  {fileInfo.name}
-                </span>
+                <span className="text-xs text-gray-300 truncate">{fileInfo.name}</span>
                 <span className="text-xs text-gray-500">
                   ({(fileInfo.size / 1024).toFixed(1)}KB)
                 </span>
@@ -276,9 +282,11 @@ export default function Base64Client() {
                 setInput(e.target.value)
                 setFileInfo(null)
               }}
-              placeholder={mode === 'encode' 
-                ? 'Enter text or upload file...\n\nExample: Hello, World!' 
-                : 'Enter Base64 string...\n\nExample: SGVsbG8sIFdvcmxkIQ=='}
+              placeholder={
+                mode === 'encode'
+                  ? 'Enter text or upload file...\n\nExample: Hello, World!'
+                  : 'Enter Base64 string...\n\nExample: SGVsbG8sIFdvcmxkIQ=='
+              }
               className="w-full h-48 p-3 bg-white/10 border border-white/20 rounded-xl text-white 
                          placeholder-gray-400 focus:outline-none focus:border-indigo-400 
                          transition-colors resize-none font-mono text-sm hover:bg-white/15"
@@ -307,8 +315,8 @@ export default function Base64Client() {
                 <button
                   onClick={handleCopy}
                   className={`px-2 py-1 text-xs rounded transition-all flex items-center gap-1 ${
-                    copied 
-                      ? 'bg-green-500 text-white' 
+                    copied
+                      ? 'bg-green-500 text-white'
                       : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -362,9 +370,9 @@ export default function Base64Client() {
         {imagePreview && (
           <div className="mt-4 p-4 bg-black/30 rounded-xl animate-fadeIn">
             <p className="text-xs text-gray-400 mb-2">Image Preview</p>
-            <img 
-              src={imagePreview} 
-              alt="Preview" 
+            <img
+              src={imagePreview}
+              alt="Preview"
               className="max-w-full max-h-64 rounded-lg mx-auto"
               onError={() => setImagePreview(null)}
             />

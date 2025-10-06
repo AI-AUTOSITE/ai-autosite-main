@@ -7,47 +7,47 @@ export const toolGuide = {
   steps: [
     { icon: '1', text: 'Paste your code in the input area' },
     { icon: '2', text: 'Choose your mode: Roast, Explain, or Fix' },
-    { icon: '3', text: 'Get instant AI-powered feedback' }
+    { icon: '3', text: 'Get instant AI-powered feedback' },
   ],
   tips: [
     'Keep code under 10,000 characters',
     'English code only (no CJK characters)',
-    'You have 3 attempts per day'
+    'You have 3 attempts per day',
   ],
   modes: [
     {
       icon: Flame,
       name: 'Roast Mode',
       color: 'text-orange-500',
-      description: 'Get brutally honest feedback with humor'
+      description: 'Get brutally honest feedback with humor',
     },
     {
       icon: BookOpen,
-      name: 'Explain Mode', 
+      name: 'Explain Mode',
       color: 'text-blue-500',
-      description: 'Understand your code step by step'
+      description: 'Understand your code step by step',
     },
     {
       icon: Wrench,
       name: 'Fix Mode',
       color: 'text-green-500',
-      description: 'Get bugs fixed and code improved'
-    }
+      description: 'Get bugs fixed and code improved',
+    },
   ],
   troubleshooting: [
-    { 
-      problem: 'Daily limit reached', 
-      solution: 'Wait 24 hours for reset (3 attempts/day)' 
+    {
+      problem: 'Daily limit reached',
+      solution: 'Wait 24 hours for reset (3 attempts/day)',
     },
-    { 
-      problem: 'Code not accepted', 
-      solution: 'Check for non-English characters' 
+    {
+      problem: 'Code not accepted',
+      solution: 'Check for non-English characters',
     },
     {
       problem: 'No response',
-      solution: 'Check internet connection and try again'
-    }
-  ]
+      solution: 'Check internet connection and try again',
+    },
+  ],
 }
 
 interface GuideProps {
@@ -80,8 +80,10 @@ export default function CodeRoasterGuide({ onClose }: GuideProps) {
         <div className="space-y-2">
           {toolGuide.steps.map((step, index) => (
             <div key={index} className="flex items-center gap-3">
-              <span className="w-7 h-7 rounded-full bg-purple-500/20 text-purple-400 
-                             flex items-center justify-center text-sm font-bold">
+              <span
+                className="w-7 h-7 rounded-full bg-purple-500/20 text-purple-400 
+                             flex items-center justify-center text-sm font-bold"
+              >
                 {step.icon}
               </span>
               <span className="text-gray-300 text-sm">{step.text}</span>
@@ -133,9 +135,7 @@ export default function CodeRoasterGuide({ onClose }: GuideProps) {
             <div key={index} className="text-sm">
               <span className="text-red-400">Issue:</span>
               <span className="text-gray-300 ml-2">{item.problem}</span>
-              <div className="text-gray-400 ml-4 text-xs mt-1">
-                → {item.solution}
-              </div>
+              <div className="text-gray-400 ml-4 text-xs mt-1">→ {item.solution}</div>
             </div>
           ))}
         </div>

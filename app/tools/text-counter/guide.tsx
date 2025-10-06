@@ -1,12 +1,12 @@
 // app/tools/text-counter/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Type,
   Twitter,
   MessageSquare,
@@ -18,28 +18,28 @@ import {
   Lightbulb,
   Target,
   Info,
-  TrendingUp
-} from 'lucide-react';
+  TrendingUp,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function TextCounterGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const platformLimits = {
-    twitter: { limit: 280, name: "Twitter/X" },
-    sms: { limit: 160, name: "SMS" },
-    metaDescription: { limit: 155, name: "Meta Description" },
-    instagram: { limit: 2200, name: "Instagram Caption" }
-  };
+    twitter: { limit: 280, name: 'Twitter/X' },
+    sms: { limit: 160, name: 'SMS' },
+    metaDescription: { limit: 155, name: 'Meta Description' },
+    instagram: { limit: 2200, name: 'Instagram Caption' },
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -83,14 +83,14 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
             <Hash className="w-5 h-5 text-purple-400" />
             What This Tool Counts
           </h4>
-          
+
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
               <BookOpen className="w-4 h-4 text-blue-400 mb-1" />
               <p className="text-sm font-medium text-white">Words</p>
               <p className="text-xs text-gray-400">Space-separated text</p>
             </div>
-            
+
             <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
               <Hash className="w-4 h-4 text-purple-400 mb-1" />
               <p className="text-sm font-medium text-white">Characters</p>
@@ -117,7 +117,7 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
             <Twitter className="w-5 h-5 text-blue-400" />
             Platform Character Limits
           </h4>
-          
+
           <div className="space-y-2">
             {Object.entries(platformLimits).map(([key, platform]) => (
               <div key={key} className="bg-gray-800/50 border border-white/10 rounded-lg p-3">
@@ -163,12 +163,10 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
               </span>
               <div>
                 <p className="font-medium text-white">Type or Paste Text</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Enter your content in the text area
-                </p>
+                <p className="text-sm text-gray-400 mt-1">Enter your content in the text area</p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -180,7 +178,7 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -199,9 +197,7 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
               </span>
               <div>
                 <p className="font-medium text-white">Copy Your Text</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  One-click copy when you're done
-                </p>
+                <p className="text-sm text-gray-400 mt-1">One-click copy when you're done</p>
               </div>
             </li>
           </ol>
@@ -298,16 +294,16 @@ export default function TextCounterGuide({ onClose }: GuideProps) {
             <div className="text-sm">
               <p className="text-white font-medium mb-1">Did You Know?</p>
               <p className="text-gray-400 text-xs">
-                The average English word is 4.5 characters long. This tool counts 
-                sentences by periods, exclamation marks, and question marks. 
-                Paragraphs are detected by double line breaks.
+                The average English word is 4.5 characters long. This tool counts sentences by
+                periods, exclamation marks, and question marks. Paragraphs are detected by double
+                line breaks.
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -315,4 +311,4 @@ export const guideMetadata = {
   title: 'Text Counter Guide',
   icon: '📝',
   available: true,
-};
+}

@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://ai-autosite.com'
-  
+
   // 44個のツール
   const tools = [
     'age-calculator',
@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter',
     'uuid-generator',
     'whatsapp-link',
-    'youtube-thumbnail'
+    'youtube-thumbnail',
   ]
 
   // ブログ記事
@@ -97,7 +97,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter-guide',
     'uuid-generator-guide',
     'whatsapp-link-generator-guide',
-    'youtube-thumbnail-guide'
+    'youtube-thumbnail-guide',
   ]
 
   // 高優先度ツール
@@ -113,9 +113,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'pdf-summarizer',
     'pdf-tools',
     'stack-recommender',
-    'tech-stack-analyzer'
+    'tech-stack-analyzer',
   ]
-  
+
   return [
     {
       url: baseUrl,
@@ -136,18 +136,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     // ツールページ（優先度別）
-    ...tools.map(tool => ({
+    ...tools.map((tool) => ({
       url: `${baseUrl}/tools/${tool}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: highPriorityTools.includes(tool) ? 0.9 : 0.7,
     })),
     // ブログ記事
-    ...blogPosts.map(slug => ({
+    ...blogPosts.map((slug) => ({
       url: `${baseUrl}/blog/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
-    }))
+    })),
   ]
 }

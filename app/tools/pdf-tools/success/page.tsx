@@ -1,28 +1,28 @@
 // app/tools/pdf-tools/success/page.tsx
-'use client';
+'use client'
 
-import { Suspense } from 'react';
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { CheckCircle, Loader, XCircle, Download, ArrowRight } from 'lucide-react';
-import { LicenseManager } from '../lib/licenseManager';
+import { Suspense } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { CheckCircle, Loader, XCircle, Download, ArrowRight } from 'lucide-react'
+import { LicenseManager } from '../lib/licenseManager'
 
 // メインのコンテンツコンポーネント（useSearchParamsを使用）
 function PaymentSuccessContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('');
-  const [licenseInfo, setLicenseInfo] = useState<any>(null);
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
+  const [message, setMessage] = useState('')
+  const [licenseInfo, setLicenseInfo] = useState<any>(null)
 
   useEffect(() => {
     const verifyPayment = async () => {
-      const sessionId = searchParams.get('session_id');
-      
+      const sessionId = searchParams.get('session_id')
+
       if (!sessionId) {
-        setStatus('error');
-        setMessage('Invalid payment session');
-        return;
+        setStatus('error')
+        setMessage('Invalid payment session')
+        return
       }
 
       try {
@@ -33,54 +33,54 @@ function PaymentSuccessContent() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ sessionId }),
-        });
+        })
 
-        const data = await response.json();
+        const data = await response.json()
 
         if (data.success && data.license) {
           // Save license to local storage
-          LicenseManager.saveLicense(data.license);
-          
-          setStatus('success');
-          setMessage('Payment successful! Your premium features are now active.');
-          setLicenseInfo(data.license);
-          
+          LicenseManager.saveLicense(data.license)
+
+          setStatus('success')
+          setMessage('Payment successful! Your premium features are now active.')
+          setLicenseInfo(data.license)
+
           // Auto redirect after 5 seconds
           setTimeout(() => {
-            router.push('/tools/pdf-tools');
-          }, 5000);
+            router.push('/tools/pdf-tools')
+          }, 5000)
         } else {
-          throw new Error(data.error || 'Payment verification failed');
+          throw new Error(data.error || 'Payment verification failed')
         }
       } catch (error) {
-        console.error('Payment verification error:', error);
-        setStatus('error');
-        setMessage('Failed to verify payment. Please contact support with your session ID.');
+        console.error('Payment verification error:', error)
+        setStatus('error')
+        setMessage('Failed to verify payment. Please contact support with your session ID.')
       }
-    };
+    }
 
-    verifyPayment();
-  }, [searchParams, router]);
+    verifyPayment()
+  }, [searchParams, router])
 
   // Download license backup
   const downloadLicenseBackup = () => {
-    if (!licenseInfo) return;
-    
+    if (!licenseInfo) return
+
     const backup = {
       product: 'PDF Tools Premium',
       license: licenseInfo.token,
       purchasedAt: licenseInfo.purchasedAt,
       email: licenseInfo.email,
-    };
-    
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pdf-tools-license-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+    }
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `pdf-tools-license-${Date.now()}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
@@ -99,7 +99,7 @@ function PaymentSuccessContent() {
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-white mb-2">Payment Successful!</h2>
               <p className="text-gray-300 mb-6">{message}</p>
-              
+
               <div className="bg-gray-700 rounded-lg p-4 mb-6 text-left">
                 <h3 className="text-sm font-semibold text-cyan-400 mb-2">Your Premium Features:</h3>
                 <ul className="space-y-1 text-sm text-gray-300">
@@ -132,7 +132,7 @@ function PaymentSuccessContent() {
                 Go to PDF Editor
                 <ArrowRight className="w-4 h-4" />
               </button>
-              
+
               <p className="text-xs text-gray-500 mt-4">
                 Redirecting automatically in 5 seconds...
               </p>
@@ -144,7 +144,7 @@ function PaymentSuccessContent() {
               <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-white mb-2">Payment Verification Failed</h2>
               <p className="text-gray-400 mb-6">{message}</p>
-              
+
               <div className="space-y-3">
                 <button
                   onClick={() => router.push('/tools/pdf-tools')}
@@ -161,7 +161,7 @@ function PaymentSuccessContent() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 function LoadingFallback() {
   return (
@@ -176,12 +176,12 @@ function LoadingFallback() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 export default function PaymentSuccessPage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <PaymentSuccessContent />
     </Suspense>
-  );
+  )
 }

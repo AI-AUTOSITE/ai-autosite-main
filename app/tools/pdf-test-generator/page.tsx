@@ -37,7 +37,7 @@ export default function PDFTestGeneratorPage() {
 
     setLoading(true)
     setError('')
-    
+
     try {
       const { jsPDF } = (window as any).jspdf
       const doc = new jsPDF()
@@ -45,46 +45,45 @@ export default function PDFTestGeneratorPage() {
       if (type === 'short') {
         doc.setFontSize(20)
         doc.text('Short Test Document', 20, 20)
-        
+
         doc.setFontSize(12)
         doc.text('This is a short test PDF for validation purposes.', 20, 40)
         doc.text('It contains approximately 200 words to test the "Short" summary mode.', 20, 50)
-        
+
         doc.text('Key Points:', 20, 70)
         doc.text('- This document tests basic PDF text extraction', 25, 80)
         doc.text('- It should generate a concise bullet-point summary', 25, 90)
         doc.text('- The summary should be 100-200 words', 25, 100)
-        
+
         doc.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 20, 120)
         doc.text('Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 20, 130)
         doc.text('Ut enim ad minim veniam, quis nostrud exercitation ullamco.', 20, 140)
-        
+
         doc.save('test-short.pdf')
-      } 
-      else if (type === 'medium') {
+      } else if (type === 'medium') {
         doc.setFontSize(20)
         doc.text('Medium Test Document', 20, 20)
-        
+
         doc.setFontSize(16)
         doc.text('Executive Summary', 20, 40)
         doc.setFontSize(12)
         doc.text('This medium-length document is designed to test the PDF summarizer', 20, 55)
         doc.text('with approximately 800 words of content across multiple sections.', 20, 63)
-        
+
         doc.text('Section 1: Introduction', 20, 85)
         const intro = [
           'Artificial intelligence has revolutionized many industries in recent years.',
           'Machine learning algorithms can now process vast amounts of data efficiently.',
           'Natural language processing enables computers to understand human language.',
           'Deep learning models have achieved remarkable results in image recognition.',
-          'The field continues to evolve with new breakthroughs every year.'
+          'The field continues to evolve with new breakthroughs every year.',
         ]
         let y = 95
-        intro.forEach(line => {
+        intro.forEach((line) => {
           doc.text(line, 20, y)
           y += 8
         })
-        
+
         doc.text('Section 2: Key Findings', 20, y + 10)
         y += 20
         const findings = [
@@ -92,13 +91,13 @@ export default function PDFTestGeneratorPage() {
           '2. Companies using AI report 25% higher productivity',
           '3. Investment in AI research reached $50 billion globally',
           '4. 75% of businesses plan to implement AI by 2025',
-          '5. Job market demands for AI skills grew by 400%'
+          '5. Job market demands for AI skills grew by 400%',
         ]
-        findings.forEach(line => {
+        findings.forEach((line) => {
           doc.text(line, 20, y)
           y += 8
         })
-        
+
         doc.addPage()
         doc.setFontSize(16)
         doc.text('Section 3: Recommendations', 20, 20)
@@ -109,38 +108,37 @@ export default function PDFTestGeneratorPage() {
           '2. Start with small pilot projects',
           '3. Establish data governance policies',
           '4. Collaborate with technology partners',
-          '5. Monitor AI performance regularly'
+          '5. Monitor AI performance regularly',
         ]
         y = 50
-        recs.forEach(line => {
+        recs.forEach((line) => {
           doc.text(line, 20, y)
           y += 8
         })
-        
+
         doc.save('test-medium.pdf')
-      }
-      else if (type === 'long') {
+      } else if (type === 'long') {
         doc.setFontSize(22)
         doc.text('Comprehensive Research Report', 20, 20)
         doc.setFontSize(14)
         doc.text('The Future of Artificial Intelligence in Business', 20, 35)
-        
+
         doc.setFontSize(16)
         doc.text('Table of Contents', 20, 55)
         doc.setFontSize(11)
         const toc = [
           '1. Executive Summary',
-          '2. Introduction', 
+          '2. Introduction',
           '3. Current State of AI',
           '4. Industry Analysis',
-          '5. Recommendations'
+          '5. Recommendations',
         ]
         let y = 70
-        toc.forEach(line => {
+        toc.forEach((line) => {
           doc.text(line, 25, y)
           y += 7
         })
-        
+
         // Page 2
         doc.addPage()
         doc.setFontSize(18)
@@ -149,14 +147,14 @@ export default function PDFTestGeneratorPage() {
         const exec = [
           'This report examines AI adoption in business. Key findings show 40% annual',
           'growth in technology sectors. Organizations report 25-30% ROI improvements.',
-          'Challenges include talent shortages and data quality issues.'
+          'Challenges include talent shortages and data quality issues.',
         ]
         y = 35
-        exec.forEach(line => {
+        exec.forEach((line) => {
           doc.text(line, 20, y)
           y += 7
         })
-        
+
         // Page 3
         doc.addPage()
         doc.setFontSize(18)
@@ -169,10 +167,10 @@ export default function PDFTestGeneratorPage() {
           '- Process automation',
           '- Fraud detection',
           '',
-          'Global investment reached $93B in 2023, up from $12B in 2015.'
+          'Global investment reached $93B in 2023, up from $12B in 2015.',
         ]
         y = 35
-        current.forEach(line => {
+        current.forEach((line) => {
           if (line.startsWith('-')) {
             doc.text(line, 25, y)
           } else {
@@ -180,7 +178,7 @@ export default function PDFTestGeneratorPage() {
           }
           y += 7
         })
-        
+
         // Page 4
         doc.addPage()
         doc.setFontSize(18)
@@ -190,14 +188,14 @@ export default function PDFTestGeneratorPage() {
           'Healthcare: AI in medical imaging improved accuracy by 20-30%.',
           'Financial Services: 70% of customer inquiries handled by AI.',
           'Retail: Recommendation engines drive 35% of sales.',
-          'Manufacturing: Predictive maintenance reduces downtime by 50%.'
+          'Manufacturing: Predictive maintenance reduces downtime by 50%.',
         ]
         y = 35
-        industries.forEach(line => {
+        industries.forEach((line) => {
           doc.text(line, 20, y)
           y += 10
         })
-        
+
         // Page 5
         doc.addPage()
         doc.setFontSize(18)
@@ -210,17 +208,17 @@ export default function PDFTestGeneratorPage() {
           '4. Talent development programs',
           '5. Ethical frameworks and governance',
           '',
-          'Companies that approach AI strategically will thrive in the AI economy.'
+          'Companies that approach AI strategically will thrive in the AI economy.',
         ]
         y = 35
-        recommendations.forEach(line => {
+        recommendations.forEach((line) => {
           doc.text(line, 20, y)
           y += 8
         })
-        
+
         doc.save('test-long.pdf')
       }
-      
+
       setGenerated(true)
       setLoading(false)
       setTimeout(() => setGenerated(false), 3000)
@@ -235,12 +233,8 @@ export default function PDFTestGeneratorPage() {
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="text-center mb-12">
         <FileText className="w-16 h-16 text-green-400 mx-auto mb-4" />
-        <h1 className="text-4xl font-bold text-white mb-4">
-          PDF Test File Generator
-        </h1>
-        <p className="text-gray-300 text-lg">
-          Generate test PDFs for validating your summarizer
-        </p>
+        <h1 className="text-4xl font-bold text-white mb-4">PDF Test File Generator</h1>
+        <p className="text-gray-300 text-lg">Generate test PDFs for validating your summarizer</p>
       </div>
 
       {!jsPDFLoaded && !error && (
@@ -286,7 +280,11 @@ export default function PDFTestGeneratorPage() {
             disabled={!jsPDFLoaded || loading}
             className="w-full py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileDown className="w-5 h-5" />}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <FileDown className="w-5 h-5" />
+            )}
             Generate Short
           </button>
         </div>
@@ -310,7 +308,11 @@ export default function PDFTestGeneratorPage() {
             disabled={!jsPDFLoaded || loading}
             className="w-full py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileDown className="w-5 h-5" />}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <FileDown className="w-5 h-5" />
+            )}
             Generate Medium
           </button>
         </div>
@@ -334,7 +336,11 @@ export default function PDFTestGeneratorPage() {
             disabled={!jsPDFLoaded || loading}
             className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileDown className="w-5 h-5" />}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <FileDown className="w-5 h-5" />
+            )}
             Generate Long
           </button>
         </div>

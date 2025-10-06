@@ -1,12 +1,12 @@
 // app/tools/stack-recommender/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Code,
   Cpu,
   Database,
@@ -19,28 +19,28 @@ import {
   Info,
   Zap,
   Settings,
-  Layers
-} from 'lucide-react';
+  Layers,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function StackRecommenderGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const projectExamples = {
-    ecommerce: "I want to build an online store with payment processing and inventory management",
-    ai_chat: "Create a chatbot with AI responses and conversation history",
-    blog: "Build a personal website with blog posts and project showcase",
-    saas: "Create a data visualization dashboard with user authentication"
-  };
+    ecommerce: 'I want to build an online store with payment processing and inventory management',
+    ai_chat: 'Create a chatbot with AI responses and conversation history',
+    blog: 'Build a personal website with blog posts and project showcase',
+    saas: 'Create a data visualization dashboard with user authentication',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -84,7 +84,7 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
             <Code className="w-5 h-5 text-cyan-400" />
             Project Description Examples
           </h4>
-          
+
           <div className="space-y-2">
             {/* E-commerce */}
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
@@ -105,7 +105,7 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
                 </button>
               </div>
             </div>
-            
+
             {/* AI Chat */}
             <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
               <div className="flex items-start justify-between">
@@ -183,7 +183,7 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -192,15 +192,15 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
                 <p className="font-medium text-white">Set Your Constraints</p>
                 <p className="text-sm text-gray-400 mt-1">
                   <DollarSign className="inline w-3 h-3 mr-1" />
-                  Budget, 
+                  Budget,
                   <Clock className="inline w-3 h-3 mx-1" />
-                  Timeline, 
+                  Timeline,
                   <Zap className="inline w-3 h-3 mx-1" />
                   Experience
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -219,9 +219,7 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
               </span>
               <div>
                 <p className="font-medium text-white">Start Building</p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Copy setup commands and begin coding!
-                </p>
+                <p className="text-sm text-gray-400 mt-1">Copy setup commands and begin coding!</p>
               </div>
             </li>
           </ol>
@@ -239,7 +237,7 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
               <p className="text-sm font-medium text-white">Core Framework</p>
               <p className="text-xs text-gray-400">Next.js, React, Vue, etc.</p>
             </div>
-            
+
             <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
               <Database className="w-4 h-4 text-green-400 mb-1" />
               <p className="text-sm font-medium text-white">Database</p>
@@ -283,9 +281,15 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
             <div className="text-sm text-blue-300">
               <p className="font-semibold mb-2">Tailored to Your Experience</p>
               <ul className="space-y-1 text-gray-300">
-                <li>• <strong>Beginner:</strong> Simple setups, good documentation</li>
-                <li>• <strong>Intermediate:</strong> Balanced complexity</li>
-                <li>• <strong>Advanced:</strong> Powerful but complex tools</li>
+                <li>
+                  • <strong>Beginner:</strong> Simple setups, good documentation
+                </li>
+                <li>
+                  • <strong>Intermediate:</strong> Balanced complexity
+                </li>
+                <li>
+                  • <strong>Advanced:</strong> Powerful but complex tools
+                </li>
               </ul>
             </div>
           </div>
@@ -332,16 +336,15 @@ export default function StackRecommenderGuide({ onClose }: GuideProps) {
             <div className="text-sm">
               <p className="text-white font-medium mb-1">Quick Start Commands</p>
               <p className="text-gray-400 text-xs">
-                After getting recommendations, you'll receive copy-paste commands 
-                to set up your project immediately. No more searching for installation 
-                guides!
+                After getting recommendations, you'll receive copy-paste commands to set up your
+                project immediately. No more searching for installation guides!
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -349,4 +352,4 @@ export const guideMetadata = {
   title: 'AI Stack Recommender Guide',
   icon: '🚀',
   available: true,
-};
+}

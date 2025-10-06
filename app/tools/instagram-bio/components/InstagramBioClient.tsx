@@ -27,25 +27,25 @@ const generateBios = (style: BioStyle, keywords: string[]): string[] => {
     professional: (kw) => [
       `${kw[0] || 'Professional'} | ${kw[1] || 'Expert'} | ${kw[2] || 'Leader'}\n📩 DM for collaboration`,
       `🎯 ${kw[0]} specialist\n💡 Helping you with ${kw[1]}\n🔗 Link below`,
-      `${kw[0]} by profession\n${kw[1]} by passion\n${kw[2] || 'Living'} my best life`
+      `${kw[0]} by profession\n${kw[1]} by passion\n${kw[2] || 'Living'} my best life`,
     ],
     fun: (kw) => [
       `Just a ${kw[0]} loving ${kw[1]} 🌈\n${kw[2] || 'Good vibes'} only ✨`,
       `${kw[0]} + ${kw[1]} = happiness 💖\nLiving for ${kw[2] || 'adventure'}`,
-      `Professional ${kw[0]} enthusiast\nPowered by ${kw[1]} ☕\n${kw[2] || 'Smiling'} always 😊`
+      `Professional ${kw[0]} enthusiast\nPowered by ${kw[1]} ☕\n${kw[2] || 'Smiling'} always 😊`,
     ],
     creative: (kw) => [
       `Creating magic with ${kw[0]} ✨\n${kw[1]} is my canvas 🎨\n${kw[2] || 'Dream'} big`,
       `${kw[0]} × ${kw[1]} × creativity 🌟\nTurning ideas into reality`,
-      `Lost in ${kw[0]} 🌙\nFound in ${kw[1]} ⭐\n${kw[2] || 'Creating'} my story`
-    ]
+      `Lost in ${kw[0]} 🌙\nFound in ${kw[1]} ⭐\n${kw[2] || 'Creating'} my story`,
+    ],
   }
-  
+
   const bioTexts = templates[style](keywords)
-  
+
   // Add relevant emojis
   const emojis: string[] = []
-  keywords.forEach(keyword => {
+  keywords.forEach((keyword) => {
     const lower = keyword.toLowerCase()
     Object.entries(EMOJI_MAP).forEach(([key, emojiList]) => {
       if (lower.includes(key) || key.includes(lower)) {
@@ -53,8 +53,8 @@ const generateBios = (style: BioStyle, keywords: string[]): string[] => {
       }
     })
   })
-  
-  return bioTexts.map(bio => {
+
+  return bioTexts.map((bio) => {
     return bio.length > 150 ? bio.substring(0, 147) + '...' : bio
   })
 }
@@ -69,15 +69,15 @@ export default function InstagramBioClient() {
   const handleGenerate = () => {
     const keywordArray = keywords
       .split(',')
-      .map(k => k.trim())
-      .filter(k => k.length > 0)
+      .map((k) => k.trim())
+      .filter((k) => k.length > 0)
       .slice(0, 3)
-    
+
     if (keywordArray.length === 0) {
       alert('Please enter at least one keyword')
       return
     }
-    
+
     const generatedBios = generateBios(style, keywordArray)
     setBios(generatedBios)
   }
@@ -136,14 +136,14 @@ export default function InstagramBioClient() {
                      placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-colors"
             autoFocus
           />
-          
+
           {/* Quick Examples */}
           <div className="flex gap-2 mt-3 flex-wrap">
             <span className="text-xs text-gray-500">Quick fill:</span>
             {[
               'developer, coffee, coding',
               'fitness, coach, motivation',
-              'artist, digital, creative'
+              'artist, digital, creative',
             ].map((example, i) => (
               <button
                 key={i}
@@ -176,7 +176,13 @@ export default function InstagramBioClient() {
               <h3 className="text-white font-medium">Your Bio Options</h3>
               <button
                 onClick={() => {
-                  const generatedBios = generateBios(style, keywords.split(',').map(k => k.trim()).slice(0, 3))
+                  const generatedBios = generateBios(
+                    style,
+                    keywords
+                      .split(',')
+                      .map((k) => k.trim())
+                      .slice(0, 3)
+                  )
                   setBios(generatedBios)
                 }}
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
@@ -185,20 +191,16 @@ export default function InstagramBioClient() {
                 <RefreshCw className="w-4 h-4" />
               </button>
             </div>
-            
+
             <div className="space-y-3">
               {bios.map((bio, index) => (
                 <div
                   key={index}
                   className="bg-black/30 rounded-xl p-4 group hover:bg-black/40 transition-all"
                 >
-                  <pre className="text-white text-sm whitespace-pre-wrap font-sans">
-                    {bio}
-                  </pre>
+                  <pre className="text-white text-sm whitespace-pre-wrap font-sans">{bio}</pre>
                   <div className="flex justify-between items-center mt-3">
-                    <span className="text-xs text-gray-500">
-                      {bio.length}/150 characters
-                    </span>
+                    <span className="text-xs text-gray-500">{bio.length}/150 characters</span>
                     <button
                       onClick={() => handleCopy(bio, index)}
                       className={`px-4 py-1.5 rounded-lg text-sm transition-all ${
@@ -230,7 +232,7 @@ export default function InstagramBioClient() {
       {/* Guide Modal */}
       {showGuide && (
         <>
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-[100000]"
             onClick={() => setShowGuide(false)}
           />

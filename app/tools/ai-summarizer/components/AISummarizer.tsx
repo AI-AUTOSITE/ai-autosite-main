@@ -2,19 +2,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Sparkles, 
-  FileText, 
-  Loader, 
-  Copy, 
-  Check, 
-  ChevronDown, 
+import {
+  Sparkles,
+  FileText,
+  Loader,
+  Copy,
+  Check,
+  ChevronDown,
   RefreshCw,
   Brain,
   Zap,
   Shield,
   Target,
-  Layers
+  Layers,
 } from 'lucide-react'
 import { PeopleAlsoUse } from '../../../components/CrossSell'
 
@@ -94,10 +94,26 @@ export default function AISummarizer() {
   }
 
   const features: Feature[] = [
-    { icon: () => <Brain className="w-4 h-4" />, title: 'AI-Powered', desc: 'Advanced neural networks' },
-    { icon: () => <Zap className="w-4 h-4" />, title: 'Lightning Fast', desc: 'Results in seconds' },
-    { icon: () => <Shield className="w-4 h-4" />, title: 'Secure', desc: 'Your data stays private' },
-    { icon: () => <Target className="w-4 h-4" />, title: 'Accurate', desc: 'Precise summarization' },
+    {
+      icon: () => <Brain className="w-4 h-4" />,
+      title: 'AI-Powered',
+      desc: 'Advanced neural networks',
+    },
+    {
+      icon: () => <Zap className="w-4 h-4" />,
+      title: 'Lightning Fast',
+      desc: 'Results in seconds',
+    },
+    {
+      icon: () => <Shield className="w-4 h-4" />,
+      title: 'Secure',
+      desc: 'Your data stays private',
+    },
+    {
+      icon: () => <Target className="w-4 h-4" />,
+      title: 'Accurate',
+      desc: 'Precise summarization',
+    },
   ]
 
   return (
@@ -113,11 +129,11 @@ export default function AISummarizer() {
                 <div className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm">
                   <Sparkles className="w-8 h-8 text-purple-400" />
                 </div>
-                
+
                 <h2 className="text-2xl font-bold text-white mb-3">
                   AI-Powered Text Summarization
                 </h2>
-                
+
                 <div className="flex flex-wrap justify-center gap-3 mb-6">
                   {features.map((feature, idx) => (
                     <div
@@ -152,9 +168,7 @@ export default function AISummarizer() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Tone
-                  </label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Tone</label>
                   <div className="relative">
                     <select
                       value={summaryTone}
@@ -249,11 +263,9 @@ export default function AISummarizer() {
                       )}
                     </button>
                   </div>
-                  
+
                   <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl">
-                    <p className="text-white leading-relaxed whitespace-pre-wrap">
-                      {summary}
-                    </p>
+                    <p className="text-white leading-relaxed whitespace-pre-wrap">{summary}</p>
                   </div>
 
                   {/* Statistics */}
@@ -272,7 +284,7 @@ export default function AISummarizer() {
                     </div>
                     <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/10">
                       <div className="text-xl font-bold text-indigo-400">
-                        {summary.split('.').filter(s => s.trim()).length}
+                        {summary.split('.').filter((s) => s.trim()).length}
                       </div>
                       <div className="text-xs text-gray-400 mt-1">Sentences</div>
                     </div>
@@ -294,8 +306,12 @@ export default function AISummarizer() {
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">LIVE</span>
-                <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">NEW</span>
+                <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
+                  LIVE
+                </span>
+                <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
+                  NEW
+                </span>
                 <span className="text-yellow-400">⭐</span>
               </div>
 
@@ -332,10 +348,14 @@ export default function AISummarizer() {
                 <h4 className="text-sm font-semibold text-gray-300 mb-2">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">AI</span>
-                  <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">Summary</span>
+                  <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">
+                    Summary
+                  </span>
                   <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">Text</span>
                   <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">Study</span>
-                  <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">Productivity</span>
+                  <span className="px-2 py-1 bg-white/10 text-gray-300 text-xs rounded">
+                    Productivity
+                  </span>
                 </div>
               </div>
             </div>

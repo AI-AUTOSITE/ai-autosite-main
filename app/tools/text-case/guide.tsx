@@ -1,12 +1,12 @@
 // app/tools/text-case/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Type,
   Code,
   Globe,
@@ -16,29 +16,29 @@ import {
   Lightbulb,
   Target,
   Download,
-  RefreshCw
-} from 'lucide-react';
+  RefreshCw,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function TextCaseConverterGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const exampleCases = {
-    original: "hello world example",
-    camelCase: "helloWorldExample",
-    snake_case: "hello_world_example",
-    PascalCase: "HelloWorldExample",
-    kebabCase: "hello-world-example"
-  };
+    original: 'hello world example',
+    camelCase: 'helloWorldExample',
+    snake_case: 'hello_world_example',
+    PascalCase: 'HelloWorldExample',
+    kebabCase: 'hello-world-example',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -71,7 +71,9 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
             <div className="text-sm text-cyan-300">
               <p className="font-semibold mb-1">Master Text Formatting for Development</p>
               <p>Convert text between 10 different case formats instantly.</p>
-              <p className="mt-2">Perfect for developers working with different naming conventions!</p>
+              <p className="mt-2">
+                Perfect for developers working with different naming conventions!
+              </p>
             </div>
           </div>
         </div>
@@ -82,7 +84,7 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
             <Code className="w-5 h-5 text-purple-400" />
             Popular Programming Cases
           </h4>
-          
+
           <div className="space-y-2">
             {/* Original */}
             <div className="bg-gray-800/50 border border-white/10 rounded-lg p-3">
@@ -103,7 +105,7 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
                 </button>
               </div>
             </div>
-            
+
             {/* camelCase */}
             <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
               <div className="flex items-center justify-between">
@@ -148,7 +150,9 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
             <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-purple-400 font-medium mb-1">PascalCase (React Components)</p>
+                  <p className="text-xs text-purple-400 font-medium mb-1">
+                    PascalCase (React Components)
+                  </p>
                   <p className="text-sm text-gray-300 font-mono">"{exampleCases.PascalCase}"</p>
                 </div>
                 <button
@@ -202,7 +206,7 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -215,7 +219,7 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -351,15 +355,25 @@ export default function TextCaseConverterGuide({ onClose }: GuideProps) {
         <div className="bg-gray-800/50 rounded-lg p-4">
           <p className="text-sm text-white font-medium mb-2">💡 Quick Reference</p>
           <div className="space-y-1 text-xs text-gray-400">
-            <p><span className="text-cyan-400">JavaScript/TypeScript:</span> camelCase for variables, PascalCase for classes</p>
-            <p><span className="text-green-400">Python/Ruby:</span> snake_case for everything except classes</p>
-            <p><span className="text-purple-400">CSS/HTML:</span> kebab-case for classes and IDs</p>
-            <p><span className="text-yellow-400">SQL:</span> snake_case for table and column names</p>
+            <p>
+              <span className="text-cyan-400">JavaScript/TypeScript:</span> camelCase for variables,
+              PascalCase for classes
+            </p>
+            <p>
+              <span className="text-green-400">Python/Ruby:</span> snake_case for everything except
+              classes
+            </p>
+            <p>
+              <span className="text-purple-400">CSS/HTML:</span> kebab-case for classes and IDs
+            </p>
+            <p>
+              <span className="text-yellow-400">SQL:</span> snake_case for table and column names
+            </p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -367,4 +381,4 @@ export const guideMetadata = {
   title: 'Text Case Converter Guide',
   icon: '📝',
   available: true,
-};
+}

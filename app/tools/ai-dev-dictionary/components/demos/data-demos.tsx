@@ -19,17 +19,29 @@ export const dataDemos: Record<string, DemoFunction> = {
           <tr className="border-b border-white/5">
             <td className="py-2 text-white">John Doe</td>
             <td className="py-2 text-gray-300">Developer</td>
-            <td className="py-2"><span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Active</span></td>
+            <td className="py-2">
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                Active
+              </span>
+            </td>
           </tr>
           <tr className="border-b border-white/5">
             <td className="py-2 text-white">Jane Smith</td>
             <td className="py-2 text-gray-300">Designer</td>
-            <td className="py-2"><span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Active</span></td>
+            <td className="py-2">
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                Active
+              </span>
+            </td>
           </tr>
           <tr>
             <td className="py-2 text-white">Bob Wilson</td>
             <td className="py-2 text-gray-300">Manager</td>
-            <td className="py-2"><span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">Away</span></td>
+            <td className="py-2">
+              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">
+                Away
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -40,8 +52,17 @@ export const dataDemos: Record<string, DemoFunction> = {
   list: (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10 overflow-y-auto">
       <div className="space-y-2">
-        {['📧 Check emails', '📝 Write report', '☕ Team meeting', '🎯 Review goals', '📊 Update dashboard'].map((item, i) => (
-          <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+        {[
+          '📧 Check emails',
+          '📝 Write report',
+          '☕ Team meeting',
+          '🎯 Review goals',
+          '📊 Update dashboard',
+        ].map((item, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+          >
             <input type="checkbox" className="w-4 h-4" />
             <span className="text-gray-300">{item}</span>
           </div>
@@ -55,26 +76,33 @@ export const dataDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
       <div className="relative h-full flex items-center justify-center">
         <button
-          onClick={() => setDemoState({ ...demoState, carousel: Math.max(0, demoState.carousel - 1) })}
+          onClick={() =>
+            setDemoState({ ...demoState, carousel: Math.max(0, demoState.carousel - 1) })
+          }
           className="absolute left-2 p-2 bg-white/10 rounded-full hover:bg-white/20"
         >
           <ArrowLeft className="w-4 h-4 text-white" />
         </button>
-        
+
         <div className="w-48 h-32 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
           <span className="text-white text-lg">Slide {demoState.carousel + 1}</span>
         </div>
-        
+
         <button
-          onClick={() => setDemoState({ ...demoState, carousel: Math.min(2, demoState.carousel + 1) })}
+          onClick={() =>
+            setDemoState({ ...demoState, carousel: Math.min(2, demoState.carousel + 1) })
+          }
           className="absolute right-2 p-2 bg-white/10 rounded-full hover:bg-white/20"
         >
           <ArrowRight className="w-4 h-4 text-white" />
         </button>
-        
+
         <div className="absolute bottom-2 flex gap-1">
-          {[0, 1, 2].map(i => (
-            <div key={i} className={`w-2 h-2 rounded-full ${i === demoState.carousel ? 'bg-cyan-400' : 'bg-white/30'}`} />
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className={`w-2 h-2 rounded-full ${i === demoState.carousel ? 'bg-cyan-400' : 'bg-white/30'}`}
+            />
           ))}
         </div>
       </div>
@@ -93,7 +121,9 @@ export const dataDemos: Record<string, DemoFunction> = {
           </div>
         ))}
       </div>
-      <p className="text-cyan-400 text-xs mt-2 text-center">Efficiently handles thousands of items</p>
+      <p className="text-cyan-400 text-xs mt-2 text-center">
+        Efficiently handles thousands of items
+      </p>
     </div>
   ),
 
@@ -106,9 +136,7 @@ export const dataDemos: Record<string, DemoFunction> = {
             <th className="text-left py-2 text-gray-400 cursor-pointer hover:text-cyan-400">
               Name ↓
             </th>
-            <th className="text-left py-2 text-gray-400 cursor-pointer hover:text-cyan-400">
-              Age
-            </th>
+            <th className="text-left py-2 text-gray-400 cursor-pointer hover:text-cyan-400">Age</th>
             <th className="text-left py-2 text-gray-400 cursor-pointer hover:text-cyan-400">
               Status
             </th>
@@ -118,12 +146,16 @@ export const dataDemos: Record<string, DemoFunction> = {
           <tr className="border-b border-white/5 hover:bg-white/5">
             <td className="py-2 text-white">Alice Johnson</td>
             <td className="py-2 text-gray-300">28</td>
-            <td className="py-2"><span className="text-green-400">Active</span></td>
+            <td className="py-2">
+              <span className="text-green-400">Active</span>
+            </td>
           </tr>
           <tr className="border-b border-white/5 hover:bg-white/5">
             <td className="py-2 text-white">Bob Smith</td>
             <td className="py-2 text-gray-300">32</td>
-            <td className="py-2"><span className="text-yellow-400">Pending</span></td>
+            <td className="py-2">
+              <span className="text-yellow-400">Pending</span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -141,7 +173,9 @@ export const dataDemos: Record<string, DemoFunction> = {
             <div className="absolute -left-5 w-3 h-3 bg-cyan-400 rounded-full"></div>
             <div className="bg-white/5 rounded-lg p-3">
               <div className="text-white text-sm">{event}</div>
-              <div className="text-gray-500 text-xs">{i === 0 ? '2 hours ago' : i === 1 ? '1 hour ago' : 'Just now'}</div>
+              <div className="text-gray-500 text-xs">
+                {i === 0 ? '2 hours ago' : i === 1 ? '1 hour ago' : 'Just now'}
+              </div>
             </div>
           </div>
         ))}
@@ -175,5 +209,5 @@ export const dataDemos: Record<string, DemoFunction> = {
         </div>
       </div>
     </div>
-  )
+  ),
 }

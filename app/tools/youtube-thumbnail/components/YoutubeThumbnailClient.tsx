@@ -17,17 +17,13 @@ interface ThumbnailCardProps {
   onCopy: () => Promise<boolean>
 }
 
-const ThumbnailCard = memo(({ 
-  thumbnail, 
-  onDownload, 
-  onCopy 
-}: ThumbnailCardProps) => {
+const ThumbnailCard = memo(({ thumbnail, onDownload, onCopy }: ThumbnailCardProps) => {
   const [copied, setCopied] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [imageError, setImageError] = useState(false)
 
   const handleCopy = async () => {
-    const success = await onCopy()  // これで型エラーが解消
+    const success = await onCopy() // これで型エラーが解消
     if (success) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -43,7 +39,7 @@ const ThumbnailCard = memo(({
             <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
           </div>
         )}
-        
+
         {imageError ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-gray-500 text-sm">Not available</p>
@@ -66,16 +62,16 @@ const ThumbnailCard = memo(({
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
           <span className="text-white font-medium">{thumbnail.label}</span>
-          <span className="text-gray-400 text-xs">{thumbnail.width}×{thumbnail.height}</span>
+          <span className="text-gray-400 text-xs">
+            {thumbnail.width}×{thumbnail.height}
+          </span>
         </div>
-        
+
         <div className="flex gap-2">
           <button
             onClick={handleCopy}
             className={`flex-1 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 text-sm ${
-              copied
-                ? 'bg-green-500 text-white'
-                : 'bg-white/5 text-gray-300 hover:bg-white/10'
+              copied ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
             }`}
           >
             {copied ? (
@@ -90,7 +86,7 @@ const ThumbnailCard = memo(({
               </>
             )}
           </button>
-          
+
           <button
             onClick={onDownload}
             disabled={imageError}
@@ -119,7 +115,7 @@ export default function YoutubeThumbnailClient() {
     loading,
     getThumbnails,
     downloadThumbnail,
-    copyUrl
+    copyUrl,
   } = useYoutubeThumbnail()
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -164,11 +160,7 @@ export default function YoutubeThumbnailClient() {
                        rounded-lg font-medium hover:opacity-90 transition-all 
                        disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                'Get'
-              )}
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Get'}
             </button>
           </div>
 
@@ -223,12 +215,12 @@ export default function YoutubeThumbnailClient() {
           {/* Thumbnails Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {thumbnails.map((thumbnail, index) => (
-            <ThumbnailCard
-  key={`${videoId}-${index}`}
-  thumbnail={thumbnail}
-  onDownload={() => downloadThumbnail(thumbnail)}
-  onCopy={async () => await copyUrl(thumbnail.url)}
-/>
+              <ThumbnailCard
+                key={`${videoId}-${index}`}
+                thumbnail={thumbnail}
+                onDownload={() => downloadThumbnail(thumbnail)}
+                onCopy={async () => await copyUrl(thumbnail.url)}
+              />
             ))}
           </div>
         </div>

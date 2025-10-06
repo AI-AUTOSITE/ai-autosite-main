@@ -68,12 +68,15 @@ export const useFileHandler = (): UseFileHandlerReturn => {
     img.src = url
   }, [])
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
-    if (selectedFile) {
-      processFile(selectedFile)
-    }
-  }, [processFile])
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0]
+      if (selectedFile) {
+        processFile(selectedFile)
+      }
+    },
+    [processFile]
+  )
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -85,15 +88,18 @@ export const useFileHandler = (): UseFileHandlerReturn => {
     setIsDraggingFile(false)
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDraggingFile(false)
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDraggingFile(false)
 
-    const droppedFile = e.dataTransfer.files[0]
-    if (droppedFile && droppedFile.type.startsWith('image/')) {
-      processFile(droppedFile)
-    }
-  }, [processFile])
+      const droppedFile = e.dataTransfer.files[0]
+      if (droppedFile && droppedFile.type.startsWith('image/')) {
+        processFile(droppedFile)
+      }
+    },
+    [processFile]
+  )
 
   const resetFile = useCallback(() => {
     setFile(null)
@@ -109,7 +115,7 @@ export const useFileHandler = (): UseFileHandlerReturn => {
     imageUrl,
     imageSize,
     displayScale,
-    setDisplayScale,  // Add setter
+    setDisplayScale, // Add setter
     originalImage,
     isDraggingFile,
     fileInputRef,
@@ -120,6 +126,6 @@ export const useFileHandler = (): UseFileHandlerReturn => {
     processFile,
     resetFile,
     error,
-    setError
+    setError,
   }
 }

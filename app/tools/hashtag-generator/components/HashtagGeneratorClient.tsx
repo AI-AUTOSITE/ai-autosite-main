@@ -14,66 +14,330 @@ interface HashtagSet {
 const PLATFORM_LIMITS = {
   instagram: 30,
   twitter: 10,
-  tiktok: 30
+  tiktok: 30,
 }
 
 // Hashtag templates based on common topics
 const HASHTAG_TEMPLATES: Record<string, HashtagSet> = {
   fitness: {
-    popular: ['fitness', 'workout', 'gym', 'health', 'fit', 'motivation', 'training', 'exercise', 'healthy', 'lifestyle'],
-    medium: ['fitnessmotivation', 'workouttime', 'gymlife', 'fitfam', 'getfit', 'cardio', 'strength', 'wellness', 'fitgoals', 'dailyworkout'],
-    niche: ['homeworkout', 'noexcuses', 'transformationtuesday', 'sweatyselfie', 'gymaddict', 'trainhard', 'fitjourney', 'workoutoftheday', 'fitnessfreak', 'beastmode']
+    popular: [
+      'fitness',
+      'workout',
+      'gym',
+      'health',
+      'fit',
+      'motivation',
+      'training',
+      'exercise',
+      'healthy',
+      'lifestyle',
+    ],
+    medium: [
+      'fitnessmotivation',
+      'workouttime',
+      'gymlife',
+      'fitfam',
+      'getfit',
+      'cardio',
+      'strength',
+      'wellness',
+      'fitgoals',
+      'dailyworkout',
+    ],
+    niche: [
+      'homeworkout',
+      'noexcuses',
+      'transformationtuesday',
+      'sweatyselfie',
+      'gymaddict',
+      'trainhard',
+      'fitjourney',
+      'workoutoftheday',
+      'fitnessfreak',
+      'beastmode',
+    ],
   },
   food: {
-    popular: ['food', 'foodie', 'yummy', 'delicious', 'cooking', 'recipe', 'dinner', 'lunch', 'tasty', 'eat'],
-    medium: ['foodporn', 'instafood', 'foodlover', 'homemade', 'foodblog', 'foodgasm', 'foodphotography', 'healthyfood', 'foodstagram', 'cooking'],
-    niche: ['foodiesofinstagram', 'homecooking', 'recipeideas', 'foodprep', 'mealprep', 'kitchenlife', 'cookingtime', 'foodshare', 'yumyum', 'fooddiary']
+    popular: [
+      'food',
+      'foodie',
+      'yummy',
+      'delicious',
+      'cooking',
+      'recipe',
+      'dinner',
+      'lunch',
+      'tasty',
+      'eat',
+    ],
+    medium: [
+      'foodporn',
+      'instafood',
+      'foodlover',
+      'homemade',
+      'foodblog',
+      'foodgasm',
+      'foodphotography',
+      'healthyfood',
+      'foodstagram',
+      'cooking',
+    ],
+    niche: [
+      'foodiesofinstagram',
+      'homecooking',
+      'recipeideas',
+      'foodprep',
+      'mealprep',
+      'kitchenlife',
+      'cookingtime',
+      'foodshare',
+      'yumyum',
+      'fooddiary',
+    ],
   },
   travel: {
-    popular: ['travel', 'vacation', 'trip', 'wanderlust', 'adventure', 'explore', 'tourism', 'traveling', 'holiday', 'world'],
-    medium: ['travelgram', 'instatravel', 'travelphotography', 'traveladdict', 'travelblogger', 'traveller', 'exploring', 'travelgoals', 'wanderer', 'travellife'],
-    niche: ['passionpassport', 'travelmore', 'goexplore', 'wonderfulplaces', 'roamtheplanet', 'travelawesome', 'welltraveled', 'travelcommunity', 'backpacking', 'solotraveler']
+    popular: [
+      'travel',
+      'vacation',
+      'trip',
+      'wanderlust',
+      'adventure',
+      'explore',
+      'tourism',
+      'traveling',
+      'holiday',
+      'world',
+    ],
+    medium: [
+      'travelgram',
+      'instatravel',
+      'travelphotography',
+      'traveladdict',
+      'travelblogger',
+      'traveller',
+      'exploring',
+      'travelgoals',
+      'wanderer',
+      'travellife',
+    ],
+    niche: [
+      'passionpassport',
+      'travelmore',
+      'goexplore',
+      'wonderfulplaces',
+      'roamtheplanet',
+      'travelawesome',
+      'welltraveled',
+      'travelcommunity',
+      'backpacking',
+      'solotraveler',
+    ],
   },
   fashion: {
-    popular: ['fashion', 'style', 'outfit', 'ootd', 'clothes', 'shopping', 'dress', 'look', 'fashionista', 'trendy'],
-    medium: ['fashionblogger', 'instafashion', 'fashionstyle', 'fashionlover', 'styleinspo', 'fashiondiaries', 'fashiongram', 'fashionpost', 'styleblogger', 'fashionaddict'],
-    niche: ['currentlywearing', 'whatiwore', 'fashionkilla', 'styleoftheday', 'fashionweek', 'streetstyle', 'fashiondaily', 'styleguide', 'fashiongoals', 'outfitinspiration']
+    popular: [
+      'fashion',
+      'style',
+      'outfit',
+      'ootd',
+      'clothes',
+      'shopping',
+      'dress',
+      'look',
+      'fashionista',
+      'trendy',
+    ],
+    medium: [
+      'fashionblogger',
+      'instafashion',
+      'fashionstyle',
+      'fashionlover',
+      'styleinspo',
+      'fashiondiaries',
+      'fashiongram',
+      'fashionpost',
+      'styleblogger',
+      'fashionaddict',
+    ],
+    niche: [
+      'currentlywearing',
+      'whatiwore',
+      'fashionkilla',
+      'styleoftheday',
+      'fashionweek',
+      'streetstyle',
+      'fashiondaily',
+      'styleguide',
+      'fashiongoals',
+      'outfitinspiration',
+    ],
   },
   photography: {
-    popular: ['photography', 'photo', 'photographer', 'photos', 'picture', 'photooftheday', 'art', 'camera', 'nature', 'portrait'],
-    medium: ['photographylovers', 'instaphoto', 'photoshoot', 'photographylife', 'photogram', 'photographers', 'capture', 'photographyislife', 'photoaday', 'visualart'],
-    niche: ['photographysouls', 'photographyeveryday', 'ig_photography', 'photographylover', 'lenslove', 'shutterbug', 'throughmylens', 'capturetheshot', 'photographyart', 'cameralife']
+    popular: [
+      'photography',
+      'photo',
+      'photographer',
+      'photos',
+      'picture',
+      'photooftheday',
+      'art',
+      'camera',
+      'nature',
+      'portrait',
+    ],
+    medium: [
+      'photographylovers',
+      'instaphoto',
+      'photoshoot',
+      'photographylife',
+      'photogram',
+      'photographers',
+      'capture',
+      'photographyislife',
+      'photoaday',
+      'visualart',
+    ],
+    niche: [
+      'photographysouls',
+      'photographyeveryday',
+      'ig_photography',
+      'photographylover',
+      'lenslove',
+      'shutterbug',
+      'throughmylens',
+      'capturetheshot',
+      'photographyart',
+      'cameralife',
+    ],
   },
   business: {
-    popular: ['business', 'entrepreneur', 'success', 'marketing', 'startup', 'money', 'work', 'motivation', 'goals', 'leadership'],
-    medium: ['businessowner', 'smallbusiness', 'businesslife', 'businesstips', 'businessmindset', 'businessgrowth', 'businessstrategy', 'onlinebusiness', 'businesscoach', 'businesssuccess'],
-    niche: ['entrepreneurmindset', 'businessmentor', 'startuplife', 'businessbuilding', 'solopreneur', 'businessgoals', 'entrepreneurjourney', 'businessnetworking', 'businessdevelopment', 'businessinspiration']
+    popular: [
+      'business',
+      'entrepreneur',
+      'success',
+      'marketing',
+      'startup',
+      'money',
+      'work',
+      'motivation',
+      'goals',
+      'leadership',
+    ],
+    medium: [
+      'businessowner',
+      'smallbusiness',
+      'businesslife',
+      'businesstips',
+      'businessmindset',
+      'businessgrowth',
+      'businessstrategy',
+      'onlinebusiness',
+      'businesscoach',
+      'businesssuccess',
+    ],
+    niche: [
+      'entrepreneurmindset',
+      'businessmentor',
+      'startuplife',
+      'businessbuilding',
+      'solopreneur',
+      'businessgoals',
+      'entrepreneurjourney',
+      'businessnetworking',
+      'businessdevelopment',
+      'businessinspiration',
+    ],
   },
   tech: {
-    popular: ['tech', 'technology', 'coding', 'programming', 'software', 'developer', 'computer', 'digital', 'innovation', 'ai'],
-    medium: ['techlife', 'techgeek', 'technews', 'techblogger', 'techy', 'techworld', 'techtrends', 'techcommunity', 'techlovers', 'techstartup'],
-    niche: ['coderlife', 'devlife', 'programminglife', 'softwaredeveloper', 'techsavvy', 'techaddicted', 'geeklife', 'techentrepreneur', 'digitalnomad', 'futuretech']
+    popular: [
+      'tech',
+      'technology',
+      'coding',
+      'programming',
+      'software',
+      'developer',
+      'computer',
+      'digital',
+      'innovation',
+      'ai',
+    ],
+    medium: [
+      'techlife',
+      'techgeek',
+      'technews',
+      'techblogger',
+      'techy',
+      'techworld',
+      'techtrends',
+      'techcommunity',
+      'techlovers',
+      'techstartup',
+    ],
+    niche: [
+      'coderlife',
+      'devlife',
+      'programminglife',
+      'softwaredeveloper',
+      'techsavvy',
+      'techaddicted',
+      'geeklife',
+      'techentrepreneur',
+      'digitalnomad',
+      'futuretech',
+    ],
   },
   art: {
-    popular: ['art', 'artist', 'artwork', 'drawing', 'painting', 'creative', 'design', 'illustration', 'sketch', 'artistsoninstagram'],
-    medium: ['artoftheday', 'instaart', 'artgallery', 'artlovers', 'artlife', 'contemporaryart', 'artcollector', 'artistry', 'artworld', 'digitalart'],
-    niche: ['artistsupport', 'artprocess', 'artjournal', 'artstudio', 'artdaily', 'creativeprocess', 'artinprogress', 'artistlife', 'artcommunity', 'arttherapy']
-  }
+    popular: [
+      'art',
+      'artist',
+      'artwork',
+      'drawing',
+      'painting',
+      'creative',
+      'design',
+      'illustration',
+      'sketch',
+      'artistsoninstagram',
+    ],
+    medium: [
+      'artoftheday',
+      'instaart',
+      'artgallery',
+      'artlovers',
+      'artlife',
+      'contemporaryart',
+      'artcollector',
+      'artistry',
+      'artworld',
+      'digitalart',
+    ],
+    niche: [
+      'artistsupport',
+      'artprocess',
+      'artjournal',
+      'artstudio',
+      'artdaily',
+      'creativeprocess',
+      'artinprogress',
+      'artistlife',
+      'artcommunity',
+      'arttherapy',
+    ],
+  },
 }
 
 function generateHashtags(topic: string, platform: Platform): HashtagSet {
   const normalizedTopic = topic.toLowerCase().trim()
   const words = normalizedTopic.split(/\s+/)
-  
+
   // Find matching template
   let template: HashtagSet | null = null
   for (const [key, value] of Object.entries(HASHTAG_TEMPLATES)) {
-    if (words.some(word => key.includes(word) || word.includes(key))) {
+    if (words.some((word) => key.includes(word) || word.includes(key))) {
       template = value
       break
     }
   }
-  
+
   // If no template found, generate generic hashtags
   if (!template) {
     const baseTag = words[0] || 'trending'
@@ -88,7 +352,7 @@ function generateHashtags(topic: string, platform: Platform): HashtagSet {
         'cute',
         'like4like',
         'followme',
-        'picoftheday'
+        'picoftheday',
       ],
       medium: [
         `${baseTag}life`,
@@ -100,17 +364,22 @@ function generateHashtags(topic: string, platform: Platform): HashtagSet {
         `${baseTag}vibes`,
         `${baseTag}mood`,
         `${baseTag}style`,
-        `${baseTag}goals`
+        `${baseTag}goals`,
       ],
-      niche: words.map(word => word.replace(/[^a-z0-9]/gi, '')).filter(w => w.length > 0).slice(0, 10)
+      niche: words
+        .map((word) => word.replace(/[^a-z0-9]/gi, ''))
+        .filter((w) => w.length > 0)
+        .slice(0, 10),
     }
-    
+
     // Add more variations
     while (template.niche.length < 10) {
-      template.niche.push(`${baseTag}${['lover', 'addict', 'obsessed', 'fan', 'freak', 'enthusiast', 'passion', 'community', 'world', 'nation'][template.niche.length]}`)
+      template.niche.push(
+        `${baseTag}${['lover', 'addict', 'obsessed', 'fan', 'freak', 'enthusiast', 'passion', 'community', 'world', 'nation'][template.niche.length]}`
+      )
     }
   }
-  
+
   // Add platform-specific tags
   if (platform === 'tiktok') {
     template.popular = ['fyp', 'foryou', 'viral', ...template.popular.slice(0, 7)]
@@ -121,12 +390,12 @@ function generateHashtags(topic: string, platform: Platform): HashtagSet {
     template.medium = template.medium.slice(0, 3)
     template.niche = template.niche.slice(0, 4)
   }
-  
+
   // Add hashtag symbol
   return {
-    popular: template.popular.map(tag => `#${tag}`),
-    medium: template.medium.map(tag => `#${tag}`),
-    niche: template.niche.map(tag => `#${tag}`)
+    popular: template.popular.map((tag) => `#${tag}`),
+    medium: template.medium.map((tag) => `#${tag}`),
+    niche: template.niche.map((tag) => `#${tag}`),
   }
 }
 
@@ -138,30 +407,28 @@ export default function HashtagGeneratorClient() {
 
   const handleGenerate = () => {
     if (!topic.trim()) return
-    
+
     const tags = generateHashtags(topic, platform)
     setHashtags(tags)
   }
 
   const handleCopy = () => {
     if (!hashtags) return
-    
-    const allTags = [
-      ...hashtags.popular,
-      ...hashtags.medium,
-      ...hashtags.niche
-    ].slice(0, PLATFORM_LIMITS[platform]).join(' ')
-    
+
+    const allTags = [...hashtags.popular, ...hashtags.medium, ...hashtags.niche]
+      .slice(0, PLATFORM_LIMITS[platform])
+      .join(' ')
+
     navigator.clipboard.writeText(allTags)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
-const handleKeyDown = (e: React.KeyboardEvent) => {
-  if (e.key === 'Enter') {
-    handleGenerate()
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleGenerate()
+    }
   }
-}
 
   const getPlatformIcon = () => {
     switch (platform) {
@@ -217,9 +484,7 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
 
       {/* Topic Input */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
-        <label className="block text-white font-medium mb-3">
-          Enter Your Topic
-        </label>
+        <label className="block text-white font-medium mb-3">Enter Your Topic</label>
         <div className="flex gap-3">
           <input
             type="text"
@@ -238,7 +503,7 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
             Generate
           </button>
         </div>
-        
+
         <div className="flex items-center justify-between mt-3">
           <p className="text-gray-400 text-sm">
             Max tags: {PLATFORM_LIMITS[platform]} for {platform}
@@ -355,7 +620,7 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
         <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
           <h3 className="text-white font-medium mb-4">Try These Topics</h3>
           <div className="grid sm:grid-cols-3 gap-3">
-            {['fitness', 'food', 'travel', 'fashion', 'photography', 'business'].map(example => (
+            {['fitness', 'food', 'travel', 'fashion', 'photography', 'business'].map((example) => (
               <button
                 key={example}
                 onClick={() => {

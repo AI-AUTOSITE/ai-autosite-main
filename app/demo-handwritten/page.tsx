@@ -1,7 +1,7 @@
 // app/demo-handwritten/page.tsx
-'use client';
+'use client'
 
-import { 
+import {
   HandwrittenIcon,
   HandHeartIcon,
   HandStarIcon,
@@ -12,8 +12,8 @@ import {
   HandCheckIcon,
   HandArrowIcon,
   HandCloudIcon,
-  HandMailIcon
-} from '../components/icons/HandwrittenIcons';
+  HandMailIcon,
+} from '../components/icons/HandwrittenIcons'
 
 const iconList = [
   { name: 'hand-heart', label: 'Heart', component: HandHeartIcon },
@@ -26,7 +26,7 @@ const iconList = [
   { name: 'hand-arrow', label: 'Arrow', component: HandArrowIcon },
   { name: 'hand-cloud', label: 'Cloud', component: HandCloudIcon },
   { name: 'hand-mail', label: 'Mail', component: HandMailIcon },
-];
+]
 
 export default function HandwrittenDemoPage() {
   return (
@@ -34,19 +34,19 @@ export default function HandwrittenDemoPage() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header with handwritten style */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2" 
-              style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          <h1
+            className="text-4xl font-bold text-gray-800 mb-2"
+            style={{ fontFamily: 'Comic Sans MS, cursive' }}
+          >
             手書き風アイコン
           </h1>
-          <p className="text-gray-600">
-            Handwritten Style Icons - 全 {iconList.length} 個
-          </p>
+          <p className="text-gray-600">Handwritten Style Icons - 全 {iconList.length} 個</p>
         </div>
 
         {/* Icon Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {iconList.map(({ name, label, component: IconComponent }) => (
-            <div 
+            <div
               key={name}
               className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow border-2 border-dashed border-amber-200"
             >
@@ -55,9 +55,7 @@ export default function HandwrittenDemoPage() {
                   <IconComponent size={32} className="text-gray-700" />
                 </div>
                 <p className="text-sm font-medium text-gray-900">{label}</p>
-                <code className="text-xs bg-amber-100 px-2 py-1 rounded text-gray-600">
-                  {name}
-                </code>
+                <code className="text-xs bg-amber-100 px-2 py-1 rounded text-gray-600">{name}</code>
               </div>
             </div>
           ))}
@@ -65,11 +63,13 @@ export default function HandwrittenDemoPage() {
 
         {/* Style Variations */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6" 
-              style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          <h2
+            className="text-2xl font-bold text-gray-800 mb-6"
+            style={{ fontFamily: 'Comic Sans MS, cursive' }}
+          >
             スタイルバリエーション
           </h2>
-          
+
           {/* Color variations */}
           <div className="bg-white rounded-lg p-6 shadow-sm border-2 border-dashed border-amber-200">
             <h3 className="text-lg font-semibold mb-4">カラーバリエーション</h3>
@@ -109,11 +109,13 @@ export default function HandwrittenDemoPage() {
 
         {/* Usage Examples */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6"
-              style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          <h2
+            className="text-2xl font-bold text-gray-800 mb-6"
+            style={{ fontFamily: 'Comic Sans MS, cursive' }}
+          >
             使用例
           </h2>
-          
+
           <div className="bg-white rounded-lg p-6 shadow-sm border-2 border-dashed border-amber-200 space-y-4">
             {/* Cute buttons */}
             <div className="flex flex-wrap gap-3">
@@ -121,17 +123,17 @@ export default function HandwrittenDemoPage() {
                 <HandHeartIcon size={20} />
                 いいね！
               </button>
-              
+
               <button className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full hover:bg-yellow-200 border-2 border-yellow-300">
                 <HandStarIcon size={20} />
                 お気に入り
               </button>
-              
+
               <button className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full hover:bg-green-200 border-2 border-green-300">
                 <HandCheckIcon size={20} />
                 完了！
               </button>
-              
+
               <button className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 border-2 border-blue-300">
                 <HandMailIcon size={20} />
                 メール送信
@@ -176,8 +178,10 @@ export default function HandwrittenDemoPage() {
 
         {/* Code Example */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6"
-              style={{ fontFamily: 'Comic Sans MS, cursive' }}>
+          <h2
+            className="text-2xl font-bold text-gray-800 mb-6"
+            style={{ fontFamily: 'Comic Sans MS, cursive' }}
+          >
             使い方
           </h2>
           <div className="bg-gray-900 text-gray-100 rounded-lg p-6 overflow-x-auto">
@@ -198,5 +202,5 @@ import { HandwrittenIcon } from '@/components/icons/HandwrittenIcons';
         </div>
       </div>
     </div>
-  );
+  )
 }

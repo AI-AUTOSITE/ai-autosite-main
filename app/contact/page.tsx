@@ -1,7 +1,17 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Mail, Github, Twitter, MessageSquare, Bug, Lightbulb, Heart, Clock, MapPin } from 'lucide-react'
+import {
+  Mail,
+  Github,
+  Twitter,
+  MessageSquare,
+  Bug,
+  Lightbulb,
+  Heart,
+  Clock,
+  MapPin,
+} from 'lucide-react'
 
 export default function ContactPage() {
   const contactReasons = [
@@ -11,7 +21,7 @@ export default function ContactPage() {
       description: 'Found something broken? Help us fix it quickly.',
       action: 'Report Bug',
       href: 'mailto:aiautosite@gmail.com?subject=Bug%20Report',
-      color: 'from-red-500 to-pink-500'
+      color: 'from-red-500 to-pink-500',
     },
     {
       icon: Lightbulb,
@@ -19,7 +29,7 @@ export default function ContactPage() {
       description: 'Have an idea for a new tool or improvement?',
       action: 'Share Idea',
       href: 'mailto:aiautosite@gmail.com?subject=Feature%20Request',
-      color: 'from-yellow-500 to-orange-500'
+      color: 'from-yellow-500 to-orange-500',
     },
     {
       icon: MessageSquare,
@@ -27,7 +37,7 @@ export default function ContactPage() {
       description: 'Tell us what you think or ask questions.',
       action: 'Send Feedback',
       href: 'mailto:aiautosite@gmail.com?subject=Feedback',
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-blue-500 to-cyan-500',
     },
     {
       icon: Heart,
@@ -35,8 +45,8 @@ export default function ContactPage() {
       description: 'Interested in collaborating or integrating?',
       action: 'Get in Touch',
       href: 'mailto:aiautosite@gmail.com?subject=Partnership%20Inquiry',
-      color: 'from-purple-500 to-pink-500'
-    }
+      color: 'from-purple-500 to-pink-500',
+    },
   ]
 
   return (
@@ -58,18 +68,16 @@ export default function ContactPage() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Get in Touch</h1>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              We're a small team that values every piece of feedback. 
-              Your input helps us build better tools for everyone.
+              We're a small team that values every piece of feedback. Your input helps us build
+              better tools for everyone.
             </p>
           </div>
 
           {/* Quick Contact */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 mb-12 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">Quick Contact</h2>
-            <p className="text-gray-400 mb-6">
-              For the fastest response, email us directly:
-            </p>
-            <a 
+            <p className="text-gray-400 mb-6">For the fastest response, email us directly:</p>
+            <a
               href="mailto:aiautosite@gmail.com"
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all text-lg font-semibold"
             >
@@ -84,18 +92,25 @@ export default function ContactPage() {
 
           {/* Contact Reasons */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">What can we help you with?</h2>
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">
+              What can we help you with?
+            </h2>
             <div className="grid md:grid-cols-2 gap-6">
               {contactReasons.map((reason, index) => {
                 const Icon = reason.icon
                 return (
-                  <div key={index} className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all group">
-                    <div className={`w-12 h-12 bg-gradient-to-br ${reason.color} rounded-xl flex items-center justify-center mb-4`}>
+                  <div
+                    key={index}
+                    className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all group"
+                  >
+                    <div
+                      className={`w-12 h-12 bg-gradient-to-br ${reason.color} rounded-xl flex items-center justify-center mb-4`}
+                    >
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{reason.title}</h3>
                     <p className="text-gray-400 text-sm mb-4">{reason.description}</p>
-                    <a 
+                    <a
                       href={reason.href}
                       className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors"
                     >
@@ -115,9 +130,9 @@ export default function ContactPage() {
               <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
                 Stay updated with new tools, features, and behind-the-scenes development insights.
               </p>
-              
+
               <div className="grid md:grid-cols-3 gap-6">
-                <a 
+                <a
                   href="https://github.com/ai-autosite"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -125,10 +140,12 @@ export default function ContactPage() {
                 >
                   <Github className="w-8 h-8 text-gray-300 group-hover:text-white mx-auto mb-3 transition-colors" />
                   <h3 className="text-white font-semibold mb-2">GitHub</h3>
-                  <p className="text-gray-400 text-sm">View source code, report issues, contribute</p>
+                  <p className="text-gray-400 text-sm">
+                    View source code, report issues, contribute
+                  </p>
                 </a>
-                
-                <a 
+
+                <a
                   href="https://twitter.com/ai_autosite"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -138,8 +155,8 @@ export default function ContactPage() {
                   <h3 className="text-white font-semibold mb-2">Twitter</h3>
                   <p className="text-gray-400 text-sm">Updates, tips, and development news</p>
                 </a>
-                
-                <Link 
+
+                <Link
                   href="/blog"
                   className="bg-white/5 rounded-xl p-6 hover:bg-white/10 transition-all text-center group border border-white/10"
                 >
@@ -161,23 +178,29 @@ export default function ContactPage() {
                     <Clock className="w-6 h-6 text-green-400" />
                   </div>
                   <h3 className="text-white font-semibold mb-2">Response Time</h3>
-                  <p className="text-gray-400 text-sm">Usually within 24 hours, often much faster</p>
+                  <p className="text-gray-400 text-sm">
+                    Usually within 24 hours, often much faster
+                  </p>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <MessageSquare className="w-6 h-6 text-blue-400" />
                   </div>
                   <h3 className="text-white font-semibold mb-2">Personal Response</h3>
-                  <p className="text-gray-400 text-sm">Real human replies, no automated responses</p>
+                  <p className="text-gray-400 text-sm">
+                    Real human replies, no automated responses
+                  </p>
                 </div>
-                
+
                 <div className="text-center">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Heart className="w-6 h-6 text-purple-400" />
                   </div>
                   <h3 className="text-white font-semibold mb-2">Genuine Care</h3>
-                  <p className="text-gray-400 text-sm">We read and consider every message carefully</p>
+                  <p className="text-gray-400 text-sm">
+                    We read and consider every message carefully
+                  </p>
                 </div>
               </div>
             </div>
@@ -189,9 +212,9 @@ export default function ContactPage() {
               <MapPin className="w-8 h-8 text-cyan-400 mx-auto mb-4" />
               <h2 className="text-xl font-bold text-white mb-4">About Our Team</h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                We're a small, remote team passionate about creating simple, powerful tools 
-                that respect your privacy and time. Based globally, we work around the clock 
-                to keep improving our services for users worldwide.
+                We're a small, remote team passionate about creating simple, powerful tools that
+                respect your privacy and time. Based globally, we work around the clock to keep
+                improving our services for users worldwide.
               </p>
               <div className="mt-6 text-sm text-gray-500">
                 <p>🌍 Remote-first team • 🛡️ Privacy-focused • 🚀 User-driven development</p>

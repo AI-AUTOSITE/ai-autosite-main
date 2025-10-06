@@ -6,14 +6,14 @@ export const toolGuide = {
     { icon: '1', text: 'Enter 3 keywords about yourself' },
     { icon: '2', text: 'Choose your style' },
     { icon: '3', text: 'Click Generate' },
-    { icon: '4', text: 'Copy your favorite bio' }
+    { icon: '4', text: 'Copy your favorite bio' },
   ],
   tips: [
     'Keep it under 150 characters',
     'Use emojis for visual appeal',
     'Include a call-to-action',
-    'Update regularly'
-  ]
+    'Update regularly',
+  ],
 }
 
 interface ToolGuideProps {
@@ -31,12 +31,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-4">
         <Instagram className="w-6 h-6 text-pink-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       <div className="space-y-4">
         {toolGuide.steps.map((step, index) => (
           <div key={index} className="flex items-start gap-3">
@@ -47,7 +47,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="mt-4 p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-pink-500/20">
         <p className="text-xs text-pink-400">
           <Sparkles className="w-3 h-3 inline mr-1" />

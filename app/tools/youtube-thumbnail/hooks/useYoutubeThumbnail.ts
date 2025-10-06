@@ -11,20 +11,20 @@ interface ThumbnailOption {
 // Extract video ID from YouTube URL
 const extractVideoId = (url: string): string | null => {
   if (!url) return null
-  
+
   // Try direct patterns
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^#&?]*).*/,
-    /^([a-zA-Z0-9_-]{11})$/
+    /^([a-zA-Z0-9_-]{11})$/,
   ]
-  
+
   for (const pattern of patterns) {
     const match = url.match(pattern)
     if (match?.[1] && match[1].length === 11) {
       return match[1]
     }
   }
-  
+
   // Try URL params
   try {
     const urlObj = new URL(url)
@@ -35,7 +35,7 @@ const extractVideoId = (url: string): string | null => {
   } catch {
     // Invalid URL format
   }
-  
+
   return null
 }
 
@@ -46,22 +46,22 @@ const getThumbnailOptions = (videoId: string): ThumbnailOption[] => [
     url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
     width: 1280,
     height: 720,
-    label: 'HD (1280×720)'
+    label: 'HD (1280×720)',
   },
   {
     quality: 'sddefault',
     url: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
     width: 640,
     height: 480,
-    label: 'SD (640×480)'
+    label: 'SD (640×480)',
   },
   {
     quality: 'mqdefault',
     url: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
     width: 320,
     height: 180,
-    label: 'Medium (320×180)'
-  }
+    label: 'Medium (320×180)',
+  },
 ]
 
 export function useYoutubeThumbnail() {
@@ -74,7 +74,7 @@ export function useYoutubeThumbnail() {
   const getThumbnails = useCallback(() => {
     setError('')
     setLoading(true)
-    
+
     const id = extractVideoId(url.trim())
     if (!id) {
       setError('Please enter a valid YouTube URL')
@@ -83,7 +83,7 @@ export function useYoutubeThumbnail() {
       setLoading(false)
       return
     }
-    
+
     setVideoId(id)
     const options = getThumbnailOptions(id)
     setThumbnails(options)
@@ -94,13 +94,13 @@ export function useYoutubeThumbnail() {
     try {
       const response = await fetch(thumbnail.url)
       const blob = await response.blob()
-      
+
       const blobUrl = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = blobUrl
       link.download = `youtube-thumbnail-${thumbnail.quality}.jpg`
       link.click()
-      
+
       URL.revokeObjectURL(blobUrl)
       return true
     } catch {
@@ -137,6 +137,6 @@ export function useYoutubeThumbnail() {
     getThumbnails,
     downloadThumbnail,
     copyUrl,
-    reset
+    reset,
   }
 }

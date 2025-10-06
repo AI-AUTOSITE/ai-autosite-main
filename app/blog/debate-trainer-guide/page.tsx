@@ -1,14 +1,29 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, MessageSquare, Brain, Target, Shield, Trophy, Zap, Users, Star, ChevronRight, CheckCircle } from 'lucide-react'
+import {
+  ArrowLeft,
+  MessageSquare,
+  Brain,
+  Target,
+  Shield,
+  Trophy,
+  Zap,
+  Users,
+  Star,
+  ChevronRight,
+  CheckCircle,
+} from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Master Debate Skills with AI: 3 Coaching Styles for Every Level | AI AutoSite',
-  description: 'Learn how to improve your argumentation skills with our AI Debate Trainer. From supportive coaching to devil\'s advocate challenges. Get scored feedback instantly.',
-  keywords: 'debate training, argumentation skills, critical thinking, AI debate coach, persuasive writing, logic training, debate practice, study tools',
+  description:
+    "Learn how to improve your argumentation skills with our AI Debate Trainer. From supportive coaching to devil's advocate challenges. Get scored feedback instantly.",
+  keywords:
+    'debate training, argumentation skills, critical thinking, AI debate coach, persuasive writing, logic training, debate practice, study tools',
   openGraph: {
     title: 'AI Debate Trainer: Master the Art of Argumentation',
-    description: 'Practice debates with AI opponents and get real-time scoring on logic, persuasiveness, and structure.',
+    description:
+      'Practice debates with AI opponents and get real-time scoring on logic, persuasiveness, and structure.',
     type: 'article',
     images: ['/og-debate-trainer.png'],
   },
@@ -16,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Master Debate Skills with AI Coaching',
     description: 'Free AI-powered debate training with instant feedback',
-  }
+  },
 }
 
 export default function DebateTrainerBlogPost() {
@@ -34,68 +49,62 @@ export default function DebateTrainerBlogPost() {
       benefits: [
         'Constructive criticism only',
         'Emphasis on strengths',
-        'Encouraging tone throughout'
-      ]
+        'Encouraging tone throughout',
+      ],
     },
     {
       name: 'Professor',
       icon: '🎓',
       level: 'Intermediate',
       color: 'from-emerald-500 to-teal-600',
-      description: 'Academic rigor with educational focus. Balanced critique with learning opportunities.',
-      benefits: [
-        'Detailed logical analysis',
-        'Real-world examples',
-        'Structured feedback'
-      ]
+      description:
+        'Academic rigor with educational focus. Balanced critique with learning opportunities.',
+      benefits: ['Detailed logical analysis', 'Real-world examples', 'Structured feedback'],
     },
     {
       name: "Devil's Advocate",
       icon: '⚔️',
       level: 'Advanced',
       color: 'from-red-500 to-orange-600',
-      description: 'No-holds-barred critique. Challenges every assumption to forge stronger arguments.',
-      benefits: [
-        'Ruthless logic testing',
-        'Exposes all weaknesses',
-        'Prepares for tough debates'
-      ]
-    }
+      description:
+        'No-holds-barred critique. Challenges every assumption to forge stronger arguments.',
+      benefits: ['Ruthless logic testing', 'Exposes all weaknesses', 'Prepares for tough debates'],
+    },
   ]
 
   const scoreCategories = [
     {
       name: 'Logical Consistency',
       description: 'How well your arguments flow and connect',
-      icon: Brain
+      icon: Brain,
     },
     {
       name: 'Persuasiveness',
       description: 'The emotional and rational appeal of your points',
-      icon: MessageSquare
+      icon: MessageSquare,
     },
     {
       name: 'Factual Accuracy',
       description: 'Correctness and reliability of your claims',
-      icon: Shield
+      icon: Shield,
     },
     {
       name: 'Structural Coherence',
       description: 'Organization and clarity of your argument',
-      icon: Target
+      icon: Target,
     },
     {
       name: 'Rebuttal Resilience',
       description: 'How well you anticipate counterarguments',
-      icon: Trophy
-    }
+      icon: Trophy,
+    },
   ]
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to Blog */}
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -109,22 +118,28 @@ export default function DebateTrainerBlogPost() {
             Study Tools
           </span>
           <span>•</span>
-          <time dateTime={publishDate}>{new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+          <time dateTime={publishDate}>
+            {new Date(publishDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </time>
           <span>•</span>
           <span>{readTime}</span>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
           Master Debate Skills with AI:
           <span className="block text-3xl sm:text-4xl mt-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             3 Coaching Styles for Every Level
           </span>
         </h1>
-        
+
         <p className="text-xl text-gray-300 leading-relaxed">
-          Whether you're preparing for a debate competition, improving your professional communication, 
-          or just want to think more critically, our AI Debate Trainer adapts to your skill level with 
-          three distinct coaching personalities.
+          Whether you're preparing for a debate competition, improving your professional
+          communication, or just want to think more critically, our AI Debate Trainer adapts to your
+          skill level with three distinct coaching personalities.
         </p>
       </header>
 
@@ -149,29 +164,41 @@ export default function DebateTrainerBlogPost() {
         <h2 className="text-3xl font-bold text-white mb-6">Why Debate Skills Matter in 2025</h2>
         <div className="bg-white/5 rounded-xl p-6 border border-white/10">
           <p className="text-gray-300 mb-4">
-            In an era of information overload and AI-generated content, the ability to construct 
+            In an era of information overload and AI-generated content, the ability to construct
             logical arguments and think critically has never been more valuable. Whether you're:
           </p>
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">A student</strong> preparing for debates or essays</span>
+              <span>
+                <strong className="text-white">A student</strong> preparing for debates or essays
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">A professional</strong> making business cases or proposals</span>
+              <span>
+                <strong className="text-white">A professional</strong> making business cases or
+                proposals
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">A content creator</strong> defending your positions online</span>
+              <span>
+                <strong className="text-white">A content creator</strong> defending your positions
+                online
+              </span>
             </li>
             <li className="flex items-start">
               <CheckCircle className="w-5 h-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">A critical thinker</strong> who wants to challenge ideas</span>
+              <span>
+                <strong className="text-white">A critical thinker</strong> who wants to challenge
+                ideas
+              </span>
             </li>
           </ul>
           <p className="text-gray-300 mt-4">
-            ...mastering debate skills will give you a competitive edge in communication and decision-making.
+            ...mastering debate skills will give you a competitive edge in communication and
+            decision-making.
           </p>
         </div>
       </section>
@@ -221,8 +248,8 @@ export default function DebateTrainerBlogPost() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Choose Your Topic</h3>
                 <p className="text-gray-400">
-                  Pick any debate topic - from "Should AI replace human workers?" to 
-                  "Is space exploration worth the cost?" The more specific, the better.
+                  Pick any debate topic - from "Should AI replace human workers?" to "Is space
+                  exploration worth the cost?" The more specific, the better.
                 </p>
               </div>
             </div>
@@ -236,8 +263,8 @@ export default function DebateTrainerBlogPost() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Select Your Coach</h3>
                 <p className="text-gray-400">
-                  Choose between Supportive Coach (beginner), Professor (intermediate), 
-                  or Devil's Advocate (advanced) based on your comfort level.
+                  Choose between Supportive Coach (beginner), Professor (intermediate), or Devil's
+                  Advocate (advanced) based on your comfort level.
                 </p>
               </div>
             </div>
@@ -251,8 +278,8 @@ export default function DebateTrainerBlogPost() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Exchange Arguments</h3>
                 <p className="text-gray-400">
-                  You have 5 rounds to make your case. The AI will counter your arguments 
-                  with appropriate intensity based on your chosen coach style.
+                  You have 5 rounds to make your case. The AI will counter your arguments with
+                  appropriate intensity based on your chosen coach style.
                 </p>
               </div>
             </div>
@@ -266,8 +293,8 @@ export default function DebateTrainerBlogPost() {
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">Get Scored Feedback</h3>
                 <p className="text-gray-400">
-                  After 5 rounds, receive detailed scores across 5 categories plus 
-                  actionable feedback to improve your argumentation skills.
+                  After 5 rounds, receive detailed scores across 5 categories plus actionable
+                  feedback to improve your argumentation skills.
                 </p>
               </div>
             </div>
@@ -282,7 +309,10 @@ export default function DebateTrainerBlogPost() {
           {scoreCategories.map((category, index) => {
             const Icon = category.icon
             return (
-              <div key={index} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-500/30 transition-all">
+              <div
+                key={index}
+                className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-500/30 transition-all"
+              >
                 <div className="flex items-start gap-3">
                   <Icon className="w-6 h-6 text-purple-400 mt-1" />
                   <div>
@@ -296,7 +326,8 @@ export default function DebateTrainerBlogPost() {
         </div>
         <div className="mt-6 p-4 bg-purple-500/10 rounded-lg border border-purple-500/20">
           <p className="text-sm text-gray-300 text-center">
-            <strong className="text-white">Scoring Scale:</strong> 1 (Needs Work) → 3 (Good) → 5 (Excellent)
+            <strong className="text-white">Scoring Scale:</strong> 1 (Needs Work) → 3 (Good) → 5
+            (Excellent)
           </p>
         </div>
       </section>
@@ -308,23 +339,38 @@ export default function DebateTrainerBlogPost() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <Star className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Start with Supportive Coach:</strong> Build confidence before tackling tougher opponents</span>
+              <span>
+                <strong className="text-white">Start with Supportive Coach:</strong> Build
+                confidence before tackling tougher opponents
+              </span>
             </li>
             <li className="flex items-start">
               <Star className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Use specific examples:</strong> Concrete evidence beats abstract claims every time</span>
+              <span>
+                <strong className="text-white">Use specific examples:</strong> Concrete evidence
+                beats abstract claims every time
+              </span>
             </li>
             <li className="flex items-start">
               <Star className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Address counterarguments:</strong> Show you understand the other side's perspective</span>
+              <span>
+                <strong className="text-white">Address counterarguments:</strong> Show you
+                understand the other side's perspective
+              </span>
             </li>
             <li className="flex items-start">
               <Star className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Structure matters:</strong> Present your strongest point first, support it, then build</span>
+              <span>
+                <strong className="text-white">Structure matters:</strong> Present your strongest
+                point first, support it, then build
+              </span>
             </li>
             <li className="flex items-start">
               <Star className="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Practice daily:</strong> Even one 5-round debate per day will improve your skills</span>
+              <span>
+                <strong className="text-white">Practice daily:</strong> Even one 5-round debate per
+                day will improve your skills
+              </span>
             </li>
           </ul>
         </div>
@@ -361,8 +407,8 @@ export default function DebateTrainerBlogPost() {
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-white/10">
         <h2 className="text-3xl font-bold text-white mb-4">Ready to Sharpen Your Mind?</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Join thousands of students, professionals, and critical thinkers who are 
-          improving their argumentation skills with AI coaching.
+          Join thousands of students, professionals, and critical thinkers who are improving their
+          argumentation skills with AI coaching.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -387,19 +433,25 @@ export default function DebateTrainerBlogPost() {
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/tools/ai-summarizer" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">AI Text Summarizer</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                AI Text Summarizer
+              </h4>
               <p className="text-gray-400 text-sm">Condense long texts instantly</p>
             </div>
           </Link>
           <Link href="/tools/pdf-summarizer" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">PDF Summarizer</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                PDF Summarizer
+              </h4>
               <p className="text-gray-400 text-sm">Extract key points from PDFs</p>
             </div>
           </Link>
           <Link href="/tools/ai-dev-dictionary" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">AI Dev Dictionary</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                AI Dev Dictionary
+              </h4>
               <p className="text-gray-400 text-sm">Learn technical terms interactively</p>
             </div>
           </Link>
@@ -416,9 +468,7 @@ export default function DebateTrainerBlogPost() {
             <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
               Study Tools
             </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              AI
-            </span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">AI</span>
             <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
               Education
             </span>

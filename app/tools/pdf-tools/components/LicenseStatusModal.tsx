@@ -1,91 +1,91 @@
 // app/tools/pdf-tools/components/LicenseStatusModal.tsx
-import React, { useRef, useEffect } from 'react';
-import { X, CheckCircle, Lock, Calendar, Mail, CreditCard, Download } from 'lucide-react';
-import { LicenseManager } from '../lib/licenseManager';
+import React, { useRef, useEffect } from 'react'
+import { X, CheckCircle, Lock, Calendar, Mail, CreditCard, Download } from 'lucide-react'
+import { LicenseManager } from '../lib/licenseManager'
 
 interface LicenseStatusModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onUpgrade: () => void;
-  isPremium: boolean;
+  isOpen: boolean
+  onClose: () => void
+  onUpgrade: () => void
+  isPremium: boolean
 }
 
 export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
   isOpen,
   onClose,
   onUpgrade,
-  isPremium
+  isPremium,
 }) => {
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null)
 
   // Handle click outside to close modal
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isOpen && modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, onClose]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, onClose])
 
   // Handle Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
+        onClose()
       }
-    };
+    }
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleEscape)
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, onClose]);
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen, onClose])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
-  const status = LicenseManager.getLicenseStatus();
-  const purchaseDate = status.purchasedAt 
+  const status = LicenseManager.getLicenseStatus()
+  const purchaseDate = status.purchasedAt
     ? new Date(status.purchasedAt).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
       })
-    : 'Unknown';
+    : 'Unknown'
 
   const downloadLicenseBackup = () => {
-    const license = LicenseManager.getLicense();
-    if (!license) return;
-    
+    const license = LicenseManager.getLicense()
+    if (!license) return
+
     const backup = {
       product: 'PDF Tools Premium',
       license: license.token,
       purchasedAt: license.purchasedAt,
       email: license.email || status.email,
-    };
-    
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pdf-tools-license-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+    }
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `pdf-tools-license-${Date.now()}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 animate-fadeIn">
-      <div 
+      <div
         ref={modalRef}
         className="bg-gray-800 rounded-lg shadow-xl max-w-md w-full animate-scaleIn"
       >
@@ -123,20 +123,20 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
                   <CheckCircle className="w-5 h-5 text-green-400" />
                   <span className="text-green-400 font-medium">Premium Features Active</span>
                 </div>
-                
+
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2 text-gray-300">
                     <Calendar className="w-4 h-4 text-gray-400" />
                     <span>Purchased: {purchaseDate}</span>
                   </div>
-                  
+
                   {status.email && (
                     <div className="flex items-center gap-2 text-gray-300">
                       <Mail className="w-4 h-4 text-gray-400" />
                       <span>{status.email}</span>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center gap-2 text-gray-300">
                     <Lock className="w-4 h-4 text-gray-400" />
                     <span>6 tool slots unlocked</span>
@@ -153,7 +153,7 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
                   <Download className="w-4 h-4" />
                   Download License Backup
                 </button>
-                
+
                 <p className="text-xs text-gray-500 text-center">
                   Save this backup to restore your license on other devices
                 </p>
@@ -190,7 +190,7 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
                   <Lock className="w-5 h-5 text-gray-400" />
                   <span className="text-gray-300 font-medium">Free Version</span>
                 </div>
-                
+
                 <div className="space-y-2 text-sm text-gray-400">
                   <p>You're using the free version with limited features.</p>
                   <p>• 3 tool slots available</p>
@@ -205,7 +205,7 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
                   <p className="text-2xl font-bold text-white mb-1">$5</p>
                   <p className="text-sm text-gray-400">One-time payment • Lifetime access</p>
                 </div>
-                
+
                 <button
                   onClick={onUpgrade}
                   className="w-full px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition flex items-center justify-center gap-2 font-medium"
@@ -213,7 +213,7 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
                   <CreditCard className="w-4 h-4" />
                   Upgrade to Premium
                 </button>
-                
+
                 <p className="text-xs text-gray-500 text-center">
                   Unlock 3 additional slots and all premium features
                 </p>
@@ -256,5 +256,5 @@ export const LicenseStatusModal: React.FC<LicenseStatusModalProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

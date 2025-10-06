@@ -10,8 +10,8 @@ export default function PrivacyNotice() {
         <div>
           <p className="text-sm text-green-400 font-semibold">100% Secure & Private</p>
           <p className="text-xs text-gray-400 mt-1">
-            Your files are processed in real-time and never stored. 
-            All data is deleted immediately after processing.
+            Your files are processed in real-time and never stored. All data is deleted immediately
+            after processing.
           </p>
         </div>
       </div>

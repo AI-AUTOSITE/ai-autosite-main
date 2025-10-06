@@ -4,8 +4,10 @@ import { ArrowLeft, Globe, Image, Download, Palette } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Favicon Generator - Create Website Icons All Sizes | AI AutoSite',
-  description: 'Generate favicon.ico and app icons for websites. Create all icon sizes from one image. Free favicon generator tool.',
-  keywords: 'favicon generator, favicon creator, website icon, favicon.ico generator, app icon generator',
+  description:
+    'Generate favicon.ico and app icons for websites. Create all icon sizes from one image. Free favicon generator tool.',
+  keywords:
+    'favicon generator, favicon creator, website icon, favicon.ico generator, app icon generator',
   openGraph: {
     title: 'Favicon Generator - Complete Icon Guide',
     description: 'Create perfect website favicons and app icons',
@@ -20,8 +22,8 @@ export default function FaviconGeneratorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function FaviconGeneratorGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">
-            Dev Tools
-          </span>
+          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">Dev Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function FaviconGeneratorGuidePage() {
           Favicon Generator Complete Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Create professional favicons for your website. Generate all required 
-          icon sizes for browsers, mobile devices, and app stores.
+          Create professional favicons for your website. Generate all required icon sizes for
+          browsers, mobile devices, and app stores.
         </p>
       </header>
 
@@ -53,8 +53,8 @@ export default function FaviconGeneratorGuidePage() {
           <h2 className="text-2xl font-bold text-white mb-4">What is a Favicon?</h2>
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <p className="text-gray-300 mb-4">
-              A favicon (favorite icon) is the small icon that appears in browser tabs, 
-              bookmarks, and address bars. It's essential for brand recognition and professional appearance.
+              A favicon (favorite icon) is the small icon that appears in browser tabs, bookmarks,
+              and address bars. It's essential for brand recognition and professional appearance.
             </p>
             <div className="grid md:grid-cols-3 gap-4 mt-4">
               <div className="text-center">
@@ -182,27 +182,19 @@ export default function FaviconGeneratorGuidePage() {
             <ol className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-purple-400 font-bold">1.</span>
-                <p className="text-gray-300">
-                  Clear browser cache (Ctrl+Shift+Delete)
-                </p>
+                <p className="text-gray-300">Clear browser cache (Ctrl+Shift+Delete)</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400 font-bold">2.</span>
-                <p className="text-gray-300">
-                  Hard refresh page (Ctrl+Shift+R)
-                </p>
+                <p className="text-gray-300">Hard refresh page (Ctrl+Shift+R)</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400 font-bold">3.</span>
-                <p className="text-gray-300">
-                  Check different browsers and devices
-                </p>
+                <p className="text-gray-300">Check different browsers and devices</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400 font-bold">4.</span>
-                <p className="text-gray-300">
-                  Test bookmarking and home screen addition
-                </p>
+                <p className="text-gray-300">Test bookmarking and home screen addition</p>
               </li>
             </ol>
           </div>
@@ -211,14 +203,12 @@ export default function FaviconGeneratorGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Generate Your Favicon Now
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Generate Your Favicon Now</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free favicon generator - create all icon sizes from one image.
         </p>
-        <Link 
-          href="/tools/favicon-generator" 
+        <Link
+          href="/tools/favicon-generator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Globe className="mr-2" size={20} />

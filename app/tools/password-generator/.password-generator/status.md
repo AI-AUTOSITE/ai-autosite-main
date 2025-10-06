@@ -1,11 +1,12 @@
-
 # Password Generator Tool - Complete Package
 
 ## 1. STATUS FILE
+
 ```markdown
 # Password Generator Tool - Status File v1.0
 
 ## 📌 Tool Overview
+
 **Name:** Password Generator
 **URL:** /tools/password-generator
 **Category:** quick-tools
@@ -13,6 +14,7 @@
 **Language Level:** Elementary English (age 10-12)
 
 ## 🎯 Core Features (MVP)
+
 1. **Length Slider** - 8 to 32 characters
 2. **Character Types** - Letters, numbers, symbols
 3. **Copy Button** - One-click copy
@@ -20,13 +22,15 @@
 5. **Generate Button** - New password instantly
 
 ## 📁 File Structure
+
 app/tools/password-generator/
-├── page.tsx                    # Metadata only
+├── page.tsx # Metadata only
 ├── components/
-│   └── PasswordGeneratorClient.tsx # Main component
-└── guide.tsx                   # Help guide
+│ └── PasswordGeneratorClient.tsx # Main component
+└── guide.tsx # Help guide
 
 ## 🔧 Technical Requirements
+
 - **No libraries needed** - Pure JavaScript
 - **No server needed** - 100% client-side
 - **Default length:** 16 characters
@@ -34,11 +38,13 @@ app/tools/password-generator/
 - **Copy support:** Clipboard API
 
 ## 💭 User Flow (3-Second Rule)
+
 1. **Land on page** → See generated password
 2. **Adjust options** → Password updates
 3. **Click copy** → Done!
 
 ## 🎨 UI Design
+
 [Password Generator]
 [Generated password display]
 [Strength: Weak | Medium | Strong | Very Strong]
@@ -47,6 +53,7 @@ app/tools/password-generator/
 [Generate New | Copy buttons]
 
 ## 📝 Simple English Copy
+
 Title: "Password Generator"
 Subtitle: "Create strong passwords"
 Length: "Length: X characters"
@@ -55,6 +62,7 @@ Strength: "Weak | OK | Strong | Very Strong"
 Buttons: "New Password | Copy"
 
 ## 🚫 What NOT to Include
+
 - Password saving
 - Account integration
 - Password history
@@ -63,6 +71,7 @@ Buttons: "New Password | Copy"
 - Master password
 
 ## 📊 Success Metrics
+
 - Generation time: Instant
 - Copy success: 100%
 - Mobile friendly: Yes

@@ -1,16 +1,16 @@
 // components/icons/DoodleIconsPart3.tsx
 // Trendy hand-drawn icons - Part 3 (Final)
 // Modern startup aesthetic continues
-import { FC } from 'react';
+import { FC } from 'react'
 
 export interface IconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-  strokeWidth?: number;
+  size?: number
+  color?: string
+  className?: string
+  strokeWidth?: number
 }
 
-export type DoodleIconName3 = 
+export type DoodleIconName3 =
   | 'doodle-file-image'
   | 'doodle-move'
   | 'doodle-github'
@@ -20,7 +20,7 @@ export type DoodleIconName3 =
   | 'doodle-save'
   | 'doodle-file-text'
   | 'doodle-menu'
-  | 'doodle-chevron-left';
+  | 'doodle-chevron-left'
 
 const doodleIcons3 = {
   // File Image - picture doc
@@ -37,8 +37,10 @@ const doodleIcons3 = {
       className={props.className}
     >
       {/* Page with folded corner */}
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" 
-            transform="rotate(-0.5 12 12)" />
+      <path
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+        transform="rotate(-0.5 12 12)"
+      />
       <path d="M14 2v6h6" />
       {/* Image inside - mountains and sun */}
       <circle cx="9" cy="11" r="1.5" />
@@ -107,8 +109,10 @@ const doodleIcons3 = {
       className={props.className}
     >
       {/* Folder shape with tab */}
-      <path d="M3 5a2 2 0 0 1 2-2h4l3 3h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" 
-            transform="rotate(-0.5 12.5 12)" />
+      <path
+        d="M3 5a2 2 0 0 1 2-2h4l3 3h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        transform="rotate(-0.5 12.5 12)"
+      />
       {/* Folder opening */}
       <path d="M3 8h19" opacity="0.4" />
       {/* Papers inside */}
@@ -154,8 +158,10 @@ const doodleIcons3 = {
       className={props.className}
     >
       {/* Page */}
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" 
-            transform="rotate(0.5 12 12)" />
+      <path
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+        transform="rotate(0.5 12 12)"
+      />
       <path d="M14 2v6h6" />
       {/* Code symbols */}
       <path d="M10 13l-2 2 2 2" />
@@ -179,8 +185,10 @@ const doodleIcons3 = {
       className={props.className}
     >
       {/* Disk outline */}
-      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" 
-            transform="rotate(-0.5 12 12)" />
+      <path
+        d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+        transform="rotate(-0.5 12 12)"
+      />
       {/* Save slider */}
       <path d="M7 3v5h8V3" />
       {/* Label area */}
@@ -204,8 +212,10 @@ const doodleIcons3 = {
       className={props.className}
     >
       {/* Page with corner */}
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" 
-            transform="rotate(-0.3 12 12)" />
+      <path
+        d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+        transform="rotate(-0.3 12 12)"
+      />
       <path d="M14 2v6h6" />
       {/* Text lines */}
       <path d="M8 12h8" opacity="0.6" />
@@ -257,31 +267,42 @@ const doodleIcons3 = {
       <path d="M15.3 4.3l-7.3 7.7 7.3 7.7" opacity="0.3" />
     </svg>
   ),
-};
+}
 
 // Main component
-export const DoodleIcon3: FC<{ name: DoodleIconName3 } & IconProps> = ({ 
-  name, 
-  ...props 
-}) => {
-  const IconComponent = doodleIcons3[name];
-  
+export const DoodleIcon3: FC<{ name: DoodleIconName3 } & IconProps> = ({ name, ...props }) => {
+  const IconComponent = doodleIcons3[name]
+
   if (!IconComponent) {
-    console.warn(`Doodle icon "${name}" not found`);
-    return null;
+    console.warn(`Doodle icon "${name}" not found`)
+    return null
   }
-  
-  return <IconComponent {...props} />;
-};
+
+  return <IconComponent {...props} />
+}
 
 // Individual exports
-export const DoodleFileImageIcon = (props: IconProps) => <DoodleIcon3 name="doodle-file-image" {...props} />;
-export const DoodleMoveIcon = (props: IconProps) => <DoodleIcon3 name="doodle-move" {...props} />;
-export const DoodleGithubIcon = (props: IconProps) => <DoodleIcon3 name="doodle-github" {...props} />;
-export const DoodleFolderIcon = (props: IconProps) => <DoodleIcon3 name="doodle-folder" {...props} />;
-export const DoodleHelpCircleIcon = (props: IconProps) => <DoodleIcon3 name="doodle-help-circle" {...props} />;
-export const DoodleFileCodeIcon = (props: IconProps) => <DoodleIcon3 name="doodle-file-code" {...props} />;
-export const DoodleSaveIcon = (props: IconProps) => <DoodleIcon3 name="doodle-save" {...props} />;
-export const DoodleFileTextIcon = (props: IconProps) => <DoodleIcon3 name="doodle-file-text" {...props} />;
-export const DoodleMenuIcon = (props: IconProps) => <DoodleIcon3 name="doodle-menu" {...props} />;
-export const DoodleChevronLeftIcon = (props: IconProps) => <DoodleIcon3 name="doodle-chevron-left" {...props} />;
+export const DoodleFileImageIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-file-image" {...props} />
+)
+export const DoodleMoveIcon = (props: IconProps) => <DoodleIcon3 name="doodle-move" {...props} />
+export const DoodleGithubIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-github" {...props} />
+)
+export const DoodleFolderIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-folder" {...props} />
+)
+export const DoodleHelpCircleIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-help-circle" {...props} />
+)
+export const DoodleFileCodeIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-file-code" {...props} />
+)
+export const DoodleSaveIcon = (props: IconProps) => <DoodleIcon3 name="doodle-save" {...props} />
+export const DoodleFileTextIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-file-text" {...props} />
+)
+export const DoodleMenuIcon = (props: IconProps) => <DoodleIcon3 name="doodle-menu" {...props} />
+export const DoodleChevronLeftIcon = (props: IconProps) => (
+  <DoodleIcon3 name="doodle-chevron-left" {...props} />
+)

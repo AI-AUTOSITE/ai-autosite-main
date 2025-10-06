@@ -11,17 +11,17 @@ import {
   Type,
   Scan,
   Copy,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react'
 import { processTesseract, type OCRResult } from '../lib/tesseract-helper'
-import { 
-  autoTranslate, 
-  translateText, 
-  translateInChunks, 
+import {
+  autoTranslate,
+  translateText,
+  translateInChunks,
   type TranslationDirection,
   type TranslationResult,
   type DetectedLanguage,
-  type TranslationProgress
+  type TranslationProgress,
 } from '../lib/translation-helper'
 import OCRResultDisplay from './OCRResult'
 
@@ -41,7 +41,9 @@ interface TranslationProgressState {
 export default function JapaneseOCR() {
   // Common states
   const [mode, setMode] = useState<Mode>('ocr')
-  const [translationDirection, setTranslationDirection] = useState<'auto' | TranslationDirection>('auto')
+  const [translationDirection, setTranslationDirection] = useState<'auto' | TranslationDirection>(
+    'auto'
+  )
   const [isTranslating, setIsTranslating] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
 
@@ -58,7 +60,9 @@ export default function JapaneseOCR() {
   const [detectedLang, setDetectedLang] = useState<DetectedLanguage>('unknown')
   const [copiedInput, setCopiedInput] = useState<boolean>(false)
   const [copiedTranslation, setCopiedTranslation] = useState<boolean>(false)
-  const [translationProgress, setTranslationProgress] = useState<TranslationProgressState | null>(null)
+  const [translationProgress, setTranslationProgress] = useState<TranslationProgressState | null>(
+    null
+  )
 
   // Progress callback
   const handleProgress: TranslationProgress = useCallback((current: number, total: number) => {
@@ -98,12 +102,12 @@ export default function JapaneseOCR() {
 
     try {
       const result = await processTesseract(imageUrl)
-      
+
       setOcrResult({
         ...result,
         translation: undefined,
         translationDirection: null,
-        detectedLanguage: 'unknown'
+        detectedLanguage: 'unknown',
       })
 
       setIsTranslating(true)
@@ -114,24 +118,20 @@ export default function JapaneseOCR() {
             ...result,
             translation: translationResult.translation,
             translationDirection: translationResult.direction,
-            detectedLanguage: translationResult.detectedLanguage
+            detectedLanguage: translationResult.detectedLanguage,
           })
         } else {
           // Use chunk translation for long texts
-          const translation = result.text.length > 450
-            ? await translateInChunks(
-                result.text, 
-                translationDirection, 
-                450,
-                handleProgress
-              )
-            : await translateText(result.text, translationDirection)
-          
+          const translation =
+            result.text.length > 450
+              ? await translateInChunks(result.text, translationDirection, 450, handleProgress)
+              : await translateText(result.text, translationDirection)
+
           setOcrResult({
             ...result,
             translation,
             translationDirection,
-            detectedLanguage: translationDirection === 'ja-en' ? 'japanese' : 'english'
+            detectedLanguage: translationDirection === 'ja-en' ? 'japanese' : 'english',
           })
         }
       } catch (translationError) {
@@ -153,7 +153,7 @@ export default function JapaneseOCR() {
 
     setIsTranslating(true)
     setError('')
-    
+
     try {
       if (translationDirection === 'auto') {
         const translationResult = await autoTranslate(ocrResult.text)
@@ -161,23 +161,19 @@ export default function JapaneseOCR() {
           ...ocrResult,
           translation: translationResult.translation,
           translationDirection: translationResult.direction,
-          detectedLanguage: translationResult.detectedLanguage
+          detectedLanguage: translationResult.detectedLanguage,
         })
       } else {
-        const translation = ocrResult.text.length > 450
-          ? await translateInChunks(
-              ocrResult.text, 
-              translationDirection, 
-              450,
-              handleProgress
-            )
-          : await translateText(ocrResult.text, translationDirection)
-        
+        const translation =
+          ocrResult.text.length > 450
+            ? await translateInChunks(ocrResult.text, translationDirection, 450, handleProgress)
+            : await translateText(ocrResult.text, translationDirection)
+
         setOcrResult({
           ...ocrResult,
           translation,
           translationDirection,
-          detectedLanguage: translationDirection === 'ja-en' ? 'japanese' : 'english'
+          detectedLanguage: translationDirection === 'ja-en' ? 'japanese' : 'english',
         })
       }
     } catch (err) {
@@ -203,22 +199,18 @@ export default function JapaneseOCR() {
 
     try {
       console.log(`Translating ${inputText.length} characters...`)
-      
+
       if (translationDirection === 'auto') {
         const result = await autoTranslate(inputText)
         setTranslatedText(result.translation)
         setDetectedLang(result.detectedLanguage)
       } else {
         // Use chunk translation for long texts
-        const translation = inputText.length > 450
-          ? await translateInChunks(
-              inputText, 
-              translationDirection, 
-              450,
-              handleProgress
-            )
-          : await translateText(inputText, translationDirection)
-        
+        const translation =
+          inputText.length > 450
+            ? await translateInChunks(inputText, translationDirection, 450, handleProgress)
+            : await translateText(inputText, translationDirection)
+
         setTranslatedText(translation)
         setDetectedLang(translationDirection === 'ja-en' ? 'japanese' : 'english')
       }
@@ -241,7 +233,7 @@ export default function JapaneseOCR() {
     // Swap the texts
     setInputText(translatedText)
     setTranslatedText('')
-    
+
     // Reverse the translation direction
     let newDirection: 'auto' | TranslationDirection = 'auto'
     if (translationDirection !== 'auto') {
@@ -260,21 +252,17 @@ export default function JapaneseOCR() {
 
     try {
       console.log(`Reverse translating ${translatedText.length} characters...`)
-      
+
       if (newDirection === 'auto') {
         const result = await autoTranslate(translatedText)
         setTranslatedText(result.translation)
         setDetectedLang(result.detectedLanguage)
       } else {
-        const translation = translatedText.length > 450
-          ? await translateInChunks(
-              translatedText, 
-              newDirection, 
-              450,
-              handleProgress
-            )
-          : await translateText(translatedText, newDirection)
-        
+        const translation =
+          translatedText.length > 450
+            ? await translateInChunks(translatedText, newDirection, 450, handleProgress)
+            : await translateText(translatedText, newDirection)
+
         setTranslatedText(translation)
         setDetectedLang(newDirection === 'ja-en' ? 'japanese' : 'english')
       }
@@ -288,17 +276,20 @@ export default function JapaneseOCR() {
   }
 
   const copyToClipboard = (text: string, type: 'input' | 'translation') => {
-    navigator.clipboard.writeText(text).then(() => {
-      if (type === 'input') {
-        setCopiedInput(true)
-        setTimeout(() => setCopiedInput(false), 2000)
-      } else {
-        setCopiedTranslation(true)
-        setTimeout(() => setCopiedTranslation(false), 2000)
-      }
-    }).catch(() => {
-      setError('Failed to copy to clipboard')
-    })
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        if (type === 'input') {
+          setCopiedInput(true)
+          setTimeout(() => setCopiedInput(false), 2000)
+        } else {
+          setCopiedTranslation(true)
+          setTimeout(() => setCopiedTranslation(false), 2000)
+        }
+      })
+      .catch(() => {
+        setError('Failed to copy to clipboard')
+      })
   }
 
   const clearTextTranslation = () => {
@@ -310,12 +301,15 @@ export default function JapaneseOCR() {
   }
 
   // OCR drag and drop handlers
-  const handleDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    setIsDragging(false)
-    const file = e.dataTransfer.files[0]
-    if (file) processFile(file)
-  }, [processFile])
+  const handleDrop = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      setIsDragging(false)
+      const file = e.dataTransfer.files[0]
+      if (file) processFile(file)
+    },
+    [processFile]
+  )
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -369,7 +363,7 @@ export default function JapaneseOCR() {
           </button>
         </div>
       </div>
- {/* Translation Mode Selector */}
+      {/* Translation Mode Selector */}
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 mb-6">
         <label className="text-white font-medium mb-3 block">Translation Mode</label>
         <div className="grid grid-cols-3 gap-3">
@@ -514,9 +508,7 @@ export default function JapaneseOCR() {
                 className="w-full h-40 p-4 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 resize-none"
               />
               <div className="flex justify-between items-center mt-2">
-                <span className="text-sm text-gray-400">
-                  {inputText.length} characters
-                </span>
+                <span className="text-sm text-gray-400">{inputText.length} characters</span>
                 {detectedLang !== 'unknown' && (
                   <span className="text-sm text-purple-400">
                     Detected: {detectedLang === 'japanese' ? 'Japanese' : 'English'}

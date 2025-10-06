@@ -1,11 +1,11 @@
 // app/tools/image-compress/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
   Image,
   Upload,
   Download,
@@ -14,34 +14,49 @@ import {
   Sliders,
   Info,
   FileImage,
-  ArrowDown
-} from 'lucide-react';
+  ArrowDown,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function ImageCompressGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const qualitySettings = [
-    { range: '80-90%', use: 'Photos', description: 'No visible difference, 60% smaller', color: 'text-green-400' },
-    { range: '60-80%', use: 'Web Graphics', description: 'Slight quality loss, 70-80% smaller', color: 'text-yellow-400' },
-    { range: 'Below 60%', use: 'Thumbnails', description: 'Visible quality loss, 85%+ smaller', color: 'text-orange-400' }
-  ];
+    {
+      range: '80-90%',
+      use: 'Photos',
+      description: 'No visible difference, 60% smaller',
+      color: 'text-green-400',
+    },
+    {
+      range: '60-80%',
+      use: 'Web Graphics',
+      description: 'Slight quality loss, 70-80% smaller',
+      color: 'text-yellow-400',
+    },
+    {
+      range: 'Below 60%',
+      use: 'Thumbnails',
+      description: 'Visible quality loss, 85%+ smaller',
+      color: 'text-orange-400',
+    },
+  ]
 
   const idealSizes = [
     { type: 'Hero images', size: '200-300KB', dimensions: '1920x1080px' },
     { type: 'Blog images', size: '100-150KB', dimensions: '800x600px' },
     { type: 'Thumbnails', size: '20-50KB', dimensions: '300x300px' },
-    { type: 'Icons', size: '5-10KB', dimensions: '64x64px' }
-  ];
+    { type: 'Icons', size: '5-10KB', dimensions: '64x64px' },
+  ]
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -113,7 +128,7 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -126,7 +141,7 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-teal-500 to-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -153,9 +168,7 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
               <div key={index} className="bg-white/5 rounded-lg p-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className={`text-sm font-medium ${setting.color}`}>
-                      {setting.range}
-                    </span>
+                    <span className={`text-sm font-medium ${setting.color}`}>{setting.range}</span>
                     <span className="text-white text-sm ml-2">for {setting.use}</span>
                   </div>
                 </div>
@@ -204,7 +217,7 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
                 <p className="text-xs text-gray-400">Compress multiple images at once</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
               <Shield className="w-5 h-5 text-blue-400" />
               <div>
@@ -212,7 +225,7 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
                 <p className="text-xs text-gray-400">All processing happens in your browser</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
               <Zap className="w-5 h-5 text-yellow-400" />
               <div>
@@ -258,15 +271,15 @@ export default function ImageCompressGuide({ onClose }: GuideProps) {
             <div className="text-sm text-green-300">
               <p className="font-semibold mb-1">Your Images Stay Private</p>
               <p className="text-gray-300">
-                All compression happens locally in your browser. Images are never uploaded to any server.
-                Perfect for sensitive or confidential images.
+                All compression happens locally in your browser. Images are never uploaded to any
+                server. Perfect for sensitive or confidential images.
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -274,4 +287,4 @@ export const guideMetadata = {
   title: 'Image Compress Guide',
   icon: '🖼️',
   available: true,
-};
+}

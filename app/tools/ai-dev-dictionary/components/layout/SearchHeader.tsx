@@ -17,7 +17,7 @@ export default function SearchHeader({
   onSearchChange,
   selectedCategory,
   onCategoryChange,
-  resultCount
+  resultCount,
 }: SearchHeaderProps) {
   return (
     <div className="space-y-4">
@@ -44,7 +44,7 @@ export default function SearchHeader({
 
       {/* カテゴリーフィルター（簡素化） */}
       <div className="flex flex-wrap gap-2 justify-center">
-        {categories.map(category => (
+        {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => onCategoryChange(category.id)}

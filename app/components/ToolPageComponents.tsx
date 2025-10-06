@@ -8,7 +8,7 @@ import { Shield, Lock, Zap, HelpCircle, ChevronDown, Check, X, Info } from 'luci
 // プライバシーバッジコンポーネント
 export function PrivacyBadge() {
   const [showDetails, setShowDetails] = useState(false)
-  
+
   return (
     <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-xl rounded-xl border border-green-500/20 p-4">
       <div className="flex items-center justify-between">
@@ -19,15 +19,17 @@ export function PrivacyBadge() {
             <p className="text-xs text-gray-400">This tool works entirely in your browser</p>
           </div>
         </div>
-        
+
         <button
           onClick={() => setShowDetails(!showDetails)}
           className="text-green-400 hover:text-green-300 transition-colors"
         >
-          <ChevronDown className={`w-5 h-5 transition-transform ${showDetails ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`w-5 h-5 transition-transform ${showDetails ? 'rotate-180' : ''}`}
+          />
         </button>
       </div>
-      
+
       {showDetails && (
         <div className="mt-4 pt-4 border-t border-green-500/20 space-y-2">
           <div className="flex items-center gap-2 text-sm">
@@ -46,7 +48,7 @@ export function PrivacyBadge() {
             <Check className="w-4 h-4 text-green-400" />
             <span className="text-gray-300">Settings saved locally only</span>
           </div>
-          
+
           <Link
             href="/faq#privacy"
             className="inline-flex items-center gap-1 text-xs text-green-400 hover:text-green-300 mt-2"
@@ -61,12 +63,12 @@ export function PrivacyBadge() {
 }
 
 // コスト透明性表示コンポーネント
-export function CostTransparency({ 
-  toolId, 
-  isFree = true, 
+export function CostTransparency({
+  toolId,
+  isFree = true,
   apiCost = 0,
-  userPrice = 0 
-}: { 
+  userPrice = 0,
+}: {
   toolId: string
   isFree?: boolean
   apiCost?: number
@@ -78,7 +80,7 @@ export function CostTransparency({
         <Info className="w-4 h-4 text-cyan-400" />
         Cost Structure
       </h3>
-      
+
       {isFree ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
@@ -118,7 +120,7 @@ export function CostTransparency({
           </div>
         </div>
       )}
-      
+
       <div className="mt-4 p-3 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-lg">
         <p className="text-xs text-gray-300 italic">
           "If it doesn't cost us to run, it doesn't cost you to use."
@@ -134,19 +136,19 @@ export function ToolStats({ toolId }: { toolId: string }) {
     totalUses: 0,
     todayUses: 0,
     avgTime: '0s',
-    satisfaction: 0
+    satisfaction: 0,
   })
-  
+
   useEffect(() => {
     // 統計データをシミュレート
     setStats({
       totalUses: Math.floor(Math.random() * 10000) + 1000,
       todayUses: Math.floor(Math.random() * 500) + 50,
       avgTime: `${Math.floor(Math.random() * 180) + 30}s`,
-      satisfaction: Math.floor(Math.random() * 10) + 90
+      satisfaction: Math.floor(Math.random() * 10) + 90,
     })
   }, [toolId])
-  
+
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="bg-white/5 backdrop-blur-xl rounded-lg p-3 text-center">

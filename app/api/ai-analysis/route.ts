@@ -9,39 +9,33 @@ const anthropic = new Anthropic({
 export async function POST(request: Request) {
   try {
     const { action, projectStructure, question } = await request.json()
-    
+
     if (!projectStructure) {
-      return NextResponse.json(
-        { error: 'Project structure is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Project structure is required' }, { status: 400 })
     }
-    
+
     const prompt = buildPrompt(action, projectStructure, question)
-    
+
     const message = await anthropic.messages.create({
       model: 'claude-3-5-haiku-20241022',
       max_tokens: 4000,
       messages: [{ role: 'user', content: prompt }],
     })
-    
+
     const textContent = message.content[0]
     const responseText = textContent.type === 'text' ? textContent.text : ''
-    
+
     return NextResponse.json({
       result: responseText,
       tokens: {
         input: message.usage.input_tokens,
         output: message.usage.output_tokens,
-        total: message.usage.input_tokens + message.usage.output_tokens
-      }
+        total: message.usage.input_tokens + message.usage.output_tokens,
+      },
     })
   } catch (error) {
     console.error('AI Analysis error:', error)
-    return NextResponse.json(
-      { error: 'Failed to process AI analysis' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to process AI analysis' }, { status: 500 })
   }
 }
 
@@ -107,8 +101,8 @@ ${structure}
 
 User Question: ${question}
 
-Provide a clear, helpful answer based only on what you can see in the structure. If you cannot determine something from the structure alone, say so.`
+Provide a clear, helpful answer based only on what you can see in the structure. If you cannot determine something from the structure alone, say so.`,
   }
-  
+
   return prompts[action] || prompts.analyze
 }

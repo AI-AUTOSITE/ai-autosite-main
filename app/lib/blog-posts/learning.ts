@@ -14,7 +14,7 @@ export const learningPosts: BlogPost[] = [
     status: 'published',
     relatedTool: {
       name: 'AI Dev Dictionary',
-      url: '/tools/ai-dev-dictionary'
+      url: '/tools/ai-dev-dictionary',
     },
     // Additional metadata
     tags: ['ai', 'development', 'dictionary', 'learning', 'terminology', 'education'],
@@ -23,7 +23,8 @@ export const learningPosts: BlogPost[] = [
     views: 0,
     // SEO
     seoTitle: 'AI Dev Dictionary - Learn AI & Development Terms',
-    seoDescription: 'Master AI and development terminology with our interactive dictionary. Understand technical concepts easily. Free learning resource.',
-    ogImage: '/og/ai-dev-dictionary-guide.png'
-  }
+    seoDescription:
+      'Master AI and development terminology with our interactive dictionary. Understand technical concepts easily. Free learning resource.',
+    ogImage: '/og/ai-dev-dictionary-guide.png',
+  },
 ]

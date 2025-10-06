@@ -7,24 +7,24 @@ export const toolGuide = {
     { icon: '1', text: 'Upload your project folder or paste GitHub URL' },
     { icon: '2', text: 'View dependency analysis and project structure' },
     { icon: '3', text: 'Compress code to save 60% on AI tokens' },
-    { icon: '4', text: 'Export for ChatGPT or Claude' }
+    { icon: '4', text: 'Export for ChatGPT or Claude' },
   ],
   tips: [
     'Supports up to 500 files',
     'Auto-skips node_modules',
     'Compress saves 60% tokens',
-    'Free to use, no signup'
+    'Free to use, no signup',
   ],
   troubleshooting: [
-    { 
-      problem: 'Files not loading', 
-      solution: 'Check file extensions (.ts, .tsx, .js, .jsx)' 
+    {
+      problem: 'Files not loading',
+      solution: 'Check file extensions (.ts, .tsx, .js, .jsx)',
     },
-    { 
-      problem: 'GitHub fetch fails', 
-      solution: 'Repository must be public' 
-    }
-  ]
+    {
+      problem: 'GitHub fetch fails',
+      solution: 'Repository must be public',
+    },
+  ],
 }
 
 interface ToolGuideProps {
@@ -35,7 +35,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md w-full relative">
       {onClose && (
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
           aria-label="Close guide"
@@ -43,7 +43,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <HelpCircle className="w-6 h-6 text-cyan-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>

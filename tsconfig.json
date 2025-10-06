@@ -33,6 +33,12 @@
       "@/config/*": ["./app/config/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/lib/categories.config.backup"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/lib/categories.config.backup"
+  ],
   "exclude": ["node_modules"]
 }

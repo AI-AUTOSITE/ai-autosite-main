@@ -8,7 +8,7 @@ export const toolGuide = {
     { icon: '1', text: 'Drag & drop your project folder or click to browse' },
     { icon: '2', text: 'Choose export format (Tree, Mermaid, JSON, or Markdown)' },
     { icon: '3', text: 'Review the generated structure in real-time' },
-    { icon: '4', text: 'Copy to clipboard or download the output' }
+    { icon: '4', text: 'Copy to clipboard or download the output' },
   ],
   tips: [
     'Automatically excludes node_modules, .git, and .env files',
@@ -16,20 +16,26 @@ export const toolGuide = {
     'All processing happens locally in your browser',
     'Tree format is best for Claude/ChatGPT',
     'Mermaid format works great in GitHub & Notion',
-    'Drag entire folders for complete project mapping'
+    'Drag entire folders for complete project mapping',
   ],
   troubleshooting: [
-    { problem: 'No files showing', solution: 'Check if all files are excluded (like node_modules only folder)' },
-    { problem: 'Missing some files', solution: 'Files over 5MB or sensitive files are auto-excluded' },
+    {
+      problem: 'No files showing',
+      solution: 'Check if all files are excluded (like node_modules only folder)',
+    },
+    {
+      problem: 'Missing some files',
+      solution: 'Files over 5MB or sensitive files are auto-excluded',
+    },
     { problem: 'Folder upload not working', solution: 'Use Chrome/Edge for best folder support' },
-    { problem: 'Output looks wrong', solution: 'Try a different format - Tree is most reliable' }
+    { problem: 'Output looks wrong', solution: 'Try a different format - Tree is most reliable' },
   ],
   formats: [
     { name: 'Tree', best: 'AI tools, CLI output', icon: '🌳' },
     { name: 'Mermaid', best: 'GitHub, Notion, diagrams', icon: '🌊' },
     { name: 'JSON', best: 'APIs, programmatic use', icon: '📊' },
-    { name: 'Markdown', best: 'Documentation, README', icon: '📝' }
-  ]
+    { name: 'Markdown', best: 'Documentation, README', icon: '📝' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -71,12 +77,12 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <FolderTree className="w-6 h-6 text-purple-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Steps Section */}
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>
@@ -98,7 +104,10 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <h4 className="text-sm font-semibold text-gray-300 mb-3">Export Formats</h4>
           <div className="space-y-2">
             {toolGuide.formats.map((format, index) => (
-              <div key={index} className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2">
+              <div
+                key={index}
+                className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2"
+              >
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{format.icon}</span>
                   <span className="text-sm text-white font-medium">{format.name}</span>
@@ -109,7 +118,7 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           </div>
         </div>
       </div>
-      
+
       {/* Features */}
       <div className="mb-6">
         <h4 className="text-sm font-semibold text-gray-300 mb-3">Features & Tips</h4>
@@ -130,13 +139,13 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <div>
             <h4 className="text-sm font-semibold text-green-400 mb-1">Privacy & Security</h4>
             <p className="text-xs text-gray-300">
-              Your files never leave your browser. Sensitive files like .env, credentials.json, 
-              and API keys are automatically excluded to keep your data safe.
+              Your files never leave your browser. Sensitive files like .env, credentials.json, and
+              API keys are automatically excluded to keep your data safe.
             </p>
           </div>
         </div>
       </div>
-      
+
       {/* Troubleshooting */}
       <div className="mb-6">
         <h4 className="text-sm font-semibold text-gray-300 mb-3">Troubleshooting</h4>

@@ -1,12 +1,13 @@
-
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { ArrowLeft, Ruler, Globe, Calculator, ChefHat } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Unit Conversion Guide - Metric to Imperial | AI AutoSite',
-  description: 'Complete guide to converting units. Metric to imperial, temperature, cooking measurements. Free converter included.',
-  keywords: 'unit converter, metric to imperial, measurement conversion, cooking conversions, temperature converter',
+  description:
+    'Complete guide to converting units. Metric to imperial, temperature, cooking measurements. Free converter included.',
+  keywords:
+    'unit converter, metric to imperial, measurement conversion, cooking conversions, temperature converter',
   openGraph: {
     title: 'Complete Unit Conversion Guide',
     description: 'Master unit conversions for cooking, travel, and more',
@@ -21,8 +22,8 @@ export default function UnitConverterGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -31,9 +32,7 @@ export default function UnitConverterGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full">
-            Tools
-          </span>
+          <span className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full">Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -43,8 +42,8 @@ export default function UnitConverterGuidePage() {
           Unit Conversion Made Simple
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Your complete guide to converting between metric and imperial units. 
-          Perfect for cooking, travel, and everyday life.
+          Your complete guide to converting between metric and imperial units. Perfect for cooking,
+          travel, and everyday life.
         </p>
       </header>
 
@@ -70,16 +69,12 @@ export default function UnitConverterGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Calculator className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Shopping</h3>
-              <p className="text-gray-400 text-sm">
-                Compare prices and sizes in different units
-              </p>
+              <p className="text-gray-400 text-sm">Compare prices and sizes in different units</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Ruler className="w-8 h-8 text-purple-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">DIY & Home</h3>
-              <p className="text-gray-400 text-sm">
-                Measure furniture and spaces in any unit
-              </p>
+              <p className="text-gray-400 text-sm">Measure furniture and spaces in any unit</p>
             </div>
           </div>
         </div>
@@ -87,7 +82,7 @@ export default function UnitConverterGuidePage() {
         {/* Common Conversions */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-4">Most Used Conversions</h2>
-          
+
           <div className="space-y-4">
             {/* Length */}
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
@@ -143,7 +138,8 @@ export default function UnitConverterGuidePage() {
                   <strong className="text-white">°C to °F:</strong> Multiply by 9/5, then add 32
                 </p>
                 <p className="text-gray-300">
-                  <strong className="text-white">°F to °C:</strong> Subtract 32, then multiply by 5/9
+                  <strong className="text-white">°F to °C:</strong> Subtract 32, then multiply by
+                  5/9
                 </p>
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   <div className="flex justify-between">
@@ -206,9 +202,7 @@ export default function UnitConverterGuidePage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
-                <p className="text-gray-300">
-                  For cooking: Weight is more accurate than volume
-                </p>
+                <p className="text-gray-300">For cooking: Weight is more accurate than volume</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
@@ -223,14 +217,12 @@ export default function UnitConverterGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-blue-500/10 to-green-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Convert Units Instantly
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Convert Units Instantly</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free unit converter for length, weight, temperature, and volume. No ads, works offline.
         </p>
-        <Link 
-          href="/tools/unit-converter" 
+        <Link
+          href="/tools/unit-converter"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Ruler className="mr-2" size={20} />

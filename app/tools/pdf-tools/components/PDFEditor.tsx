@@ -1,202 +1,209 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
-import { PDFDocument, degrees } from 'pdf-lib';
-import { 
-  Download, RotateCw, Trash2, Scissors, 
-  FileStack, Minimize2, X, GripVertical,
-  ChevronLeft, ChevronRight
-} from 'lucide-react';
-import { Tool } from '../types';
+import { useState, useEffect } from 'react'
+import * as pdfjsLib from 'pdfjs-dist'
+import { PDFDocument, degrees } from 'pdf-lib'
+import {
+  Download,
+  RotateCw,
+  Trash2,
+  Scissors,
+  FileStack,
+  Minimize2,
+  X,
+  GripVertical,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
+import { Tool } from '../types'
 
 // PDF.js workerの設定
 if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`
 }
 
 interface PageData {
-  id: string;
-  pageNumber: number;
-  rotation: number;
-  thumbnail: string;
+  id: string
+  pageNumber: number
+  rotation: number
+  thumbnail: string
 }
 
 interface PDFEditorProps {
-  file: File;
-  activeTools: Tool[];
-  onFileChange: () => void;
+  file: File
+  activeTools: Tool[]
+  onFileChange: () => void
 }
 
 export default function PDFEditor({ file, activeTools, onFileChange }: PDFEditorProps) {
-  const [pages, setPages] = useState<PageData[]>([]);
-  const [selectedPages, setSelectedPages] = useState<Set<string>>(new Set());
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [pdfDoc, setPdfDoc] = useState<any>(null);
-  const [draggedPage, setDraggedPage] = useState<string | null>(null);
+  const [pages, setPages] = useState<PageData[]>([])
+  const [selectedPages, setSelectedPages] = useState<Set<string>>(new Set())
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [pdfDoc, setPdfDoc] = useState<any>(null)
+  const [draggedPage, setDraggedPage] = useState<string | null>(null)
 
   // PDFの読み込みとサムネイル生成
   useEffect(() => {
     const loadPDF = async () => {
-      setIsProcessing(true);
+      setIsProcessing(true)
       try {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-        setPdfDoc(pdf);
+        const arrayBuffer = await file.arrayBuffer()
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise
+        setPdfDoc(pdf)
 
-        const newPages: PageData[] = [];
-        
+        const newPages: PageData[] = []
+
         for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 0.3 });
-          
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d')!;
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          
+          const page = await pdf.getPage(i)
+          const viewport = page.getViewport({ scale: 0.3 })
+
+          const canvas = document.createElement('canvas')
+          const context = canvas.getContext('2d')!
+          canvas.height = viewport.height
+          canvas.width = viewport.width
+
           await page.render({
             canvasContext: context,
-            viewport: viewport
-          }).promise;
-          
+            viewport: viewport,
+          }).promise
+
           newPages.push({
             id: `page-${i}`,
             pageNumber: i,
             rotation: 0,
-            thumbnail: canvas.toDataURL()
-          });
+            thumbnail: canvas.toDataURL(),
+          })
         }
-        
-        setPages(newPages);
+
+        setPages(newPages)
       } catch (error) {
-        console.error('Error loading PDF:', error);
+        console.error('Error loading PDF:', error)
       }
-      setIsProcessing(false);
-    };
+      setIsProcessing(false)
+    }
 
     if (file) {
-      loadPDF();
+      loadPDF()
     }
-  }, [file]);
+  }, [file])
 
   // ツールアクション実行
   const executeToolAction = (toolId: string) => {
     switch (toolId) {
       case 'rotate':
-        handleRotateSelected();
-        break;
+        handleRotateSelected()
+        break
       case 'split':
-        handleSplitSelected();
-        break;
+        handleSplitSelected()
+        break
       case 'merge':
-        alert('Merge feature - Upload additional PDFs');
-        break;
+        alert('Merge feature - Upload additional PDFs')
+        break
       case 'compress':
-        handleCompress();
-        break;
+        handleCompress()
+        break
       default:
-        alert(`${toolId} feature coming soon!`);
+        alert(`${toolId} feature coming soon!`)
     }
-  };
+  }
 
   // ページ選択
   const togglePageSelection = (pageId: string) => {
-    const newSelected = new Set(selectedPages);
+    const newSelected = new Set(selectedPages)
     if (newSelected.has(pageId)) {
-      newSelected.delete(pageId);
+      newSelected.delete(pageId)
     } else {
-      newSelected.add(pageId);
+      newSelected.add(pageId)
     }
-    setSelectedPages(newSelected);
-  };
+    setSelectedPages(newSelected)
+  }
 
   // 回転処理
   const handleRotateSelected = () => {
     if (selectedPages.size === 0) {
-      alert('Please select pages to rotate');
-      return;
+      alert('Please select pages to rotate')
+      return
     }
-    
-    setPages(pages.map(page => 
-      selectedPages.has(page.id) 
-        ? { ...page, rotation: (page.rotation + 90) % 360 }
-        : page
-    ));
-  };
+
+    setPages(
+      pages.map((page) =>
+        selectedPages.has(page.id) ? { ...page, rotation: (page.rotation + 90) % 360 } : page
+      )
+    )
+  }
 
   // 分割処理
   const handleSplitSelected = () => {
     if (selectedPages.size === 0) {
-      alert('Please select pages to extract');
-      return;
+      alert('Please select pages to extract')
+      return
     }
-    
+
     const selectedPageNumbers = pages
-      .filter(p => selectedPages.has(p.id))
-      .map(p => p.pageNumber);
-    
-    alert(`Extracting pages: ${selectedPageNumbers.join(', ')}`);
-  };
+      .filter((p) => selectedPages.has(p.id))
+      .map((p) => p.pageNumber)
+
+    alert(`Extracting pages: ${selectedPageNumbers.join(', ')}`)
+  }
 
   // 圧縮処理
   const handleCompress = async () => {
-    alert('Compressing PDF...');
-  };
+    alert('Compressing PDF...')
+  }
 
   // ドラッグ&ドロップ
   const handleDragStart = (pageId: string) => {
-    setDraggedPage(pageId);
-  };
+    setDraggedPage(pageId)
+  }
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const handleDrop = (e: React.DragEvent, targetPageId: string) => {
-    e.preventDefault();
-    if (!draggedPage || draggedPage === targetPageId) return;
+    e.preventDefault()
+    if (!draggedPage || draggedPage === targetPageId) return
 
-    const draggedIndex = pages.findIndex(p => p.id === draggedPage);
-    const targetIndex = pages.findIndex(p => p.id === targetPageId);
-    
-    const newPages = [...pages];
-    const [removed] = newPages.splice(draggedIndex, 1);
-    newPages.splice(targetIndex, 0, removed);
-    
-    setPages(newPages);
-    setDraggedPage(null);
-  };
+    const draggedIndex = pages.findIndex((p) => p.id === draggedPage)
+    const targetIndex = pages.findIndex((p) => p.id === targetPageId)
+
+    const newPages = [...pages]
+    const [removed] = newPages.splice(draggedIndex, 1)
+    newPages.splice(targetIndex, 0, removed)
+
+    setPages(newPages)
+    setDraggedPage(null)
+  }
 
   // ダウンロード処理
-// ダウンロード処理（型エラー修正版）
-const handleDownload = async () => {
-  setIsProcessing(true);
-  try {
-    const pdfDoc = await PDFDocument.create();
-    // 実際のPDF生成処理をここに実装
-    
-    const pdfBytes = await pdfDoc.save();
-    
-    // Method 1: ArrayBufferに変換（互換性重視）
-    const arrayBuffer = new ArrayBuffer(pdfBytes.byteLength);
-    const view = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < pdfBytes.byteLength; i++) {
-      view[i] = pdfBytes[i];
+  // ダウンロード処理（型エラー修正版）
+  const handleDownload = async () => {
+    setIsProcessing(true)
+    try {
+      const pdfDoc = await PDFDocument.create()
+      // 実際のPDF生成処理をここに実装
+
+      const pdfBytes = await pdfDoc.save()
+
+      // Method 1: ArrayBufferに変換（互換性重視）
+      const arrayBuffer = new ArrayBuffer(pdfBytes.byteLength)
+      const view = new Uint8Array(arrayBuffer)
+      for (let i = 0; i < pdfBytes.byteLength; i++) {
+        view[i] = pdfBytes[i]
+      }
+
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `edited_${file.name}`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Download error:', error)
     }
-    
-    const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `edited_${file.name}`;
-    a.click();
-    URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Download error:', error);
+    setIsProcessing(false)
   }
-  setIsProcessing(false);
-};
 
   return (
     <div className="flex-1 flex flex-col bg-gray-900">
@@ -218,7 +225,7 @@ const handleDownload = async () => {
 
           {/* Active Tools */}
           <div className="flex items-center gap-2">
-            {activeTools.slice(0, 3).map(tool => (
+            {activeTools.slice(0, 3).map((tool) => (
               <button
                 key={tool.id}
                 onClick={() => executeToolAction(tool.id)}
@@ -231,9 +238,9 @@ const handleDownload = async () => {
                 <span className="text-sm">{tool.name}</span>
               </button>
             ))}
-            
+
             <div className="ml-4 h-8 w-px bg-gray-700" />
-            
+
             <button
               onClick={handleDownload}
               disabled={isProcessing}
@@ -244,11 +251,9 @@ const handleDownload = async () => {
             </button>
           </div>
         </div>
-        
+
         {selectedPages.size > 0 && (
-          <div className="mt-2 text-xs text-cyan-400">
-            {selectedPages.size} page(s) selected
-          </div>
+          <div className="mt-2 text-xs text-cyan-400">{selectedPages.size} page(s) selected</div>
         )}
       </div>
 
@@ -279,9 +284,7 @@ const handleDownload = async () => {
                     className="w-12 h-16 object-cover rounded"
                     style={{ transform: `rotate(${page.rotation}deg)` }}
                   />
-                  <span className="text-xs text-gray-300">
-                    {page.pageNumber}
-                  </span>
+                  <span className="text-xs text-gray-300">{page.pageNumber}</span>
                 </div>
               </div>
             ))}
@@ -322,5 +325,5 @@ const handleDownload = async () => {
         </div>
       </div>
     </div>
-  );
+  )
 }

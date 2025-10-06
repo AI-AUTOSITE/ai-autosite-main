@@ -20,17 +20,17 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: numbe
   const window = 60 * 60 * 1000 // 1 hour
 
   const record = requestCounts.get(identifier)
-  
+
   if (record && now > record.resetTime) {
     requestCounts.delete(identifier)
   }
 
   const current = requestCounts.get(identifier)
-  
+
   if (!current) {
-    requestCounts.set(identifier, { 
-      count: 1, 
-      resetTime: now + window 
+    requestCounts.set(identifier, {
+      count: 1,
+      resetTime: now + window,
     })
     return { allowed: true }
   }
@@ -50,31 +50,27 @@ async function extractTextFromPDF(buffer: Buffer): Promise<{ text: string; error
     const pdf = require('pdf-parse')
     const data = await pdf(buffer)
     const text = data.text || ''
-    
+
     // Check if extraction was successful
     if (!text || text.trim().length === 0) {
       return { text: '', error: 'EMPTY_PDF' }
     }
-    
+
     if (text.trim().length < 50) {
       return { text: '', error: 'IMAGE_BASED_PDF' }
     }
-    
+
     return { text }
   } catch (error) {
     console.error('PDF parsing error:', error)
-    
+
     // Try fallback extraction
     try {
       const pdfString = buffer.toString('latin1')
       let text = ''
-      
-      const patterns = [
-        /\((.*?)\)/g,
-        /BT\s*([\s\S]*?)\s*ET/g,
-        /Tj\s*\((.*?)\)/g,
-      ]
-      
+
+      const patterns = [/\((.*?)\)/g, /BT\s*([\s\S]*?)\s*ET/g, /Tj\s*\((.*?)\)/g]
+
       for (const pattern of patterns) {
         const matches = pdfString.matchAll(pattern)
         for (const match of matches) {
@@ -83,13 +79,13 @@ async function extractTextFromPDF(buffer: Buffer): Promise<{ text: string; error
           }
         }
       }
-      
+
       const cleanedText = text.trim()
-      
+
       if (!cleanedText || cleanedText.length < 50) {
         return { text: '', error: 'CORRUPTED_PDF' }
       }
-      
+
       return { text: cleanedText }
     } catch (fallbackError) {
       return { text: '', error: 'CORRUPTED_PDF' }
@@ -109,12 +105,12 @@ export async function POST(request: NextRequest) {
     // Rate limiting check
     const clientIp = getClientIp(request)
     const ipCheck = checkRateLimit(clientIp)
-    
+
     if (!ipCheck.allowed) {
       return NextResponse.json(
-        { 
-          error: 'RATE_LIMIT_EXCEEDED', 
-          message: `Too many requests. Please try again in ${ipCheck.resetIn} minutes.` 
+        {
+          error: 'RATE_LIMIT_EXCEEDED',
+          message: `Too many requests. Please try again in ${ipCheck.resetIn} minutes.`,
         },
         { status: 429 }
       )
@@ -122,12 +118,12 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData()
     const file = formData.get('pdf') as File
-    let outputFormat = formData.get('format') as string || 'csv'
-    const customFields = formData.get('customFields') as string || ''
-    
+    let outputFormat = (formData.get('format') as string) || 'csv'
+    const customFields = (formData.get('customFields') as string) || ''
+
     console.log('Processing PDF:', file?.name)
     console.log('Custom fields:', customFields)
-    
+
     if (!file) {
       return NextResponse.json(
         { error: 'INVALID_FILE_TYPE', message: 'PDF file missing' },
@@ -144,14 +140,14 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    
+
     // Extract text from PDF
     const { text: extractedText, error: extractionError } = await extractTextFromPDF(buffer)
-    
+
     // Handle extraction errors with specific messages
     if (extractionError) {
       let message = 'Failed to extract text from PDF'
-      
+
       switch (extractionError) {
         case 'EMPTY_PDF':
           message = 'This PDF appears to be empty or has no extractable text.'
@@ -163,11 +159,8 @@ export async function POST(request: NextRequest) {
           message = 'The PDF file appears to be corrupted. Please try a different file.'
           break
       }
-      
-      return NextResponse.json(
-        { error: extractionError, message },
-        { status: 400 }
-      )
+
+      return NextResponse.json({ error: extractionError, message }, { status: 400 })
     }
 
     // Trim if too long
@@ -181,7 +174,10 @@ export async function POST(request: NextRequest) {
     // Prepare custom fields instruction
     let fieldsInstruction = ''
     if (customFields) {
-      const fields = customFields.split(',').map(f => f.trim()).filter(f => f)
+      const fields = customFields
+        .split(',')
+        .map((f) => f.trim())
+        .filter((f) => f)
       if (fields.length > 0) {
         fieldsInstruction = `\n\nIMPORTANT: Extract ONLY these specific fields: ${fields.join(', ')}\nCreate CSV columns exactly matching these field names.`
       }
@@ -214,14 +210,12 @@ Then extract the most relevant information into a well-structured CSV table.${fi
 Document content:
 ${processedText}
 
-Output pure CSV only. Choose appropriate column names based on the document type.`
-        }
-      ]
+Output pure CSV only. Choose appropriate column names based on the document type.`,
+        },
+      ],
     })
 
-    let csvContent = message.content[0].type === 'text' 
-      ? message.content[0].text 
-      : ''
+    let csvContent = message.content[0].type === 'text' ? message.content[0].text : ''
 
     if (!csvContent) {
       return NextResponse.json(
@@ -231,7 +225,10 @@ Output pure CSV only. Choose appropriate column names based on the document type
     }
 
     // Remove markdown formatting
-    csvContent = csvContent.replace(/```csv\n?/g, '').replace(/```\n?/g, '').trim()
+    csvContent = csvContent
+      .replace(/```csv\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim()
 
     // Excel format conversion
     if (outputFormat === 'excel') {
@@ -239,7 +236,7 @@ Output pure CSV only. Choose appropriate column names based on the document type
         const XLSX = require('xlsx')
         const workbook = XLSX.read(csvContent, { type: 'string' })
         const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
-        
+
         return new NextResponse(excelBuffer, {
           status: 200,
           headers: {
@@ -271,10 +268,9 @@ Output pure CSV only. Choose appropriate column names based on the document type
         'Content-Disposition': 'attachment; filename="extracted_data.csv"',
       },
     })
-
   } catch (error: any) {
     console.error('Server error:', error)
-    
+
     // Handle specific API errors
     if (error.status === 401) {
       return NextResponse.json(
@@ -282,14 +278,17 @@ Output pure CSV only. Choose appropriate column names based on the document type
         { status: 500 }
       )
     }
-    
+
     if (error.status === 429) {
       return NextResponse.json(
-        { error: 'RATE_LIMIT_EXCEEDED', message: 'API rate limit exceeded. Please try again later.' },
+        {
+          error: 'RATE_LIMIT_EXCEEDED',
+          message: 'API rate limit exceeded. Please try again later.',
+        },
         { status: 429 }
       )
     }
-    
+
     return NextResponse.json(
       { error: 'GENERAL_ERROR', message: 'Failed to process PDF. Please try again.' },
       { status: 500 }

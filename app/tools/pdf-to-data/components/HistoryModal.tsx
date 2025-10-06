@@ -18,11 +18,7 @@ interface HistoryModalProps {
   history: HistoryEntry[]
 }
 
-export default function HistoryModal({
-  isOpen,
-  onClose,
-  history
-}: HistoryModalProps) {
+export default function HistoryModal({ isOpen, onClose, history }: HistoryModalProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -38,16 +34,16 @@ export default function HistoryModal({
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
   const modalContent = (
-    <div 
+    <div
       className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border border-slate-700"
         onClick={(e) => e.stopPropagation()}
       >
@@ -57,10 +53,7 @@ export default function HistoryModal({
             <h2 className="text-xl font-bold text-white">Processing History</h2>
             <p className="text-sm text-gray-400 mt-1">Your recent PDF extractions</p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
@@ -88,16 +81,12 @@ export default function HistoryModal({
                         ) : (
                           <XCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
                         )}
-                        <span className="text-white font-medium truncate">
-                          {entry.fileName}
-                        </span>
+                        <span className="text-white font-medium truncate">{entry.fileName}</span>
                       </div>
                       <div className="flex flex-col gap-1 text-xs text-gray-400">
                         <span>{formatDate(entry.date)}</span>
                         {entry.customFields && (
-                          <span className="text-cyan-400">
-                            Custom fields: {entry.customFields}
-                          </span>
+                          <span className="text-cyan-400">Custom fields: {entry.customFields}</span>
                         )}
                       </div>
                     </div>

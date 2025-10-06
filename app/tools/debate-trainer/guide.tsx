@@ -1,11 +1,11 @@
 // app/tools/debate-trainer/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
   MessageSquare,
   Brain,
   Target,
@@ -15,23 +15,23 @@ import {
   Star,
   Users,
   ChevronRight,
-  Info
-} from 'lucide-react';
+  Info,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function DebateTrainerGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const exampleTopics = [
-    "Should AI replace human workers?",
-    "Is space exploration worth the cost?",
-    "Should social media be regulated?",
-    "Is remote work better than office work?",
-    "Should college education be free?"
-  ];
+    'Should AI replace human workers?',
+    'Is space exploration worth the cost?',
+    'Should social media be regulated?',
+    'Is remote work better than office work?',
+    'Should college education be free?',
+  ]
 
   const coachStyles = [
     {
@@ -39,37 +39,37 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
       icon: '🤝',
       level: 'Beginner',
       description: 'Gentle feedback, builds confidence',
-      color: 'from-blue-400 to-purple-500'
+      color: 'from-blue-400 to-purple-500',
     },
     {
       name: 'Professor',
       icon: '🎓',
       level: 'Intermediate',
       description: 'Academic rigor, balanced critique',
-      color: 'from-emerald-500 to-teal-600'
+      color: 'from-emerald-500 to-teal-600',
     },
     {
       name: "Devil's Advocate",
       icon: '⚔️',
       level: 'Advanced',
       description: 'No mercy, challenges everything',
-      color: 'from-red-500 to-orange-600'
-    }
-  ];
+      color: 'from-red-500 to-orange-600',
+    },
+  ]
 
   const scoreCategories = [
     { name: 'Logical Consistency', icon: Brain, description: 'How well arguments connect' },
     { name: 'Persuasiveness', icon: MessageSquare, description: 'Emotional and rational appeal' },
     { name: 'Factual Accuracy', icon: Shield, description: 'Correctness of claims' },
     { name: 'Structural Coherence', icon: Target, description: 'Organization and clarity' },
-    { name: 'Rebuttal Resilience', icon: Trophy, description: 'Anticipating counterarguments' }
-  ];
+    { name: 'Rebuttal Resilience', icon: Trophy, description: 'Anticipating counterarguments' },
+  ]
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -122,7 +122,7 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-pink-500 to-orange-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -134,7 +134,7 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-orange-500 to-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -222,7 +222,7 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
           </h4>
           <div className="space-y-2">
             {scoreCategories.map((category, index) => {
-              const Icon = category.icon;
+              const Icon = category.icon
               return (
                 <div key={index} className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
                   <Icon className="w-5 h-5 text-purple-400 mt-0.5" />
@@ -231,7 +231,7 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
                     <p className="text-xs text-gray-400">{category.description}</p>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
           <p className="text-xs text-gray-400 text-center mt-2">
@@ -280,8 +280,8 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
             <div className="text-sm text-green-300">
               <p className="font-semibold mb-1">Privacy Protected</p>
               <p className="text-gray-300">
-                No account needed. Anonymous processing. Rate-limited for fairness.
-                Your debates are never stored or shared.
+                No account needed. Anonymous processing. Rate-limited for fairness. Your debates are
+                never stored or shared.
               </p>
             </div>
           </div>
@@ -291,8 +291,8 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
         <div className="bg-purple-500/10 rounded-lg p-4">
           <p className="text-sm text-white font-medium mb-2">💡 Winning Strategy</p>
           <p className="text-xs text-gray-300 mb-2">
-            The key to high scores is anticipating counterarguments. Always think:
-            "What would my opponent say?" and address it preemptively.
+            The key to high scores is anticipating counterarguments. Always think: "What would my
+            opponent say?" and address it preemptively.
           </p>
           <p className="text-xs text-gray-400">
             Remember: This tool helps you think critically, not win arguments at any cost.
@@ -300,7 +300,7 @@ export default function DebateTrainerGuide({ onClose }: GuideProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -308,4 +308,4 @@ export const guideMetadata = {
   title: 'AI Debate Trainer Guide',
   icon: '💬',
   available: true,
-};
+}

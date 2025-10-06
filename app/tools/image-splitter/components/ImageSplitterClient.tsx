@@ -7,7 +7,7 @@ import { FileText, Download, Scissors } from 'lucide-react'
 const PAPER_SIZES = {
   A4: { width: 210, height: 297 },
   A5: { width: 148, height: 210 },
-  B5: { width: 182, height: 257 }
+  B5: { width: 182, height: 257 },
 }
 
 const DPI_OPTIONS = [72, 96, 150, 300]
@@ -33,7 +33,7 @@ export default function ImageSplitterClient() {
 
   const onFile = (file: File | null) => {
     if (!file || !file.type.startsWith('image/')) return
-    
+
     const im = new Image()
     im.onload = () => {
       setImg(im)
@@ -41,7 +41,7 @@ export default function ImageSplitterClient() {
       if (mode === 'manual') {
         const defaultSplits = []
         for (let i = 1; i < 3; i++) {
-          defaultSplits.push(Math.floor(im.height * i / 3))
+          defaultSplits.push(Math.floor((im.height * i) / 3))
         }
         setManualSplits(defaultSplits)
       }
@@ -51,9 +51,9 @@ export default function ImageSplitterClient() {
 
   useEffect(() => {
     if (!img) return
-    
+
     let splitLines: number[] = []
-    
+
     if (mode === 'paper') {
       const paperHeight = getPaperHeightPx()
       splitLines = []
@@ -78,17 +78,17 @@ export default function ImageSplitterClient() {
     } else if (mode === 'manual') {
       splitLines = manualSplits
     }
-    
+
     generateSplitPreviews(splitLines)
   }, [img, mode, paperSize, dpi, heightPx, count, manualSplits])
 
   const generateSplitPreviews = (splitLines: number[]) => {
     if (!img) return
-    
+
     const parts: string[] = []
     const w = img.width
     let lastY = 0
-    
+
     const createPart = (startY: number, height: number) => {
       const c = document.createElement('canvas')
       c.width = w
@@ -97,28 +97,28 @@ export default function ImageSplitterClient() {
       ctx.drawImage(img, 0, startY, w, height, 0, 0, w, height)
       return c
     }
-    
+
     splitLines.forEach((y) => {
       const h = y - lastY
       const canvas = createPart(lastY, h)
       parts.push(canvas.toDataURL('image/png'))
       lastY = y
     })
-    
+
     if (lastY < img.height) {
       const h = img.height - lastY
       const canvas = createPart(lastY, h)
       parts.push(canvas.toDataURL('image/png'))
     }
-    
+
     setSplitParts(parts)
   }
 
   const downloadMerged = () => {
     if (!img || splitParts.length === 0) return
-    
+
     let splitLines: number[] = []
-    
+
     if (mode === 'paper') {
       const paperHeight = getPaperHeightPx()
       splitLines = []
@@ -143,11 +143,11 @@ export default function ImageSplitterClient() {
     } else if (mode === 'manual') {
       splitLines = manualSplits
     }
-    
+
     const parts: HTMLCanvasElement[] = []
     const w = img.width
     let lastY = 0
-    
+
     splitLines.forEach((y) => {
       const h = y - lastY
       const c = document.createElement('canvas')
@@ -157,7 +157,7 @@ export default function ImageSplitterClient() {
       parts.push(c)
       lastY = y
     })
-    
+
     if (lastY < img.height) {
       const h = img.height - lastY
       const c = document.createElement('canvas')
@@ -166,20 +166,20 @@ export default function ImageSplitterClient() {
       c.getContext('2d')!.drawImage(img, 0, lastY, w, h, 0, 0, w, h)
       parts.push(c)
     }
-    
+
     // Merge horizontally
     const totalW = w * parts.length
     const maxH = parts.reduce((m, c) => Math.max(m, c.height), 0)
-    
+
     const m = document.createElement('canvas')
     m.width = totalW
     m.height = maxH
     const ctx = m.getContext('2d')!
     ctx.fillStyle = '#fff'
     ctx.fillRect(0, 0, m.width, m.height)
-    
+
     parts.forEach((c, i) => ctx.drawImage(c, i * w, 0))
-    
+
     m.toBlob((blob) => {
       if (!blob) return
       const url = URL.createObjectURL(blob)
@@ -211,14 +211,14 @@ export default function ImageSplitterClient() {
     const rect = imageRef.current.getBoundingClientRect()
     const scale = imageRef.current.offsetHeight / img.height
     const y = Math.round((e.clientY - rect.top) / scale)
-    
+
     if (y > 10 && y < img.height - 10) {
-      setManualSplits(prev => [...prev, y].sort((a, b) => a - b))
+      setManualSplits((prev) => [...prev, y].sort((a, b) => a - b))
     }
   }
 
   const removeSplitLine = (index: number) => {
-    setManualSplits(prev => prev.filter((_, i) => i !== index))
+    setManualSplits((prev) => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -240,7 +240,7 @@ export default function ImageSplitterClient() {
                 <div className="text-xs text-white">Paper Size</div>
               </div>
             </label>
-            
+
             <label className="relative">
               <input
                 type="radio"
@@ -253,7 +253,7 @@ export default function ImageSplitterClient() {
                 <div className="text-xs text-white">By Height</div>
               </div>
             </label>
-            
+
             <label className="relative">
               <input
                 type="radio"
@@ -266,7 +266,7 @@ export default function ImageSplitterClient() {
                 <div className="text-xs text-white">By Count</div>
               </div>
             </label>
-            
+
             <label className="relative">
               <input
                 type="radio"
@@ -277,7 +277,7 @@ export default function ImageSplitterClient() {
                   if (img && manualSplits.length === 0) {
                     const defaultSplits = []
                     for (let i = 1; i < 3; i++) {
-                      defaultSplits.push(Math.floor(img.height * i / 3))
+                      defaultSplits.push(Math.floor((img.height * i) / 3))
                     }
                     setManualSplits(defaultSplits)
                   }
@@ -313,17 +313,17 @@ export default function ImageSplitterClient() {
                     onChange={(e) => setDpi(Number(e.target.value))}
                     className="px-3 py-1 rounded bg-white/10 border border-white/20 text-white text-sm"
                   >
-                    {DPI_OPTIONS.map(d => (
-                      <option key={d} value={d}>{d}</option>
+                    {DPI_OPTIONS.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
                     ))}
                   </select>
                 </div>
-                <div className="text-xs text-cyan-400">
-                  = {getPaperHeightPx()}px per page
-                </div>
+                <div className="text-xs text-cyan-400">= {getPaperHeightPx()}px per page</div>
               </>
             )}
-            
+
             {mode === 'height' && (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-gray-300">Height (px):</label>
@@ -337,7 +337,7 @@ export default function ImageSplitterClient() {
                 />
               </div>
             )}
-            
+
             {mode === 'count' && (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-gray-300">Parts:</label>
@@ -379,7 +379,9 @@ export default function ImageSplitterClient() {
             role="button"
             tabIndex={0}
             onClick={() => document.getElementById('split-file')?.click()}
-            onKeyDown={(e) => (e.key === 'Enter' ? document.getElementById('split-file')?.click() : null)}
+            onKeyDown={(e) =>
+              e.key === 'Enter' ? document.getElementById('split-file')?.click() : null
+            }
             onDragOver={(e) => {
               e.preventDefault()
               e.currentTarget.classList.add('border-cyan-400', 'bg-cyan-500/10')
@@ -417,7 +419,7 @@ export default function ImageSplitterClient() {
                       style={{ maxHeight: '400px' }}
                       onClick={mode === 'manual' ? addSplitLine : undefined}
                     />
-                    
+
                     {/* Manual split lines */}
                     {mode === 'manual' && (
                       <div className="absolute inset-0 pointer-events-none">

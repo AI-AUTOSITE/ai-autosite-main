@@ -20,17 +20,17 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: numbe
   const window = 60 * 60 * 1000
 
   const record = requestCounts.get(identifier)
-  
+
   if (record && now > record.resetTime) {
     requestCounts.delete(identifier)
   }
 
   const current = requestCounts.get(identifier)
-  
+
   if (!current) {
-    requestCounts.set(identifier, { 
-      count: 1, 
-      resetTime: now + window 
+    requestCounts.set(identifier, {
+      count: 1,
+      resetTime: now + window,
     })
     return { allowed: true }
   }
@@ -47,7 +47,7 @@ function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: numbe
 const stylePrompts = {
   kind: `You are a supportive debate coach. Be encouraging, constructive, and positive while providing honest feedback. Focus on strengths first, then gently point out areas for improvement.`,
   teacher: `You are a logical debate professor. Be educational, analytical, and thorough. Provide detailed reasoning for your scores and help the debater understand logical principles.`,
-  devil: `You are a sharp debate critic playing devil's advocate. Challenge arguments directly and rigorously, but remain respectful and educational. Your goal is to strengthen the debater's skills through tough but fair critique.`
+  devil: `You are a sharp debate critic playing devil's advocate. Challenge arguments directly and rigorously, but remain respectful and educational. Your goal is to strengthen the debater's skills through tough but fair critique.`,
 }
 
 export async function POST(request: NextRequest) {
@@ -56,10 +56,7 @@ export async function POST(request: NextRequest) {
     const { theme, message, style, user_token, is_new_session } = body
 
     if (!theme || !message || !style) {
-      return NextResponse.json(
-        { error: 'Please provide all required fields' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Please provide all required fields' }, { status: 400 })
     }
 
     if (theme.length > 200 || message.length > 2000) {
@@ -72,7 +69,7 @@ export async function POST(request: NextRequest) {
     const clientIp = getClientIp(request)
     const ipIdentifier = `ip:${clientIp}`
     const ipCheck = checkRateLimit(ipIdentifier)
-    
+
     if (!ipCheck.allowed) {
       return NextResponse.json(
         { error: `Rate limit exceeded. Please try again in ${ipCheck.resetIn} minutes.` },
@@ -83,7 +80,7 @@ export async function POST(request: NextRequest) {
     if (is_new_session && user_token) {
       const userIdentifier = `user:${user_token}`
       const userCheck = checkRateLimit(userIdentifier)
-      
+
       if (!userCheck.allowed) {
         return NextResponse.json(
           { error: `You've started too many debates. Please try again later.` },
@@ -93,8 +90,8 @@ export async function POST(request: NextRequest) {
     }
 
     const roleInstruction = stylePrompts[style as keyof typeof stylePrompts] || stylePrompts.teacher
-    
-const userPrompt = `Evaluate this debate argument CRITICALLY and provide honest scores.
+
+    const userPrompt = `Evaluate this debate argument CRITICALLY and provide honest scores.
 
 Topic: "${theme}"
 Argument: "${message}"
@@ -127,51 +124,52 @@ SCORING GUIDELINES:
       temperature: 0.7,
       system: roleInstruction,
       messages: [
-        { 
-          role: 'user', 
-          content: userPrompt 
-        }
-      ]
+        {
+          role: 'user',
+          content: userPrompt,
+        },
+      ],
     })
 
-    const rawResponse = completion.content[0].type === 'text' 
-      ? completion.content[0].text 
-      : ''
+    const rawResponse = completion.content[0].type === 'text' ? completion.content[0].text : ''
 
     let scores = {
-      "Logical Consistency": 3,
-      "Persuasiveness": 3,
-      "Factual Accuracy": 3,
-      "Structural Coherence": 3,
-      "Rebuttal Resilience": 3
+      'Logical Consistency': 3,
+      Persuasiveness: 3,
+      'Factual Accuracy': 3,
+      'Structural Coherence': 3,
+      'Rebuttal Resilience': 3,
     }
-    
+
     let scoreExplanations: Record<string, string> = {}
-    let feedback = "Keep practicing your argumentation skills!"
+    let feedback = 'Keep practicing your argumentation skills!'
 
     // スコアと説明を抽出
-// スコアを抽出（よりシンプルに）
-const scoreMatches = Array.from(rawResponse.matchAll(
-  /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*(\d)\/5/g
-))
+    // スコアを抽出（よりシンプルに）
+    const scoreMatches = Array.from(
+      rawResponse.matchAll(
+        /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*(\d)\/5/g
+      )
+    )
 
-for (const match of scoreMatches) {
-  const key = match[1] as keyof typeof scores
-  const value = parseInt(match[2], 10)
-  
-  if (value >= 1 && value <= 5) {
-    scores[key] = value
-  }
-}
+    for (const match of scoreMatches) {
+      const key = match[1] as keyof typeof scores
+      const value = parseInt(match[2], 10)
 
-// 説明を別途抽出
-const explanationPattern = /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*\d\/5\s*-\s*([^\n]+)/g
-const explanationMatches = Array.from(rawResponse.matchAll(explanationPattern))
+      if (value >= 1 && value <= 5) {
+        scores[key] = value
+      }
+    }
 
-for (const match of explanationMatches) {
-  const key = match[1] as keyof typeof scores
-  scoreExplanations[key] = match[2].trim()
-}
+    // 説明を別途抽出
+    const explanationPattern =
+      /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*\d\/5\s*-\s*([^\n]+)/g
+    const explanationMatches = Array.from(rawResponse.matchAll(explanationPattern))
+
+    for (const match of explanationMatches) {
+      const key = match[1] as keyof typeof scores
+      scoreExplanations[key] = match[2].trim()
+    }
 
     const feedbackMatch = rawResponse.match(/FEEDBACK:\s*([\s\S]+?)(?:\n\n|$)/)
     if (feedbackMatch) {
@@ -191,29 +189,25 @@ for (const match of explanationMatches) {
       reply: rawResponse,
       scores,
       scoreExplanations,
-      feedback
+      feedback,
     })
-
   } catch (error: any) {
     console.error('Debate API error:', error)
-    
+
     if (error.status === 401) {
       return NextResponse.json(
         { error: 'Configuration error. Please contact support.' },
         { status: 500 }
       )
     }
-    
+
     if (error.status === 429) {
       return NextResponse.json(
         { error: 'Service temporarily unavailable. Please try again later.' },
         { status: 429 }
       )
     }
-    
-    return NextResponse.json(
-      { error: 'Something went wrong. Please try again.' },
-      { status: 500 }
-    )
+
+    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 }

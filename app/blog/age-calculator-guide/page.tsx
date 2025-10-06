@@ -4,8 +4,10 @@ import { ArrowLeft, Calendar, Cake, Clock, Star } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Age Calculator Online - Calculate Exact Age in Years, Months, Days | AI AutoSite',
-  description: 'Calculate your exact age with our free age calculator. Find out how many days you\'ve lived, zodiac sign, and days until your next birthday.',
-  keywords: 'age calculator, birthday calculator, how old am i, calculate age, zodiac sign calculator, days lived calculator',
+  description:
+    "Calculate your exact age with our free age calculator. Find out how many days you've lived, zodiac sign, and days until your next birthday.",
+  keywords:
+    'age calculator, birthday calculator, how old am i, calculate age, zodiac sign calculator, days lived calculator',
   openGraph: {
     title: 'Age Calculator - Find Your Exact Age',
     description: 'Calculate your age in years, months, days, hours, and minutes',
@@ -20,8 +22,8 @@ export default function AgeCalculatorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function AgeCalculatorGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
-            Quick Tools
-          </span>
+          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">Quick Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function AgeCalculatorGuidePage() {
           Age Calculator Complete Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Calculate your exact age in years, months, days, hours, and minutes. 
-          Find out interesting facts about your birth date.
+          Calculate your exact age in years, months, days, hours, and minutes. Find out interesting
+          facts about your birth date.
         </p>
       </header>
 
@@ -55,23 +55,17 @@ export default function AgeCalculatorGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Calendar className="w-8 h-8 text-blue-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Official Documents</h3>
-              <p className="text-gray-400 text-sm">
-                Exact age for applications and forms
-              </p>
+              <p className="text-gray-400 text-sm">Exact age for applications and forms</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Cake className="w-8 h-8 text-pink-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Birthday Planning</h3>
-              <p className="text-gray-400 text-sm">
-                Days until your next birthday
-              </p>
+              <p className="text-gray-400 text-sm">Days until your next birthday</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Star className="w-8 h-8 text-yellow-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Fun Facts</h3>
-              <p className="text-gray-400 text-sm">
-                Zodiac signs and life statistics
-              </p>
+              <p className="text-gray-400 text-sm">Zodiac signs and life statistics</p>
             </div>
           </div>
         </div>
@@ -84,19 +78,22 @@ export default function AgeCalculatorGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 mt-1">📅</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Exact Age:</strong> Years, months, and days since birth
+                  <strong className="text-white">Exact Age:</strong> Years, months, and days since
+                  birth
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 mt-1">⏰</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Total Time:</strong> Days, hours, minutes you've lived
+                  <strong className="text-white">Total Time:</strong> Days, hours, minutes you've
+                  lived
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400 mt-1">🎂</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Next Birthday:</strong> Countdown to your special day
+                  <strong className="text-white">Next Birthday:</strong> Countdown to your special
+                  day
                 </p>
               </li>
               <li className="flex items-start gap-2">
@@ -159,21 +156,15 @@ export default function AgeCalculatorGuidePage() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">🎯</span>
-                <p className="text-gray-300">
-                  You celebrate about 10,000 days when you turn 27
-                </p>
+                <p className="text-gray-300">You celebrate about 10,000 days when you turn 27</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">🎯</span>
-                <p className="text-gray-300">
-                  At age 31, you've lived about 1 billion seconds
-                </p>
+                <p className="text-gray-300">At age 31, you've lived about 1 billion seconds</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">🎯</span>
-                <p className="text-gray-300">
-                  Your heart beats about 42 million times per year
-                </p>
+                <p className="text-gray-300">Your heart beats about 42 million times per year</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">🎯</span>
@@ -188,14 +179,12 @@ export default function AgeCalculatorGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Calculate Your Age Now
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Calculate Your Age Now</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free age calculator with zodiac signs, life statistics, and birthday countdown.
         </p>
-        <Link 
-          href="/tools/age-calculator" 
+        <Link
+          href="/tools/age-calculator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Calendar className="mr-2" size={20} />

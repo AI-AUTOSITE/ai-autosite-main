@@ -1,62 +1,62 @@
-import React, { useState } from 'react';
-import { Lock, Unlock, Eye, EyeOff } from 'lucide-react';
+import React, { useState } from 'react'
+import { Lock, Unlock, Eye, EyeOff } from 'lucide-react'
 
 interface PasswordUIProps {
-  onAddPassword: (options: any) => void;
-  onRemovePassword: (password: string) => void;
-  onCancel: () => void;
-  isProtected: boolean;
+  onAddPassword: (options: any) => void
+  onRemovePassword: (password: string) => void
+  onCancel: () => void
+  isProtected: boolean
 }
 
 export const PasswordUI: React.FC<PasswordUIProps> = ({
   onAddPassword,
   onRemovePassword,
   onCancel,
-  isProtected
+  isProtected,
 }) => {
-  const [mode, setMode] = useState<'add' | 'remove'>(isProtected ? 'remove' : 'add');
-  const [userPassword, setUserPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [ownerPassword, setOwnerPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [mode, setMode] = useState<'add' | 'remove'>(isProtected ? 'remove' : 'add')
+  const [userPassword, setUserPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [ownerPassword, setOwnerPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [permissions, setPermissions] = useState({
     printing: true,
     copying: true,
     modifying: false,
-    annotating: true
-  });
+    annotating: true,
+  })
 
   const handleAddPassword = () => {
     if (!userPassword) {
-      alert('Please enter a password');
-      return;
+      alert('Please enter a password')
+      return
     }
 
     if (userPassword !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
+      alert('Passwords do not match')
+      return
     }
 
     if (userPassword.length < 4) {
-      alert('Password must be at least 4 characters');
-      return;
+      alert('Password must be at least 4 characters')
+      return
     }
 
     onAddPassword({
       userPassword,
       ownerPassword: ownerPassword || userPassword,
-      permissions
-    });
-  };
+      permissions,
+    })
+  }
 
   const handleRemovePassword = () => {
     if (!userPassword) {
-      alert('Please enter the password');
-      return;
+      alert('Please enter the password')
+      return
     }
 
-    onRemovePassword(userPassword);
-  };
+    onRemovePassword(userPassword)
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -75,10 +75,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
               </>
             )}
           </h3>
-          <button 
-            onClick={onCancel}
-            className="text-gray-400 hover:text-white"
-          >
+          <button onClick={onCancel} className="text-gray-400 hover:text-white">
             ✕
           </button>
         </div>
@@ -89,9 +86,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
             <button
               onClick={() => setMode('add')}
               className={`flex-1 py-2 px-3 rounded ${
-                mode === 'add'
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-700 text-gray-300'
+                mode === 'add' ? 'bg-cyan-600 text-white' : 'bg-gray-700 text-gray-300'
               }`}
             >
               Add Password
@@ -99,9 +94,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
             <button
               onClick={() => setMode('remove')}
               className={`flex-1 py-2 px-3 rounded ${
-                mode === 'remove'
-                  ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-700 text-gray-300'
+                mode === 'remove' ? 'bg-cyan-600 text-white' : 'bg-gray-700 text-gray-300'
               }`}
             >
               Remove Password
@@ -113,9 +106,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
           <div className="space-y-4">
             {/* User Password */}
             <div>
-              <label className="block text-sm text-gray-300 mb-1">
-                User Password (Required)
-              </label>
+              <label className="block text-sm text-gray-300 mb-1">User Password (Required)</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -136,9 +127,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm text-gray-300 mb-1">
-                Confirm Password
-              </label>
+              <label className="block text-sm text-gray-300 mb-1">Confirm Password</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={confirmPassword}
@@ -150,9 +139,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
 
             {/* Owner Password (Optional) */}
             <div>
-              <label className="block text-sm text-gray-300 mb-1">
-                Owner Password (Optional)
-              </label>
+              <label className="block text-sm text-gray-300 mb-1">Owner Password (Optional)</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={ownerPassword}
@@ -167,15 +154,13 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
 
             {/* Permissions */}
             <div>
-              <label className="block text-sm text-gray-300 mb-2">
-                Permissions
-              </label>
+              <label className="block text-sm text-gray-300 mb-2">Permissions</label>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm text-gray-400">
                   <input
                     type="checkbox"
                     checked={permissions.printing}
-                    onChange={(e) => setPermissions({...permissions, printing: e.target.checked})}
+                    onChange={(e) => setPermissions({ ...permissions, printing: e.target.checked })}
                     className="rounded bg-gray-700 border-gray-600 text-cyan-500 focus:ring-cyan-500"
                   />
                   Allow printing
@@ -184,7 +169,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
                   <input
                     type="checkbox"
                     checked={permissions.copying}
-                    onChange={(e) => setPermissions({...permissions, copying: e.target.checked})}
+                    onChange={(e) => setPermissions({ ...permissions, copying: e.target.checked })}
                     className="rounded bg-gray-700 border-gray-600 text-cyan-500 focus:ring-cyan-500"
                   />
                   Allow copying text
@@ -193,7 +178,9 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
                   <input
                     type="checkbox"
                     checked={permissions.modifying}
-                    onChange={(e) => setPermissions({...permissions, modifying: e.target.checked})}
+                    onChange={(e) =>
+                      setPermissions({ ...permissions, modifying: e.target.checked })
+                    }
                     className="rounded bg-gray-700 border-gray-600 text-cyan-500 focus:ring-cyan-500"
                   />
                   Allow modifying
@@ -202,7 +189,9 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
                   <input
                     type="checkbox"
                     checked={permissions.annotating}
-                    onChange={(e) => setPermissions({...permissions, annotating: e.target.checked})}
+                    onChange={(e) =>
+                      setPermissions({ ...permissions, annotating: e.target.checked })
+                    }
                     className="rounded bg-gray-700 border-gray-600 text-cyan-500 focus:ring-cyan-500"
                   />
                   Allow annotations
@@ -214,9 +203,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
           <div className="space-y-4">
             {/* Remove Password */}
             <div>
-              <label className="block text-sm text-gray-300 mb-1">
-                Enter Current Password
-              </label>
+              <label className="block text-sm text-gray-300 mb-1">Enter Current Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -233,9 +220,7 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Enter the password to unlock the PDF
-              </p>
+              <p className="text-xs text-gray-500 mt-1">Enter the password to unlock the PDF</p>
             </div>
           </div>
         )}
@@ -267,5 +252,5 @@ export const PasswordUI: React.FC<PasswordUIProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

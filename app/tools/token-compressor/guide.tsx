@@ -9,16 +9,16 @@ export default function TokenCompressorGuide({ onClose }: TokenCompressorGuidePr
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md relative">
       {/* × ボタンにonClickハンドラーを追加 */}
-      <button 
+      <button
         onClick={onClose}
         className="absolute top-2 right-2 p-2 hover:bg-white/10 rounded-lg transition-colors"
         aria-label="Close guide"
       >
         <X className="w-5 h-5 text-gray-400 hover:text-white" />
       </button>
-      
+
       <h3 className="text-xl font-bold text-white mb-4">Quick Guide</h3>
-      
+
       {/* How to Use */}
       <div className="space-y-3 mb-6">
         <div className="flex items-start gap-3">
@@ -30,7 +30,7 @@ export default function TokenCompressorGuide({ onClose }: TokenCompressorGuidePr
             <p className="text-gray-400 text-xs">Drag & drop or click to browse</p>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 bg-cyan-600/20 rounded-full flex items-center justify-center text-cyan-400 font-bold text-sm flex-shrink-0">
             2
@@ -40,7 +40,7 @@ export default function TokenCompressorGuide({ onClose }: TokenCompressorGuidePr
             <p className="text-gray-400 text-xs">Auto-detects sensitive data</p>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 bg-cyan-600/20 rounded-full flex items-center justify-center text-cyan-400 font-bold text-sm flex-shrink-0">
             3

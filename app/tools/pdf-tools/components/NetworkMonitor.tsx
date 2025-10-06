@@ -1,37 +1,37 @@
 // pdf-tools/components/NetworkMonitor.tsx
 
-import React, { useState, useEffect, useRef } from 'react';
-import { NetworkActivity } from '../types/privacy';
+import React, { useState, useEffect, useRef } from 'react'
+import { NetworkActivity } from '../types/privacy'
 
 export const NetworkMonitor: React.FC = () => {
-  const [activities, setActivities] = useState<NetworkActivity[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isMonitoring, setIsMonitoring] = useState(true);
-  const originalFetchRef = useRef<typeof fetch>();
+  const [activities, setActivities] = useState<NetworkActivity[]>([])
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [isMonitoring, setIsMonitoring] = useState(true)
+  const originalFetchRef = useRef<typeof fetch>()
 
   useEffect(() => {
-    if (!isMonitoring) return;
+    if (!isMonitoring) return
 
     // Store original fetch
-    originalFetchRef.current = window.fetch;
+    originalFetchRef.current = window.fetch
 
     // Intercept all fetch requests
     window.fetch = new Proxy(window.fetch, {
       apply: (target, thisArg, args) => {
-        const [url, options] = args;
-        const urlString = typeof url === 'string' ? url : url.toString();
-        
+        const [url, options] = args
+        const urlString = typeof url === 'string' ? url : url.toString()
+
         // Determine type of connection
-        let type: NetworkActivity['type'] = 'external';
+        let type: NetworkActivity['type'] = 'external'
         if (urlString.includes(window.location.hostname)) {
-          type = 'internal';
+          type = 'internal'
         }
         // Block any attempts to connect to your server (for privacy)
         // Add your domain here if needed
         if (urlString.includes('your-analytics-domain.com')) {
-          type = 'blocked';
-          console.warn('[Privacy] Blocked connection to:', urlString);
-          return Promise.reject(new Error('Connection blocked for privacy'));
+          type = 'blocked'
+          console.warn('[Privacy] Blocked connection to:', urlString)
+          return Promise.reject(new Error('Connection blocked for privacy'))
         }
 
         // Log the activity
@@ -40,62 +40,66 @@ export const NetworkMonitor: React.FC = () => {
           url: urlString,
           method: options?.method || 'GET',
           type,
-          size: options?.body ? 
-            (typeof options.body === 'string' ? options.body.length : 0) : 
-            0
-        };
+          size: options?.body ? (typeof options.body === 'string' ? options.body.length : 0) : 0,
+        }
 
-        setActivities(prev => [activity, ...prev].slice(0, 50)); // Keep last 50
+        setActivities((prev) => [activity, ...prev].slice(0, 50)) // Keep last 50
 
         // Execute the original fetch
-        return target.apply(thisArg, args);
-      }
-    });
+        return target.apply(thisArg, args)
+      },
+    })
 
     // Cleanup
     return () => {
       if (originalFetchRef.current) {
-        window.fetch = originalFetchRef.current;
+        window.fetch = originalFetchRef.current
       }
-    };
-  }, [isMonitoring]);
+    }
+  }, [isMonitoring])
 
   const getActivityIcon = (type: NetworkActivity['type']) => {
     switch (type) {
-      case 'internal': return '🟢';
-      case 'external': return '🟡';
-      case 'blocked': return '🔴';
+      case 'internal':
+        return '🟢'
+      case 'external':
+        return '🟡'
+      case 'blocked':
+        return '🔴'
     }
-  };
+  }
 
   const getActivityColor = (type: NetworkActivity['type']) => {
     switch (type) {
-      case 'internal': return 'text-green-500';
-      case 'external': return 'text-yellow-500';
-      case 'blocked': return 'text-red-500';
+      case 'internal':
+        return 'text-green-500'
+      case 'external':
+        return 'text-yellow-500'
+      case 'blocked':
+        return 'text-red-500'
     }
-  };
+  }
 
   const formatUrl = (url: string) => {
     try {
-      const urlObj = new URL(url);
-      return `${urlObj.hostname}${urlObj.pathname}`;
+      const urlObj = new URL(url)
+      return `${urlObj.hostname}${urlObj.pathname}`
     } catch {
-      return url;
+      return url
     }
-  };
+  }
 
   const formatTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString();
-  };
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString()
+  }
 
   const clearActivities = () => {
-    setActivities([]);
-  };
+    setActivities([])
+  }
 
-  const externalCount = activities.filter(a => a.type === 'external').length;
-  const blockedCount = activities.filter(a => a.type === 'blocked').length;
+  const externalCount = activities.filter((a) => a.type === 'external').length
+  const blockedCount = activities.filter((a) => a.type === 'blocked').length
 
   return (
     <div className="fixed bottom-4 right-4 z-40">
@@ -142,9 +146,7 @@ export const NetworkMonitor: React.FC = () => {
               <button
                 onClick={() => setIsMonitoring(!isMonitoring)}
                 className={`text-xs px-2 py-1 rounded ${
-                  isMonitoring 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-gray-100 text-gray-700'
+                  isMonitoring ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
                 }`}
               >
                 {isMonitoring ? 'Monitoring' : 'Paused'}
@@ -167,19 +169,11 @@ export const NetworkMonitor: React.FC = () => {
           {/* Stats Bar */}
           {activities.length > 0 && (
             <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center gap-4 text-xs">
-              <span className="text-gray-600">
-                Total: {activities.length}
-              </span>
+              <span className="text-gray-600">Total: {activities.length}</span>
               {externalCount > 0 && (
-                <span className="text-yellow-600">
-                  External: {externalCount}
-                </span>
+                <span className="text-yellow-600">External: {externalCount}</span>
               )}
-              {blockedCount > 0 && (
-                <span className="text-red-600">
-                  Blocked: {blockedCount}
-                </span>
-              )}
+              {blockedCount > 0 && <span className="text-red-600">Blocked: {blockedCount}</span>}
             </div>
           )}
 
@@ -189,21 +183,19 @@ export const NetworkMonitor: React.FC = () => {
               <div className="px-4 py-8 text-center">
                 <div className="text-4xl mb-2">🛡️</div>
                 <p className="text-gray-500 text-sm">No network activity detected</p>
-                <p className="text-gray-400 text-xs mt-1">
-                  All processing is happening locally
-                </p>
+                <p className="text-gray-400 text-xs mt-1">All processing is happening locally</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-100">
                 {activities.map((activity, index) => (
                   <div key={index} className="px-4 py-2 hover:bg-gray-50">
                     <div className="flex items-start gap-2">
-                      <span className="text-lg mt-0.5">
-                        {getActivityIcon(activity.type)}
-                      </span>
+                      <span className="text-lg mt-0.5">{getActivityIcon(activity.type)}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs font-medium ${getActivityColor(activity.type)}`}>
+                          <span
+                            className={`text-xs font-medium ${getActivityColor(activity.type)}`}
+                          >
                             {activity.method}
                           </span>
                           <span className="text-xs text-gray-400">
@@ -235,5 +227,5 @@ export const NetworkMonitor: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}

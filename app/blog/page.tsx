@@ -31,7 +31,7 @@ export default function BlogPage() {
     const totalArticles = blogCategories.reduce((sum, cat) => sum + getPostCount(cat.id), 0)
     return {
       totalArticles,
-      categoriesCount: blogCategories.length
+      categoriesCount: blogCategories.length,
     }
   }, [])
 
@@ -45,7 +45,7 @@ export default function BlogPage() {
   // Handle category selection with transition
   const handleCategorySelect = (categoryId: string) => {
     setIsTransitioning(true)
-    
+
     setTimeout(() => {
       setSelectedCategory(categoryId)
       setShowPosts(true)
@@ -57,7 +57,7 @@ export default function BlogPage() {
   // Clear selection and reset
   const clearSelection = () => {
     setIsTransitioning(true)
-    
+
     setTimeout(() => {
       setSelectedCategory(null)
       setShowPosts(false)
@@ -66,14 +66,16 @@ export default function BlogPage() {
     }, 300)
   }
 
-  const loadMorePosts = () => setVisiblePostsCount(prev => prev + 6)
+  const loadMorePosts = () => setVisiblePostsCount((prev) => prev + 6)
 
-  const selectedCategoryData = blogCategories.find(c => c.id === selectedCategory)
+  const selectedCategoryData = blogCategories.find((c) => c.id === selectedCategory)
 
   return (
-    <div className={`max-w-6xl mx-auto px-4 py-12 transition-all duration-300 ${
-      isTransitioning ? 'opacity-0' : 'opacity-100'
-    }`}>
+    <div
+      className={`max-w-6xl mx-auto px-4 py-12 transition-all duration-300 ${
+        isTransitioning ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       {!showPosts ? (
         /* === CATEGORY SELECTION VIEW === */
         <>
@@ -83,14 +85,14 @@ export default function BlogPage() {
               <BookOpen className="w-4 h-4 text-cyan-400" />
               <span className="text-sm text-cyan-400">Knowledge Hub • Guides & Tutorials</span>
             </div>
-            
+
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
               Explore Our
               <span className="block text-2xl sm:text-3xl md:text-4xl mt-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Knowledge Hub
               </span>
             </h1>
-            
+
             <p className="text-gray-400 mt-4 flex items-center justify-center gap-2">
               <MousePointer2 className="w-4 h-4" />
               Select a category to explore articles
@@ -98,14 +100,14 @@ export default function BlogPage() {
           </section>
 
           {/* Category Grid Component */}
-          <CategoryGrid 
+          <CategoryGrid
             categories={blogCategories}
             onSelectCategory={handleCategorySelect}
             isMobile={isMobile}
           />
 
           {/* Statistics Component */}
-          <BlogStats 
+          <BlogStats
             totalArticles={stats.totalArticles}
             categories={stats.categoriesCount}
             isFree={true}
@@ -133,12 +135,8 @@ export default function BlogPage() {
                   <>
                     <selectedCategoryData.icon className="w-12 h-12" />
                     <div>
-                      <h2 className="text-2xl font-bold text-white">
-                        {selectedCategoryData.name}
-                      </h2>
-                      <p className="text-gray-400">
-                        {selectedCategoryData.description}
-                      </p>
+                      <h2 className="text-2xl font-bold text-white">{selectedCategoryData.name}</h2>
+                      <p className="text-gray-400">{selectedCategoryData.description}</p>
                       <p className="text-sm text-cyan-400 mt-1">
                         {filteredPosts.length} articles available
                       </p>
@@ -168,14 +166,8 @@ export default function BlogPage() {
                 {filteredPosts.slice(0, visiblePostsCount).map((post) => {
                   const badgeType = getPostBadge(post)
                   const badge = badgeType ? BADGE_TYPES[badgeType] : null
-                  
-                  return (
-                    <BlogPostCard
-                      key={post.id}
-                      post={post}
-                      badge={badge}
-                    />
-                  )
+
+                  return <BlogPostCard key={post.id} post={post} badge={badge} />
                 })}
               </div>
 

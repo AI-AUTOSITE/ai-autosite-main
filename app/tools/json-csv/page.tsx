@@ -9,25 +9,27 @@ export const metadata: Metadata = {
     title: 'JSON to CSV - Truly Free, No Ads',
     description: 'Zero ads, zero tracking. Convert data formats without the BS.',
     type: 'website',
-    images: [{
-      url: '/og-json-csv.png',
-      width: 1200,
-      height: 630,
-      alt: 'Free JSON to CSV Converter - No Ads'
-    }]
+    images: [
+      {
+        url: '/og-json-csv.png',
+        width: 1200,
+        height: 630,
+        alt: 'Free JSON to CSV Converter - No Ads',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'JSON to CSV - Free Forever',
-    description: 'Convert data without ads or tracking.'
-  },
+    description: 'Convert data without ads or tracking.',
+  },
   robots: {
     index: true,
-    follow: true
+    follow: true,
   },
   alternates: {
-    canonical: 'https://ai-autosite.com/tools/json-csv'
-  }
+    canonical: 'https://ai-autosite.com/tools/json-csv',
+  },
 }
 
 export default function JsonCsvPage() {

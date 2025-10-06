@@ -1,6 +1,7 @@
 # BMI Calculator Tool - Status File v1.0
 
 ## 📌 Tool Overview
+
 **Name:** BMI Calculator
 **URL:** /tools/bmi-calculator
 **Category:** quick-tools
@@ -8,6 +9,7 @@
 **Language Level:** Elementary English (age 10-12)
 
 ## 🎯 Core Features (MVP)
+
 1. **Enter Height** - Feet/inches or cm
 2. **Enter Weight** - Pounds or kg
 3. **Calculate BMI** - Instant result
@@ -15,13 +17,15 @@
 5. **Health Tips** - General guidance
 
 ## 📁 File Structure
+
 app/tools/bmi-calculator/
-├── page.tsx                    # Metadata only
+├── page.tsx # Metadata only
 ├── components/
-│   └── BmiCalculatorClient.tsx # Main component
-└── guide.tsx                   # Help guide
+│ └── BmiCalculatorClient.tsx # Main component
+└── guide.tsx # Help guide
 
 ## 🔧 Technical Requirements
+
 - **No server needed** - 100% client-side
 - **Unit toggle:** Imperial/Metric
 - **Range:** Reasonable human values
@@ -29,11 +33,13 @@ app/tools/bmi-calculator/
 - **Categories:** WHO standards
 
 ## 💭 User Flow (3-Second Rule)
+
 1. **Enter measurements** → Toggle units if needed
 2. **Click calculate** → See BMI instantly
 3. **View category** → Understand result
 
 ## 🎨 UI Design
+
 [BMI Calculator]
 [Unit toggle: Imperial | Metric]
 [Height: [___] ft [___] in]
@@ -44,6 +50,7 @@ Your BMI: 22.5
 Status: Normal weight
 
 ## 📝 Simple English Copy
+
 Title: "BMI Calculator"
 Subtitle: "Check your body mass index"
 Labels: "Height" / "Weight"
@@ -52,6 +59,7 @@ Results: "Your BMI is X"
 Categories: "Underweight/Normal/Overweight/Obese"
 
 ## 🚫 What NOT to Include
+
 - Medical advice
 - Diet recommendations
 - Calorie counters
@@ -60,6 +68,7 @@ Categories: "Underweight/Normal/Overweight/Obese"
 - Exercise plans
 
 ## 📊 Success Metrics
+
 - Calculation: Instant
 - Unit switching: Smooth
 - Mobile friendly: Yes

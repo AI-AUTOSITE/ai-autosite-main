@@ -17,14 +17,14 @@ export default function Portal({ children, containerId = 'portal-root' }: Portal
   useEffect(() => {
     // Check if the container already exists
     let portalContainer = document.getElementById(containerId)
-    
+
     // If not, create it
     if (!portalContainer) {
       portalContainer = document.createElement('div')
       portalContainer.id = containerId
       document.body.appendChild(portalContainer)
     }
-    
+
     setContainer(portalContainer)
     setMounted(true)
 

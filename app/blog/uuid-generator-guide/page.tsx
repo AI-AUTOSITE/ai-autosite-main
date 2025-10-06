@@ -4,8 +4,10 @@ import { ArrowLeft, Key, Shield, Copy, Database } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'UUID Generator Online - Create Unique Identifiers | AI AutoSite',
-  description: 'Generate UUIDs (Universally Unique Identifiers) for databases and applications. Create v1, v4 UUIDs instantly. Free UUID generator tool.',
-  keywords: 'uuid generator, guid generator, unique id generator, uuid v4, universally unique identifier',
+  description:
+    'Generate UUIDs (Universally Unique Identifiers) for databases and applications. Create v1, v4 UUIDs instantly. Free UUID generator tool.',
+  keywords:
+    'uuid generator, guid generator, unique id generator, uuid v4, universally unique identifier',
   openGraph: {
     title: 'UUID Generator - Unique Identifier Guide',
     description: 'Generate secure unique identifiers for your applications',
@@ -20,8 +22,8 @@ export default function UuidGeneratorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function UuidGeneratorGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">
-            Dev Tools
-          </span>
+          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">Dev Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function UuidGeneratorGuidePage() {
           UUID Generator Complete Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Generate universally unique identifiers for databases, APIs, and 
-          distributed systems. Understand UUID versions and best practices.
+          Generate universally unique identifiers for databases, APIs, and distributed systems.
+          Understand UUID versions and best practices.
         </p>
       </header>
 
@@ -53,7 +53,7 @@ export default function UuidGeneratorGuidePage() {
           <h2 className="text-2xl font-bold text-white mb-4">What is a UUID?</h2>
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <p className="text-gray-300 mb-4">
-              A UUID (Universally Unique Identifier) is a 128-bit number used to identify 
+              A UUID (Universally Unique Identifier) is a 128-bit number used to identify
               information in computer systems. The probability of duplicates is negligible.
             </p>
             <div className="bg-white/10 rounded-lg p-4 font-mono text-purple-400 text-sm break-all">
@@ -115,23 +115,17 @@ export default function UuidGeneratorGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Database className="w-8 h-8 text-purple-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Databases</h3>
-              <p className="text-gray-400 text-sm">
-                Primary keys in distributed systems
-              </p>
+              <p className="text-gray-400 text-sm">Primary keys in distributed systems</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Shield className="w-8 h-8 text-blue-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">API Keys</h3>
-              <p className="text-gray-400 text-sm">
-                Session tokens and API identifiers
-              </p>
+              <p className="text-gray-400 text-sm">Session tokens and API identifiers</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Key className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">File Systems</h3>
-              <p className="text-gray-400 text-sm">
-                Unique file and object identifiers
-              </p>
+              <p className="text-gray-400 text-sm">Unique file and object identifiers</p>
             </div>
           </div>
         </div>
@@ -176,7 +170,9 @@ export default function UuidGeneratorGuidePage() {
 
         {/* Code Examples */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">Generate UUID in Different Languages</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Generate UUID in Different Languages
+          </h2>
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
               <code className="text-purple-400 text-sm">{`// JavaScript
@@ -208,33 +204,23 @@ uniqid('', true);`}</code>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✅</span>
-                <p className="text-gray-300">
-                  Use UUID v4 for most applications
-                </p>
+                <p className="text-gray-300">Use UUID v4 for most applications</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✅</span>
-                <p className="text-gray-300">
-                  Store as binary(16) in databases, not varchar(36)
-                </p>
+                <p className="text-gray-300">Store as binary(16) in databases, not varchar(36)</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✅</span>
-                <p className="text-gray-300">
-                  Consider UUID v7 for time-ordered requirements
-                </p>
+                <p className="text-gray-300">Consider UUID v7 for time-ordered requirements</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✅</span>
-                <p className="text-gray-300">
-                  Index UUID columns appropriately
-                </p>
+                <p className="text-gray-300">Index UUID columns appropriately</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✅</span>
-                <p className="text-gray-300">
-                  Validate UUID format before processing
-                </p>
+                <p className="text-gray-300">Validate UUID format before processing</p>
               </li>
             </ul>
           </div>
@@ -243,14 +229,12 @@ uniqid('', true);`}</code>
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Generate UUIDs Instantly
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Generate UUIDs Instantly</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free UUID generator with bulk generation and format options.
         </p>
-        <Link 
-          href="/tools/uuid-generator" 
+        <Link
+          href="/tools/uuid-generator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Key className="mr-2" size={20} />

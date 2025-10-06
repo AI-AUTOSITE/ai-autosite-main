@@ -19,7 +19,7 @@ const TOOL_CONFIG = {
     showSidebar: true,
     showCrossSell: true,
     containerWidth: 'xl' as const, // sm, md, lg, xl, 2xl, full
-  }
+  },
 }
 
 // ========================================
@@ -40,30 +40,30 @@ function ToolComponent() {
     input: '',
     output: '',
     isProcessing: false,
-    error: null
+    error: null,
   })
 
   // Tool-specific logic
   const processInput = async () => {
-    setState(prev => ({ ...prev, isProcessing: true, error: null }))
-    
+    setState((prev) => ({ ...prev, isProcessing: true, error: null }))
+
     try {
       // Simulate processing (replace with actual logic)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
       // Your tool logic here
       const result = state.input.toUpperCase() // Example transformation
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
         output: result,
-        isProcessing: false
+        isProcessing: false,
       }))
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: error instanceof Error ? error.message : 'An error occurred',
-        isProcessing: false
+        isProcessing: false,
       }))
     }
   }
@@ -72,12 +72,10 @@ function ToolComponent() {
     <div className="space-y-6">
       {/* Input Section */}
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Input
-        </label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Input</label>
         <textarea
           value={state.input}
-          onChange={(e) => setState(prev => ({ ...prev, input: e.target.value }))}
+          onChange={(e) => setState((prev) => ({ ...prev, input: e.target.value }))}
           placeholder="Enter your input here..."
           className="w-full h-32 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition-colors resize-none"
         />
@@ -114,9 +112,7 @@ function ToolComponent() {
       {state.output && (
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-gray-300">
-              Output
-            </label>
+            <label className="text-sm font-medium text-gray-300">Output</label>
             <button
               onClick={() => navigator.clipboard.writeText(state.output)}
               className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
@@ -125,9 +121,7 @@ function ToolComponent() {
             </button>
           </div>
           <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
-            <pre className="text-white whitespace-pre-wrap break-all">
-              {state.output}
-            </pre>
+            <pre className="text-white whitespace-pre-wrap break-all">{state.output}</pre>
           </div>
         </div>
       )}

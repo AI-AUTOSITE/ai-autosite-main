@@ -6,19 +6,19 @@ export const toolGuide = {
     { icon: '1', text: 'Enter event name' },
     { icon: '2', text: 'Set target date and time' },
     { icon: '3', text: 'Choose display format' },
-    { icon: '4', text: 'Start countdown and share' }
+    { icon: '4', text: 'Start countdown and share' },
   ],
   tips: [
     'Add timezone for global events',
     'Enable notifications for reminders',
     'Customize colors and style',
-    'Embed on websites with code'
+    'Embed on websites with code',
   ],
   troubleshooting: [
     { problem: 'Wrong time showing', solution: 'Check timezone settings' },
     { problem: 'Timer stopped', solution: 'Keep browser tab active' },
-    { problem: 'Past date selected', solution: 'Target must be in future' }
-  ]
+    { problem: 'Past date selected', solution: 'Target must be in future' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -37,12 +37,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <Clock className="w-6 h-6 text-cyan-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
         {toolGuide.steps.map((step, index) => (
@@ -54,16 +54,18 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Features</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
         <p className="text-xs text-cyan-400">
           <Bell className="w-3 h-3 inline mr-1" />

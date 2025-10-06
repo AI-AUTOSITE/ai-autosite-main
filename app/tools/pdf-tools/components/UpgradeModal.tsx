@@ -1,56 +1,52 @@
 // app/tools/pdf-tools/components/UpgradeModal.tsx
-import { useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { X, CreditCard, CheckCircle } from 'lucide-react';
+import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
+import { X, CreditCard, CheckCircle } from 'lucide-react'
 
 interface UpgradeModalProps {
-  showUpgradeModal: boolean;
-  setShowUpgradeModal: (show: boolean) => void;
-  handleUpgradeToPremium: () => void;
-  isLoadingPayment: boolean;
+  showUpgradeModal: boolean
+  setShowUpgradeModal: (show: boolean) => void
+  handleUpgradeToPremium: () => void
+  isLoadingPayment: boolean
 }
 
 export function UpgradeModal({
   showUpgradeModal,
   setShowUpgradeModal,
   handleUpgradeToPremium,
-  isLoadingPayment
+  isLoadingPayment,
 }: UpgradeModalProps) {
-  
   // Handle Escape key
   useEffect(() => {
-    if (!showUpgradeModal) return;
-    
+    if (!showUpgradeModal) return
+
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setShowUpgradeModal(false);
+        setShowUpgradeModal(false)
       }
-    };
-    
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [showUpgradeModal, setShowUpgradeModal]);
-  
-  if (!showUpgradeModal) return null;
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [showUpgradeModal, setShowUpgradeModal])
+
+  if (!showUpgradeModal) return null
 
   const modalContent = (
     <>
       {/* Overlay */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
         style={{ zIndex: 100000 }}
         onClick={() => setShowUpgradeModal(false)}
         aria-label="Close modal overlay"
       />
-      
+
       {/* Modal Container */}
-      <div 
-        className="fixed inset-0 overflow-y-auto pointer-events-none"
-        style={{ zIndex: 100001 }}
-      >
+      <div className="fixed inset-0 overflow-y-auto pointer-events-none" style={{ zIndex: 100001 }}>
         <div className="flex min-h-screen items-center justify-center p-4">
           {/* Modal Content */}
-          <div 
+          <div
             className="pointer-events-auto bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 animate-scaleIn"
             onClick={(e) => e.stopPropagation()}
           >
@@ -64,7 +60,7 @@ export function UpgradeModal({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="mb-6">
               <div className="bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-lg p-4 mb-4 border border-amber-500/20">
                 <div className="flex items-center justify-between mb-2">
@@ -73,7 +69,7 @@ export function UpgradeModal({
                 </div>
                 <p className="text-sm text-gray-300">One-time payment • Lifetime access</p>
               </div>
-              
+
               <ul className="space-y-2 text-sm text-gray-300">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
@@ -97,7 +93,7 @@ export function UpgradeModal({
                 </li>
               </ul>
             </div>
-            
+
             <div className="space-y-3">
               <button
                 onClick={handleUpgradeToPremium}
@@ -113,7 +109,7 @@ export function UpgradeModal({
                   </>
                 )}
               </button>
-              
+
               <button
                 onClick={() => setShowUpgradeModal(false)}
                 className="w-full px-4 py-2 text-gray-400 hover:text-gray-300 transition"
@@ -121,7 +117,7 @@ export function UpgradeModal({
                 Maybe later
               </button>
             </div>
-            
+
             <div className="mt-4 pt-4 border-t border-gray-700">
               <p className="text-xs text-gray-500 text-center">
                 Secure payment via Stripe • 30-day money-back guarantee
@@ -131,8 +127,8 @@ export function UpgradeModal({
         </div>
       </div>
     </>
-  );
+  )
 
   // Render to document.body using Portal
-  return createPortal(modalContent, document.body);
+  return createPortal(modalContent, document.body)
 }

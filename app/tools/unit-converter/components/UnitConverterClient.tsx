@@ -1,7 +1,16 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Ruler, Scale, Thermometer, Droplet, ArrowUpDown, Copy, Check, TrendingUp } from 'lucide-react'
+import {
+  Ruler,
+  Scale,
+  Thermometer,
+  Droplet,
+  ArrowUpDown,
+  Copy,
+  Check,
+  TrendingUp,
+} from 'lucide-react'
 
 type Category = 'length' | 'weight' | 'temperature' | 'volume'
 
@@ -25,7 +34,7 @@ const conversionData = {
       { name: 'Yard', value: 'yd', symbol: 'yd', factor: 1.09361 },
       { name: 'Foot', value: 'ft', symbol: 'ft', factor: 3.28084 },
       { name: 'Inch', value: 'in', symbol: 'in', factor: 39.3701 },
-    ]
+    ],
   },
   weight: {
     icon: Scale,
@@ -37,7 +46,7 @@ const conversionData = {
       { name: 'Pound', value: 'lb', symbol: 'lb', factor: 2.20462 },
       { name: 'Ounce', value: 'oz', symbol: 'oz', factor: 35.274 },
       { name: 'Ton', value: 't', symbol: 't', factor: 0.001 },
-    ]
+    ],
   },
   temperature: {
     icon: Thermometer,
@@ -46,7 +55,7 @@ const conversionData = {
       { name: 'Celsius', value: '°C', symbol: '°C' },
       { name: 'Fahrenheit', value: '°F', symbol: '°F' },
       { name: 'Kelvin', value: 'K', symbol: 'K' },
-    ]
+    ],
   },
   volume: {
     icon: Droplet,
@@ -58,8 +67,8 @@ const conversionData = {
       { name: 'Cup', value: 'cup', symbol: 'cup', factor: 4.22675 },
       { name: 'Fl Ounce', value: 'fl oz', symbol: 'fl oz', factor: 33.814 },
       { name: 'Tablespoon', value: 'tbsp', symbol: 'tbsp', factor: 67.628 },
-    ]
-  }
+    ],
+  },
 }
 
 // Popular conversions for quick access
@@ -100,14 +109,14 @@ export default function UnitConverterClient() {
 
     // Convert to Celsius first
     if (from === '°F') {
-      celsius = (value - 32) * 5/9
+      celsius = ((value - 32) * 5) / 9
     } else if (from === 'K') {
       celsius = value - 273.15
     }
 
     // Convert from Celsius to target
     if (to === '°F') {
-      return celsius * 9/5 + 32
+      return (celsius * 9) / 5 + 32
     } else if (to === 'K') {
       return celsius + 273.15
     }
@@ -116,21 +125,24 @@ export default function UnitConverterClient() {
   }, [])
 
   // Convert other units
-  const convertUnit = useCallback((value: number, from: string, to: string, cat: Category): number => {
-    if (cat === 'temperature') {
-      return convertTemperature(value, from, to)
-    }
+  const convertUnit = useCallback(
+    (value: number, from: string, to: string, cat: Category): number => {
+      if (cat === 'temperature') {
+        return convertTemperature(value, from, to)
+      }
 
-    const units = conversionData[cat].units
-    const fromUnit = units.find(u => u.value === from)
-    const toUnit = units.find(u => u.value === to)
+      const units = conversionData[cat].units
+      const fromUnit = units.find((u) => u.value === from)
+      const toUnit = units.find((u) => u.value === to)
 
-    if (!fromUnit?.factor || !toUnit?.factor) return 0
+      if (!fromUnit?.factor || !toUnit?.factor) return 0
 
-    // Convert to base unit then to target unit
-    const baseValue = value / fromUnit.factor
-    return baseValue * toUnit.factor
-  }, [convertTemperature])
+      // Convert to base unit then to target unit
+      const baseValue = value / fromUnit.factor
+      return baseValue * toUnit.factor
+    },
+    [convertTemperature]
+  )
 
   // Calculate output value
   const outputValue = useMemo(() => {
@@ -138,7 +150,7 @@ export default function UnitConverterClient() {
     if (isNaN(value) || inputValue === '') return ''
 
     const result = convertUnit(value, fromUnit, toUnit, category)
-    
+
     // Smart formatting
     if (Math.abs(result) >= 1000000) {
       return result.toExponential(3)
@@ -178,17 +190,19 @@ export default function UnitConverterClient() {
   // Copy result
   const copyResult = async () => {
     if (!outputValue) return
-    
-    const fromSymbol = conversionData[category].units.find(u => u.value === fromUnit)?.symbol || fromUnit
-    const toSymbol = conversionData[category].units.find(u => u.value === toUnit)?.symbol || toUnit
+
+    const fromSymbol =
+      conversionData[category].units.find((u) => u.value === fromUnit)?.symbol || fromUnit
+    const toSymbol =
+      conversionData[category].units.find((u) => u.value === toUnit)?.symbol || toUnit
     const fullText = `${inputValue} ${fromSymbol} = ${outputValue} ${toSymbol}`
-    
+
     await navigator.clipboard.writeText(fullText)
     setCopied(true)
-    
+
     // Add to recent
-    setRecentConversions(prev => [fullText, ...prev.slice(0, 2)])
-    
+    setRecentConversions((prev) => [fullText, ...prev.slice(0, 2)])
+
     setTimeout(() => setCopied(false), 2000)
   }
 
@@ -205,14 +219,13 @@ export default function UnitConverterClient() {
       {/* Main Display */}
       {outputValue && (
         <div className="text-center mb-8">
-          <div className="text-6xl font-bold text-white mb-2">
-            {outputValue}
-          </div>
+          <div className="text-6xl font-bold text-white mb-2">{outputValue}</div>
           <div className="text-gray-400">
-            {conversionData[category].units.find(u => u.value === toUnit)?.symbol}
+            {conversionData[category].units.find((u) => u.value === toUnit)?.symbol}
           </div>
           <div className="text-sm text-gray-500 mt-2">
-            from {inputValue} {conversionData[category].units.find(u => u.value === fromUnit)?.symbol}
+            from {inputValue}{' '}
+            {conversionData[category].units.find((u) => u.value === fromUnit)?.symbol}
           </div>
         </div>
       )}
@@ -220,25 +233,27 @@ export default function UnitConverterClient() {
       {/* Category Selector - Simplified */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-2 mb-6 border border-white/10">
         <div className="grid grid-cols-4 gap-1">
-          {(Object.entries(conversionData) as [Category, typeof currentData][]).map(([key, data]) => {
-            const CategoryIcon = data.icon
-            const isActive = category === key
-            
-            return (
-              <button
-                key={key}
-                onClick={() => setCategory(key)}
-                className={`py-3 rounded-xl font-medium transition-all flex flex-col items-center justify-center ${
-                  isActive
-                    ? `bg-gradient-to-r ${data.color} text-white`
-                    : 'text-gray-400 hover:bg-white/5'
-                }`}
-              >
-                <CategoryIcon className="w-5 h-5 mb-1" />
-                <span className="text-xs capitalize">{key}</span>
-              </button>
-            )
-          })}
+          {(Object.entries(conversionData) as [Category, typeof currentData][]).map(
+            ([key, data]) => {
+              const CategoryIcon = data.icon
+              const isActive = category === key
+
+              return (
+                <button
+                  key={key}
+                  onClick={() => setCategory(key)}
+                  className={`py-3 rounded-xl font-medium transition-all flex flex-col items-center justify-center ${
+                    isActive
+                      ? `bg-gradient-to-r ${data.color} text-white`
+                      : 'text-gray-400 hover:bg-white/5'
+                  }`}
+                >
+                  <CategoryIcon className="w-5 h-5 mb-1" />
+                  <span className="text-xs capitalize">{key}</span>
+                </button>
+              )
+            }
+          )}
         </div>
       </div>
 
@@ -264,7 +279,7 @@ export default function UnitConverterClient() {
                        text-white focus:outline-none focus:border-cyan-400 cursor-pointer
                        [&>option]:bg-gray-800 [&>option]:text-white"
             >
-              {currentData.units.map(unit => (
+              {currentData.units.map((unit) => (
                 <option key={unit.value} value={unit.value}>
                   {unit.name}
                 </option>
@@ -299,7 +314,7 @@ export default function UnitConverterClient() {
                        text-white focus:outline-none focus:border-cyan-400 cursor-pointer
                        [&>option]:bg-gray-800 [&>option]:text-white"
             >
-              {currentData.units.map(unit => (
+              {currentData.units.map((unit) => (
                 <option key={unit.value} value={unit.value}>
                   {unit.name}
                 </option>
@@ -316,16 +331,16 @@ export default function UnitConverterClient() {
           >
             Clear
           </button>
-          
+
           <button
             onClick={copyResult}
             disabled={!outputValue}
             className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-30 
                      disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
-              copied
-                ? 'bg-green-500 text-white'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-lg'
-            }`}
+                       copied
+                         ? 'bg-green-500 text-white'
+                         : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-lg'
+                     }`}
           >
             {copied ? (
               <>

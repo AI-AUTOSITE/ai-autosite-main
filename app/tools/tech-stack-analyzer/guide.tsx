@@ -6,9 +6,9 @@ export default function TechStackAnalyzerGuide() {
       <button className="absolute top-2 right-2 p-2 hover:bg-white/10 rounded-lg transition-colors">
         <X className="w-5 h-5 text-gray-400 hover:text-white" />
       </button>
-      
+
       <h3 className="text-xl font-bold text-white mb-4">Quick Guide</h3>
-      
+
       {/* How to Use */}
       <div className="space-y-3 mb-6">
         <div className="flex items-start gap-3">
@@ -20,7 +20,7 @@ export default function TechStackAnalyzerGuide() {
             <p className="text-gray-400 text-xs">Click up to 3 items to compare</p>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 bg-cyan-600/20 rounded-full flex items-center justify-center text-cyan-400 font-bold text-sm flex-shrink-0">
             2
@@ -30,7 +30,7 @@ export default function TechStackAnalyzerGuide() {
             <p className="text-gray-400 text-xs">Switch to Compare view</p>
           </div>
         </div>
-        
+
         <div className="flex items-start gap-3">
           <div className="w-6 h-6 bg-cyan-600/20 rounded-full flex items-center justify-center text-cyan-400 font-bold text-sm flex-shrink-0">
             3

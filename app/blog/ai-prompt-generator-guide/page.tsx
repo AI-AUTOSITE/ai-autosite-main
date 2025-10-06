@@ -4,8 +4,10 @@ import { ArrowLeft, Sparkles, Brain, Zap, MessageSquare } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'AI Prompt Generator - Create Better ChatGPT Prompts | AI AutoSite',
-  description: 'Generate effective AI prompts for ChatGPT, Claude, and other AI tools. Learn prompt engineering techniques for better results.',
-  keywords: 'ai prompt generator, chatgpt prompts, prompt engineering, ai prompts, claude prompts, prompt templates',
+  description:
+    'Generate effective AI prompts for ChatGPT, Claude, and other AI tools. Learn prompt engineering techniques for better results.',
+  keywords:
+    'ai prompt generator, chatgpt prompts, prompt engineering, ai prompts, claude prompts, prompt templates',
   openGraph: {
     title: 'AI Prompt Generator - Master Prompt Engineering',
     description: 'Create powerful AI prompts that get better results',
@@ -20,8 +22,8 @@ export default function AiPromptGeneratorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function AiPromptGeneratorGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">
-            AI Tools
-          </span>
+          <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">AI Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function AiPromptGeneratorGuidePage() {
           AI Prompt Generator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Master the art of prompt engineering. Create prompts that unlock 
-          the full potential of AI language models.
+          Master the art of prompt engineering. Create prompts that unlock the full potential of AI
+          language models.
         </p>
       </header>
 
@@ -66,12 +66,16 @@ export default function AiPromptGeneratorGuidePage() {
               <li className="border-b border-white/10 pb-3">
                 <h3 className="text-white font-semibold mb-1">🎯 Specifics</h3>
                 <p className="text-gray-400 text-sm">Details and constraints</p>
-                <code className="text-purple-400 text-xs">"...for a tech startup, budget $5000..."</code>
+                <code className="text-purple-400 text-xs">
+                  "...for a tech startup, budget $5000..."
+                </code>
               </li>
               <li>
                 <h3 className="text-white font-semibold mb-1">📝 Format</h3>
                 <p className="text-gray-400 text-sm">How to structure the output</p>
-                <code className="text-purple-400 text-xs">"Present as a bullet list with examples"</code>
+                <code className="text-purple-400 text-xs">
+                  "Present as a bullet list with examples"
+                </code>
               </li>
             </ul>
           </div>
@@ -84,32 +88,28 @@ export default function AiPromptGeneratorGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Content Creation</h3>
               <p className="text-gray-400 text-sm mb-2">
-                "Write a [type] about [topic] for [audience]. 
-                Include [specifics]. Tone should be [style]. 
-                Length: [words]"
+                "Write a [type] about [topic] for [audience]. Include [specifics]. Tone should be
+                [style]. Length: [words]"
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Problem Solving</h3>
               <p className="text-gray-400 text-sm mb-2">
-                "I have [problem]. My constraints are [list]. 
-                Provide 3 solutions with pros/cons for each. 
-                Consider [factors]"
+                "I have [problem]. My constraints are [list]. Provide 3 solutions with pros/cons for
+                each. Consider [factors]"
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Code Generation</h3>
               <p className="text-gray-400 text-sm mb-2">
-                "Write [language] code to [function]. 
-                Input: [format]. Output: [format]. 
-                Include error handling and comments"
+                "Write [language] code to [function]. Input: [format]. Output: [format]. Include
+                error handling and comments"
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Analysis</h3>
               <p className="text-gray-400 text-sm mb-2">
-                "Analyze [data/text] and identify [what]. 
-                Focus on [aspects]. Present findings as 
+                "Analyze [data/text] and identify [what]. Focus on [aspects]. Present findings as
                 [format]. Include examples"
               </p>
             </div>
@@ -138,15 +138,21 @@ export default function AiPromptGeneratorGuidePage() {
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Role Playing</td>
-                  <td className="py-3 text-sm">"You are an expert [role] with 20 years experience..."</td>
+                  <td className="py-3 text-sm">
+                    "You are an expert [role] with 20 years experience..."
+                  </td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Constraints</td>
-                  <td className="py-3 text-sm">"Limit response to 100 words, use simple language"</td>
+                  <td className="py-3 text-sm">
+                    "Limit response to 100 words, use simple language"
+                  </td>
                 </tr>
                 <tr>
                   <td className="py-3 text-purple-400">Output Format</td>
-                  <td className="py-3 text-sm">"Format as: Title: / Summary: / Details: / Action:"</td>
+                  <td className="py-3 text-sm">
+                    "Format as: Title: / Summary: / Details: / Action:"
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -161,13 +167,15 @@ export default function AiPromptGeneratorGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-red-400">❌</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Too vague:</strong> "Write something about marketing"
+                  <strong className="text-white">Too vague:</strong> "Write something about
+                  marketing"
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400">✅</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Specific:</strong> "Write 5 Instagram marketing tips for small bakeries"
+                  <strong className="text-white">Specific:</strong> "Write 5 Instagram marketing
+                  tips for small bakeries"
                 </p>
               </li>
               <li className="flex items-start gap-2">
@@ -179,7 +187,8 @@ export default function AiPromptGeneratorGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-green-400">✅</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">With context:</strong> "Fix this Python function that should sort a list but returns None"
+                  <strong className="text-white">With context:</strong> "Fix this Python function
+                  that should sort a list but returns None"
                 </p>
               </li>
             </ul>
@@ -193,7 +202,8 @@ export default function AiPromptGeneratorGuidePage() {
             <li className="flex items-start gap-2">
               <span className="text-purple-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">Content Writing:</strong> Blog posts, social media, emails
+                <strong className="text-white">Content Writing:</strong> Blog posts, social media,
+                emails
               </p>
             </li>
             <li className="flex items-start gap-2">
@@ -205,7 +215,8 @@ export default function AiPromptGeneratorGuidePage() {
             <li className="flex items-start gap-2">
               <span className="text-purple-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">Learning:</strong> Explanations, summaries, study guides
+                <strong className="text-white">Learning:</strong> Explanations, summaries, study
+                guides
               </p>
             </li>
             <li className="flex items-start gap-2">
@@ -220,14 +231,12 @@ export default function AiPromptGeneratorGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Generate Perfect AI Prompts
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Generate Perfect AI Prompts</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free AI prompt generator with templates for ChatGPT, Claude, and more.
         </p>
-        <Link 
-          href="/tools/ai-prompt-generator" 
+        <Link
+          href="/tools/ai-prompt-generator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Sparkles className="mr-2" size={20} />

@@ -16,6 +16,6 @@ export const learningTools: Tool[] = [
     timeToUse: '1 minute',
     featured: true,
     pricing: 'free',
-    dataProcessing: 'local'
-  }
+    dataProcessing: 'local',
+  },
 ]

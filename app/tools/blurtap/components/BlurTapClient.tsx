@@ -7,7 +7,12 @@ import { MASK_SIZE_MAP } from '../constants'
 import { useFileHandler } from '../hooks/useFileHandler'
 import { useImageEditor } from '../hooks/useImageEditor'
 import { ImageUploader } from './ImageUploader'
-import { redrawCanvas, getCanvasPosition, downloadCanvas, calculateDisplayScale } from '../utils/canvas'
+import {
+  redrawCanvas,
+  getCanvasPosition,
+  downloadCanvas,
+  calculateDisplayScale,
+} from '../utils/canvas'
 
 export default function BlurTapClient() {
   const {
@@ -24,7 +29,7 @@ export default function BlurTapClient() {
     handleDrop,
     resetFile,
     error,
-    setError
+    setError,
   } = useFileHandler()
 
   const {
@@ -38,7 +43,7 @@ export default function BlurTapClient() {
     addMask,
     undoMask,
     resetMasks,
-    setSuccessMessage
+    setSuccessMessage,
   } = useImageEditor()
 
   const [isDragging, setIsDragging] = useState(false)
@@ -62,113 +67,124 @@ export default function BlurTapClient() {
     }
   }, [displayScale, originalImage, masks])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!originalImage || !canvasRef.current) return
-    
-    const rect = canvasRef.current.getBoundingClientRect()
-    const cssX = e.clientX - rect.left
-    const cssY = e.clientY - rect.top
-    const wrapperElement = canvasRef.current.parentElement
-    if (!wrapperElement) return
-    
-    const wrapperRect = wrapperElement.getBoundingClientRect()
-    const canvasRect = canvasRef.current.getBoundingClientRect()
-    const canvasOffsetX = canvasRect.left - wrapperRect.left
-    const canvasOffsetY = canvasRect.top - wrapperRect.top
-    const wrapperX = canvasOffsetX + cssX
-    const wrapperY = canvasOffsetY + cssY
-    
-    if (settings.mode === 'click') {
-      const size = MASK_SIZE_MAP[settings.maskSize]
-      setCurrentGuide({
-        x: wrapperX - (size.w * displayScale) / 2,
-        y: wrapperY - (size.h * displayScale) / 2,
-        w: size.w * displayScale,
-        h: size.h * displayScale
-      })
-      setShowGuide(true)
-    } else if (settings.mode === 'drag' && isDragging) {
-      const startX = dragStart.x
-      const startY = dragStart.y
-      setCurrentGuide({
-        x: Math.min(startX, wrapperX),
-        y: Math.min(startY, wrapperY),
-        w: Math.abs(wrapperX - startX),
-        h: Math.abs(wrapperY - startY)
-      })
-      setShowGuide(true)
-    }
-  }, [originalImage, settings.mode, settings.maskSize, displayScale, isDragging, dragStart])
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      if (!originalImage || !canvasRef.current) return
 
-  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!originalImage || !canvasRef.current) return
-    
-    const pos = getCanvasPosition(e, canvasRef.current)
-    
-    if (settings.mode === 'click') {
-      const size = MASK_SIZE_MAP[settings.maskSize]
-      const newMask: MaskRegion = {
-        x: pos.canvasX - size.w / 2,
-        y: pos.canvasY - size.h / 2,
-        w: size.w,
-        h: size.h,
-        id: `mask-${Date.now()}`
-      }
-      addMask(newMask)
-    } else if (settings.mode === 'drag') {
-      setIsDragging(true)
+      const rect = canvasRef.current.getBoundingClientRect()
+      const cssX = e.clientX - rect.left
+      const cssY = e.clientY - rect.top
       const wrapperElement = canvasRef.current.parentElement
       if (!wrapperElement) return
+
       const wrapperRect = wrapperElement.getBoundingClientRect()
       const canvasRect = canvasRef.current.getBoundingClientRect()
       const canvasOffsetX = canvasRect.left - wrapperRect.left
       const canvasOffsetY = canvasRect.top - wrapperRect.top
-      setDragStart({
-        x: canvasOffsetX + pos.x,
-        y: canvasOffsetY + pos.y
-      })
-    }
-  }, [originalImage, settings.mode, settings.maskSize, addMask])
+      const wrapperX = canvasOffsetX + cssX
+      const wrapperY = canvasOffsetY + cssY
 
-  const handleMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!originalImage || settings.mode !== 'drag' || !isDragging || !canvasRef.current) return
-    
-    const pos = getCanvasPosition(e, canvasRef.current)
-    const wrapperElement = canvasRef.current.parentElement
-    if (!wrapperElement) return
-    
-    const wrapperRect = wrapperElement.getBoundingClientRect()
-    const canvasRect = canvasRef.current.getBoundingClientRect()
-    const canvasOffsetX = canvasRect.left - wrapperRect.left
-    const canvasOffsetY = canvasRect.top - wrapperRect.top
-    
-    const startCanvasX = ((dragStart.x - canvasOffsetX) / canvasRect.width) * canvasRef.current.width
-    const startCanvasY = ((dragStart.y - canvasOffsetY) / canvasRect.height) * canvasRef.current.height
-    
-    const x1 = startCanvasX
-    const y1 = startCanvasY
-    const x2 = pos.canvasX
-    const y2 = pos.canvasY
-    
-    const bx = Math.min(x1, x2)
-    const by = Math.min(y1, y2)
-    const bw = Math.abs(x2 - x1)
-    const bh = Math.abs(y2 - y1)
-    
-    if (bw > 2 && bh > 2) {
-      const newMask: MaskRegion = {
-        x: bx,
-        y: by,
-        w: bw,
-        h: bh,
-        id: `mask-${Date.now()}`
+      if (settings.mode === 'click') {
+        const size = MASK_SIZE_MAP[settings.maskSize]
+        setCurrentGuide({
+          x: wrapperX - (size.w * displayScale) / 2,
+          y: wrapperY - (size.h * displayScale) / 2,
+          w: size.w * displayScale,
+          h: size.h * displayScale,
+        })
+        setShowGuide(true)
+      } else if (settings.mode === 'drag' && isDragging) {
+        const startX = dragStart.x
+        const startY = dragStart.y
+        setCurrentGuide({
+          x: Math.min(startX, wrapperX),
+          y: Math.min(startY, wrapperY),
+          w: Math.abs(wrapperX - startX),
+          h: Math.abs(wrapperY - startY),
+        })
+        setShowGuide(true)
       }
-      addMask(newMask)
-    }
-    
-    setIsDragging(false)
-    setShowGuide(false)
-  }, [originalImage, settings.mode, isDragging, dragStart, addMask])
+    },
+    [originalImage, settings.mode, settings.maskSize, displayScale, isDragging, dragStart]
+  )
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      if (!originalImage || !canvasRef.current) return
+
+      const pos = getCanvasPosition(e, canvasRef.current)
+
+      if (settings.mode === 'click') {
+        const size = MASK_SIZE_MAP[settings.maskSize]
+        const newMask: MaskRegion = {
+          x: pos.canvasX - size.w / 2,
+          y: pos.canvasY - size.h / 2,
+          w: size.w,
+          h: size.h,
+          id: `mask-${Date.now()}`,
+        }
+        addMask(newMask)
+      } else if (settings.mode === 'drag') {
+        setIsDragging(true)
+        const wrapperElement = canvasRef.current.parentElement
+        if (!wrapperElement) return
+        const wrapperRect = wrapperElement.getBoundingClientRect()
+        const canvasRect = canvasRef.current.getBoundingClientRect()
+        const canvasOffsetX = canvasRect.left - wrapperRect.left
+        const canvasOffsetY = canvasRect.top - wrapperRect.top
+        setDragStart({
+          x: canvasOffsetX + pos.x,
+          y: canvasOffsetY + pos.y,
+        })
+      }
+    },
+    [originalImage, settings.mode, settings.maskSize, addMask]
+  )
+
+  const handleMouseUp = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement>) => {
+      if (!originalImage || settings.mode !== 'drag' || !isDragging || !canvasRef.current) return
+
+      const pos = getCanvasPosition(e, canvasRef.current)
+      const wrapperElement = canvasRef.current.parentElement
+      if (!wrapperElement) return
+
+      const wrapperRect = wrapperElement.getBoundingClientRect()
+      const canvasRect = canvasRef.current.getBoundingClientRect()
+      const canvasOffsetX = canvasRect.left - wrapperRect.left
+      const canvasOffsetY = canvasRect.top - wrapperRect.top
+
+      const startCanvasX =
+        ((dragStart.x - canvasOffsetX) / canvasRect.width) * canvasRef.current.width
+      const startCanvasY =
+        ((dragStart.y - canvasOffsetY) / canvasRect.height) * canvasRef.current.height
+
+      const x1 = startCanvasX
+      const y1 = startCanvasY
+      const x2 = pos.canvasX
+      const y2 = pos.canvasY
+
+      const bx = Math.min(x1, x2)
+      const by = Math.min(y1, y2)
+      const bw = Math.abs(x2 - x1)
+      const bh = Math.abs(y2 - y1)
+
+      if (bw > 2 && bh > 2) {
+        const newMask: MaskRegion = {
+          x: bx,
+          y: by,
+          w: bw,
+          h: bh,
+          id: `mask-${Date.now()}`,
+        }
+        addMask(newMask)
+      }
+
+      setIsDragging(false)
+      setShowGuide(false)
+    },
+    [originalImage, settings.mode, isDragging, dragStart, addMask]
+  )
 
   const handleMouseLeave = useCallback(() => {
     setShowGuide(false)
@@ -280,7 +296,10 @@ export default function BlurTapClient() {
   )
 }
 
-const MessageArea: React.FC<{ error: string; successMessage: string }> = ({ error, successMessage }) => (
+const MessageArea: React.FC<{ error: string; successMessage: string }> = ({
+  error,
+  successMessage,
+}) => (
   <>
     {error && (
       <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-xl p-4 flex items-start space-x-3 animate-fade-in mb-4">
@@ -314,7 +333,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
   onMouseMove,
   onMouseDown,
   onMouseUp,
-  onMouseLeave
+  onMouseLeave,
 }) => (
   <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
     <div className="overflow-auto" style={{ maxHeight: '75vh', minHeight: '500px' }}>
@@ -330,7 +349,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
             cursor: 'crosshair',
             border: '2px solid #444',
             borderRadius: '8px',
-            display: 'block'
+            display: 'block',
           }}
           className="bg-white mx-auto"
         />
@@ -344,7 +363,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({
               height: `${currentGuide.h}px`,
               border: '3px dashed #1a9dff',
               backgroundColor: 'rgba(26,157,255,0.11)',
-              boxShadow: '0 0 0 3px rgba(26,157,255,0.24)'
+              boxShadow: '0 0 0 3px rgba(26,157,255,0.24)',
             }}
           />
         )}
@@ -382,12 +401,12 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
   onUndo,
   onReset,
   onDownload,
-  onNewImage
+  onNewImage,
 }) => (
   <div className="w-full lg:w-80 order-1 lg:order-2">
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4">
       <h4 className="text-sm font-semibold text-white mb-4">Actions</h4>
-      
+
       {/* Controls Section */}
       <div className="space-y-3 mb-4 pb-4 border-b border-white/10">
         {/* Mode */}
@@ -449,7 +468,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
           </div>
         </div>
       </div>
-      
+
       {/* Action Buttons */}
       <div className="space-y-2">
         <button

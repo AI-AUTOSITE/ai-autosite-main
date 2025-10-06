@@ -1,42 +1,42 @@
-'use client';
+'use client'
 
-import './styles/pdf-tools.css';
+import './styles/pdf-tools.css'
 
-import {useState,useEffect,useRef} from 'react';
-import {PDFDocument,degrees} from 'pdf-lib';
-import {Menu,ChevronLeft} from 'lucide-react';
+import { useState, useEffect, useRef } from 'react'
+import { PDFDocument, degrees } from 'pdf-lib'
+import { Menu, ChevronLeft } from 'lucide-react'
 
 // Hooks
-import {usePDFLoader} from './hooks/usePDFLoader';
-import {usePageSelection} from './hooks/usePageSelection';
-import {useLicenseManager} from './hooks/useLicenseManager';
-import {usePDFEditor} from './hooks/usePDFEditor';
-import {usePDFToolHandlers} from './hooks/usePDFToolHandlers';
+import { usePDFLoader } from './hooks/usePDFLoader'
+import { usePageSelection } from './hooks/usePageSelection'
+import { useLicenseManager } from './hooks/useLicenseManager'
+import { usePDFEditor } from './hooks/usePDFEditor'
+import { usePDFToolHandlers } from './hooks/usePDFToolHandlers'
 
 // Components
-import PWAInstaller from './components/PWAInstaller';
-import {ToolPanel} from './components/ToolPanel';
-import {Toolbar} from './components/Toolbar';
-import {PDFViewer} from './components/PDFViewer';
-import {UpgradeModal} from './components/UpgradeModal';
-import {LicenseStatusModal} from './components/LicenseStatusModal';
+import PWAInstaller from './components/PWAInstaller'
+import { ToolPanel } from './components/ToolPanel'
+import { Toolbar } from './components/Toolbar'
+import { PDFViewer } from './components/PDFViewer'
+import { UpgradeModal } from './components/UpgradeModal'
+import { LicenseStatusModal } from './components/LicenseStatusModal'
 
 // Features
-import {PasswordHandler} from './features/password/PasswordHandler';
-import {PasswordUI} from './features/password/PasswordUI';
-import {WatermarkUI} from './features/watermark/WatermarkUI';
-import {SignatureUI} from './features/signature/SignatureUI';
-import {ConvertUI} from './features/convert/ConvertUI';
+import { PasswordHandler } from './features/password/PasswordHandler'
+import { PasswordUI } from './features/password/PasswordUI'
+import { WatermarkUI } from './features/watermark/WatermarkUI'
+import { SignatureUI } from './features/signature/SignatureUI'
+import { ConvertUI } from './features/convert/ConvertUI'
 
 // Constants
-import {availableTools,MAX_FREE_SLOTS} from './constants/tools';
-import {Tool} from './types';
+import { availableTools, MAX_FREE_SLOTS } from './constants/tools'
+import { Tool } from './types'
 
 // Helpers
-import { uint8ArrayToBlob } from './utils/pdfHelpers';
+import { uint8ArrayToBlob } from './utils/pdfHelpers'
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
-const MAX_PAGES = 100;
+const MAX_FILE_SIZE = 20 * 1024 * 1024
+const MAX_PAGES = 100
 
 export default function PDFStudioClient() {
   // Core PDF hooks
@@ -47,66 +47,59 @@ export default function PDFStudioClient() {
     isProcessing,
     setIsProcessing,
     loadPDF,
-    setFile
-  } = usePDFLoader();
-  
-  const {selectedPages, handlePageSelect, clearSelection} = usePageSelection();
-  
+    setFile,
+  } = usePDFLoader()
+
+  const { selectedPages, handlePageSelect, clearSelection } = usePageSelection()
+
   const {
     isPremium,
     isLoadingPayment,
     showUpgradeModal,
     setShowUpgradeModal,
     handleUpgradeToPremium,
-    showLicenseStatus
-  } = useLicenseManager();
-  
-  const {
-    pages,
-    updatePages,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    clearHistory
-  } = usePDFEditor(initialPages);
+    showLicenseStatus,
+  } = useLicenseManager()
+
+  const { pages, updatePages, undo, redo, canUndo, canRedo, clearHistory } =
+    usePDFEditor(initialPages)
 
   // UI States
-  const [isMobile, setIsMobile] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showThumbnails, setShowThumbnails] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [draggedPage, setDraggedPage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [convertFormat, setConvertFormat] = useState<'word' | 'excel'>('word');
-  const [showLicenseModal, setShowLicenseModal] = useState(false);
-  const [isSelectingTool, setIsSelectingTool] = useState<number | null>(null);
-  const [keepSelection, setKeepSelection] = useState(true);
+  const [isMobile, setIsMobile] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const [showThumbnails, setShowThumbnails] = useState(true)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [draggedPage, setDraggedPage] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [convertFormat, setConvertFormat] = useState<'word' | 'excel'>('word')
+  const [showLicenseModal, setShowLicenseModal] = useState(false)
+  const [isSelectingTool, setIsSelectingTool] = useState<number | null>(null)
+  const [keepSelection, setKeepSelection] = useState(true)
 
   // Tool slots initialization
   const [activeToolSlots, setActiveToolSlots] = useState<(Tool | null)[]>(() => {
-    const defaultSlots = Array(6).fill(null);
-    defaultSlots[0] = availableTools.find(t => t.id === 'rotate') || null;
-    defaultSlots[1] = availableTools.find(t => t.id === 'merge') || null;
-    defaultSlots[2] = availableTools.find(t => t.id === 'split') || null;
-    return defaultSlots;
-  });
+    const defaultSlots = Array(6).fill(null)
+    defaultSlots[0] = availableTools.find((t) => t.id === 'rotate') || null
+    defaultSlots[1] = availableTools.find((t) => t.id === 'merge') || null
+    defaultSlots[2] = availableTools.find((t) => t.id === 'split') || null
+    return defaultSlots
+  })
 
   // Helper functions
   const downloadPDF = (pdfBytes: Uint8Array, filename: string) => {
-    const buffer = new Uint8Array(pdfBytes);
-    const blob = new Blob([buffer], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+    const buffer = new Uint8Array(pdfBytes)
+    const blob = new Blob([buffer], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   const handleProcessComplete = (blob: Blob) => {
     // Process completion handler (for future use)
-  };
+  }
 
   // Tool handlers hook
   const {
@@ -138,7 +131,7 @@ export default function PDFStudioClient() {
     handleToWord,
     handleToExcel,
     handleConvert,
-    handleOCR
+    handleOCR,
   } = usePDFToolHandlers({
     file,
     pages,
@@ -148,336 +141,340 @@ export default function PDFStudioClient() {
     setIsProcessing,
     downloadPDF,
     handleProcessComplete,
-    keepSelection
-  });
+    keepSelection,
+  })
 
   // Sync pages
   useEffect(() => {
     if (initialPages.length > 0 && pages.length === 0) {
-      updatePages(initialPages);
+      updatePages(initialPages)
     }
-  }, [initialPages, pages.length, updatePages]);
+  }, [initialPages, pages.length, updatePages])
 
   // Mobile detection
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Before unload warning
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (file && pages.length > 0) {
-        const message = 'Your edits will be lost. Are you sure you want to leave?';
-        e.preventDefault();
-        e.returnValue = message;
-        return message;
+        const message = 'Your edits will be lost. Are you sure you want to leave?'
+        e.preventDefault()
+        e.returnValue = message
+        return message
       }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [file, pages]);
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [file, pages])
 
   const handleShowLicenseStatus = () => {
-    setShowLicenseModal(true);
-  };
+    setShowLicenseModal(true)
+  }
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = e.target.files?.[0];
-    if (!uploadedFile) return;
+    const uploadedFile = e.target.files?.[0]
+    if (!uploadedFile) return
 
     if (uploadedFile.type !== 'application/pdf') {
-      alert('Please upload a PDF file');
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      return;
+      alert('Please upload a PDF file')
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
     }
 
     if (uploadedFile.size > MAX_FILE_SIZE) {
-      alert(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit. Please upload a smaller file.`);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      return;
+      alert(
+        `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit. Please upload a smaller file.`
+      )
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
     }
 
-    setFile(uploadedFile);
-    const isProtected = await PasswordHandler.isPasswordProtected(uploadedFile);
-    setIsPasswordProtected(isProtected);
-    
+    setFile(uploadedFile)
+    const isProtected = await PasswordHandler.isPasswordProtected(uploadedFile)
+    setIsPasswordProtected(isProtected)
+
     if (isProtected) {
-      alert('This PDF is password protected. Use the Password tool to unlock it.');
+      alert('This PDF is password protected. Use the Password tool to unlock it.')
     }
 
-    clearSelection();
-    clearHistory();
+    clearSelection()
+    clearHistory()
 
     try {
-      const newPages = await loadPDF(uploadedFile, isMobile);
+      const newPages = await loadPDF(uploadedFile, isMobile)
       if (newPages.length > MAX_PAGES) {
-        alert(`PDF has ${newPages.length} pages. Maximum allowed is ${MAX_PAGES} pages.`);
-        setFile(null);
-        setInitialPages([]);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        return;
+        alert(`PDF has ${newPages.length} pages. Maximum allowed is ${MAX_PAGES} pages.`)
+        setFile(null)
+        setInitialPages([])
+        if (fileInputRef.current) fileInputRef.current.value = ''
+        return
       }
-      
-      updatePages(newPages);
+
+      updatePages(newPages)
     } catch (error) {
-      alert('Failed to load PDF. Please try again.');
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      alert('Failed to load PDF. Please try again.')
+      setFile(null)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
-  };
+  }
 
   const handleClearFile = () => {
     if (confirm('Are you sure you want to clear the current file? All changes will be lost.')) {
-      setFile(null);
-      setInitialPages([]);
-      updatePages([]);
-      clearSelection();
-      clearHistory();
+      setFile(null)
+      setInitialPages([])
+      updatePages([])
+      clearSelection()
+      clearHistory()
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = ''
       }
     }
-  };
+  }
 
   const handleUndo = () => {
     if (canUndo) {
-      undo();
+      undo()
       if (!keepSelection) {
-        clearSelection();
+        clearSelection()
       }
     }
-  };
+  }
 
   const handleRedo = () => {
     if (canRedo) {
-      redo();
+      redo()
       if (!keepSelection) {
-        clearSelection();
+        clearSelection()
       }
     }
-  };
+  }
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault();
-        handleUndo();
+        e.preventDefault()
+        handleUndo()
       }
       if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
-        e.preventDefault();
-        handleRedo();
+        e.preventDefault()
+        handleRedo()
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [canUndo, canRedo]);
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [canUndo, canRedo])
 
   const handleToolSelect = (tool: Tool | null, slotIndex: number) => {
-    const newSlots = [...activeToolSlots];
-    newSlots[slotIndex] = tool;
-    setActiveToolSlots(newSlots);
-    setIsSelectingTool(null);
-    
+    const newSlots = [...activeToolSlots]
+    newSlots[slotIndex] = tool
+    setActiveToolSlots(newSlots)
+    setIsSelectingTool(null)
+
     if (isMobile) {
-      setShowMobileMenu(false);
+      setShowMobileMenu(false)
     }
-  };
+  }
 
   const handleSlotClick = (index: number) => {
-    const tool = activeToolSlots[index];
-    const isLocked = index >= MAX_FREE_SLOTS && !isPremium;
-    
+    const tool = activeToolSlots[index]
+    const isLocked = index >= MAX_FREE_SLOTS && !isPremium
+
     if (isLocked) {
-      setShowUpgradeModal(true);
-      return;
+      setShowUpgradeModal(true)
+      return
     }
 
     if (tool) {
       if (!file) {
-        alert('Please upload a PDF file first');
-        return;
+        alert('Please upload a PDF file first')
+        return
       }
-      
+
       switch (tool.id) {
         case 'rotate':
-          handleRotateSelected();
-          break;
+          handleRotateSelected()
+          break
         case 'merge':
-          handleMerge();
-          break;
+          handleMerge()
+          break
         case 'split':
-          handleSplit();
-          break;
+          handleSplit()
+          break
         case 'delete':
-          handleDeleteSelected();
-          break;
+          handleDeleteSelected()
+          break
         case 'compress':
-          handleCompress();
-          break;
+          handleCompress()
+          break
         case 'pageNumbers':
-          handleAddPageNumbers();
-          break;
+          handleAddPageNumbers()
+          break
         case 'blankPage':
-          handleInsertBlankPage();
-          break;
+          handleInsertBlankPage()
+          break
         case 'duplicate':
-          handleDuplicatePages();
-          break;
+          handleDuplicatePages()
+          break
         case 'ocr':
-          handleOCR();
-          break;
+          handleOCR()
+          break
         case 'annotate':
-          alert('Annotation coming soon!');
-          break;
+          alert('Annotation coming soon!')
+          break
         case 'highlight':
-          alert('Highlight coming soon!');
-          break;
+          alert('Highlight coming soon!')
+          break
         case 'crop':
-          alert('Crop coming soon!');
-          break;
+          alert('Crop coming soon!')
+          break
         case 'password':
-          handlePassword();
-          break;
+          handlePassword()
+          break
         case 'watermark':
-          handleWatermark();
-          break;
+          handleWatermark()
+          break
         case 'signature':
-          handleSignature();
-          break;
+          handleSignature()
+          break
         case 'toWord':
-          setConvertFormat('word');
-          handleToWord();
-          break;
+          setConvertFormat('word')
+          handleToWord()
+          break
         case 'toExcel':
-          setConvertFormat('excel');
-          handleToExcel();
-          break;
+          setConvertFormat('excel')
+          handleToExcel()
+          break
       }
     } else {
-      setIsSelectingTool(index);
+      setIsSelectingTool(index)
     }
-  };
+  }
 
   const createPDFFromPages = async (): Promise<Uint8Array> => {
-    if (!file) throw new Error('No file loaded');
-    
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfDoc = await PDFDocument.load(arrayBuffer);
-    const newPdfDoc = await PDFDocument.create();
-    
+    if (!file) throw new Error('No file loaded')
+
+    const arrayBuffer = await file.arrayBuffer()
+    const pdfDoc = await PDFDocument.load(arrayBuffer)
+    const newPdfDoc = await PDFDocument.create()
+
     for (const page of pages) {
-      const pageIndex = page.pageNumber - 1;
-      const [copiedPage] = await newPdfDoc.copyPages(pdfDoc, [pageIndex]);
-      
+      const pageIndex = page.pageNumber - 1
+      const [copiedPage] = await newPdfDoc.copyPages(pdfDoc, [pageIndex])
+
       if (page.rotation !== 0) {
-        copiedPage.setRotation(degrees(page.rotation));
+        copiedPage.setRotation(degrees(page.rotation))
       }
-      
-      newPdfDoc.addPage(copiedPage);
+
+      newPdfDoc.addPage(copiedPage)
     }
-    
-    return await newPdfDoc.save();
-  };
+
+    return await newPdfDoc.save()
+  }
 
   const handleDownload = async () => {
     if (!file || pages.length === 0) {
-      alert('No file to download');
-      return;
+      alert('No file to download')
+      return
     }
-    
-    setIsProcessing(true);
+
+    setIsProcessing(true)
     try {
-      const pdfBytes = await createPDFFromPages();
-      downloadPDF(pdfBytes, `edited_${file.name}`);
-      handleProcessComplete(uint8ArrayToBlob(pdfBytes));
+      const pdfBytes = await createPDFFromPages()
+      downloadPDF(pdfBytes, `edited_${file.name}`)
+      handleProcessComplete(uint8ArrayToBlob(pdfBytes))
     } catch (error) {
-      console.error('Download error:', error);
-      alert('Failed to prepare download');
+      console.error('Download error:', error)
+      alert('Failed to prepare download')
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const handlePrint = async () => {
     if (!file || pages.length === 0) {
-      alert('No file to print');
-      return;
+      alert('No file to print')
+      return
     }
-    
+
     try {
-      const pdfBytes = await createPDFFromPages();
-      const blob = uint8ArrayToBlob(pdfBytes);
-      const fileURL = URL.createObjectURL(blob);
-      
-      const printWindow = window.open(fileURL);
+      const pdfBytes = await createPDFFromPages()
+      const blob = uint8ArrayToBlob(pdfBytes)
+      const fileURL = URL.createObjectURL(blob)
+
+      const printWindow = window.open(fileURL)
       if (printWindow) {
         printWindow.onload = () => {
-          printWindow.print();
-          setTimeout(() => URL.revokeObjectURL(fileURL), 1000);
-        };
+          printWindow.print()
+          setTimeout(() => URL.revokeObjectURL(fileURL), 1000)
+        }
       }
     } catch (error) {
-      console.error('Print error:', error);
-      alert('Failed to prepare print');
+      console.error('Print error:', error)
+      alert('Failed to prepare print')
     }
-  };
+  }
 
   const handleTouchStart = (pageId: string) => {
-    setDraggedPage(pageId);
-  };
+    setDraggedPage(pageId)
+  }
 
   const handleTouchEnd = (e: React.TouchEvent, targetPageId: string) => {
-    if (!draggedPage || draggedPage === targetPageId) return;
-    
-    const draggedIndex = pages.findIndex(p => p.id === draggedPage);
-    const targetIndex = pages.findIndex(p => p.id === targetPageId);
-    
-    const newPages = [...pages];
-    const [removed] = newPages.splice(draggedIndex, 1);
-    newPages.splice(targetIndex, 0, removed);
-    
-    updatePages(newPages.map((page, index) => ({
-      ...page,
-      pageNumber: index + 1
-    })));
-    setDraggedPage(null);
-  };
+    if (!draggedPage || draggedPage === targetPageId) return
+
+    const draggedIndex = pages.findIndex((p) => p.id === draggedPage)
+    const targetIndex = pages.findIndex((p) => p.id === targetPageId)
+
+    const newPages = [...pages]
+    const [removed] = newPages.splice(draggedIndex, 1)
+    newPages.splice(targetIndex, 0, removed)
+
+    updatePages(
+      newPages.map((page, index) => ({
+        ...page,
+        pageNumber: index + 1,
+      }))
+    )
+    setDraggedPage(null)
+  }
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
     } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
+      document.exitFullscreen()
+      setIsFullscreen(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col md:flex-row">
       {/* Mobile Header */}
       {isMobile && (
         <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
-          <button 
+          <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             className="p-2 rounded hover:bg-gray-700"
           >
             <Menu className="w-5 h-5 text-gray-300" />
           </button>
-          <span className="text-sm text-gray-300">
-            {file ? file.name : 'PDF Editor'}
-          </span>
-          <button 
+          <span className="text-sm text-gray-300">{file ? file.name : 'PDF Editor'}</span>
+          <button
             onClick={() => setShowThumbnails(!showThumbnails)}
             className="p-2 rounded hover:bg-gray-700"
           >
-            <ChevronLeft className={`w-5 h-5 text-gray-300 transform transition ${!showThumbnails ? 'rotate-180' : ''}`} />
+            <ChevronLeft
+              className={`w-5 h-5 text-gray-300 transform transition ${!showThumbnails ? 'rotate-180' : ''}`}
+            />
           </button>
         </div>
       )}
@@ -558,10 +555,7 @@ export default function PDFStudioClient() {
       )}
 
       {showWatermarkUI && (
-        <WatermarkUI
-          onApply={handleApplyWatermark}
-          onCancel={() => setShowWatermarkUI(false)}
-        />
+        <WatermarkUI onApply={handleApplyWatermark} onCancel={() => setShowWatermarkUI(false)} />
       )}
 
       {showSignatureUI && (
@@ -574,7 +568,9 @@ export default function PDFStudioClient() {
 
       {showConvertUI && (
         <ConvertUI
-          onConvert={(format, options) => handleConvert(format, { ...options, format: convertFormat })}
+          onConvert={(format, options) =>
+            handleConvert(format, { ...options, format: convertFormat })
+          }
           onCancel={() => setShowConvertUI(false)}
           isProcessing={isProcessing}
         />
@@ -598,5 +594,5 @@ export default function PDFStudioClient() {
 
       <PWAInstaller />
     </div>
-  );
+  )
 }

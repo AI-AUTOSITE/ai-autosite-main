@@ -6,7 +6,7 @@ import {
   Briefcase,
   Palette,
   GraduationCap,
-  type LucideIcon
+  type LucideIcon,
 } from 'lucide-react'
 
 // カテゴリーの型定義
@@ -23,7 +23,7 @@ export interface Category {
   order?: number
   badge?: string
   benefits?: string[]
-  path?: string  // ⭐ この行を追加
+  path?: string // ⭐ この行を追加
 }
 
 // カテゴリー定義（一元管理）
@@ -39,7 +39,7 @@ export const CATEGORIES: Category[] = [
     description: 'Instant tools for everyday tasks',
     enabled: true,
     order: 1,
-    path: '/tools?category=quick-tools'  // ⭐ 各カテゴリーにpathを追加（オプション）
+    path: '/tools?category=quick-tools', // ⭐ 各カテゴリーにpathを追加（オプション）
   },
   {
     id: 'dev-tools',
@@ -52,7 +52,7 @@ export const CATEGORIES: Category[] = [
     description: 'Tools for developers and coders',
     enabled: true,
     order: 2,
-    path: '/tools?category=dev-tools'  // ⭐ 追加（オプション）
+    path: '/tools?category=dev-tools', // ⭐ 追加（オプション）
   },
   {
     id: 'study-tools',
@@ -66,7 +66,7 @@ export const CATEGORIES: Category[] = [
     enabled: true,
     order: 3,
     badge: 'NEW',
-    path: '/tools?category=study-tools'  // ⭐ 追加（オプション）
+    path: '/tools?category=study-tools', // ⭐ 追加（オプション）
   },
   {
     id: 'business-tools',
@@ -79,7 +79,7 @@ export const CATEGORIES: Category[] = [
     description: 'Professional productivity tools',
     enabled: true,
     order: 4,
-    path: '/tools?category=business-tools'  // ⭐ 追加（オプション）
+    path: '/tools?category=business-tools', // ⭐ 追加（オプション）
   },
   {
     id: 'creative-tools',
@@ -92,7 +92,7 @@ export const CATEGORIES: Category[] = [
     description: 'Design and creative tools',
     enabled: true,
     order: 5,
-    path: '/tools?category=creative-tools'  // ⭐ 追加（オプション）
+    path: '/tools?category=creative-tools', // ⭐ 追加（オプション）
   },
   {
     id: 'learning-hub',
@@ -105,23 +105,23 @@ export const CATEGORIES: Category[] = [
     description: 'Educational and learning resources',
     enabled: true,
     order: 6,
-    path: '/tools?category=learning-hub'  // ⭐ 追加（オプション）
-  }
+    path: '/tools?category=learning-hub', // ⭐ 追加（オプション）
+  },
 ]
 
 // 以下は変更なし
 export function getEnabledCategories(): Category[] {
-  return CATEGORIES
-    .filter(cat => cat.enabled !== false)
-    .sort((a, b) => (a.order || 0) - (b.order || 0))
+  return CATEGORIES.filter((cat) => cat.enabled !== false).sort(
+    (a, b) => (a.order || 0) - (b.order || 0)
+  )
 }
 
 export function getCategoryById(id: string): Category | undefined {
-  return CATEGORIES.find(cat => cat.id === id)
+  return CATEGORIES.find((cat) => cat.id === id)
 }
 
 export function getCategoryByName(name: string): Category | undefined {
-  return CATEGORIES.find(cat => cat.name === name)
+  return CATEGORIES.find((cat) => cat.name === name)
 }
 
 export default CATEGORIES

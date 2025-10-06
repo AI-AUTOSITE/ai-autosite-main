@@ -17,7 +17,7 @@ import {
   Type,
   Scan,
   ArrowRight,
-  ArrowLeftRight
+  ArrowLeftRight,
 } from 'lucide-react'
 
 interface GuideProps {
@@ -34,7 +34,7 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
     'Convert printed Japanese to digital text',
     'Learn Japanese through image-based content',
     'Process business documents and receipts',
-    'Quick text translation without images'
+    'Quick text translation without images',
   ]
 
   const handleCopy = (text: string, id: string) => {
@@ -56,7 +56,7 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
             <X className="w-5 h-5 text-gray-400 hover:text-white" />
           </button>
         )}
-        
+
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center">
             <Languages className="w-5 h-5 text-white" />
@@ -107,7 +107,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
           <h4 className="font-semibold text-white mb-3">Using Image OCR Mode</h4>
           <ol className="space-y-3">
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">1</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                1
+              </span>
               <div>
                 <p className="font-medium text-white">Upload Your Image</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -117,7 +119,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
               </div>
             </li>
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">2</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                2
+              </span>
               <div>
                 <p className="font-medium text-white">Automatic Processing</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -127,7 +131,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
               </div>
             </li>
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">3</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                3
+              </span>
               <div>
                 <p className="font-medium text-white">Get Results</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -144,7 +150,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
           <h4 className="font-semibold text-white mb-3">Using Text Translation Mode</h4>
           <ol className="space-y-3">
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">1</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                1
+              </span>
               <div>
                 <p className="font-medium text-white">Paste Your Text</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -154,7 +162,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
               </div>
             </li>
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">2</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                2
+              </span>
               <div>
                 <p className="font-medium text-white">Click Translate</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -164,7 +174,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
               </div>
             </li>
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">3</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                3
+              </span>
               <div>
                 <p className="font-medium text-white">Copy Translation</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -174,7 +186,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
               </div>
             </li>
             <li className="flex items-start">
-              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-pink-500 to-red-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">4</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-pink-500 to-red-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                4
+              </span>
               <div>
                 <p className="font-medium text-white">Swap & Retranslate (NEW!)</p>
                 <p className="text-sm text-gray-400 mt-1">
@@ -308,9 +322,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
             <div className="text-sm text-green-300">
               <p className="font-semibold mb-1">Complete Privacy</p>
               <p className="text-gray-300">
-                Your images and text never leave your device. All OCR processing happens
-                locally in your browser. Translation uses secure HTTPS APIs without storing
-                your data. Perfect for sensitive documents and confidential information.
+                Your images and text never leave your device. All OCR processing happens locally in
+                your browser. Translation uses secure HTTPS APIs without storing your data. Perfect
+                for sensitive documents and confidential information.
               </p>
             </div>
           </div>
@@ -320,9 +334,9 @@ export default function JapaneseOCRGuide({ onClose }: GuideProps) {
         <div className="bg-purple-500/10 rounded-lg p-4">
           <p className="text-sm text-white font-medium mb-2">Japanese Language Support</p>
           <p className="text-xs text-gray-300">
-            This tool specializes in Japanese ↔ English translation with support for complex
-            Kanji characters, vertical text, and long documents. Perfect for students,
-            professionals, and anyone working with Japanese content.
+            This tool specializes in Japanese ↔ English translation with support for complex Kanji
+            characters, vertical text, and long documents. Perfect for students, professionals, and
+            anyone working with Japanese content.
           </p>
         </div>
       </div>

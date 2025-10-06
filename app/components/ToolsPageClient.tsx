@@ -1,16 +1,7 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import {
-  Search,
-  Sparkles,
-  Clock,
-  Grid3x3,
-  List,
-  ChevronRight,
-  ArrowRight,
-  X
-} from 'lucide-react'
+import { Search, Sparkles, Clock, Grid3x3, List, ChevronRight, ArrowRight, X } from 'lucide-react'
 
 // Import unified data system
 import {
@@ -18,7 +9,7 @@ import {
   getToolsByCategory,
   getFeaturedTools,
   getNewTools,
-  searchTools
+  searchTools,
 } from '@/lib/unified-data'
 
 // Import categories from unified config
@@ -40,8 +31,8 @@ export default function ToolsPageClient() {
   // Category statistics
   const categoryStats = useMemo(() => {
     const stats: Record<string, number> = {}
-    categories.forEach(cat => {
-      const categoryTools = getToolsByCategory(cat.id).filter(t => t.status === 'active')
+    categories.forEach((cat) => {
+      const categoryTools = getToolsByCategory(cat.id).filter((t) => t.status === 'active')
       stats[cat.id] = categoryTools.length
     })
     return stats
@@ -60,21 +51,22 @@ export default function ToolsPageClient() {
   // Filtered and sorted tools
   const filteredTools = useMemo(() => {
     if (selectedCategory === null) return []
-    
-    let filtered = selectedCategory === 'all' 
-      ? tools 
-      : getToolsByCategory(selectedCategory).filter(t => t.status === 'active')
+
+    let filtered =
+      selectedCategory === 'all'
+        ? tools
+        : getToolsByCategory(selectedCategory).filter((t) => t.status === 'active')
 
     if (searchQuery) {
       filtered = searchTools(searchQuery)
     }
 
     if (showOnlyNew) {
-      filtered = filtered.filter(tool => tool.new)
+      filtered = filtered.filter((tool) => tool.new)
     }
 
     if (showOnlyFeatured) {
-      filtered = filtered.filter(tool => tool.featured)
+      filtered = filtered.filter((tool) => tool.featured)
     }
 
     // Alphabetical sorting
@@ -82,11 +74,14 @@ export default function ToolsPageClient() {
   }, [selectedCategory, searchQuery, showOnlyNew, showOnlyFeatured, tools])
 
   // Statistics
-  const stats = useMemo(() => ({
-    total: tools.length,
-    featured: tools.filter(t => t.featured).length,
-    new: tools.filter(t => t.new).length
-  }), [tools])
+  const stats = useMemo(
+    () => ({
+      total: tools.length,
+      featured: tools.filter((t) => t.featured).length,
+      new: tools.filter((t) => t.new).length,
+    }),
+    [tools]
+  )
 
   // Featured and new tools for quick access
   const featuredTools = useMemo(() => getFeaturedTools(4), [])
@@ -156,7 +151,7 @@ export default function ToolsPageClient() {
 
       {/* Category Grid (Default View) */}
       {selectedCategory === null && !searchQuery && (
-        <CategoryGrid 
+        <CategoryGrid
           categories={categories}
           categoryStats={categoryStats}
           setSelectedCategory={setSelectedCategory}
@@ -185,9 +180,9 @@ export default function ToolsPageClient() {
                 <>
                   <span className="text-gray-600">/</span>
                   <span className="text-white font-medium">
-                    {selectedCategory === 'all' 
-                      ? 'All Tools' 
-                      : categories.find(c => c.id === selectedCategory)?.name}
+                    {selectedCategory === 'all'
+                      ? 'All Tools'
+                      : categories.find((c) => c.id === selectedCategory)?.name}
                   </span>
                 </>
               )}
@@ -207,7 +202,7 @@ export default function ToolsPageClient() {
                   <Sparkles className="w-3 h-3" />
                   Featured ({stats.featured})
                 </button>
-                
+
                 <button
                   onClick={() => setShowOnlyNew(!showOnlyNew)}
                   className={`px-3 py-1.5 text-sm rounded-lg transition-all flex items-center gap-1 ${
@@ -225,8 +220,8 @@ export default function ToolsPageClient() {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-1.5 rounded transition-all ${
-                    viewMode === 'grid' 
-                      ? 'bg-gray-700 text-white' 
+                    viewMode === 'grid'
+                      ? 'bg-gray-700 text-white'
                       : 'text-gray-500 hover:text-white'
                   }`}
                 >
@@ -235,8 +230,8 @@ export default function ToolsPageClient() {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-1.5 rounded transition-all ${
-                    viewMode === 'list' 
-                      ? 'bg-gray-700 text-white' 
+                    viewMode === 'list'
+                      ? 'bg-gray-700 text-white'
                       : 'text-gray-500 hover:text-white'
                   }`}
                 >
@@ -257,7 +252,7 @@ export default function ToolsPageClient() {
               >
                 🎯 All Tools
               </button>
-              {categories.map(cat => (
+              {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
@@ -277,7 +272,12 @@ export default function ToolsPageClient() {
           {/* Results Count */}
           <div className="mb-6 text-gray-500">
             Showing <span className="text-white font-bold">{filteredTools.length}</span> tools
-            {searchQuery && <span> matching "<span className="text-white">{searchQuery}</span>"</span>}
+            {searchQuery && (
+              <span>
+                {' '}
+                matching "<span className="text-white">{searchQuery}</span>"
+              </span>
+            )}
           </div>
 
           {/* Tools Display */}
@@ -285,13 +285,13 @@ export default function ToolsPageClient() {
             <EmptyState />
           ) : viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTools.map(tool => (
+              {filteredTools.map((tool) => (
                 <ToolCard key={tool.id || tool.name} tool={tool} />
               ))}
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              {filteredTools.map(tool => (
+              {filteredTools.map((tool) => (
                 <ToolListItem key={tool.id || tool.name} tool={tool} />
               ))}
             </div>
@@ -303,11 +303,20 @@ export default function ToolsPageClient() {
 }
 
 // Category Grid Component
-function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowOnlyFeatured, setShowOnlyNew, featuredTools, newTools, stats }: any) {
+function CategoryGrid({
+  categories,
+  categoryStats,
+  setSelectedCategory,
+  setShowOnlyFeatured,
+  setShowOnlyNew,
+  featuredTools,
+  newTools,
+  stats,
+}: any) {
   return (
     <div>
       <h2 className="text-3xl font-bold mb-6 text-center">Choose a Category</h2>
-      
+
       {/* Category Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {categories.map((cat: any) => {
@@ -333,12 +342,12 @@ function CategoryGrid({ categories, categoryStats, setSelectedCategory, setShowO
                     {categoryStats[cat.id] || 0} tools
                   </span>
                 </div>
-                
+
                 <h3 className="text-2xl font-bold mb-2 text-white">{cat.name}</h3>
                 <p className="text-base text-gray-400 mb-4">{cat.description}</p>
-                
+
                 <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
-                  Browse tools 
+                  Browse tools
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
@@ -419,13 +428,17 @@ function ToolCard({ tool }: { tool: any }) {
 
   return (
     <Link href={tool.url || `/tools/${tool.id}`} className="block">
-      <div className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
+      <div
+        className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
                      hover:scale-[1.02] cursor-pointer h-full min-h-[260px]
-                     flex flex-col border border-gray-700 hover:border-gray-600 group p-6">
+                     flex flex-col border border-gray-700 hover:border-gray-600 group p-6"
+      >
         <div className="flex items-start justify-between mb-4">
-          <div className={`w-16 h-16 rounded-xl ${getIconBgClass()} 
+          <div
+            className={`w-16 h-16 rounded-xl ${getIconBgClass()} 
                          flex items-center justify-center text-3xl
-                         group-hover:scale-105 transition-transform`}>
+                         group-hover:scale-105 transition-transform`}
+          >
             {tool.icon || tool.emoji || '🔧'}
           </div>
           <div className="flex gap-1">
@@ -446,14 +459,16 @@ function ToolCard({ tool }: { tool: any }) {
         <p className="text-base text-gray-400 mb-4 line-clamp-3 flex-grow">
           {tool.description || 'No description available'}
         </p>
-        
+
         <div className="flex items-center justify-between text-sm mt-auto pt-3 border-t border-gray-700">
           <span className="text-gray-500 flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {tool.timeToUse || 'Instant'}
           </span>
-          <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
-                        group-hover:translate-x-1 transition-all" />
+          <ChevronRight
+            className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
+                        group-hover:translate-x-1 transition-all"
+          />
         </div>
       </div>
     </Link>
@@ -469,11 +484,15 @@ function ToolListItem({ tool }: { tool: any }) {
 
   return (
     <Link href={tool.url || `/tools/${tool.id}`} className="block">
-      <div className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
-                     cursor-pointer border border-gray-700 hover:border-gray-600 group p-5">
+      <div
+        className="bg-gray-800 rounded-xl hover:bg-gray-750 transition-all 
+                     cursor-pointer border border-gray-700 hover:border-gray-600 group p-5"
+      >
         <div className="flex items-center gap-4">
-          <div className={`flex-shrink-0 w-14 h-14 ${getIconBgClass()} 
-                        rounded-lg flex items-center justify-center text-2xl`}>
+          <div
+            className={`flex-shrink-0 w-14 h-14 ${getIconBgClass()} 
+                        rounded-lg flex items-center justify-center text-2xl`}
+          >
             {tool.icon || tool.emoji || '🔧'}
           </div>
 
@@ -501,14 +520,16 @@ function ToolListItem({ tool }: { tool: any }) {
                   {tool.description || 'No description available'}
                 </p>
               </div>
-              
+
               <div className="flex items-center gap-3 flex-shrink-0">
                 <span className="text-sm text-gray-500 flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   {tool.timeToUse || 'Instant'}
                 </span>
-                <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-gray-300 
-                              group-hover:translate-x-1 transition-all" />
+                <ChevronRight
+                  className="w-5 h-5 text-gray-500 group-hover:text-gray-300 
+                              group-hover:translate-x-1 transition-all"
+                />
               </div>
             </div>
           </div>

@@ -7,12 +7,15 @@
  * @param mimeType - The MIME type for the Blob (default: 'application/pdf')
  * @returns A Blob object
  */
-export function uint8ArrayToBlob(uint8Array: Uint8Array, mimeType: string = 'application/pdf'): Blob {
+export function uint8ArrayToBlob(
+  uint8Array: Uint8Array,
+  mimeType: string = 'application/pdf'
+): Blob {
   // Create a new ArrayBuffer to avoid SharedArrayBuffer issues
-  const newBuffer = new ArrayBuffer(uint8Array.length);
-  const view = new Uint8Array(newBuffer);
-  view.set(uint8Array);
-  return new Blob([newBuffer], { type: mimeType });
+  const newBuffer = new ArrayBuffer(uint8Array.length)
+  const view = new Uint8Array(newBuffer)
+  view.set(uint8Array)
+  return new Blob([newBuffer], { type: mimeType })
 }
 
 // Future utility functions can be added here

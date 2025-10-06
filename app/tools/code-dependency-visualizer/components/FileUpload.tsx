@@ -16,7 +16,7 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
   const [isWaitingForFiles, setIsWaitingForFiles] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const folderInputRef = useRef<HTMLInputElement>(null)
-  
+
   // Add global cursor style when waiting
   useEffect(() => {
     if (isWaitingForFiles) {
@@ -26,11 +26,11 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
       }
     }
   }, [isWaitingForFiles])
-  
+
   const handleButtonClick = (type: 'file' | 'folder') => {
     setError('')
     setIsWaitingForFiles(true)
-    
+
     // Trigger file input
     if (type === 'file') {
       fileInputRef.current?.click()
@@ -38,34 +38,34 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
       folderInputRef.current?.click()
     }
   }
-  
+
   const handleDragEnter = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(true)
   }
-  
+
   const handleDragLeave = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
   }
-  
+
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
   }
-  
+
   const handleDrop = async (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
     setError('')
     setIsWaitingForFiles(true)
-    
+
     const items = Array.from(e.dataTransfer.items)
     const files: File[] = []
-    
+
     for (const item of items) {
       if (item.kind === 'file') {
         const entry = item.webkitGetAsEntry()
@@ -74,24 +74,24 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
         }
       }
     }
-    
+
     if (files.length > 0) {
       onFilesSelect(files)
     } else {
       setIsWaitingForFiles(false)
     }
   }
-  
+
   const processEntry = async (entry: any, files: File[], path = ''): Promise<void> => {
     if (entry.isFile) {
       return new Promise((resolve) => {
         entry.file((file: File) => {
           const fileWithPath = new File([file], path + file.name, {
             type: file.type,
-            lastModified: file.lastModified
+            lastModified: file.lastModified,
           })
           Object.defineProperty(fileWithPath, 'webkitRelativePath', {
-            value: path + file.name
+            value: path + file.name,
           })
           files.push(fileWithPath)
           resolve()
@@ -102,16 +102,16 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
       const entries = await new Promise<any[]>((resolve) => {
         reader.readEntries((entries: any[]) => resolve(entries))
       })
-      
+
       for (const childEntry of entries) {
         await processEntry(childEntry, files, path + entry.name + '/')
       }
     }
   }
-  
+
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError('')
-    
+
     const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       onFilesSelect(files)
@@ -119,19 +119,22 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
       setIsWaitingForFiles(false)
     }
   }
-  
+
   // Reset when dialog is cancelled
   const handleInputClick = () => {
     // User cancelled if no files selected after a delay
     setTimeout(() => {
-      if (fileInputRef.current?.files?.length === 0 && folderInputRef.current?.files?.length === 0) {
+      if (
+        fileInputRef.current?.files?.length === 0 &&
+        folderInputRef.current?.files?.length === 0
+      ) {
         setIsWaitingForFiles(false)
       }
     }, 100)
   }
-  
+
   const isLoading = isProcessing || isWaitingForFiles
-  
+
   return (
     <div className="space-y-4">
       {/* Drop Zone */}
@@ -142,9 +145,10 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
         onDrop={handleDrop}
         className={`
           relative p-8 border-2 border-dashed rounded-xl transition-all duration-200
-          ${isDragging ? 
-            'border-cyan-400 bg-cyan-400/10 scale-[1.02]' : 
-            'border-white/20 bg-white/5 hover:border-cyan-400/50'
+          ${
+            isDragging
+              ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]'
+              : 'border-white/20 bg-white/5 hover:border-cyan-400/50'
           }
           ${isLoading ? 'opacity-50' : ''}
         `}
@@ -161,7 +165,7 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
           disabled={isLoading}
           className="hidden"
         />
-        
+
         <input
           ref={folderInputRef}
           type="file"
@@ -173,7 +177,7 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
           disabled={isLoading}
           className="hidden"
         />
-        
+
         <div className="text-center">
           {isLoading ? (
             <>
@@ -182,16 +186,16 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
                 {isWaitingForFiles ? 'Preparing files...' : 'Processing files...'}
               </p>
               <p className="text-gray-400 text-sm mt-2">
-                {isWaitingForFiles ? 'This may take a few seconds for large folders' : 'Please wait'}
+                {isWaitingForFiles
+                  ? 'This may take a few seconds for large folders'
+                  : 'Please wait'}
               </p>
             </>
           ) : (
             <>
               <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-white font-medium mb-2">
-                Drop files or folder here
-              </p>
-              
+              <p className="text-white font-medium mb-2">Drop files or folder here</p>
+
               {/* Action Buttons */}
               <div className="flex gap-3 justify-center">
                 <button
@@ -204,7 +208,7 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
                   <Upload className="w-4 h-4" />
                   Select Files
                 </button>
-                
+
                 <button
                   onClick={() => handleButtonClick('folder')}
                   disabled={isLoading}
@@ -220,27 +224,27 @@ export default function FileUpload({ onFilesSelect, isProcessing }: FileUploadPr
           )}
         </div>
       </div>
-      
+
       {/* Limits Info */}
       <div className="flex justify-center gap-6 text-sm text-gray-400">
         <span>• Max total size: 100MB</span>
         <span>• Max files: 1000</span>
       </div>
-      
+
       {/* Error Message */}
-{error && (
-  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg animate-fade-in">
-    <div className="flex items-start gap-2">
-      <AlertCircle className="w-4 h-4 text-red-400 mt-0.5" />
-      <div>
-        <p className="text-sm text-red-400">{error}</p>
-        <p className="text-xs text-red-400/70 mt-1">
-          Supported formats: TS, TSX, JS, JSX, JSON, CSS, MD
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+      {error && (
+        <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg animate-fade-in">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-400 mt-0.5" />
+            <div>
+              <p className="text-sm text-red-400">{error}</p>
+              <p className="text-xs text-red-400/70 mt-1">
+                Supported formats: TS, TSX, JS, JSX, JSON, CSS, MD
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

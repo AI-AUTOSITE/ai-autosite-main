@@ -1,10 +1,16 @@
 'use client'
 
 import { useState, useRef, useCallback, useMemo } from 'react'
-import { 
-  Copy, Check, RefreshCw, Download, 
-  Upload, AlertCircle, CheckCircle, 
-  Minimize2, Maximize2
+import {
+  Copy,
+  Check,
+  RefreshCw,
+  Download,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Minimize2,
+  Maximize2,
 } from 'lucide-react'
 
 type ProcessMode = 'beautify' | 'minify'
@@ -17,31 +23,30 @@ interface JsonStats {
 }
 
 const SAMPLE_JSON = {
-  name: "AI AutoSite",
-  version: "1.0.0",
-  features: ["JSON Format", "Text Tools"],
+  name: 'AI AutoSite',
+  version: '1.0.0',
+  features: ['JSON Format', 'Text Tools'],
   settings: {
-    theme: "dark",
-    indentSize: 2
-  }
+    theme: 'dark',
+    indentSize: 2,
+  },
 }
 
 const INDENT_OPTIONS = [2, 4, 8] as const
 
 const processJsonData = (text: string, mode: ProcessMode, indentSize: number) => {
   if (!text.trim()) return { success: true, output: '' }
-  
+
   try {
     const parsed = JSON.parse(text)
-    const output = mode === 'beautify' 
-      ? JSON.stringify(parsed, null, indentSize)
-      : JSON.stringify(parsed)
+    const output =
+      mode === 'beautify' ? JSON.stringify(parsed, null, indentSize) : JSON.stringify(parsed)
     return { success: true, output }
   } catch (err) {
     return {
       success: false,
       output: '',
-      error: err instanceof Error ? err.message : 'Invalid JSON'
+      error: err instanceof Error ? err.message : 'Invalid JSON',
     }
   }
 }
@@ -49,19 +54,19 @@ const processJsonData = (text: string, mode: ProcessMode, indentSize: number) =>
 const calculateStats = (jsonString: string): JsonStats => {
   try {
     if (!jsonString) return { keys: 0, arrays: 0, objects: 0, size: 0 }
-    
+
     const parsed = JSON.parse(jsonString)
     const stringified = JSON.stringify(parsed, null, 0)
     const keys = stringified.match(/"[^"]+"\s*:/g) || []
     const arrays = stringified.match(/\[/g) || []
     const objects = stringified.match(/\{/g) || []
     const size = new Blob([jsonString]).size
-    
+
     return {
       keys: keys.length,
       arrays: arrays.length,
       objects: objects.length,
-      size
+      size,
     }
   } catch {
     return { keys: 0, arrays: 0, objects: 0, size: 0 }
@@ -76,37 +81,39 @@ export default function JsonFormatClient() {
   const [copied, setCopied] = useState(false)
   const [indentSize, setIndentSize] = useState<2 | 4 | 8>(2)
   const [mode, setMode] = useState<ProcessMode>('beautify')
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const stats = useMemo(() => calculateStats(outputJson), [outputJson])
-  
-  const processJson = useCallback((
-    text: string,
-    currentMode: ProcessMode = mode,
-    currentIndent: number = indentSize
-  ) => {
-    setError('')
-    setSuccess('')
-    
-    const result = processJsonData(text, currentMode, currentIndent)
-    
-    if (result.success) {
-      setOutputJson(result.output)
-      if (result.output) {
-        setSuccess('✓ Valid JSON')
-        setTimeout(() => setSuccess(''), 2000)
+
+  const processJson = useCallback(
+    (text: string, currentMode: ProcessMode = mode, currentIndent: number = indentSize) => {
+      setError('')
+      setSuccess('')
+
+      const result = processJsonData(text, currentMode, currentIndent)
+
+      if (result.success) {
+        setOutputJson(result.output)
+        if (result.output) {
+          setSuccess('✓ Valid JSON')
+          setTimeout(() => setSuccess(''), 2000)
+        }
+      } else {
+        setOutputJson('')
+        setError(result.error || '')
       }
-    } else {
-      setOutputJson('')
-      setError(result.error || '')
-    }
-  }, [mode, indentSize])
-  
-  const handleInputChange = useCallback((text: string) => {
-    setInputJson(text)
-    processJson(text)
-  }, [processJson])
-  
+    },
+    [mode, indentSize]
+  )
+
+  const handleInputChange = useCallback(
+    (text: string) => {
+      setInputJson(text)
+      processJson(text)
+    },
+    [processJson]
+  )
+
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(outputJson)
@@ -116,7 +123,7 @@ export default function JsonFormatClient() {
       setError('Cannot copy')
     }
   }, [outputJson])
-  
+
   const handleDownload = useCallback(() => {
     const blob = new Blob([outputJson], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -126,22 +133,24 @@ export default function JsonFormatClient() {
     link.click()
     URL.revokeObjectURL(url)
   }, [outputJson])
-  
-  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const text = event.target?.result as string
-        handleInputChange(text)
+
+  const handleFileUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (event) => {
+          const text = event.target?.result as string
+          handleInputChange(text)
+        }
+        reader.readAsText(file)
       }
-      reader.readAsText(file)
-    }
-  }, [handleInputChange])
-  
+    },
+    [handleInputChange]
+  )
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
-      
       {/* Control Panel */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 mb-4">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -176,7 +185,7 @@ export default function JsonFormatClient() {
               <span>Small</span>
             </button>
           </div>
-          
+
           {/* Indent for beautify */}
           {mode === 'beautify' && (
             <div className="flex items-center space-x-2">
@@ -199,7 +208,7 @@ export default function JsonFormatClient() {
               ))}
             </div>
           )}
-          
+
           {/* Actions */}
           <div className="flex gap-2 ml-auto">
             <button
@@ -225,7 +234,7 @@ export default function JsonFormatClient() {
           </div>
         </div>
       </div>
-      
+
       {/* Messages - Compact */}
       {(error || success) && (
         <div className="mb-4">
@@ -243,7 +252,7 @@ export default function JsonFormatClient() {
           )}
         </div>
       )}
-      
+
       {/* Editors */}
       <div className="grid lg:grid-cols-2 gap-4">
         {/* Input */}
@@ -270,7 +279,7 @@ export default function JsonFormatClient() {
             spellCheck={false}
           />
         </div>
-        
+
         {/* Output */}
         <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
           <div className="flex justify-between items-center mb-2">
@@ -281,7 +290,11 @@ export default function JsonFormatClient() {
                 disabled={!outputJson}
                 className="text-gray-400 hover:text-white transition-colors disabled:opacity-50"
               >
-                {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                {copied ? (
+                  <Check className="w-4 h-4 text-green-400" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
               </button>
               <button
                 onClick={handleDownload}
@@ -301,7 +314,7 @@ export default function JsonFormatClient() {
           />
         </div>
       </div>
-      
+
       {/* Stats - Inline when output exists */}
       {outputJson && (
         <div className="mt-4 flex justify-center">
@@ -320,7 +333,7 @@ export default function JsonFormatClient() {
             </div>
             <div className="text-center">
               <span className="text-blue-400 font-bold">
-                {stats.size > 1024 ? `${(stats.size/1024).toFixed(1)}KB` : `${stats.size}B`}
+                {stats.size > 1024 ? `${(stats.size / 1024).toFixed(1)}KB` : `${stats.size}B`}
               </span>
               <span className="text-gray-400 text-xs ml-1">size</span>
             </div>

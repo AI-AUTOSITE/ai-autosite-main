@@ -3,7 +3,7 @@
 
 import Link from 'next/link'
 import { Home, ChevronRight } from 'lucide-react'
-import type { Tool, Category } from '../../lib/categories'  // ← この行を追加！
+import type { Tool, Category } from '../../lib/categories' // ← この行を追加！
 
 interface BreadcrumbProps {
   tool: Tool | undefined
@@ -24,8 +24,8 @@ export default function Breadcrumb({ tool, category }: BreadcrumbProps) {
       {category && (
         <>
           <ChevronRight className="w-3 h-3" />
-          <Link 
-            href={`/tools?category=${category.id}`} 
+          <Link
+            href={`/tools?category=${category.id}`}
             className="hover:text-cyan-400 transition-colors"
           >
             {category.title}

@@ -22,12 +22,8 @@ export default function TermsOfServicePage() {
               <FileText className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
-            <p className="text-xl text-gray-400">
-              Simple, fair terms that put users first.
-            </p>
-            <p className="text-sm text-gray-500 mt-4">
-              Last updated: August 31, 2025
-            </p>
+            <p className="text-xl text-gray-400">Simple, fair terms that put users first.</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: August 31, 2025</p>
           </div>
 
           {/* Key Points */}
@@ -57,20 +53,24 @@ export default function TermsOfServicePage() {
 
           {/* Main Content */}
           <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 space-y-8">
-            
             {/* Service Description */}
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">1. Our Service</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
-                  AI-AutoSite provides free online tools for developers, creatives, and professionals. 
-                  Our tools work directly in your browser with minimal data collection and maximum privacy.
+                  AI-AutoSite provides free online tools for developers, creatives, and
+                  professionals. Our tools work directly in your browser with minimal data
+                  collection and maximum privacy.
                 </p>
                 <p>
-                  By using our service, you agree to these terms and our 
-                  <Link href="/privacy-policy" className="text-cyan-400 hover:text-cyan-300 underline ml-1">
+                  By using our service, you agree to these terms and our
+                  <Link
+                    href="/privacy-policy"
+                    className="text-cyan-400 hover:text-cyan-300 underline ml-1"
+                  >
                     Privacy Policy
-                  </Link>.
+                  </Link>
+                  .
                 </p>
               </div>
             </section>
@@ -82,23 +82,33 @@ export default function TermsOfServicePage() {
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
-                    <span><strong>Use our tools freely</strong> for personal and commercial projects</span>
+                    <span>
+                      <strong>Use our tools freely</strong> for personal and commercial projects
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
-                    <span><strong>Own your data</strong> - anything you create belongs to you</span>
+                    <span>
+                      <strong>Own your data</strong> - anything you create belongs to you
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
-                    <span><strong>Cancel anytime</strong> - no lock-in contracts for premium features</span>
+                    <span>
+                      <strong>Cancel anytime</strong> - no lock-in contracts for premium features
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
-                    <span><strong>Request data deletion</strong> - complete removal within 24 hours</span>
+                    <span>
+                      <strong>Request data deletion</strong> - complete removal within 24 hours
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
-                    <span><strong>Export your data</strong> - take it anywhere you want</span>
+                    <span>
+                      <strong>Export your data</strong> - take it anywhere you want
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -109,7 +119,7 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">3. Acceptable Use</h2>
               <div className="space-y-4 text-gray-300">
                 <p>We ask that you use our tools responsibly:</p>
-                
+
                 <div className="grid md:grid-cols-2 gap-6 mt-6">
                   <div>
                     <h3 className="text-lg font-semibold text-green-400 mb-3">✅ Please Do</h3>
@@ -120,7 +130,7 @@ export default function TermsOfServicePage() {
                       <li>• Report bugs or security issues</li>
                     </ul>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-lg font-semibold text-red-400 mb-3">❌ Please Don't</h3>
                     <ul className="space-y-2 text-sm">
@@ -139,7 +149,8 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">4. Service Availability</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
-                  We strive to keep our tools available 24/7, but we're a small team with limited resources:
+                  We strive to keep our tools available 24/7, but we're a small team with limited
+                  resources:
                 </p>
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start">
@@ -157,7 +168,7 @@ export default function TermsOfServicePage() {
                 </ul>
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mt-4">
                   <p className="text-yellow-300 text-sm">
-                    <strong>No Service Guarantees:</strong> While we work hard to maintain uptime, 
+                    <strong>No Service Guarantees:</strong> While we work hard to maintain uptime,
                     we cannot guarantee 100% availability for our free tools.
                   </p>
                 </div>
@@ -198,15 +209,15 @@ export default function TermsOfServicePage() {
                   <div>
                     <h3 className="text-lg font-semibold text-cyan-400 mb-3">Your Content</h3>
                     <p className="text-sm">
-                      You retain full ownership of any content you create using our tools. 
-                      We never claim rights to your work.
+                      You retain full ownership of any content you create using our tools. We never
+                      claim rights to your work.
                     </p>
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-purple-400 mb-3">Our Service</h3>
                     <p className="text-sm">
-                      Our tools, code, and branding remain our intellectual property, 
-                      but much of our code is open source.
+                      Our tools, code, and branding remain our intellectual property, but much of
+                      our code is open source.
                     </p>
                   </div>
                 </div>
@@ -221,15 +232,24 @@ export default function TermsOfServicePage() {
                   <div className="flex items-start">
                     <AlertTriangle className="w-5 h-5 text-orange-400 mt-1 mr-3 flex-shrink-0" />
                     <div className="space-y-2 text-sm">
-                      <p><strong>Use at Your Own Risk:</strong> Our tools are provided "as is" without warranties.</p>
-                      <p><strong>No Liability:</strong> We're not responsible for any damages from using our service.</p>
-                      <p><strong>Results May Vary:</strong> Tool outputs depend on your input and may not always be perfect.</p>
+                      <p>
+                        <strong>Use at Your Own Risk:</strong> Our tools are provided "as is"
+                        without warranties.
+                      </p>
+                      <p>
+                        <strong>No Liability:</strong> We're not responsible for any damages from
+                        using our service.
+                      </p>
+                      <p>
+                        <strong>Results May Vary:</strong> Tool outputs depend on your input and may
+                        not always be perfect.
+                      </p>
                     </div>
                   </div>
                 </div>
                 <p className="text-sm">
-                  We're a small team doing our best to provide helpful tools. Please use common sense 
-                  and don't rely solely on our tools for critical business decisions.
+                  We're a small team doing our best to provide helpful tools. Please use common
+                  sense and don't rely solely on our tools for critical business decisions.
                 </p>
               </div>
             </section>
@@ -239,8 +259,8 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">8. Changes to These Terms</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
-                  We may update these terms occasionally to improve clarity or comply with legal requirements. 
-                  We'll notify you of significant changes by:
+                  We may update these terms occasionally to improve clarity or comply with legal
+                  requirements. We'll notify you of significant changes by:
                 </p>
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start">
@@ -264,18 +284,18 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">9. Questions or Disputes</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
-                  We believe in resolving issues through friendly communication. 
-                  If you have concerns about our terms or service, please reach out:
+                  We believe in resolving issues through friendly communication. If you have
+                  concerns about our terms or service, please reach out:
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <a 
-                    href="mailto:aiautosite@gmail.com" 
+                  <a
+                    href="mailto:aiautosite@gmail.com"
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                   >
                     <span>Email Us</span>
                   </a>
-                  <Link 
-                    href="/contact" 
+                  <Link
+                    href="/contact"
                     className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
                   >
                     <span>Contact Page</span>
@@ -287,9 +307,9 @@ export default function TermsOfServicePage() {
             {/* Legal Notice */}
             <section className="pt-6 border-t border-white/10">
               <p className="text-sm text-gray-500">
-                These terms are governed by the laws of the United States. 
-                By using our service, you agree to resolve disputes through good faith communication first, 
-                and arbitration if necessary. These terms are effective as of August 31, 2025.
+                These terms are governed by the laws of the United States. By using our service, you
+                agree to resolve disputes through good faith communication first, and arbitration if
+                necessary. These terms are effective as of August 31, 2025.
               </p>
             </section>
           </div>

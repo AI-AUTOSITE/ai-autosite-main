@@ -1,30 +1,30 @@
 // pdf-tools/components/PrivacyGate.tsx
 
-import React, { useState } from 'react';
-import { PrivacyGateConfig } from '../types/privacy';
+import React, { useState } from 'react'
+import { PrivacyGateConfig } from '../types/privacy'
 
 export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
   destination,
   fileInfo,
   onConfirm,
-  onCancel
+  onCancel,
 }) => {
-  const [understood, setUnderstood] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  const [understood, setUnderstood] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
 
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} bytes`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
+    if (bytes < 1024) return `${bytes} bytes`
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+  }
 
   const getPrivacyImpact = (score: number) => {
-    if (score >= 8) return { level: 'Low', color: 'text-green-500', bg: 'bg-green-50' };
-    if (score >= 5) return { level: 'Medium', color: 'text-yellow-500', bg: 'bg-yellow-50' };
-    return { level: 'High', color: 'text-orange-500', bg: 'bg-orange-50' };
-  };
+    if (score >= 8) return { level: 'Low', color: 'text-green-500', bg: 'bg-green-50' }
+    if (score >= 5) return { level: 'Medium', color: 'text-yellow-500', bg: 'bg-yellow-50' }
+    return { level: 'High', color: 'text-orange-500', bg: 'bg-orange-50' }
+  }
 
-  const impact = getPrivacyImpact(destination.privacyScore);
+  const impact = getPrivacyImpact(destination.privacyScore)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -32,9 +32,7 @@ export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Privacy Notice</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Please review before sharing your file
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Please review before sharing your file</p>
         </div>
 
         {/* Visual Flow Diagram */}
@@ -47,7 +45,7 @@ export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
               <span className="text-xs font-medium">Your PDF</span>
               <div className="text-xs text-gray-500">{fileInfo.name}</div>
             </div>
-            
+
             <div className="flex-1 max-w-[100px]">
               <div className="h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 relative">
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -73,7 +71,9 @@ export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
             </div>
 
             <div className="text-center">
-              <div className={`w-16 h-16 ${impact.bg} rounded-full flex items-center justify-center shadow-md mb-2 ring-2 ring-orange-300`}>
+              <div
+                className={`w-16 h-16 ${impact.bg} rounded-full flex items-center justify-center shadow-md mb-2 ring-2 ring-orange-300`}
+              >
                 <span className="text-2xl">{destination.icon}</span>
               </div>
               <span className="text-xs font-medium">{destination.name}</span>
@@ -124,21 +124,19 @@ export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
                   <div className="flex items-center gap-3">
                     <div className="flex-1 max-w-[200px]">
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className={`h-full bg-gradient-to-r ${
-                            destination.privacyScore >= 8 
-                              ? 'from-green-400 to-green-500' 
+                            destination.privacyScore >= 8
+                              ? 'from-green-400 to-green-500'
                               : destination.privacyScore >= 5
-                              ? 'from-yellow-400 to-yellow-500'
-                              : 'from-orange-400 to-orange-500'
+                                ? 'from-yellow-400 to-yellow-500'
+                                : 'from-orange-400 to-orange-500'
                           }`}
                           style={{ width: `${destination.privacyScore * 10}%` }}
                         />
                       </div>
                     </div>
-                    <span className={`font-semibold ${impact.color}`}>
-                      {impact.level}
-                    </span>
+                    <span className={`font-semibold ${impact.color}`}>{impact.level}</span>
                   </div>
                 </td>
               </tr>
@@ -165,11 +163,11 @@ export const PrivacyGate: React.FC<PrivacyGateConfig> = ({
           >
             {showDetails ? '▼' : '▶'} Technical Details
           </button>
-          
+
           {showDetails && (
             <div className="mt-3 p-3 bg-gray-50 rounded-lg">
               <pre className="text-xs text-gray-600 font-mono whitespace-pre-wrap">
-{`// What happens when you confirm:
+                {`// What happens when you confirm:
 1. Your browser creates a direct connection to ${destination.name}
 2. The PDF file is transmitted directly from your device
 3. Our servers are NOT involved in this transfer
@@ -200,8 +198,9 @@ fetch('${destination.url}', {
               className="mt-1"
             />
             <span className="text-sm text-gray-700">
-              I understand that my file will leave my device and be sent directly to {destination.name}. 
-              This tool's developers cannot see or access my data during this transfer.
+              I understand that my file will leave my device and be sent directly to{' '}
+              {destination.name}. This tool's developers cannot see or access my data during this
+              transfer.
             </span>
           </label>
         </div>
@@ -214,7 +213,7 @@ fetch('${destination.url}', {
           >
             Stay Private
           </button>
-          
+
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500">
               Privacy Score: {destination.privacyScore}/10
@@ -234,5 +233,5 @@ fetch('${destination.url}', {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

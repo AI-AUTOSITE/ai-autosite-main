@@ -24,24 +24,22 @@ export default function TextCounterClient() {
     const charactersNoSpace = input.replace(/\s/g, '').length
 
     // Words
-    const words = input.trim() === '' 
-      ? 0 
-      : input.trim().split(/\s+/).length
+    const words = input.trim() === '' ? 0 : input.trim().split(/\s+/).length
 
     // Lines
-    const lines = input === '' 
-      ? 0 
-      : input.split('\n').length
+    const lines = input === '' ? 0 : input.split('\n').length
 
     // Paragraphs (separated by double line breaks)
-    const paragraphs = input.trim() === '' 
-      ? 0 
-      : input.trim().split(/\n\s*\n/).filter(p => p.trim()).length || 1
+    const paragraphs =
+      input.trim() === ''
+        ? 0
+        : input
+            .trim()
+            .split(/\n\s*\n/)
+            .filter((p) => p.trim()).length || 1
 
     // Sentences
-    const sentences = input.trim() === ''
-      ? 0
-      : input.split(/[.!?]+/).filter(s => s.trim()).length
+    const sentences = input.trim() === '' ? 0 : input.split(/[.!?]+/).filter((s) => s.trim()).length
 
     // Reading time (average 200 words per minute)
     const readingTime = Math.ceil(words / 200)
@@ -53,7 +51,7 @@ export default function TextCounterClient() {
       lines,
       paragraphs,
       sentences,
-      readingTime
+      readingTime,
     }
   }, [])
 
@@ -115,7 +113,7 @@ export default function TextCounterClient() {
             {formatNumber(stats.charactersNoSpace)} without spaces
           </span>
         </div>
-        
+
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -141,10 +139,10 @@ export default function TextCounterClient() {
             disabled={!text}
             className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 
                       disabled:opacity-50 disabled:cursor-not-allowed ${
-              copied
-                ? 'bg-green-500 text-white'
-                : 'bg-white/5 text-gray-300 hover:bg-white/10'
-            }`}
+                        copied
+                          ? 'bg-green-500 text-white'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                      }`}
           >
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copied!' : 'Copy'}
@@ -183,8 +181,11 @@ export default function TextCounterClient() {
           <div className="flex justify-between">
             <span className="text-gray-400 text-sm">Reading level</span>
             <span className="text-white font-medium">
-              {stats.words / stats.sentences > 20 ? 'Advanced' : 
-               stats.words / stats.sentences > 15 ? 'Intermediate' : 'Basic'}
+              {stats.words / stats.sentences > 20
+                ? 'Advanced'
+                : stats.words / stats.sentences > 15
+                  ? 'Intermediate'
+                  : 'Basic'}
             </span>
           </div>
         </div>
@@ -198,11 +199,12 @@ export default function TextCounterClient() {
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-gray-300">Twitter/X</span>
               <span className="text-xs text-gray-400">
-                {stats.characters}/280 {stats.characters <= 280 ? '✓' : `(${stats.characters - 280} over)`}
+                {stats.characters}/280{' '}
+                {stats.characters <= 280 ? '✓' : `(${stats.characters - 280} over)`}
               </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all ${
                   stats.characters <= 280 ? 'bg-green-400' : 'bg-red-400'
                 }`}
@@ -215,11 +217,12 @@ export default function TextCounterClient() {
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-gray-300">SMS</span>
               <span className="text-xs text-gray-400">
-                {stats.characters}/160 {stats.characters <= 160 ? '✓' : `(${Math.ceil(stats.characters / 160)} messages)`}
+                {stats.characters}/160{' '}
+                {stats.characters <= 160 ? '✓' : `(${Math.ceil(stats.characters / 160)} messages)`}
               </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all ${
                   stats.characters <= 160 ? 'bg-green-400' : 'bg-yellow-400'
                 }`}
@@ -232,11 +235,12 @@ export default function TextCounterClient() {
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-gray-300">Meta Description</span>
               <span className="text-xs text-gray-400">
-                {stats.characters}/155 {stats.characters <= 155 ? '✓' : `(${stats.characters - 155} over)`}
+                {stats.characters}/155{' '}
+                {stats.characters <= 155 ? '✓' : `(${stats.characters - 155} over)`}
               </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all ${
                   stats.characters <= 155 ? 'bg-green-400' : 'bg-red-400'
                 }`}
@@ -249,11 +253,12 @@ export default function TextCounterClient() {
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm text-gray-300">LinkedIn Post</span>
               <span className="text-xs text-gray-400">
-                {stats.characters}/3000 {stats.characters <= 3000 ? '✓' : `(${stats.characters - 3000} over)`}
+                {stats.characters}/3000{' '}
+                {stats.characters <= 3000 ? '✓' : `(${stats.characters - 3000} over)`}
               </span>
             </div>
             <div className="w-full bg-white/10 rounded-full h-2">
-              <div 
+              <div
                 className="h-2 rounded-full bg-green-400 transition-all"
                 style={{ width: `${Math.min(100, (stats.characters / 3000) * 100)}%` }}
               />

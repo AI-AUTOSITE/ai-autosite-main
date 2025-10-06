@@ -116,7 +116,8 @@
 }
 
 @keyframes ping {
-  75%, 100% {
+  75%,
+  100% {
     transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
@@ -126,7 +127,12 @@
    4. Privacy Dashboard
    =================================== */
 .privacy-dashboard {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
 }
 
 .privacy-gate-overlay {
@@ -209,18 +215,18 @@
   .pdf-tools-sidebar {
     width: 40px;
   }
-  
+
   .pdf-tool-button {
     width: 32px;
     height: 32px;
     padding: 6px;
   }
-  
+
   .pdf-tool-button svg {
     width: 18px;
     height: 18px;
   }
-  
+
   .pdf-main-content {
     margin-left: 48px;
   }
@@ -233,7 +239,7 @@
     width: calc(100vw - 32px);
     max-width: none;
   }
-  
+
   .network-monitor-expanded {
     width: calc(100vw - 32px);
     right: 16px;
@@ -245,12 +251,7 @@
    7. Loading & Animation States
    =================================== */
 .skeleton-loading {
-  background: linear-gradient(
-    90deg,
-    #f3f4f6 0%,
-    #e5e7eb 50%,
-    #f3f4f6 100%
-  );
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }

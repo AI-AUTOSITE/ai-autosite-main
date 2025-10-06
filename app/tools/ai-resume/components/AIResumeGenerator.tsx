@@ -1,7 +1,18 @@
 'use client'
 
 import { useState, useMemo, useRef } from 'react'
-import { Copy, FileText, Briefcase, User, Zap, CheckCircle, ArrowRight, ArrowLeft, Sparkles, Download } from 'lucide-react'
+import {
+  Copy,
+  FileText,
+  Briefcase,
+  User,
+  Zap,
+  CheckCircle,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
+  Download,
+} from 'lucide-react'
 
 type StepKey = 'name' | 'job_title' | 'experience' | 'skills' | 'cover_letter'
 
@@ -15,46 +26,47 @@ type StepDef = {
 }
 
 const STEPS: StepDef[] = [
-  { 
-    key: 'name', 
-    label: 'Full Name', 
-    type: 'input', 
-    required: true, 
+  {
+    key: 'name',
+    label: 'Full Name',
+    type: 'input',
+    required: true,
     placeholder: 'Jane Doe',
-    icon: <User className="w-4 h-4" />
+    icon: <User className="w-4 h-4" />,
   },
-  { 
-    key: 'job_title', 
-    label: 'Target Job Title', 
-    type: 'input', 
-    required: true, 
+  {
+    key: 'job_title',
+    label: 'Target Job Title',
+    type: 'input',
+    required: true,
     placeholder: 'Full Stack Developer',
-    icon: <Briefcase className="w-4 h-4" />
+    icon: <Briefcase className="w-4 h-4" />,
   },
-  { 
-    key: 'experience', 
-    label: 'Professional Experience', 
-    type: 'textarea', 
-    required: true, 
-    placeholder: '• Led development of React application with 50k+ users\n• Implemented CI/CD pipeline reducing deployment time by 40%\n• Mentored team of 3 junior developers',
-    icon: <FileText className="w-4 h-4" />
+  {
+    key: 'experience',
+    label: 'Professional Experience',
+    type: 'textarea',
+    required: true,
+    placeholder:
+      '• Led development of React application with 50k+ users\n• Implemented CI/CD pipeline reducing deployment time by 40%\n• Mentored team of 3 junior developers',
+    icon: <FileText className="w-4 h-4" />,
   },
-  { 
-    key: 'skills', 
-    label: 'Key Skills', 
-    type: 'input', 
-    required: true, 
+  {
+    key: 'skills',
+    label: 'Key Skills',
+    type: 'input',
+    required: true,
     placeholder: 'React, TypeScript, Node.js, SQL, AWS, Team Leadership',
-    icon: <Zap className="w-4 h-4" />
+    icon: <Zap className="w-4 h-4" />,
   },
-  { 
-    key: 'cover_letter', 
-    label: 'Cover Letter Notes (Optional)', 
-    type: 'textarea', 
-    required: false, 
+  {
+    key: 'cover_letter',
+    label: 'Cover Letter Notes (Optional)',
+    type: 'textarea',
+    required: false,
     placeholder: 'Add any specific points you want to highlight in your cover letter...',
-    icon: <FileText className="w-4 h-4" />
-  }
+    icon: <FileText className="w-4 h-4" />,
+  },
 ]
 
 export default function AIResumeGenerator() {
@@ -72,28 +84,28 @@ export default function AIResumeGenerator() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     e.stopPropagation() // ✅ イベント伝播を停止
-    
+
     // ✅ 最後のステップでない場合は絶対に送信しない
     if (step !== last) {
       return
     }
-    
+
     setLoading(true)
     setError(null)
     setResult(null)
-    
+
     const form = new FormData(e.currentTarget)
 
     try {
-      const res = await fetch('/api/ai-resume', { 
-        method: 'POST', 
-        body: form 
+      const res = await fetch('/api/ai-resume', {
+        method: 'POST',
+        body: form,
       })
-      
+
       const data = await res.json()
-      
+
       if (!res.ok) throw new Error(data?.error || 'Failed to generate documents')
-      
+
       setResult(data.result)
       setAiPowered(data.aiPowered || false)
     } catch (err) {
@@ -122,7 +134,7 @@ export default function AIResumeGenerator() {
 
   const downloadAsText = () => {
     if (!result) return
-    
+
     const blob = new Blob([result], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -136,7 +148,6 @@ export default function AIResumeGenerator() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
-
       {/* Main Form Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 md:p-8">
         <form ref={formRef} onSubmit={onSubmit}>
@@ -145,21 +156,27 @@ export default function AIResumeGenerator() {
             <div className="flex items-center justify-between">
               {STEPS.map((s, i) => (
                 <div key={i} className="flex items-center flex-1">
-                  <div className={`
+                  <div
+                    className={`
                     w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all text-sm font-semibold
-                    ${i === step 
-                      ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white scale-110 shadow-lg shadow-indigo-500/50' 
-                      : i < step 
-                        ? 'bg-green-500/80 text-white' 
-                        : 'bg-white/10 text-gray-500'}
-                  `}>
+                    ${
+                      i === step
+                        ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white scale-110 shadow-lg shadow-indigo-500/50'
+                        : i < step
+                          ? 'bg-green-500/80 text-white'
+                          : 'bg-white/10 text-gray-500'
+                    }
+                  `}
+                  >
                     {i < step ? '✓' : i + 1}
                   </div>
                   {i < last && (
-                    <div className={`
+                    <div
+                      className={`
                       flex-1 h-0.5 mx-1 md:mx-2 transition-all
                       ${i < step ? 'bg-green-500/50' : 'bg-white/10'}
-                    `} />
+                    `}
+                    />
                   )}
                 </div>
               ))}
@@ -178,7 +195,7 @@ export default function AIResumeGenerator() {
                   {s.label}
                   {s.required && <span className="text-red-400 text-sm">*</span>}
                 </label>
-                
+
                 {s.type === 'input' ? (
                   <input
                     name={s.key}
@@ -229,9 +246,11 @@ export default function AIResumeGenerator() {
               disabled={step === 0 || loading}
               className={`
                 flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all
-                ${step === 0 || loading 
-                  ? 'opacity-0 pointer-events-none' 
-                  : 'bg-white/10 text-white hover:bg-white/20'}
+                ${
+                  step === 0 || loading
+                    ? 'opacity-0 pointer-events-none'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }
               `}
             >
               <ArrowLeft className="w-4 h-4" />
@@ -308,9 +327,11 @@ export default function AIResumeGenerator() {
                     onClick={() => copyToClipboard(result, 'all')}
                     className={`
                       flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm
-                      ${copiedSection === 'all' 
-                        ? 'bg-green-500 text-white' 
-                        : 'bg-white/10 text-white hover:bg-white/20'}
+                      ${
+                        copiedSection === 'all'
+                          ? 'bg-green-500 text-white'
+                          : 'bg-white/10 text-white hover:bg-white/20'
+                      }
                     `}
                   >
                     {copiedSection === 'all' ? (
@@ -327,7 +348,7 @@ export default function AIResumeGenerator() {
                   </button>
                 </div>
               </div>
-              
+
               <div className="bg-black/30 rounded-xl p-4 border border-white/10">
                 <pre className="whitespace-pre-wrap text-gray-300 text-sm leading-relaxed font-mono">
                   {result}
@@ -337,7 +358,8 @@ export default function AIResumeGenerator() {
               {/* Action Tip */}
               <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                 <p className="text-blue-300 text-xs">
-                  💡 <strong>Next Steps:</strong> Copy to your favorite editor, customize with your details, and save as PDF for applications.
+                  💡 <strong>Next Steps:</strong> Copy to your favorite editor, customize with your
+                  details, and save as PDF for applications.
                 </p>
               </div>
             </div>
@@ -349,7 +371,8 @@ export default function AIResumeGenerator() {
       {!result && (
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-400">
-            💡 Tip: Use bullet points and specific metrics (e.g., "Increased sales by 30%") for better impact
+            💡 Tip: Use bullet points and specific metrics (e.g., "Increased sales by 30%") for
+            better impact
           </p>
         </div>
       )}

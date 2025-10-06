@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   RotateCw,
   FileStack,
@@ -15,11 +15,11 @@ import {
   FileSpreadsheet,
   PenTool,
   Highlighter,
-  Crop
-} from 'lucide-react';
-import { Tool } from '../types';
+  Crop,
+} from 'lucide-react'
+import { Tool } from '../types'
 
-export const MAX_FREE_SLOTS = 3;
+export const MAX_FREE_SLOTS = 3
 
 export const availableTools: Tool[] = [
   {
@@ -29,7 +29,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Rotate pages left or right',
-    color: 'blue'
+    color: 'blue',
   },
   {
     id: 'merge',
@@ -38,7 +38,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Combine multiple PDFs',
-    color: 'purple'
+    color: 'purple',
   },
   {
     id: 'split',
@@ -47,7 +47,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Extract or separate pages',
-    color: 'orange'
+    color: 'orange',
   },
   {
     id: 'delete',
@@ -56,7 +56,7 @@ export const availableTools: Tool[] = [
     category: 'optimize',
     action: () => {},
     description: 'Remove selected pages',
-    color: 'red'
+    color: 'red',
   },
   {
     id: 'compress',
@@ -65,7 +65,7 @@ export const availableTools: Tool[] = [
     category: 'optimize',
     action: () => {},
     description: 'Reduce file size',
-    color: 'green'
+    color: 'green',
   },
   {
     id: 'pageNumbers',
@@ -74,7 +74,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Add page numbers',
-    color: 'indigo'
+    color: 'indigo',
   },
   {
     id: 'blankPage',
@@ -83,7 +83,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Insert blank pages',
-    color: 'gray'
+    color: 'gray',
   },
   {
     id: 'duplicate',
@@ -92,7 +92,7 @@ export const availableTools: Tool[] = [
     category: 'basic',
     action: () => {},
     description: 'Duplicate selected pages',
-    color: 'cyan'
+    color: 'cyan',
   },
   {
     id: 'ocr',
@@ -101,7 +101,7 @@ export const availableTools: Tool[] = [
     category: 'convert',
     action: () => {},
     description: 'Extract text with OCR',
-    color: 'purple'
+    color: 'purple',
   },
   {
     id: 'password',
@@ -110,7 +110,7 @@ export const availableTools: Tool[] = [
     category: 'optimize',
     action: () => {},
     description: 'Add or remove password',
-    color: 'yellow'
+    color: 'yellow',
   },
   {
     id: 'watermark',
@@ -119,7 +119,7 @@ export const availableTools: Tool[] = [
     category: 'edit',
     action: () => {},
     description: 'Add watermark to pages',
-    color: 'blue'
+    color: 'blue',
   },
   {
     id: 'signature',
@@ -128,7 +128,7 @@ export const availableTools: Tool[] = [
     category: 'edit',
     action: () => {},
     description: 'Add signature or stamp',
-    color: 'green'
+    color: 'green',
   },
   {
     id: 'toWord',
@@ -137,7 +137,7 @@ export const availableTools: Tool[] = [
     category: 'convert',
     action: () => {},
     description: 'Convert to Word document',
-    color: 'blue'
+    color: 'blue',
   },
   {
     id: 'toExcel',
@@ -146,7 +146,7 @@ export const availableTools: Tool[] = [
     category: 'convert',
     action: () => {},
     description: 'Convert to Excel spreadsheet',
-    color: 'green'
+    color: 'green',
   },
   {
     id: 'annotate',
@@ -155,7 +155,7 @@ export const availableTools: Tool[] = [
     category: 'edit',
     action: () => {},
     description: 'Add notes and annotations',
-    color: 'orange'
+    color: 'orange',
   },
   {
     id: 'highlight',
@@ -164,7 +164,7 @@ export const availableTools: Tool[] = [
     category: 'edit',
     action: () => {},
     description: 'Highlight text',
-    color: 'yellow'
+    color: 'yellow',
   },
   {
     id: 'crop',
@@ -173,6 +173,6 @@ export const availableTools: Tool[] = [
     category: 'edit',
     action: () => {},
     description: 'Crop page areas',
-    color: 'indigo'
-  }
-];
+    color: 'indigo',
+  },
+]

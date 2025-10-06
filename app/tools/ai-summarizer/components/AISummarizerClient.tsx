@@ -79,11 +79,14 @@ export default function AISummarizerClient() {
   const exampleTexts = [
     { label: 'News Article', chars: 1500 },
     { label: 'Research Paper', chars: 3000 },
-    { label: 'Blog Post', chars: 800 }
+    { label: 'Blog Post', chars: 800 },
   ]
 
   const loadExample = (chars: number) => {
-    const exampleText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. `.repeat(Math.ceil(chars / 450))
+    const exampleText =
+      `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. `.repeat(
+        Math.ceil(chars / 450)
+      )
     setInputText(exampleText.substring(0, chars))
   }
 
@@ -91,18 +94,15 @@ export default function AISummarizerClient() {
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Text Input - Large and Prominent */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="text-white font-medium">
-              Your Text
-            </label>
+            <label className="text-white font-medium">Your Text</label>
             <span className={`text-xs ${charCount < 100 ? 'text-red-400' : 'text-gray-400'}`}>
               {charCount.toLocaleString()} {charCount < 100 && '(min 100)'}
             </span>
           </div>
-          
+
           <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value.slice(0, 50000))}
@@ -112,7 +112,7 @@ export default function AISummarizerClient() {
                        transition-colors hover:bg-white/15"
             autoFocus
           />
-          
+
           {/* Quick Examples */}
           {charCount === 0 && (
             <div className="flex gap-2 mt-2">
@@ -133,14 +133,12 @@ export default function AISummarizerClient() {
 
         {/* Summary Length Selection - Simplified */}
         <div className="mb-6">
-          <label className="text-sm text-gray-400 mb-2 block">
-            Summary Length
-          </label>
+          <label className="text-sm text-gray-400 mb-2 block">Summary Length</label>
           <div className="flex gap-2">
             {[
               { value: 'brief', label: 'Brief', desc: '2-3 lines' },
               { value: 'standard', label: 'Standard', desc: '4-5 lines' },
-              { value: 'detailed', label: 'Detailed', desc: '6-8 lines' }
+              { value: 'detailed', label: 'Detailed', desc: '6-8 lines' },
             ].map((option) => (
               <button
                 key={option.value}
@@ -179,7 +177,7 @@ export default function AISummarizerClient() {
               </>
             )}
           </button>
-          
+
           {(inputText || summary) && (
             <button
               onClick={handleClear}
@@ -203,15 +201,11 @@ export default function AISummarizerClient() {
         {summary && (
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-white font-medium">
-                Summary
-              </label>
+              <label className="text-white font-medium">Summary</label>
               <button
                 onClick={handleCopy}
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2 ${
-                  copied 
-                    ? 'bg-green-500 text-white' 
-                    : 'bg-white/10 text-white hover:bg-white/20'
+                  copied ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
                 {copied ? (
@@ -229,9 +223,7 @@ export default function AISummarizerClient() {
             </div>
 
             <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl mb-4">
-              <p className="text-white leading-relaxed whitespace-pre-wrap">
-                {summary}
-              </p>
+              <p className="text-white leading-relaxed whitespace-pre-wrap">{summary}</p>
             </div>
 
             {/* Simple Stats Bar */}
@@ -244,9 +236,7 @@ export default function AISummarizerClient() {
               </div>
               <div className="text-gray-600">•</div>
               <div>
-                <span className="text-lg font-bold text-pink-400">
-                  {summary.split(' ').length}
-                </span>
+                <span className="text-lg font-bold text-pink-400">{summary.split(' ').length}</span>
                 <span className="text-xs text-gray-400 ml-1">words</span>
               </div>
               <div className="text-gray-600">•</div>

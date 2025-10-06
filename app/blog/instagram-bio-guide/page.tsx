@@ -4,8 +4,10 @@ import { ArrowLeft, Instagram, Sparkles, Users, Heart } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Instagram Bio Generator - Create Perfect Profile Bios | AI AutoSite',
-  description: 'Generate creative Instagram bios that get followers. Free bio generator with emoji suggestions and character counter.',
-  keywords: 'instagram bio generator, instagram bio ideas, bio creator, profile bio generator, instagram bio examples',
+  description:
+    'Generate creative Instagram bios that get followers. Free bio generator with emoji suggestions and character counter.',
+  keywords:
+    'instagram bio generator, instagram bio ideas, bio creator, profile bio generator, instagram bio examples',
   openGraph: {
     title: 'Instagram Bio Generator - Perfect Profile Guide',
     description: 'Create engaging Instagram bios that attract followers',
@@ -20,8 +22,8 @@ export default function InstagramBioGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -42,8 +44,8 @@ export default function InstagramBioGuidePage() {
           Instagram Bio Generator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Create the perfect Instagram bio that captures your personality 
-          and attracts followers. Stand out with creative bio ideas.
+          Create the perfect Instagram bio that captures your personality and attracts followers.
+          Stand out with creative bio ideas.
         </p>
       </header>
 
@@ -80,52 +82,66 @@ export default function InstagramBioGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Professional</h3>
               <p className="text-gray-400 text-sm mb-2">
-                [Job Title] at [Company]<br/>
-                [Achievement/Credential]<br/>
+                [Job Title] at [Company]
+                <br />
+                [Achievement/Credential]
+                <br />
                 [Contact/Link] ↓
               </p>
               <p className="text-cyan-400 text-xs">
-                Example: Marketing Manager @Nike<br/>
-                MBA • 10+ years experience<br/>
+                Example: Marketing Manager @Nike
+                <br />
+                MBA • 10+ years experience
+                <br />
                 Contact: link.bio/johndoe
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Creative</h3>
               <p className="text-gray-400 text-sm mb-2">
-                [Passion/Interest] 🎨<br/>
-                [Fun fact or quote]<br/>
+                [Passion/Interest] 🎨
+                <br />
+                [Fun fact or quote]
+                <br />
                 [Location] 📍
               </p>
               <p className="text-purple-400 text-xs">
-                Example: Coffee addict ☕<br/>
-                "Living my best life"<br/>
+                Example: Coffee addict ☕<br />
+                "Living my best life"
+                <br />
                 NYC 📍 Shop ↓
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Influencer</h3>
               <p className="text-gray-400 text-sm mb-2">
-                [Niche] content creator<br/>
-                [Follower milestone]<br/>
+                [Niche] content creator
+                <br />
+                [Follower milestone]
+                <br />
                 [Email for collabs]
               </p>
               <p className="text-pink-400 text-xs">
-                Example: Fashion blogger 👗<br/>
-                100K+ community 💕<br/>
+                Example: Fashion blogger 👗
+                <br />
+                100K+ community 💕
+                <br />
                 Collabs: email@domain.com
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Business</h3>
               <p className="text-gray-400 text-sm mb-2">
-                [What you do]<br/>
-                [Value proposition]<br/>
+                [What you do]
+                <br />
+                [Value proposition]
+                <br />
                 [CTA + Link]
               </p>
               <p className="text-green-400 text-xs">
-                Example: Handmade jewelry ✨<br/>
-                Ships worldwide 🌍<br/>
+                Example: Handmade jewelry ✨<br />
+                Ships worldwide 🌍
+                <br />
                 Shop new collection ↓
               </p>
             </div>
@@ -140,19 +156,22 @@ export default function InstagramBioGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">✨</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Visual breaks:</strong> Use emojis to separate sections
+                  <strong className="text-white">Visual breaks:</strong> Use emojis to separate
+                  sections
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">🎯</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Replace words:</strong> Save characters (✈️ = travel)
+                  <strong className="text-white">Replace words:</strong> Save characters (✈️ =
+                  travel)
                 </p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">💫</span>
                 <p className="text-gray-300">
-                  <strong className="text-white">Brand personality:</strong> Match emojis to your vibe
+                  <strong className="text-white">Brand personality:</strong> Match emojis to your
+                  vibe
                 </p>
               </li>
               <li className="flex items-start gap-2">
@@ -179,15 +198,21 @@ export default function InstagramBioGuidePage() {
               <tbody className="text-gray-300">
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Fitness</td>
-                  <td className="py-3">Personal Trainer 💪 | Transform your body in 90 days | Free workout guide ↓</td>
+                  <td className="py-3">
+                    Personal Trainer 💪 | Transform your body in 90 days | Free workout guide ↓
+                  </td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Food</td>
-                  <td className="py-3">Plant-based recipes 🌱 | Easy 30-min meals | New recipe every Tuesday</td>
+                  <td className="py-3">
+                    Plant-based recipes 🌱 | Easy 30-min meals | New recipe every Tuesday
+                  </td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Travel</td>
-                  <td className="py-3">50 countries & counting 🌍 | Budget travel tips | Currently: Bali 🏝️</td>
+                  <td className="py-3">
+                    50 countries & counting 🌍 | Budget travel tips | Currently: Bali 🏝️
+                  </td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-3 text-purple-400">Art</td>
@@ -195,7 +220,9 @@ export default function InstagramBioGuidePage() {
                 </tr>
                 <tr>
                   <td className="py-3 text-purple-400">Tech</td>
-                  <td className="py-3">Developer 👨‍💻 | JavaScript tips daily | Free coding resources ↓</td>
+                  <td className="py-3">
+                    Developer 👨‍💻 | JavaScript tips daily | Free coding resources ↓
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -209,27 +236,19 @@ export default function InstagramBioGuidePage() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">💡</span>
-                <p className="text-gray-300">
-                  Include searchable keywords in your name field
-                </p>
+                <p className="text-gray-300">Include searchable keywords in your name field</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">💡</span>
-                <p className="text-gray-300">
-                  Update bio regularly with current projects/offers
-                </p>
+                <p className="text-gray-300">Update bio regularly with current projects/offers</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">💡</span>
-                <p className="text-gray-300">
-                  Use line breaks for better readability
-                </p>
+                <p className="text-gray-300">Use line breaks for better readability</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">💡</span>
-                <p className="text-gray-300">
-                  Test different CTAs to see what converts best
-                </p>
+                <p className="text-gray-300">Test different CTAs to see what converts best</p>
               </li>
             </ul>
           </div>
@@ -238,14 +257,12 @@ export default function InstagramBioGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Generate Your Perfect Bio
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Generate Your Perfect Bio</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free Instagram bio generator with templates, emojis, and character counter.
         </p>
-        <Link 
-          href="/tools/instagram-bio" 
+        <Link
+          href="/tools/instagram-bio"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Instagram className="mr-2" size={20} />

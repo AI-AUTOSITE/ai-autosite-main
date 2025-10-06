@@ -16,13 +16,13 @@ interface OCRResultProps {
   isTranslating?: boolean
 }
 
-export default function OCRResult({ 
-  text, 
-  confidence, 
+export default function OCRResult({
+  text,
+  confidence,
   translation,
   translationDirection,
   detectedLanguage,
-  isTranslating = false
+  isTranslating = false,
 }: OCRResultProps) {
   const [copiedText, setCopiedText] = React.useState(false)
   const [copiedTranslation, setCopiedTranslation] = React.useState(false)
@@ -50,7 +50,7 @@ export default function OCRResult({
 
   const getTranslationLabel = () => {
     if (!translationDirection) return 'Translation'
-    
+
     switch (translationDirection) {
       case 'ja-en':
         return 'Translation (Japanese → English)'
@@ -159,12 +159,8 @@ export default function OCRResult({
               </button>
             </div>
           </div>
-          <p className="text-gray-200 whitespace-pre-wrap">
-            {translation}
-          </p>
-          <p className="text-xs text-gray-400 mt-2">
-            Powered by Translation API
-          </p>
+          <p className="text-gray-200 whitespace-pre-wrap">{translation}</p>
+          <p className="text-xs text-gray-400 mt-2">Powered by Translation API</p>
         </div>
       ) : (
         <div className="bg-black/30 rounded-lg p-4">

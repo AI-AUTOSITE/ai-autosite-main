@@ -6,52 +6,58 @@ export const toolGuide = {
     {
       name: 'Paper Size',
       desc: 'Split by standard paper dimensions',
-      icon: '📄'
+      icon: '📄',
     },
     {
       name: 'By Height',
       desc: 'Split every X pixels',
-      icon: '📏'
+      icon: '📏',
     },
     {
       name: 'By Count',
       desc: 'Split into N equal parts',
-      icon: '🔢'
+      icon: '🔢',
     },
     {
       name: 'Manual',
       desc: 'Click to place split lines',
-      icon: '✋'
-    }
+      icon: '✋',
+    },
   ],
   paperSizes: [
     { name: 'A4', size: '210×297mm', use: 'Standard documents' },
     { name: 'A5', size: '148×210mm', use: 'Small prints' },
-    { name: 'B5', size: '182×257mm', use: 'Books, notebooks' }
+    { name: 'B5', size: '182×257mm', use: 'Books, notebooks' },
   ],
   dpiGuide: [
     { dpi: 72, use: 'Web display only' },
     { dpi: 96, use: 'Standard screen' },
     { dpi: 150, use: 'Regular printing' },
-    { dpi: 300, use: 'High-quality print' }
+    { dpi: 300, use: 'High-quality print' },
   ],
   downloadOptions: [
-    { 
+    {
       type: 'Merged',
       desc: 'All parts side by side in one image',
-      best: 'Viewing on screen'
+      best: 'Viewing on screen',
     },
     {
       type: 'Separate',
       desc: 'Individual image files',
-      best: 'Printing each page'
-    }
+      best: 'Printing each page',
+    },
   ],
   troubleshooting: [
-    { problem: 'Image not splitting', solution: 'Make sure image height is larger than split size' },
+    {
+      problem: 'Image not splitting',
+      solution: 'Make sure image height is larger than split size',
+    },
     { problem: 'Wrong paper size', solution: 'Check DPI setting - higher DPI = more pixels' },
-    { problem: 'Manual mode not working', solution: 'Click on the image to add lines, click Remove to delete' }
-  ]
+    {
+      problem: 'Manual mode not working',
+      solution: 'Click on the image to add lines, click Remove to delete',
+    },
+  ],
 }
 
 interface ToolGuideProps {
@@ -70,12 +76,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <Scissors className="w-6 h-6 text-purple-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Split Modes */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Split Modes</h4>
@@ -91,7 +97,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           ))}
         </div>
       </div>
-      
+
       {/* Paper Sizes & DPI */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Paper Size Settings</h4>
@@ -104,7 +110,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
             </div>
           ))}
         </div>
-        
+
         <div className="bg-white/5 rounded-lg p-3">
           <div className="text-xs text-gray-300 mb-2">DPI Settings:</div>
           <div className="grid grid-cols-2 gap-2">
@@ -117,7 +123,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         </div>
       </div>
-      
+
       {/* Download Options */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Download Options</h4>
@@ -134,7 +140,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           ))}
         </div>
       </div>
-      
+
       {/* Privacy Notice */}
       <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
         <p className="text-xs text-green-400">

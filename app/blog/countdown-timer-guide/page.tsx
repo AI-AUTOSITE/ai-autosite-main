@@ -4,8 +4,10 @@ import { ArrowLeft, Clock, Calendar, Bell, Target } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Countdown Timer - Track Important Events & Deadlines | AI AutoSite',
-  description: 'Create countdown timers for events, deadlines, and special occasions. Free online countdown timer with customization options.',
-  keywords: 'countdown timer, event timer, deadline tracker, countdown clock, days until calculator',
+  description:
+    'Create countdown timers for events, deadlines, and special occasions. Free online countdown timer with customization options.',
+  keywords:
+    'countdown timer, event timer, deadline tracker, countdown clock, days until calculator',
   openGraph: {
     title: 'Countdown Timer - Event Tracking Guide',
     description: 'Never miss important dates with countdown timers',
@@ -20,8 +22,8 @@ export default function CountdownTimerGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function CountdownTimerGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">
-            Quick Tools
-          </span>
+          <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full">Quick Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function CountdownTimerGuidePage() {
           Countdown Timer Complete Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Create countdown timers for events, deadlines, and special occasions. 
-          Never miss an important date again.
+          Create countdown timers for events, deadlines, and special occasions. Never miss an
+          important date again.
         </p>
       </header>
 
@@ -55,23 +55,17 @@ export default function CountdownTimerGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Target className="w-8 h-8 text-cyan-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Stay Focused</h3>
-              <p className="text-gray-400 text-sm">
-                Visual reminder of approaching deadlines
-              </p>
+              <p className="text-gray-400 text-sm">Visual reminder of approaching deadlines</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Bell className="w-8 h-8 text-blue-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Build Excitement</h3>
-              <p className="text-gray-400 text-sm">
-                Create anticipation for events
-              </p>
+              <p className="text-gray-400 text-sm">Create anticipation for events</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Calendar className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Time Management</h3>
-              <p className="text-gray-400 text-sm">
-                Better planning and organization
-              </p>
+              <p className="text-gray-400 text-sm">Better planning and organization</p>
             </div>
           </div>
         </div>
@@ -153,9 +147,7 @@ export default function CountdownTimerGuidePage() {
         <div>
           <h2 className="text-2xl font-bold text-white mb-4">Add Timer to Your Website</h2>
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-            <p className="text-gray-300 mb-4">
-              Basic JavaScript countdown timer example:
-            </p>
+            <p className="text-gray-300 mb-4">Basic JavaScript countdown timer example:</p>
             <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
               <code className="text-cyan-400 text-sm">{`// Set the target date
 const targetDate = new Date("Dec 31, 2025 23:59:59").getTime();
@@ -198,7 +190,8 @@ const timer = setInterval(function() {
             <li className="flex items-start gap-2">
               <span className="text-cyan-400 mt-1">•</span>
               <p className="text-gray-300">
-                <strong className="text-white">Anticipation:</strong> Builds excitement for upcoming events
+                <strong className="text-white">Anticipation:</strong> Builds excitement for upcoming
+                events
               </p>
             </li>
             <li className="flex items-start gap-2">
@@ -223,15 +216,11 @@ const timer = setInterval(function() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
-                <p className="text-gray-300">
-                  Set realistic deadlines to maintain credibility
-                </p>
+                <p className="text-gray-300">Set realistic deadlines to maintain credibility</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
-                <p className="text-gray-300">
-                  Include timezone information for global events
-                </p>
+                <p className="text-gray-300">Include timezone information for global events</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
@@ -241,9 +230,7 @@ const timer = setInterval(function() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-cyan-400">💡</span>
-                <p className="text-gray-300">
-                  Make timers mobile-responsive for all devices
-                </p>
+                <p className="text-gray-300">Make timers mobile-responsive for all devices</p>
               </li>
             </ul>
           </div>
@@ -252,14 +239,12 @@ const timer = setInterval(function() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Create Your Countdown Timer
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Create Your Countdown Timer</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free countdown timer with customizable display and sharing options.
         </p>
-        <Link 
-          href="/tools/countdown-timer" 
+        <Link
+          href="/tools/countdown-timer"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Clock className="mr-2" size={20} />

@@ -6,19 +6,19 @@ export const toolGuide = {
     { icon: '1', text: 'Paste your JSON data or upload a file' },
     { icon: '2', text: 'Review the automatic field detection' },
     { icon: '3', text: 'Click Convert to transform the data' },
-    { icon: '4', text: 'Download CSV or copy to clipboard' }
+    { icon: '4', text: 'Download CSV or copy to clipboard' },
   ],
   tips: [
     'Handles nested JSON structures automatically',
     'Works with arrays and objects',
     'Preview before downloading',
-    'All processing happens in your browser'
+    'All processing happens in your browser',
   ],
   troubleshooting: [
     { problem: 'Invalid JSON error', solution: 'Check for missing quotes or commas in your JSON' },
     { problem: 'Empty result', solution: 'Ensure your JSON has valid data structure' },
-    { problem: 'Missing fields', solution: 'Check if your JSON uses consistent field names' }
-  ]
+    { problem: 'Missing fields', solution: 'Check if your JSON uses consistent field names' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -37,12 +37,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <FileJson className="w-6 h-6 text-purple-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
         {toolGuide.steps.map((step, index) => (
@@ -54,16 +54,18 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Pro Tips</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
         <p className="text-xs text-green-400">
           <Shield className="w-3 h-3 inline mr-1" />

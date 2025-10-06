@@ -5,15 +5,16 @@ import { getToolsByCategory } from '@/lib/unified-data'
 import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
 export default function LearningHubClient() {
-  const tools = useMemo(() => 
-    getToolsByCategory('learning-hub').filter(t => t.status === 'active')
-  , [])
+  const tools = useMemo(
+    () => getToolsByCategory('learning-hub').filter((t) => t.status === 'active'),
+    []
+  )
 
   return (
     <div className="py-12">
       <div className="max-w-7xl mx-auto px-4">
-        <Link 
-          href="/tools" 
+        <Link
+          href="/tools"
           className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -31,7 +32,7 @@ export default function LearningHubClient() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map(tool => (
+          {tools.map((tool) => (
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
@@ -43,9 +44,11 @@ export default function LearningHubClient() {
 function ToolCard({ tool }: any) {
   return (
     <Link href={tool.url} className="block group">
-      <div className="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all 
+      <div
+        className="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all 
                       border border-gray-700 hover:border-gray-600 h-full min-h-[240px]
-                      flex flex-col hover:scale-[1.02] transform">
+                      flex flex-col hover:scale-[1.02] transform"
+      >
         <div className="flex items-start justify-between mb-4">
           <div className="text-3xl">{tool.icon || tool.emoji}</div>
           <div className="flex gap-1">
@@ -62,20 +65,18 @@ function ToolCard({ tool }: any) {
           </div>
         </div>
 
-        <h3 className="text-xl font-bold mb-3 text-white line-clamp-2">
-          {tool.name}
-        </h3>
-        <p className="text-base text-gray-400 mb-4 line-clamp-3 flex-grow">
-          {tool.description}
-        </p>
+        <h3 className="text-xl font-bold mb-3 text-white line-clamp-2">{tool.name}</h3>
+        <p className="text-base text-gray-400 mb-4 line-clamp-3 flex-grow">{tool.description}</p>
 
         <div className="flex items-center justify-between text-sm mt-auto pt-3 border-t border-gray-700">
           <span className="text-gray-500 flex items-center gap-1">
             <Clock className="w-4 h-4" />
             {tool.timeToUse}
           </span>
-          <ChevronRight className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
-                        group-hover:translate-x-1 transition-all" />
+          <ChevronRight
+            className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
+                        group-hover:translate-x-1 transition-all"
+          />
         </div>
       </div>
     </Link>

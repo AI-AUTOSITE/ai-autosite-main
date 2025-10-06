@@ -9,7 +9,7 @@ interface ErrorMessageProps {
 
 export default function ErrorMessage({ message, onReset }: ErrorMessageProps) {
   if (!message) return null
-  
+
   return (
     <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 max-w-md w-full px-4">
       <div className="bg-red-500/90 backdrop-blur-sm text-white rounded-xl shadow-lg border border-red-400/50">
@@ -22,7 +22,7 @@ export default function ErrorMessage({ message, onReset }: ErrorMessageProps) {
               <p className="text-sm font-medium leading-relaxed">{message}</p>
             </div>
           </div>
-          
+
           {onReset && (
             <div className="mt-3 pt-3 border-t border-red-400/30">
               <button

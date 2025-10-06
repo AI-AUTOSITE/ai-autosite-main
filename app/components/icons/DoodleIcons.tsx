@@ -1,15 +1,15 @@
 // components/icons/DoodleIcons.tsx
 // Trendy hand-drawn icons inspired by Notion, Linear, and modern SaaS designs
-import { FC } from 'react';
+import { FC } from 'react'
 
 export interface IconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-  strokeWidth?: number;
+  size?: number
+  color?: string
+  className?: string
+  strokeWidth?: number
 }
 
-export type DoodleIconName = 
+export type DoodleIconName =
   | 'doodle-search'
   | 'doodle-book-open'
   | 'doodle-code'
@@ -24,7 +24,7 @@ export type DoodleIconName =
   | 'doodle-mouse-pointer'
   | 'doodle-layout'
   | 'doodle-component'
-  | 'doodle-form-input';
+  | 'doodle-form-input'
 
 // Modern doodle style icons - imperfect but intentional
 const doodleIcons = {
@@ -42,12 +42,15 @@ const doodleIcons = {
       className={props.className}
     >
       {/* Main circle with slight wobble */}
-      <circle cx="10.5" cy="10.5" r="6.5" 
-              strokeDasharray="0.2 0.3" 
-              transform="rotate(-2 10.5 10.5)" />
+      <circle
+        cx="10.5"
+        cy="10.5"
+        r="6.5"
+        strokeDasharray="0.2 0.3"
+        transform="rotate(-2 10.5 10.5)"
+      />
       {/* Double stroke for sketch effect */}
-      <circle cx="10.3" cy="10.7" r="6.3" 
-              opacity="0.3" />
+      <circle cx="10.3" cy="10.7" r="6.3" opacity="0.3" />
       {/* Handle */}
       <path d="M15.5 15.8l5.2 5.1" />
       <path d="M15.3 16l5.1 4.9" opacity="0.3" />
@@ -365,36 +368,47 @@ const doodleIcons = {
       <path d="M3 5h5" opacity="0.6" />
     </svg>
   ),
-};
+}
 
 // Main Doodle Icon component
-export const DoodleIcon: FC<{ name: DoodleIconName } & IconProps> = ({ 
-  name, 
-  ...props 
-}) => {
-  const IconComponent = doodleIcons[name];
-  
+export const DoodleIcon: FC<{ name: DoodleIconName } & IconProps> = ({ name, ...props }) => {
+  const IconComponent = doodleIcons[name]
+
   if (!IconComponent) {
-    console.warn(`Doodle icon "${name}" not found`);
-    return null;
+    console.warn(`Doodle icon "${name}" not found`)
+    return null
   }
-  
-  return <IconComponent {...props} />;
-};
+
+  return <IconComponent {...props} />
+}
 
 // Individual exports for convenience
-export const DoodleSearchIcon = (props: IconProps) => <DoodleIcon name="doodle-search" {...props} />;
-export const DoodleBookOpenIcon = (props: IconProps) => <DoodleIcon name="doodle-book-open" {...props} />;
-export const DoodleCodeIcon = (props: IconProps) => <DoodleIcon name="doodle-code" {...props} />;
-export const DoodleSparklesIcon = (props: IconProps) => <DoodleIcon name="doodle-sparkles" {...props} />;
-export const DoodleChevronRightIcon = (props: IconProps) => <DoodleIcon name="doodle-chevron-right" {...props} />;
-export const DoodleFilterIcon = (props: IconProps) => <DoodleIcon name="doodle-filter" {...props} />;
-export const DoodleXIcon = (props: IconProps) => <DoodleIcon name="doodle-x" {...props} />;
-export const DoodleCopyIcon = (props: IconProps) => <DoodleIcon name="doodle-copy" {...props} />;
-export const DoodleCheckIcon = (props: IconProps) => <DoodleIcon name="doodle-check" {...props} />;
-export const DoodleExternalLinkIcon = (props: IconProps) => <DoodleIcon name="doodle-external-link" {...props} />;
-export const DoodleZapIcon = (props: IconProps) => <DoodleIcon name="doodle-zap" {...props} />;
-export const DoodleMousePointerIcon = (props: IconProps) => <DoodleIcon name="doodle-mouse-pointer" {...props} />;
-export const DoodleLayoutIcon = (props: IconProps) => <DoodleIcon name="doodle-layout" {...props} />;
-export const DoodleComponentIcon = (props: IconProps) => <DoodleIcon name="doodle-component" {...props} />;
-export const DoodleFormInputIcon = (props: IconProps) => <DoodleIcon name="doodle-form-input" {...props} />;
+export const DoodleSearchIcon = (props: IconProps) => <DoodleIcon name="doodle-search" {...props} />
+export const DoodleBookOpenIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-book-open" {...props} />
+)
+export const DoodleCodeIcon = (props: IconProps) => <DoodleIcon name="doodle-code" {...props} />
+export const DoodleSparklesIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-sparkles" {...props} />
+)
+export const DoodleChevronRightIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-chevron-right" {...props} />
+)
+export const DoodleFilterIcon = (props: IconProps) => <DoodleIcon name="doodle-filter" {...props} />
+export const DoodleXIcon = (props: IconProps) => <DoodleIcon name="doodle-x" {...props} />
+export const DoodleCopyIcon = (props: IconProps) => <DoodleIcon name="doodle-copy" {...props} />
+export const DoodleCheckIcon = (props: IconProps) => <DoodleIcon name="doodle-check" {...props} />
+export const DoodleExternalLinkIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-external-link" {...props} />
+)
+export const DoodleZapIcon = (props: IconProps) => <DoodleIcon name="doodle-zap" {...props} />
+export const DoodleMousePointerIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-mouse-pointer" {...props} />
+)
+export const DoodleLayoutIcon = (props: IconProps) => <DoodleIcon name="doodle-layout" {...props} />
+export const DoodleComponentIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-component" {...props} />
+)
+export const DoodleFormInputIcon = (props: IconProps) => (
+  <DoodleIcon name="doodle-form-input" {...props} />
+)

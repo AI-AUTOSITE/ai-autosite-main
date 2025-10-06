@@ -16,7 +16,7 @@ export const creativeTools: Tool[] = [
     timeToUse: '2 minutes',
     featured: true,
     new: true,
-    badge: 'HOT'
+    badge: 'HOT',
   },
   {
     id: 'youtube-thumbnail',
@@ -31,7 +31,7 @@ export const creativeTools: Tool[] = [
     difficulty: 'Instant',
     timeToUse: '5 seconds',
     featured: true,
-    new: true
+    new: true,
   },
   {
     id: 'gradient-generator',
@@ -47,6 +47,6 @@ export const creativeTools: Tool[] = [
     timeToUse: '1 minute',
     featured: false,
     new: true,
-    badge: 'NEW'
-  }
+    badge: 'NEW',
+  },
 ]

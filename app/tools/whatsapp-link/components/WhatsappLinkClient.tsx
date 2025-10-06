@@ -39,9 +39,9 @@ const ALL_COUNTRIES: CountryCode[] = [
 
 const MESSAGE_TEMPLATES = [
   { label: 'Business', text: "Hi! I'm interested in your services." },
-  { label: 'Support', text: "Hello, I need help with..." },
-  { label: 'Info', text: "Hi, could you provide more information?" },
-  { label: 'Custom', text: "" },
+  { label: 'Support', text: 'Hello, I need help with...' },
+  { label: 'Info', text: 'Hi, could you provide more information?' },
+  { label: 'Custom', text: '' },
 ]
 
 export default function WhatsappLinkClient() {
@@ -56,7 +56,7 @@ export default function WhatsappLinkClient() {
 
   // Get current country
   const currentCountry = useMemo(() => {
-    return ALL_COUNTRIES.find(c => c.code === countryCode) || ALL_COUNTRIES[0]
+    return ALL_COUNTRIES.find((c) => c.code === countryCode) || ALL_COUNTRIES[0]
   }, [countryCode])
 
   // Full phone number
@@ -69,19 +69,19 @@ export default function WhatsappLinkClient() {
   // Generate link automatically
   useEffect(() => {
     const cleanPhone = phoneNumber.replace(/[\s\-\(\)]/g, '')
-    
+
     if (!cleanPhone || !/^\d+$/.test(cleanPhone)) {
       setGeneratedLink('')
       setQrCodeUrl('')
       return
     }
-    
+
     const fullNumber = countryCode.replace('+', '') + cleanPhone
     const encodedMessage = message ? encodeURIComponent(message) : ''
-    const waLink = message 
+    const waLink = message
       ? `https://wa.me/${fullNumber}?text=${encodedMessage}`
       : `https://wa.me/${fullNumber}`
-    
+
     setGeneratedLink(waLink)
     generateQRCode(waLink)
   }, [phoneNumber, countryCode, message])
@@ -94,8 +94,8 @@ export default function WhatsappLinkClient() {
         margin: 2,
         color: {
           dark: '#25D366', // WhatsApp green
-          light: '#FFFFFF'
-        }
+          light: '#FFFFFF',
+        },
       })
       setQrCodeUrl(qrDataUrl)
     } catch (err) {
@@ -106,7 +106,7 @@ export default function WhatsappLinkClient() {
   // Copy to clipboard
   const handleCopy = async () => {
     if (!generatedLink) return
-    
+
     await navigator.clipboard.writeText(generatedLink)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -115,13 +115,13 @@ export default function WhatsappLinkClient() {
   // Share link
   const handleShare = async () => {
     if (!generatedLink) return
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'WhatsApp Chat Link',
           text: message || 'Start a WhatsApp chat',
-          url: generatedLink
+          url: generatedLink,
         })
       } catch {
         // User cancelled
@@ -134,7 +134,7 @@ export default function WhatsappLinkClient() {
   // Download QR
   const handleDownloadQR = () => {
     if (!qrCodeUrl) return
-    
+
     const link = document.createElement('a')
     link.href = qrCodeUrl
     link.download = `whatsapp-${phoneNumber}.png`
@@ -142,7 +142,7 @@ export default function WhatsappLinkClient() {
   }
 
   // Apply template
-  const applyTemplate = (template: typeof MESSAGE_TEMPLATES[0]) => {
+  const applyTemplate = (template: (typeof MESSAGE_TEMPLATES)[0]) => {
     setSelectedTemplate(template.label)
     setMessage(template.text)
   }
@@ -153,13 +153,9 @@ export default function WhatsappLinkClient() {
       {generatedLink && (
         <div className="text-center mb-8">
           <div className="text-xs text-gray-500 mb-2">Ready to share</div>
-          <div className="text-3xl font-bold text-green-400 mb-2">
-            {fullPhoneNumber}
-          </div>
+          <div className="text-3xl font-bold text-green-400 mb-2">{fullPhoneNumber}</div>
           {message && (
-            <div className="text-sm text-gray-400 max-w-md mx-auto line-clamp-2">
-              "{message}"
-            </div>
+            <div className="text-sm text-gray-400 max-w-md mx-auto line-clamp-2">"{message}"</div>
           )}
         </div>
       )}
@@ -177,7 +173,7 @@ export default function WhatsappLinkClient() {
             <Send className="w-4 h-4" />
             Open Chat
           </a>
-          
+
           <button
             onClick={handleCopy}
             className={`py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
@@ -189,7 +185,7 @@ export default function WhatsappLinkClient() {
             {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             {copied ? 'Copied!' : 'Copy'}
           </button>
-          
+
           <button
             onClick={() => setShowQR(!showQR)}
             className="py-3 bg-white/5 text-gray-300 rounded-xl font-medium 
@@ -206,10 +202,10 @@ export default function WhatsappLinkClient() {
         {/* Phone Number Section */}
         <div className="mb-6">
           <label className="text-sm text-gray-400 mb-3 block">Phone Number</label>
-          
+
           {/* Country Quick Select */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-3">
-            {POPULAR_COUNTRIES.map(country => (
+            {POPULAR_COUNTRIES.map((country) => (
               <button
                 key={country.code + country.name}
                 onClick={() => setCountryCode(country.code)}
@@ -224,14 +220,14 @@ export default function WhatsappLinkClient() {
               </button>
             ))}
           </div>
-          
+
           {/* Phone Input */}
           <div className="flex gap-2">
             <div className="bg-black/30 px-4 py-3 rounded-xl border border-white/10 flex items-center gap-2">
               <span className="text-2xl">{currentCountry.flag}</span>
               <span className="text-white font-medium">{countryCode}</span>
             </div>
-            
+
             <input
               type="tel"
               value={phoneNumber}
@@ -249,10 +245,10 @@ export default function WhatsappLinkClient() {
         {/* Message Section */}
         <div>
           <label className="text-sm text-gray-400 mb-3 block">Message Template</label>
-          
+
           {/* Template Buttons */}
           <div className="grid grid-cols-4 gap-2 mb-3">
-            {MESSAGE_TEMPLATES.map(template => (
+            {MESSAGE_TEMPLATES.map((template) => (
               <button
                 key={template.label}
                 onClick={() => applyTemplate(template)}
@@ -266,7 +262,7 @@ export default function WhatsappLinkClient() {
               </button>
             ))}
           </div>
-          
+
           {/* Message Input */}
           <textarea
             value={message}
@@ -280,9 +276,7 @@ export default function WhatsappLinkClient() {
                      text-white placeholder-gray-500 focus:outline-none focus:border-green-400 
                      transition-all resize-none"
           />
-          <p className="text-xs text-gray-500 mt-2">
-            {message.length} characters
-          </p>
+          <p className="text-xs text-gray-500 mt-2">{message.length} characters</p>
         </div>
       </div>
 
@@ -301,16 +295,12 @@ export default function WhatsappLinkClient() {
               ✕
             </button>
           </div>
-          
+
           <div className="flex flex-col items-center">
             <div className="bg-white p-4 rounded-xl mb-4">
-              <img
-                src={qrCodeUrl}
-                alt="WhatsApp QR"
-                className="w-48 h-48 sm:w-64 sm:h-64"
-              />
+              <img src={qrCodeUrl} alt="WhatsApp QR" className="w-48 h-48 sm:w-64 sm:h-64" />
             </div>
-            
+
             <div className="flex gap-3">
               <button
                 onClick={handleDownloadQR}
@@ -320,7 +310,7 @@ export default function WhatsappLinkClient() {
                 <Download className="w-4 h-4" />
                 Download
               </button>
-              
+
               {navigator.share && (
                 <button
                   onClick={handleShare}

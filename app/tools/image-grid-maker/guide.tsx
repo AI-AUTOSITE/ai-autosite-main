@@ -9,26 +9,26 @@ export const toolGuide = {
     { icon: '2', text: 'Drag & drop multiple images at once' },
     { icon: '3', text: 'Click any cell to add or replace image' },
     { icon: '4', text: 'Toggle numbers for tracking' },
-    { icon: '5', text: 'Click "Merge & Download" to save' }
+    { icon: '5', text: 'Click "Merge & Download" to save' },
   ],
   tips: [
     'Drop multiple images at once to fill grid quickly',
     'Click any cell to replace its image',
     'Up to 8×8 grid (64 images max)',
     'Numbers help track image order',
-    'Empty cells show with light borders'
+    'Empty cells show with light borders',
   ],
   useCases: [
     { title: 'Before/After', desc: 'Compare changes' },
     { title: 'Tutorials', desc: 'Show steps' },
     { title: 'Product Grid', desc: 'Display items' },
-    { title: 'Photo Collage', desc: 'Make collections' }
+    { title: 'Photo Collage', desc: 'Make collections' },
   ],
   troubleshooting: [
     { problem: 'Images not loading', solution: 'Check format: JPG, PNG, GIF, WebP' },
     { problem: 'Grid looks wrong', solution: 'Images auto-fit to largest size' },
-    { problem: 'Can\'t add more', solution: 'Max 64 images (8×8 grid)' }
-  ]
+    { problem: "Can't add more", solution: 'Max 64 images (8×8 grid)' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -48,13 +48,13 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       {/* Header */}
       <div className="flex items-center gap-2 mb-6">
         <Grid3x3 className="w-6 h-6 text-cyan-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Steps */}
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Quick Steps</h4>
@@ -67,7 +67,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       {/* Use Cases */}
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Perfect For</h4>
@@ -80,17 +80,19 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           ))}
         </div>
       </div>
-      
+
       {/* Tips */}
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Pro Tips</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       {/* Privacy Notice */}
       <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
         <p className="text-xs text-green-400">

@@ -13,7 +13,7 @@ const LOREM_IPSUM = [
   'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis.',
   'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus.',
   'Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit.',
-  'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.'
+  'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.',
 ]
 
 // Japanese dummy text pool
@@ -27,7 +27,7 @@ const JAPANESE_TEXT = [
   'Fairu saizu ya naiyou wo jiyuu ni kasutamaizu dekimasu.',
   'Fukuzatsu na gazou patān ya shori shiyasui gazou wo sentaku dekimasu.',
   'Riarutaimu purēbyū kinou ni yori, seisei mae ni kakunin ga kanou desu.',
-  'Daunroodo shita fairu wa sugu ni tesuto ni shiyou dekimasu.'
+  'Daunroodo shita fairu wa sugu ni tesuto ni shiyou dekimasu.',
 ]
 
 /**
@@ -37,12 +37,12 @@ export function generateText(language: Language, wordCount: number): string {
   const pool = language === 'japanese' ? JAPANESE_TEXT : LOREM_IPSUM
   const sentences: string[] = []
   let currentWords = 0
-  
+
   while (currentWords < wordCount) {
     if (language === 'mixed') {
       // Alternate between English and Japanese
       const useJapanese = Math.random() > 0.5
-      const sentence = useJapanese 
+      const sentence = useJapanese
         ? JAPANESE_TEXT[Math.floor(Math.random() * JAPANESE_TEXT.length)]
         : LOREM_IPSUM[Math.floor(Math.random() * LOREM_IPSUM.length)]
       sentences.push(sentence)
@@ -53,7 +53,7 @@ export function generateText(language: Language, wordCount: number): string {
       currentWords += sentence.split(' ').length
     }
   }
-  
+
   return sentences.join(' ')
 }
 

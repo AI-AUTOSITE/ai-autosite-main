@@ -6,17 +6,72 @@ import { Copy, Check, Type } from 'lucide-react'
 type GenerationType = 'words' | 'sentences' | 'paragraphs'
 
 const LOREM_WORDS = [
-  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-  'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-  'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-  'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-  'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-  'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-  'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-  'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'
+  'lorem',
+  'ipsum',
+  'dolor',
+  'sit',
+  'amet',
+  'consectetur',
+  'adipiscing',
+  'elit',
+  'sed',
+  'do',
+  'eiusmod',
+  'tempor',
+  'incididunt',
+  'ut',
+  'labore',
+  'et',
+  'dolore',
+  'magna',
+  'aliqua',
+  'enim',
+  'ad',
+  'minim',
+  'veniam',
+  'quis',
+  'nostrud',
+  'exercitation',
+  'ullamco',
+  'laboris',
+  'nisi',
+  'aliquip',
+  'ex',
+  'ea',
+  'commodo',
+  'consequat',
+  'duis',
+  'aute',
+  'irure',
+  'in',
+  'reprehenderit',
+  'voluptate',
+  'velit',
+  'esse',
+  'cillum',
+  'fugiat',
+  'nulla',
+  'pariatur',
+  'excepteur',
+  'sint',
+  'occaecat',
+  'cupidatat',
+  'non',
+  'proident',
+  'sunt',
+  'culpa',
+  'qui',
+  'officia',
+  'deserunt',
+  'mollit',
+  'anim',
+  'id',
+  'est',
+  'laborum',
 ]
 
-const LOREM_START = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+const LOREM_START =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
 
 export default function LoremIpsumClient() {
   const [amount, setAmount] = useState('5')
@@ -54,7 +109,7 @@ export default function LoremIpsumClient() {
   const handleGenerate = () => {
     const num = parseInt(amount) || 1
     let result = ''
-    
+
     switch (type) {
       case 'words':
         const loremWords = LOREM_START.split(' ').slice(0, Math.min(num, 19))
@@ -64,7 +119,7 @@ export default function LoremIpsumClient() {
           result = LOREM_START + ' ' + generateWords(num - 19)
         }
         break
-        
+
       case 'sentences':
         const sentences: string[] = []
         sentences.push(LOREM_START)
@@ -73,7 +128,7 @@ export default function LoremIpsumClient() {
         }
         result = sentences.join(' ')
         break
-        
+
       case 'paragraphs':
         const paragraphs: string[] = []
         paragraphs.push(LOREM_START + ' ' + generateParagraph())
@@ -83,7 +138,7 @@ export default function LoremIpsumClient() {
         result = paragraphs.join('\n\n')
         break
     }
-    
+
     setGeneratedText(result)
   }
 
@@ -97,7 +152,7 @@ export default function LoremIpsumClient() {
   const presets = [
     { amount: '1', type: 'paragraphs' as GenerationType, label: '1 Paragraph' },
     { amount: '5', type: 'sentences' as GenerationType, label: '5 Sentences' },
-    { amount: '50', type: 'words' as GenerationType, label: '50 Words' }
+    { amount: '50', type: 'words' as GenerationType, label: '50 Words' },
   ]
 
   return (
@@ -109,14 +164,11 @@ export default function LoremIpsumClient() {
 
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Simple Controls */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {/* Amount Input */}
           <div>
-            <label className="text-white text-sm font-medium mb-2 block">
-              How many?
-            </label>
+            <label className="text-white text-sm font-medium mb-2 block">How many?</label>
             <input
               type="number"
               value={amount}
@@ -129,12 +181,10 @@ export default function LoremIpsumClient() {
               autoFocus
             />
           </div>
-          
+
           {/* Type Selection */}
           <div>
-            <label className="text-white text-sm font-medium mb-2 block">
-              Type
-            </label>
+            <label className="text-white text-sm font-medium mb-2 block">Type</label>
             <div className="grid grid-cols-3 gap-1">
               {(['words', 'sentences', 'paragraphs'] as GenerationType[]).map((t) => (
                 <button
@@ -187,8 +237,8 @@ export default function LoremIpsumClient() {
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
             <div className="flex justify-between items-center mb-3">
               <span className="text-xs text-gray-400">
-                {generatedText.split(/\s+/).filter(w => w).length} words • 
-                {generatedText.length} characters
+                {generatedText.split(/\s+/).filter((w) => w).length} words •{generatedText.length}{' '}
+                characters
               </span>
               <button
                 onClick={handleCopy}
@@ -211,7 +261,7 @@ export default function LoremIpsumClient() {
                 )}
               </button>
             </div>
-            
+
             <div className="bg-black/30 rounded-xl p-4 max-h-64 overflow-y-auto">
               <pre className="text-gray-300 whitespace-pre-wrap text-sm font-sans">
                 {generatedText}

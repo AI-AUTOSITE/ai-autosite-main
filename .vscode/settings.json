@@ -1,9 +1,51 @@
 {
+  // Terminal settings
   "terminal.integrated.profiles.windows": {
     "PowerShell with Profile": {
       "source": "PowerShell",
       "args": ["-NoExit", "-Command", ". $PROFILE"]
     }
   },
-  "terminal.integrated.defaultProfile.windows": "PowerShell with Profile"
+  "terminal.integrated.defaultProfile.windows": "PowerShell with Profile",
+
+  // File encoding - CRITICAL for preventing garbled text
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "files.eol": "\n",
+
+  // Auto save - recommended for Next.js development
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  // TypeScript/JavaScript settings
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  // Editor settings for better DX
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Next.js specific
+  "files.exclude": {
+    "**/.next": true,
+    "**/node_modules": true
+  },
+
+  // Tailwind CSS IntelliSense
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]]
 }

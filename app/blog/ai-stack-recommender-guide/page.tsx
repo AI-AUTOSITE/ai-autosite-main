@@ -2,12 +2,25 @@
 
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, Cpu, Code, DollarSign, Clock, Zap, Database, Cloud, Target, CheckCircle } from 'lucide-react'
+import {
+  ArrowLeft,
+  Cpu,
+  Code,
+  DollarSign,
+  Clock,
+  Zap,
+  Database,
+  Cloud,
+  Target,
+  CheckCircle,
+} from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'AI Stack Recommender: Get Your Perfect Tech Stack in 30 Seconds | AI AutoSite',
-  description: 'Stop analysis paralysis. Get personalized tech stack recommendations based on your project, budget, and experience. AI-powered tool for developers.',
-  keywords: 'ai stack recommender, tech stack generator, project architecture, framework selection, development tools, stack advice, technology choice',
+  description:
+    'Stop analysis paralysis. Get personalized tech stack recommendations based on your project, budget, and experience. AI-powered tool for developers.',
+  keywords:
+    'ai stack recommender, tech stack generator, project architecture, framework selection, development tools, stack advice, technology choice',
   openGraph: {
     title: 'AI Stack Recommender - Perfect Tech Stack in 30 Seconds',
     description: 'Get AI-powered tech stack recommendations tailored to your project needs',
@@ -18,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Stack Recommender Guide',
     description: 'Choose the perfect tech stack with AI assistance',
-  }
+  },
 }
 
 export default function AIStackRecommenderGuidePage() {
@@ -31,56 +44,56 @@ export default function AIStackRecommenderGuidePage() {
       type: 'E-commerce',
       stack: ['Next.js', 'TypeScript', 'Stripe', 'Supabase'],
       cost: '$25-40/month',
-      icon: '🛍️'
+      icon: '🛍️',
     },
     {
       type: 'AI Chat App',
       stack: ['Next.js', 'OpenAI API', 'Pinecone', 'Vercel'],
       cost: '$20-50/month',
-      icon: '💬'
+      icon: '💬',
     },
     {
       type: 'Blog/Portfolio',
       stack: ['Astro', 'Markdown', 'Cloudflare Pages'],
       cost: '$0/month',
-      icon: '📝'
+      icon: '📝',
     },
     {
       type: 'SaaS Dashboard',
       stack: ['Next.js', 'PostgreSQL', 'Auth.js', 'AWS'],
       cost: '$50-100/month',
-      icon: '📊'
-    }
+      icon: '📊',
+    },
   ]
 
   const benefits = [
     {
       title: 'Save Weeks of Research',
       description: 'No more endless comparisons and analysis paralysis',
-      icon: Clock
+      icon: Clock,
     },
     {
       title: 'Budget-Aware',
       description: 'Get recommendations that fit your financial constraints',
-      icon: DollarSign
+      icon: DollarSign,
     },
     {
       title: 'Experience-Based',
       description: 'Tailored complexity based on your skill level',
-      icon: Zap
+      icon: Zap,
     },
     {
       title: 'Complete Stack',
       description: 'Framework, database, hosting, and tools - all included',
-      icon: Database
-    }
+      icon: Database,
+    },
   ]
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to Blog */}
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -94,22 +107,28 @@ export default function AIStackRecommenderGuidePage() {
             Developer Tools
           </span>
           <span>•</span>
-          <time dateTime={publishDate}>{new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+          <time dateTime={publishDate}>
+            {new Date(publishDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </time>
           <span>•</span>
           <span>{readTime}</span>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
           Stop Googling "Best Tech Stack 2025"
           <span className="block text-3xl sm:text-4xl mt-2 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
             Get Your Perfect Stack in 30 Seconds
           </span>
         </h1>
-        
+
         <p className="text-xl text-gray-300 leading-relaxed">
-          Every developer faces the same problem: choosing the right tech stack. 
-          Our AI Stack Recommender analyzes your project requirements and delivers 
-          personalized recommendations instantly.
+          Every developer faces the same problem: choosing the right tech stack. Our AI Stack
+          Recommender analyzes your project requirements and delivers personalized recommendations
+          instantly.
         </p>
       </header>
 
@@ -129,8 +148,8 @@ export default function AIStackRecommenderGuidePage() {
           </ul>
         </div>
         <p className="text-gray-300">
-          You spend days researching, reading comparisons, watching tutorials... 
-          and still feel uncertain. Meanwhile, your actual project hasn't even started.
+          You spend days researching, reading comparisons, watching tutorials... and still feel
+          uncertain. Meanwhile, your actual project hasn't even started.
         </p>
       </section>
 
@@ -138,10 +157,10 @@ export default function AIStackRecommenderGuidePage() {
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-white mb-6">AI-Powered Stack Recommendations</h2>
         <p className="text-gray-300 mb-6">
-          Our tool uses AI to analyze your project description and constraints, 
-          then recommends the optimal tech stack based on thousands of successful projects.
+          Our tool uses AI to analyze your project description and constraints, then recommends the
+          optimal tech stack based on thousands of successful projects.
         </p>
-        
+
         <div className="grid md:grid-cols-2 gap-4">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon
@@ -159,7 +178,7 @@ export default function AIStackRecommenderGuidePage() {
       {/* How It Works */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-white mb-8">How It Works</h2>
-        
+
         <div className="space-y-6">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -168,8 +187,8 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Describe Your Project</h3>
               <p className="text-gray-400">
-                Tell us what you're building. Be specific about features and requirements.
-                Use our templates for common project types or write your own description.
+                Tell us what you're building. Be specific about features and requirements. Use our
+                templates for common project types or write your own description.
               </p>
             </div>
           </div>
@@ -181,8 +200,8 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Set Your Constraints</h3>
               <p className="text-gray-400">
-                Choose your budget range, timeline, and experience level. 
-                The AI considers these factors to ensure realistic recommendations.
+                Choose your budget range, timeline, and experience level. The AI considers these
+                factors to ensure realistic recommendations.
               </p>
             </div>
           </div>
@@ -194,8 +213,8 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Get Personalized Stack</h3>
               <p className="text-gray-400">
-                Receive complete recommendations including framework, database, hosting, 
-                and additional tools. Plus estimated costs and learning time.
+                Receive complete recommendations including framework, database, hosting, and
+                additional tools. Plus estimated costs and learning time.
               </p>
             </div>
           </div>
@@ -215,7 +234,10 @@ export default function AIStackRecommenderGuidePage() {
               <div className="space-y-2 mb-3">
                 <div className="flex flex-wrap gap-2">
                   {example.stack.map((tech) => (
-                    <span key={tech} className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs">
+                    <span
+                      key={tech}
+                      className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs"
+                    >
                       {tech}
                     </span>
                   ))}
@@ -236,17 +258,19 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-white font-semibold mb-1">Context-Aware Recommendations</h3>
               <p className="text-gray-400">
-                Not just a list of popular tools - recommendations based on your specific project needs.
+                Not just a list of popular tools - recommendations based on your specific project
+                needs.
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="text-white font-semibold mb-1">Real Cost Estimates</h3>
               <p className="text-gray-400">
-                Know upfront what you'll actually pay, including hidden costs and scaling considerations.
+                Know upfront what you'll actually pay, including hidden costs and scaling
+                considerations.
               </p>
             </div>
           </div>
@@ -256,7 +280,8 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-white font-semibold mb-1">Quick Start Commands</h3>
               <p className="text-gray-400">
-                Get copy-paste setup commands to start building immediately - no more setup tutorials.
+                Get copy-paste setup commands to start building immediately - no more setup
+                tutorials.
               </p>
             </div>
           </div>
@@ -266,7 +291,8 @@ export default function AIStackRecommenderGuidePage() {
             <div>
               <h3 className="text-white font-semibold mb-1">Learning Curve Considered</h3>
               <p className="text-gray-400">
-                Recommendations match your experience level - no overwhelming complexity for beginners.
+                Recommendations match your experience level - no overwhelming complexity for
+                beginners.
               </p>
             </div>
           </div>
@@ -280,19 +306,31 @@ export default function AIStackRecommenderGuidePage() {
           <ul className="grid md:grid-cols-2 gap-3 text-gray-300">
             <li className="flex items-start">
               <Target className="w-5 h-5 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Startup Founders:</strong> Choose scalable tech without engineering background</span>
+              <span>
+                <strong className="text-white">Startup Founders:</strong> Choose scalable tech
+                without engineering background
+              </span>
             </li>
             <li className="flex items-start">
               <Target className="w-5 h-5 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Freelancers:</strong> Estimate project costs and timelines accurately</span>
+              <span>
+                <strong className="text-white">Freelancers:</strong> Estimate project costs and
+                timelines accurately
+              </span>
             </li>
             <li className="flex items-start">
               <Target className="w-5 h-5 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Students:</strong> Learn modern tech stacks for real projects</span>
+              <span>
+                <strong className="text-white">Students:</strong> Learn modern tech stacks for real
+                projects
+              </span>
             </li>
             <li className="flex items-start">
               <Target className="w-5 h-5 text-purple-400 mr-2 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Dev Teams:</strong> Validate technology choices quickly</span>
+              <span>
+                <strong className="text-white">Dev Teams:</strong> Validate technology choices
+                quickly
+              </span>
             </li>
           </ul>
         </div>
@@ -305,7 +343,10 @@ export default function AIStackRecommenderGuidePage() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <span className="text-cyan-400 mr-2">💡</span>
-              <span>Be specific about features - "user authentication with social login" is better than "login system"</span>
+              <span>
+                Be specific about features - "user authentication with social login" is better than
+                "login system"
+              </span>
             </li>
             <li className="flex items-start">
               <span className="text-cyan-400 mr-2">💡</span>
@@ -313,7 +354,9 @@ export default function AIStackRecommenderGuidePage() {
             </li>
             <li className="flex items-start">
               <span className="text-cyan-400 mr-2">💡</span>
-              <span>Be honest about your experience - better to start simple and upgrade later</span>
+              <span>
+                Be honest about your experience - better to start simple and upgrade later
+              </span>
             </li>
             <li className="flex items-start">
               <span className="text-cyan-400 mr-2">💡</span>
@@ -325,12 +368,10 @@ export default function AIStackRecommenderGuidePage() {
 
       {/* Call to Action */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-2xl border border-white/10">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Stop Overthinking, Start Building
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Stop Overthinking, Start Building</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Get your personalized tech stack recommendation in 30 seconds. 
-          No signup, completely free, instant results.
+          Get your personalized tech stack recommendation in 30 seconds. No signup, completely free,
+          instant results.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -356,19 +397,25 @@ export default function AIStackRecommenderGuidePage() {
         <div className="grid md:grid-cols-3 gap-4">
           <Link href="/tools/tech-stack-analyzer" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">Tech Stack Analyzer</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                Tech Stack Analyzer
+              </h4>
               <p className="text-gray-400 text-sm">Compare frameworks in detail</p>
             </div>
           </Link>
           <Link href="/tools/code-reader" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">Code Reader</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                Code Reader
+              </h4>
               <p className="text-gray-400 text-sm">Analyze code dependencies</p>
             </div>
           </Link>
           <Link href="/tools/ai-dev-dictionary" className="group">
             <div className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-purple-400/30 transition-all">
-              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">AI Dev Dictionary</h4>
+              <h4 className="text-white font-semibold mb-2 group-hover:text-purple-400">
+                AI Dev Dictionary
+              </h4>
               <p className="text-gray-400 text-sm">Learn development terms</p>
             </div>
           </Link>
@@ -385,12 +432,8 @@ export default function AIStackRecommenderGuidePage() {
             <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
               Development
             </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              AI Tools
-            </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              Tutorial
-            </span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">AI Tools</span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">Tutorial</span>
           </div>
         </div>
       </footer>

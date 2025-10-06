@@ -16,26 +16,26 @@ interface QuickAction {
 }
 
 const QUICK_ACTIONS: QuickAction[] = [
-  { 
-    type: 'text', 
-    label: 'Text', 
+  {
+    type: 'text',
+    label: 'Text',
     icon: <FileText className="w-4 h-4" />,
     placeholder: 'Enter any text...',
-    example: 'Hello World!'
+    example: 'Hello World!',
   },
-  { 
-    type: 'url', 
-    label: 'URL', 
+  {
+    type: 'url',
+    label: 'URL',
     icon: <Link2 className="w-4 h-4" />,
     placeholder: 'Enter website URL...',
-    example: 'https://example.com'
+    example: 'https://example.com',
   },
-  { 
-    type: 'wifi', 
-    label: 'WiFi', 
+  {
+    type: 'wifi',
+    label: 'WiFi',
     icon: <Wifi className="w-4 h-4" />,
     placeholder: 'WIFI:T:WPA;S:NetworkName;P:Password;;',
-    example: 'WIFI:T:WPA;S:MyNetwork;P:MyPassword;;'
+    example: 'WIFI:T:WPA;S:MyNetwork;P:MyPassword;;',
   },
 ]
 
@@ -60,29 +60,29 @@ export default function QRCodeClient() {
     }
 
     setError('')
-    
+
     // Generate QR code
     QRCode.toDataURL(input, {
       width: size,
       margin: 2,
       color: {
         dark: '#000000',
-        light: '#FFFFFF'
+        light: '#FFFFFF',
       },
-      errorCorrectionLevel: 'M'
+      errorCorrectionLevel: 'M',
     })
-    .then(url => {
-      setQrDataUrl(url)
-    })
-    .catch(err => {
-      console.error(err)
-      setError('Could not create QR code')
-    })
+      .then((url) => {
+        setQrDataUrl(url)
+      })
+      .catch((err) => {
+        console.error(err)
+        setError('Could not create QR code')
+      })
   }, [input, size])
 
   const handleDownload = () => {
     if (!qrDataUrl) return
-    
+
     const link = document.createElement('a')
     link.download = `qrcode-${Date.now()}.png`
     link.href = qrDataUrl
@@ -96,21 +96,25 @@ export default function QRCodeClient() {
   }
 
   const loadExample = () => {
-    const currentAction = QUICK_ACTIONS.find(a => a.type === qrType)
+    const currentAction = QUICK_ACTIONS.find((a) => a.type === qrType)
     if (currentAction) {
       setInput(currentAction.example)
     }
   }
 
   const getSizeLabel = (s: QRSize) => {
-    switch(s) {
-      case 256: return 'Small'
-      case 512: return 'Medium'
-      case 1024: return 'Large'
+    switch (s) {
+      case 256:
+        return 'Small'
+      case 512:
+        return 'Medium'
+      case 1024:
+        return 'Large'
     }
   }
 
-  const currentPlaceholder = QUICK_ACTIONS.find(a => a.type === qrType)?.placeholder || 'Enter text...'
+  const currentPlaceholder =
+    QUICK_ACTIONS.find((a) => a.type === qrType)?.placeholder || 'Enter text...'
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-2xl">
@@ -118,7 +122,7 @@ export default function QRCodeClient() {
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
         {/* Type Selection */}
         <div className="flex gap-2 mb-4">
-          {QUICK_ACTIONS.map(action => (
+          {QUICK_ACTIONS.map((action) => (
             <button
               key={action.type}
               onClick={() => setQrType(action.type)}
@@ -145,12 +149,10 @@ export default function QRCodeClient() {
           maxLength={2000}
           spellCheck={false}
         />
-        
+
         {/* Character count & Actions */}
         <div className="flex justify-between items-center mt-3">
-          <span className="text-xs text-gray-400">
-            {input.length}/2000 characters
-          </span>
+          <span className="text-xs text-gray-400">{input.length}/2000 characters</span>
           <div className="flex gap-2">
             <button
               onClick={loadExample}
@@ -204,9 +206,9 @@ export default function QRCodeClient() {
           <div className="flex flex-col items-center">
             {/* QR Code Container */}
             <div className="bg-white p-6 rounded-xl mb-6">
-              <img 
-                src={qrDataUrl} 
-                alt="Generated QR Code" 
+              <img
+                src={qrDataUrl}
+                alt="Generated QR Code"
                 className="max-w-full h-auto block"
                 style={{ imageRendering: 'pixelated' }}
               />

@@ -44,7 +44,7 @@ export default function MarkdownHtmlClient() {
   useEffect(() => {
     marked.setOptions({
       gfm: true, // GitHub Flavored Markdown
-      breaks: true // Convert line breaks to <br>
+      breaks: true, // Convert line breaks to <br>
       // headerIds and mangle were removed in newer versions of marked
     })
   }, [])
@@ -67,7 +67,7 @@ export default function MarkdownHtmlClient() {
   // Copy HTML to clipboard
   const copyHtml = async () => {
     if (!html) return
-    
+
     try {
       await navigator.clipboard.writeText(html)
       setCopied(true)
@@ -111,7 +111,7 @@ export default function MarkdownHtmlClient() {
               <span>{stats.words} words</span>
             </div>
           </div>
-          
+
           <textarea
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
@@ -121,7 +121,7 @@ export default function MarkdownHtmlClient() {
                      transition-colors resize-none font-mono text-sm"
             spellCheck={false}
           />
-          
+
           {/* Input Actions */}
           <div className="flex gap-2 mt-4">
             <button
@@ -162,39 +162,37 @@ export default function MarkdownHtmlClient() {
               <button
                 onClick={() => setViewMode('code')}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-1.5 ${
-                  viewMode === 'code'
-                    ? 'bg-cyan-600 text-white'
-                    : 'text-gray-400 hover:text-white'
+                  viewMode === 'code' ? 'bg-cyan-600 text-white' : 'text-gray-400 hover:text-white'
                 }`}
               >
                 <Code className="w-3.5 h-3.5" />
                 HTML
               </button>
             </div>
-            
+
             {/* Copy Button */}
             <button
               onClick={copyHtml}
               disabled={!html}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all 
                         flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                copied
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
-              }`}
+                          copied
+                            ? 'bg-green-500 text-white'
+                            : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                        }`}
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          
+
           {/* Output Display */}
           {viewMode === 'preview' ? (
-            <div 
+            <div
               className="w-full h-[450px] p-4 bg-black/20 border border-white/10 rounded-xl 
                        overflow-auto prose prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ 
-                __html: html || '<p class="text-gray-400">Preview will appear here...</p>' 
+              dangerouslySetInnerHTML={{
+                __html: html || '<p class="text-gray-400">Preview will appear here...</p>',
               }}
             />
           ) : (

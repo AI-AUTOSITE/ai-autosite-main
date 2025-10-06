@@ -18,7 +18,7 @@ export const allDemos = {
   ...navigationDemos,
   ...feedbackDemos,
   ...advancedDemos,
-  ...additionalDemos  // 新しく追加
+  ...additionalDemos, // 新しく追加
 }
 
 // デモタイプの型定義

@@ -1,9 +1,18 @@
-import { ReactElement } from 'react';
-import { 
-  RotateCw, FileStack, Scissors, PenTool, Highlighter, 
-  Crop, Minimize2, Lock, FileText, Image, Trash2
-} from 'lucide-react';
-import { Tool } from '../types';
+import { ReactElement } from 'react'
+import {
+  RotateCw,
+  FileStack,
+  Scissors,
+  PenTool,
+  Highlighter,
+  Crop,
+  Minimize2,
+  Lock,
+  FileText,
+  Image,
+  Trash2,
+} from 'lucide-react'
+import { Tool } from '../types'
 
 // ツールのアクション関数を定義
 const toolActions = {
@@ -18,7 +27,7 @@ const toolActions = {
   toword: () => alert('Word conversion coming soon!'),
   toimage: () => alert('Image conversion coming soon!'),
   delete: () => console.log('Delete action'),
-};
+}
 
 export const availableTools: Tool[] = [
   // Basic Tools
@@ -29,7 +38,7 @@ export const availableTools: Tool[] = [
     icon: <RotateCw className="w-4 h-4" />,
     category: 'basic',
     color: 'blue',
-    action: toolActions.rotate
+    action: toolActions.rotate,
   },
   {
     id: 'merge',
@@ -38,7 +47,7 @@ export const availableTools: Tool[] = [
     icon: <FileStack className="w-4 h-4" />,
     category: 'basic',
     color: 'purple',
-    action: toolActions.merge
+    action: toolActions.merge,
   },
   {
     id: 'split',
@@ -47,7 +56,7 @@ export const availableTools: Tool[] = [
     icon: <Scissors className="w-4 h-4" />,
     category: 'basic',
     color: 'orange',
-    action: toolActions.split
+    action: toolActions.split,
   },
   // Edit Tools
   {
@@ -57,7 +66,7 @@ export const availableTools: Tool[] = [
     icon: <PenTool className="w-4 h-4" />,
     category: 'edit',
     color: 'green',
-    action: toolActions.annotate
+    action: toolActions.annotate,
   },
   {
     id: 'highlight',
@@ -66,7 +75,7 @@ export const availableTools: Tool[] = [
     icon: <Highlighter className="w-4 h-4" />,
     category: 'edit',
     color: 'yellow',
-    action: toolActions.highlight
+    action: toolActions.highlight,
   },
   {
     id: 'crop',
@@ -75,7 +84,7 @@ export const availableTools: Tool[] = [
     icon: <Crop className="w-4 h-4" />,
     category: 'edit',
     color: 'indigo',
-    action: toolActions.crop
+    action: toolActions.crop,
   },
   // Optimize Tools
   {
@@ -85,7 +94,7 @@ export const availableTools: Tool[] = [
     icon: <Minimize2 className="w-4 h-4" />,
     category: 'optimize',
     color: 'red',
-    action: toolActions.compress
+    action: toolActions.compress,
   },
   {
     id: 'password',
@@ -94,7 +103,7 @@ export const availableTools: Tool[] = [
     icon: <Lock className="w-4 h-4" />,
     category: 'optimize',
     color: 'gray',
-    action: toolActions.password
+    action: toolActions.password,
   },
   {
     id: 'delete',
@@ -103,7 +112,7 @@ export const availableTools: Tool[] = [
     icon: <Trash2 className="w-4 h-4" />,
     category: 'optimize',
     color: 'red',
-    action: toolActions.delete
+    action: toolActions.delete,
   },
   // Convert Tools
   {
@@ -113,7 +122,7 @@ export const availableTools: Tool[] = [
     icon: <FileText className="w-4 h-4" />,
     category: 'convert',
     color: 'blue',
-    action: toolActions.toword
+    action: toolActions.toword,
   },
   {
     id: 'toimage',
@@ -122,13 +131,13 @@ export const availableTools: Tool[] = [
     icon: <Image className="w-4 h-4" />,
     category: 'convert',
     color: 'green',
-    action: toolActions.toimage
+    action: toolActions.toimage,
   },
-];
+]
 
 export const toolCategories = [
   { id: 'basic', name: 'Basic', description: 'Essential PDF operations' },
   { id: 'edit', name: 'Edit', description: 'Modify your documents' },
   { id: 'optimize', name: 'Optimize', description: 'Improve your PDFs' },
   { id: 'convert', name: 'Convert', description: 'Change file formats' },
-];
+]

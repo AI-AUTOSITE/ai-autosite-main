@@ -15,21 +15,21 @@ interface CategoryGridProps {
 }
 
 // Mobile scroll view component
-function CategoryMobileScroll({ 
-  categories, 
-  onSelectCategory 
-}: { 
+function CategoryMobileScroll({
+  categories,
+  onSelectCategory,
+}: {
   categories: CategoryWithCount[]
-  onSelectCategory: (categoryId: string) => void 
+  onSelectCategory: (categoryId: string) => void
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  
+
   const scrollToCategory = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const scrollAmount = 200
       scrollContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
     }
   }
@@ -49,16 +49,18 @@ function CategoryMobileScroll({
       <div
         ref={scrollContainerRef}
         className="overflow-x-auto scrollbar-hide px-8"
-        style={{ 
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch' // iOS対応
-        } as React.CSSProperties}
+        style={
+          {
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch', // iOS対応
+          } as React.CSSProperties
+        }
       >
         <div className="flex gap-3 pb-2">
-          {categories.map(cat => {
+          {categories.map((cat) => {
             const Icon = cat.icon
-            
+
             return (
               <button
                 key={cat.id}
@@ -90,12 +92,12 @@ function CategoryMobileScroll({
 }
 
 // Desktop grid view component
-function CategoryDesktopGrid({ 
-  categories, 
-  onSelectCategory 
-}: { 
+function CategoryDesktopGrid({
+  categories,
+  onSelectCategory,
+}: {
   categories: CategoryWithCount[]
-  onSelectCategory: (categoryId: string) => void 
+  onSelectCategory: (categoryId: string) => void
 }) {
   const gridClassName = getGridClassName(categories.length)
   const paddingClass = getCardPaddingClass(categories.length)
@@ -103,9 +105,9 @@ function CategoryDesktopGrid({
 
   return (
     <div className={`grid gap-4 ${gridClassName}`}>
-      {categories.map(cat => {
+      {categories.map((cat) => {
         const Icon = cat.icon
-        
+
         return (
           <button
             key={cat.id}
@@ -119,7 +121,9 @@ function CategoryDesktopGrid({
           >
             <Icon className={`${iconSizeClass} mb-3 group-hover:scale-110 transition-transform`} />
             <h3 className="font-semibold text-white mb-1 text-center">{cat.name}</h3>
-            <p className={`text-xs bg-gradient-to-r ${cat.color} bg-clip-text text-transparent mb-2 text-center`}>
+            <p
+              className={`text-xs bg-gradient-to-r ${cat.color} bg-clip-text text-transparent mb-2 text-center`}
+            >
               {cat.description}
             </p>
             <p className="text-xs text-gray-400 text-center">{cat.count} articles</p>
@@ -132,14 +136,18 @@ function CategoryDesktopGrid({
 
 // Main CategoryGrid component
 export function CategoryGrid({ categories, onSelectCategory, isMobile }: CategoryGridProps) {
-  const categoriesWithCount: CategoryWithCount[] = categories.map(cat => ({
+  const categoriesWithCount: CategoryWithCount[] = categories.map((cat) => ({
     ...cat,
-    count: getPostCount(cat.id)
+    count: getPostCount(cat.id),
   }))
 
   if (isMobile) {
-    return <CategoryMobileScroll categories={categoriesWithCount} onSelectCategory={onSelectCategory} />
+    return (
+      <CategoryMobileScroll categories={categoriesWithCount} onSelectCategory={onSelectCategory} />
+    )
   }
 
-  return <CategoryDesktopGrid categories={categoriesWithCount} onSelectCategory={onSelectCategory} />
+  return (
+    <CategoryDesktopGrid categories={categoriesWithCount} onSelectCategory={onSelectCategory} />
+  )
 }

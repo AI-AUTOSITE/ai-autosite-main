@@ -16,6 +16,7 @@
 ## 📋 About The Project
 
 AI AutoSite is an open-source collection of instant web tools designed to be:
+
 - **🚀 Instant** - No installation, no sign-up, just use
 - **🔒 Private** - All processing happens in your browser
 - **⚡ Fast** - Optimized for speed and efficiency
@@ -50,12 +51,14 @@ AI AutoSite is an open-source collection of instant web tools designed to be:
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/ai-autosite.git
 cd ai-autosite
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 # or
@@ -65,6 +68,7 @@ pnpm install
 ```
 
 3. Run the development server
+
 ```bash
 npm run dev
 # or
@@ -103,6 +107,7 @@ ai-autosite/
 This project is open source and available under the **MIT License**.
 
 ### You are free to:
+
 - ✅ **Copy** any tools or code you like
 - ✅ **Modify** for your specific needs
 - ✅ **Use commercially** without restrictions
@@ -110,6 +115,7 @@ This project is open source and available under the **MIT License**.
 - ✅ **Use privately** for personal projects
 
 ### No need to:
+
 - ❌ Ask for permission
 - ❌ Give attribution (but it's appreciated! 😊)
 - ❌ Share your modifications (but PRs are welcome!)
@@ -127,6 +133,7 @@ Contributions make the open-source community amazing! Any contributions you make
 ## 🌟 Support
 
 If you find this project useful, please consider:
+
 - ⭐ Giving it a star on GitHub
 - 🐛 Reporting bugs or requesting features
 - 📝 Contributing to the codebase

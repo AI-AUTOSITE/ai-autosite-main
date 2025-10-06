@@ -9,25 +9,27 @@ export const metadata: Metadata = {
     title: 'Gradient Generator - Truly Free, No Ads',
     description: 'Zero ads, zero tracking. Beautiful CSS gradients without the BS.',
     type: 'website',
-    images: [{
-      url: '/og-gradient-generator.png',
-      width: 1200,
-      height: 630,
-      alt: 'Free Gradient Generator - No Ads'
-    }]
+    images: [
+      {
+        url: '/og-gradient-generator.png',
+        width: 1200,
+        height: 630,
+        alt: 'Free Gradient Generator - No Ads',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Gradient Generator - Free Forever',
-    description: 'CSS gradients without ads or sign-ups.'
-  },
+    description: 'CSS gradients without ads or sign-ups.',
+  },
   robots: {
     index: true,
-    follow: true
+    follow: true,
   },
   alternates: {
-    canonical: 'https://ai-autosite.com/tools/gradient-generator'
-  }
+    canonical: 'https://ai-autosite.com/tools/gradient-generator',
+  },
 }
 
 export default function GradientGeneratorPage() {

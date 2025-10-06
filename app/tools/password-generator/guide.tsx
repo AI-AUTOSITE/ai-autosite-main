@@ -1,12 +1,12 @@
 // app/tools/password-generator/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
-  BookOpen, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
+  BookOpen,
   Shield,
   Lock,
   Key,
@@ -15,26 +15,26 @@ import {
   Settings,
   Lightbulb,
   Target,
-  Info
-} from 'lucide-react';
+  Info,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const examplePasswords = {
-    weak: "password123",
-    strong: "K9#mP2$vL8@nQ5xR"
-  };
+    weak: 'password123',
+    strong: 'K9#mP2$vL8@nQ5xR',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -67,7 +67,9 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
             <div className="text-sm text-purple-300">
               <p className="font-semibold mb-1">Create Unbreakable Passwords</p>
               <p>Generate secure passwords instantly with customizable options.</p>
-              <p className="mt-2">All generation happens locally - your passwords never leave your device!</p>
+              <p className="mt-2">
+                All generation happens locally - your passwords never leave your device!
+              </p>
             </div>
           </div>
         </div>
@@ -78,7 +80,7 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
             <Lock className="w-5 h-5 text-cyan-400" />
             Understand Password Strength
           </h4>
-          
+
           <div className="space-y-3">
             {/* Weak Example */}
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
@@ -100,7 +102,7 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
                 </button>
               </div>
             </div>
-            
+
             {/* Strong Example */}
             <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
               <div className="flex items-start justify-between">
@@ -139,7 +141,7 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -152,7 +154,7 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -264,16 +266,16 @@ export default function PasswordGeneratorGuide({ onClose }: GuideProps) {
             <div className="text-sm">
               <p className="text-white font-medium mb-1">Remember</p>
               <p className="text-gray-400">
-                A password manager is the best way to store all your unique passwords. 
-                This generator helps you create strong passwords, but you'll need a 
-                secure way to remember them all!
+                A password manager is the best way to store all your unique passwords. This
+                generator helps you create strong passwords, but you'll need a secure way to
+                remember them all!
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -281,4 +283,4 @@ export const guideMetadata = {
   title: 'Password Generator Guide',
   icon: '🔐',
   available: true,
-};
+}

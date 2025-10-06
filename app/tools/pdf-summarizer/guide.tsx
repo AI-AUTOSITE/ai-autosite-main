@@ -50,37 +50,45 @@ export default function PDFSummarizerGuide({ onClose }: GuideProps) {
               </span>
               <div>
                 <p className="font-medium text-white">Upload Your PDF</p>
-                <p className="text-sm text-gray-400 mt-1">Click or drag & drop your PDF file (max 10MB)</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Click or drag & drop your PDF file (max 10MB)
+                </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-teal-500 to-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
               </span>
               <div>
                 <p className="font-medium text-white">Choose Summary Length</p>
-                <p className="text-sm text-gray-400 mt-1">Short (bullet points), Medium (overview), or Long (detailed)</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Short (bullet points), Medium (overview), or Long (detailed)
+                </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
               </span>
               <div>
                 <p className="font-medium text-white">Click Summarize</p>
-                <p className="text-sm text-gray-400 mt-1">AI processes your document (usually 10-30 seconds)</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  AI processes your document (usually 10-30 seconds)
+                </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 4
               </span>
               <div>
                 <p className="font-medium text-white">Get Your Summary</p>
-                <p className="text-sm text-gray-400 mt-1">Copy to clipboard or download as markdown file</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  Copy to clipboard or download as markdown file
+                </p>
               </div>
             </li>
           </ol>
@@ -95,11 +103,13 @@ export default function PDFSummarizerGuide({ onClose }: GuideProps) {
                 <span className="text-green-400 font-semibold">Short:</span>
                 <div>
                   <p className="text-sm text-gray-300">Key bullet points only</p>
-                  <p className="text-xs text-gray-500 mt-1">~100-200 words, perfect for quick review</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    ~100-200 words, perfect for quick review
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-900/50 backdrop-blur rounded-lg p-3 border border-gray-800">
               <div className="flex items-start gap-3">
                 <span className="text-teal-400 font-semibold">Medium:</span>
@@ -109,7 +119,7 @@ export default function PDFSummarizerGuide({ onClose }: GuideProps) {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-900/50 backdrop-blur rounded-lg p-3 border border-gray-800">
               <div className="flex items-start gap-3">
                 <span className="text-cyan-400 font-semibold">Long:</span>
@@ -133,7 +143,7 @@ export default function PDFSummarizerGuide({ onClose }: GuideProps) {
               </div>
               <p className="text-xs text-gray-300">Easy file upload</p>
             </div>
-            
+
             <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-lg p-3 border border-cyan-500/20">
               <div className="flex items-center gap-2 mb-1">
                 <Download className="w-4 h-4 text-cyan-400" />

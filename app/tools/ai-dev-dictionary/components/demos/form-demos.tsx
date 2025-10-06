@@ -6,7 +6,7 @@ export const formDemos: Record<string, DemoFunction> = {
   checkbox: (demoState, setDemoState) => {
     // checkboxの初期値を確認
     const checkboxState = demoState.checkbox || [false, false, false]
-    
+
     return (
       <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
         <p className="text-gray-400 text-sm mb-4">Select your preferences:</p>
@@ -42,9 +42,12 @@ export const formDemos: Record<string, DemoFunction> = {
         {[
           { id: 'option1', label: 'Basic - $9/mo', desc: 'Perfect for starters' },
           { id: 'option2', label: 'Pro - $29/mo', desc: 'Most popular choice' },
-          { id: 'option3', label: 'Enterprise - $99/mo', desc: 'For large teams' }
+          { id: 'option3', label: 'Enterprise - $99/mo', desc: 'For large teams' },
         ].map((option) => (
-          <label key={option.id} className="flex items-start gap-3 cursor-pointer p-3 bg-white/5 rounded-lg hover:bg-white/10">
+          <label
+            key={option.id}
+            className="flex items-start gap-3 cursor-pointer p-3 bg-white/5 rounded-lg hover:bg-white/10"
+          >
             <input
               type="radio"
               name="plan"
@@ -78,13 +81,16 @@ export const formDemos: Record<string, DemoFunction> = {
               demoState.switch ? 'bg-cyan-500' : 'bg-gray-600'
             }`}
           >
-            <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
-              demoState.switch ? 'translate-x-7' : 'translate-x-1'
-            }`} />
+            <div
+              className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
+                demoState.switch ? 'translate-x-7' : 'translate-x-1'
+              }`}
+            />
           </button>
         </div>
         <p className="text-center text-gray-400 text-sm">
-          Status: <span className={demoState.switch ? 'text-cyan-400' : 'text-gray-500'}>
+          Status:{' '}
+          <span className={demoState.switch ? 'text-cyan-400' : 'text-gray-500'}>
             {demoState.switch ? 'ON' : 'OFF'}
           </span>
         </p>
@@ -123,7 +129,7 @@ export const formDemos: Record<string, DemoFunction> = {
   select: (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
       <label className="text-gray-400 text-sm mb-2 block">Choose your country:</label>
-      <select 
+      <select
         value={demoState.select}
         onChange={(e) => setDemoState({ ...demoState, select: e.target.value })}
         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
@@ -136,9 +142,7 @@ export const formDemos: Record<string, DemoFunction> = {
         <option value="jp">🇯🇵 Japan</option>
       </select>
       {demoState.select && (
-        <p className="mt-4 text-cyan-400 text-sm">
-          You selected: {demoState.select.toUpperCase()}
-        </p>
+        <p className="mt-4 text-cyan-400 text-sm">You selected: {demoState.select.toUpperCase()}</p>
       )}
     </div>
   ),
@@ -162,8 +166,8 @@ export const formDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 border border-white/10">
       <div className="space-y-6">
         <div className="relative">
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder=" "
             className="w-full px-3 pt-6 pb-2 bg-white/10 border border-white/20 rounded-lg text-white peer"
           />
@@ -172,8 +176,8 @@ export const formDemos: Record<string, DemoFunction> = {
           </label>
         </div>
         <div className="relative">
-          <input 
-            type="password" 
+          <input
+            type="password"
             placeholder=" "
             className="w-full px-3 pt-6 pb-2 bg-white/10 border border-white/20 rounded-lg text-white peer"
           />
@@ -191,24 +195,22 @@ export const formDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
       <div className="space-y-4">
         <div>
-          <input 
-            type="email" 
+          <input
+            type="email"
             placeholder="Enter email"
             className="w-full px-3 py-2 bg-white/10 border border-red-500 rounded-lg text-white"
           />
           <p className="text-red-400 text-xs mt-1">Please enter a valid email address</p>
         </div>
         <div>
-          <input 
-            type="password" 
+          <input
+            type="password"
             placeholder="Password"
             className="w-full px-3 py-2 bg-white/10 border border-green-500 rounded-lg text-white"
           />
           <p className="text-green-400 text-xs mt-1">✓ Strong password</p>
         </div>
-        <button className="w-full px-4 py-2 bg-cyan-500 text-white rounded-lg">
-          Submit
-        </button>
+        <button className="w-full px-4 py-2 bg-cyan-500 text-white rounded-lg">Submit</button>
       </div>
     </div>
   ),
@@ -216,8 +218,8 @@ export const formDemos: Record<string, DemoFunction> = {
   // AUTOCOMPLETE DEMO
   autocomplete: (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
-      <input 
-        type="text" 
+      <input
+        type="text"
         placeholder="Type 'React'..."
         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white"
       />
@@ -225,7 +227,9 @@ export const formDemos: Record<string, DemoFunction> = {
         <div className="px-3 py-2 hover:bg-white/20 text-gray-300 cursor-pointer">React</div>
         <div className="px-3 py-2 hover:bg-white/20 text-gray-300 cursor-pointer">React Native</div>
         <div className="px-3 py-2 hover:bg-white/20 text-gray-300 cursor-pointer">React Router</div>
-        <div className="px-3 py-2 hover:bg-white/20 text-gray-300 cursor-pointer">React Hook Form</div>
+        <div className="px-3 py-2 hover:bg-white/20 text-gray-300 cursor-pointer">
+          React Hook Form
+        </div>
       </div>
       <p className="text-gray-400 text-xs mt-3 text-center">Suggestions appear as you type</p>
     </div>
@@ -237,9 +241,11 @@ export const formDemos: Record<string, DemoFunction> = {
       <div className="flex justify-between mb-6">
         {['Personal', 'Address', 'Payment'].map((step, i) => (
           <div key={i} className="flex items-center">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-              i === 0 ? 'bg-cyan-500 text-white' : 'bg-white/10 text-gray-500'
-            }`}>
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
+                i === 0 ? 'bg-cyan-500 text-white' : 'bg-white/10 text-gray-500'
+              }`}
+            >
               {i + 1}
             </div>
             {i < 2 && <div className="w-16 h-0.5 bg-white/10 mx-2"></div>}
@@ -248,8 +254,8 @@ export const formDemos: Record<string, DemoFunction> = {
       </div>
       <div className="bg-white/5 rounded-lg p-4">
         <h4 className="text-white mb-3">Step 1: Personal Information</h4>
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Full Name"
           className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white"
         />
@@ -276,8 +282,8 @@ export const formDemos: Record<string, DemoFunction> = {
             Node.js <button className="hover:text-white">×</button>
           </span>
         </div>
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Add a tag..."
           className="w-full px-2 py-1 bg-transparent text-white outline-none"
         />
@@ -293,26 +299,14 @@ export const formDemos: Record<string, DemoFunction> = {
         <div>
           <label className="text-gray-400 text-sm">Price Range: $50 - $150</label>
           <div className="relative mt-2">
-            <input 
-              type="range" 
-              min="0" 
-              max="200" 
-              defaultValue="50"
-              className="w-full"
-            />
+            <input type="range" min="0" max="200" defaultValue="50" className="w-full" />
           </div>
         </div>
         <div>
           <label className="text-gray-400 text-sm">Volume: 75%</label>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            defaultValue="75"
-            className="w-full mt-2"
-          />
+          <input type="range" min="0" max="100" defaultValue="75" className="w-full mt-2" />
         </div>
       </div>
     </div>
-  )
+  ),
 }

@@ -18,42 +18,41 @@ export default function TextCaseConverter() {
       case 'lowercase':
         return text.toLowerCase()
       case 'title':
-        return text.replace(/\w\S*/g, (txt) => 
-          txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+        return text.replace(
+          /\w\S*/g,
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
         )
       case 'sentence':
         return text.replace(/(^\w|\.\s+\w)/gm, (letter) => letter.toUpperCase())
       case 'camelCase':
         return text
-          .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+          .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
             index === 0 ? word.toLowerCase() : word.toUpperCase()
           )
           .replace(/\s+/g, '')
       case 'PascalCase':
-        return text
-          .replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase())
-          .replace(/\s+/g, '')
+        return text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase()).replace(/\s+/g, '')
       case 'snake_case':
         return text
           .replace(/\W+/g, ' ')
           .split(/ |\B(?=[A-Z])/)
-          .map(word => word.toLowerCase())
+          .map((word) => word.toLowerCase())
           .join('_')
       case 'kebab-case':
         return text
           .replace(/\W+/g, ' ')
           .split(/ |\B(?=[A-Z])/)
-          .map(word => word.toLowerCase())
+          .map((word) => word.toLowerCase())
           .join('-')
       case 'alternating':
         return text
           .split('')
-          .map((char, i) => i % 2 === 0 ? char.toLowerCase() : char.toUpperCase())
+          .map((char, i) => (i % 2 === 0 ? char.toLowerCase() : char.toUpperCase()))
           .join('')
       case 'inverse':
         return text
           .split('')
-          .map(char => char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase())
+          .map((char) => (char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()))
           .join('')
       default:
         return text
@@ -182,7 +181,7 @@ export default function TextCaseConverter() {
                      transition-colors resize-none font-mono text-sm"
             spellCheck={false}
           />
-          
+
           {/* Input Actions */}
           <div className="flex gap-2 mt-4">
             <button
@@ -200,7 +199,7 @@ export default function TextCaseConverter() {
               onChange={handleFileUpload}
               className="hidden"
             />
-            
+
             <button
               onClick={handleClear}
               className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg 
@@ -222,15 +221,15 @@ export default function TextCaseConverter() {
                 disabled={!outputText}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all 
                           flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                  copied
-                    ? 'bg-green-500 text-white'
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10'
-                }`}
+                            copied
+                              ? 'bg-green-500 text-white'
+                              : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                          }`}
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copied ? 'Copied!' : 'Copy'}
               </button>
-              
+
               <button
                 onClick={handleDownload}
                 disabled={!outputText}
@@ -243,7 +242,7 @@ export default function TextCaseConverter() {
               </button>
             </div>
           </div>
-          
+
           <textarea
             value={outputText}
             readOnly
@@ -263,13 +262,13 @@ export default function TextCaseConverter() {
             <p className="text-gray-300 font-medium">10 Case Types</p>
             <p className="text-gray-400 text-xs mt-1">Programming & text formats</p>
           </div>
-          
+
           <div>
             <Copy className="w-5 h-5 text-cyan-400 mb-2" />
             <p className="text-gray-300 font-medium">Instant Conversion</p>
             <p className="text-gray-400 text-xs mt-1">Real-time as you type</p>
           </div>
-          
+
           <div>
             <Download className="w-5 h-5 text-cyan-400 mb-2" />
             <p className="text-gray-300 font-medium">Export Options</p>

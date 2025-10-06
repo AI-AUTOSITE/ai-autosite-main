@@ -2,9 +2,24 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Download, FileText, Image, Sliders, Eye, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Download,
+  FileText,
+  Image,
+  Sliders,
+  Eye,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 import { saveAs } from 'file-saver'
-import { DEFAULT_SETTINGS, type GeneratorSettings, type Language, type ImageType, type ImageSize } from '../lib/types'
+import {
+  DEFAULT_SETTINGS,
+  type GeneratorSettings,
+  type Language,
+  type ImageType,
+  type ImageSize,
+} from '../lib/types'
 import { generatePDF, generateFilename, estimateFileSize } from '../lib/generators'
 
 export default function TestFileGeneratorClient() {
@@ -65,7 +80,6 @@ export default function TestFileGeneratorClient() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Settings Panel */}
           <div className="space-y-6">
@@ -78,12 +92,12 @@ export default function TestFileGeneratorClient() {
 
               {/* Language Selection */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Language
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Language</label>
                 <select
                   value={settings.language}
-                  onChange={(e) => setSettings({ ...settings, language: e.target.value as Language })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, language: e.target.value as Language })
+                  }
                   className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white [&>option]:bg-gray-800 [&>option]:text-white focus:outline-none focus:border-cyan-500"
                 >
                   <option value="english">English (Lorem Ipsum)</option>
@@ -118,12 +132,12 @@ export default function TestFileGeneratorClient() {
 
               {/* Image Type */}
               <div className="mb-6 relative z-30">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Image Type
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Image Type</label>
                 <select
                   value={settings.imageType}
-                  onChange={(e) => setSettings({ ...settings, imageType: e.target.value as ImageType })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, imageType: e.target.value as ImageType })
+                  }
                   className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white [&>option]:bg-gray-800 [&>option]:text-white focus:outline-none focus:border-purple-500"
                 >
                   <option value="hard">Hard to Process (Complex patterns)</option>
@@ -133,12 +147,12 @@ export default function TestFileGeneratorClient() {
 
               {/* Image Size */}
               <div className="mb-4 relative z-10">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Image Size
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Image Size</label>
                 <select
                   value={settings.imageSize}
-                  onChange={(e) => setSettings({ ...settings, imageSize: e.target.value as ImageSize })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, imageSize: e.target.value as ImageSize })
+                  }
                   className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white [&>option]:bg-gray-800 [&>option]:text-white focus:outline-none focus:border-purple-500"
                 >
                   <option value="small">Small (200x200px)</option>
@@ -158,7 +172,9 @@ export default function TestFileGeneratorClient() {
                   min="0"
                   max="5"
                   value={settings.imagesPerPage}
-                  onChange={(e) => setSettings({ ...settings, imagesPerPage: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, imagesPerPage: Number(e.target.value) })
+                  }
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-purple-500"
                 />
               </div>
@@ -174,7 +190,9 @@ export default function TestFileGeneratorClient() {
               <div>
                 <div className="flex justify-between text-sm text-gray-300 mb-2">
                   <span>Target Size</span>
-                  <span className="text-orange-400 font-medium">{settings.targetSizeMB.toFixed(1)} MB</span>
+                  <span className="text-orange-400 font-medium">
+                    {settings.targetSizeMB.toFixed(1)} MB
+                  </span>
                 </div>
                 <input
                   type="range"
@@ -182,7 +200,9 @@ export default function TestFileGeneratorClient() {
                   max="10"
                   step="0.1"
                   value={settings.targetSizeMB}
-                  onChange={(e) => setSettings({ ...settings, targetSizeMB: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, targetSizeMB: Number(e.target.value) })
+                  }
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-500"
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
@@ -193,7 +213,8 @@ export default function TestFileGeneratorClient() {
 
               <div className="mt-4 p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
                 <p className="text-sm text-gray-300">
-                  Estimated: <span className="text-orange-400 font-medium">{estimatedSize.toFixed(2)} MB</span>
+                  Estimated:{' '}
+                  <span className="text-orange-400 font-medium">{estimatedSize.toFixed(2)} MB</span>
                 </p>
               </div>
             </div>
@@ -225,9 +246,7 @@ export default function TestFileGeneratorClient() {
                 <Eye className="text-cyan-400" size={24} />
                 <h2 className="text-2xl font-bold">Live Preview</h2>
               </div>
-              <div className="text-sm text-gray-400">
-                Updates in real-time
-              </div>
+              <div className="text-sm text-gray-400">Updates in real-time</div>
             </div>
 
             {/* Preview Info */}
@@ -269,7 +288,9 @@ export default function TestFileGeneratorClient() {
                   </span>
 
                   <button
-                    onClick={() => setCurrentPreviewPage(Math.min(totalPages, currentPreviewPage + 1))}
+                    onClick={() =>
+                      setCurrentPreviewPage(Math.min(totalPages, currentPreviewPage + 1))
+                    }
                     disabled={currentPreviewPage === totalPages}
                     className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                   >

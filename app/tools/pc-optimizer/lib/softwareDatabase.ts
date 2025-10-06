@@ -1,14 +1,14 @@
-import { SoftwareCategory } from './types';
+import { SoftwareCategory } from './types'
 
 // Known software patterns for identification
 export interface SoftwarePattern {
-  patterns: RegExp[];
-  displayName: string;
-  category: SoftwareCategory;
-  description: string;
-  isStartup?: boolean;
-  estimatedCacheSize?: number;
-  tips?: string[];
+  patterns: RegExp[]
+  displayName: string
+  category: SoftwareCategory
+  description: string
+  isStartup?: boolean
+  estimatedCacheSize?: number
+  tips?: string[]
 }
 
 export const knownSoftware: SoftwarePattern[] = [
@@ -93,10 +93,7 @@ export const knownSoftware: SoftwarePattern[] = [
     description: 'Gaming Platform',
     isStartup: true,
     estimatedCacheSize: 1024 * 1024 * 2000,
-    tips: [
-      'Clean up game library regularly',
-      'Clear download cache: Settings > Downloads',
-    ],
+    tips: ['Clean up game library regularly', 'Clear download cache: Settings > Downloads'],
   },
   {
     patterns: [/epicgameslauncher\.exe$/i, /epic.*games/i],
@@ -159,10 +156,7 @@ export const knownSoftware: SoftwarePattern[] = [
     description: 'Image Editor',
     isStartup: false,
     estimatedCacheSize: 1024 * 1024 * 2000,
-    tips: [
-      'Check scratch disk settings',
-      'Cache size: Edit > Preferences > Performance',
-    ],
+    tips: ['Check scratch disk settings', 'Cache size: Edit > Preferences > Performance'],
   },
   {
     patterns: [/illustrator\.exe$/i, /illustrator/i],
@@ -329,33 +323,33 @@ export const knownSoftware: SoftwarePattern[] = [
     isStartup: true,
     estimatedCacheSize: 0,
   },
-];
+]
 
 // Identify software from filename
 export function identifySoftware(fileName: string, path: string): SoftwarePattern | null {
-  const fullPath = `${path}\\${fileName}`.toLowerCase();
-  
+  const fullPath = `${path}\\${fileName}`.toLowerCase()
+
   for (const software of knownSoftware) {
     for (const pattern of software.patterns) {
       if (pattern.test(fileName) || pattern.test(fullPath)) {
-        return software;
+        return software
       }
     }
   }
-  
-  return null;
+
+  return null
 }
 
 // Get category from path if software not identified
 export function getCategoryFromPath(path: string): SoftwareCategory {
-  const lowerPath = path.toLowerCase();
-  
-  if (lowerPath.includes('game') || lowerPath.includes('steam')) return 'gaming';
-  if (lowerPath.includes('adobe') || lowerPath.includes('media')) return 'media';
-  if (lowerPath.includes('microsoft office')) return 'productivity';
-  if (lowerPath.includes('development') || lowerPath.includes('jetbrains')) return 'development';
-  if (lowerPath.includes('security') || lowerPath.includes('antivirus')) return 'security';
-  if (lowerPath.includes('system32') || lowerPath.includes('windows')) return 'system';
-  
-  return 'unknown';
+  const lowerPath = path.toLowerCase()
+
+  if (lowerPath.includes('game') || lowerPath.includes('steam')) return 'gaming'
+  if (lowerPath.includes('adobe') || lowerPath.includes('media')) return 'media'
+  if (lowerPath.includes('microsoft office')) return 'productivity'
+  if (lowerPath.includes('development') || lowerPath.includes('jetbrains')) return 'development'
+  if (lowerPath.includes('security') || lowerPath.includes('antivirus')) return 'security'
+  if (lowerPath.includes('system32') || lowerPath.includes('windows')) return 'system'
+
+  return 'unknown'
 }

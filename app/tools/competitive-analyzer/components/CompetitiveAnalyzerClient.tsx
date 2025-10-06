@@ -3,9 +3,18 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { 
-  Search, TrendingUp, Lightbulb, Download, Copy, Check,
-  Shield, Zap, ArrowRight, AlertCircle, Loader2
+import {
+  Search,
+  TrendingUp,
+  Lightbulb,
+  Download,
+  Copy,
+  Check,
+  Shield,
+  Zap,
+  ArrowRight,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react'
 
 interface AnalysisResult {
@@ -48,37 +57,38 @@ export default function CompetitiveAnalyzerClient() {
 
     try {
       // Simulated API call (replace with actual API)
-      await new Promise(resolve => setTimeout(resolve, 3000))
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+
       // Mock result (replace with actual API response)
       const mockResult: AnalysisResult = {
         competitors: [
           {
             name: 'Competitor A',
             strengths: ['Market leader', 'Strong brand', 'Good UX'],
-            weaknesses: ['Expensive', 'Limited features', 'Poor support']
+            weaknesses: ['Expensive', 'Limited features', 'Poor support'],
           },
           {
             name: 'Competitor B',
             strengths: ['Affordable', 'Many integrations', 'Fast'],
-            weaknesses: ['Complex UI', 'Limited docs', 'No mobile app']
-          }
+            weaknesses: ['Complex UI', 'Limited docs', 'No mobile app'],
+          },
         ],
         marketGaps: [
           'No solution for small businesses under 10 employees',
           'Lack of AI-powered automation in this space',
-          'Missing localization for Asian markets'
+          'Missing localization for Asian markets',
         ],
         productIdeas: [
           'Freemium model with AI assistant',
           'Mobile-first approach with offline mode',
-          'Vertical solution for specific industry'
+          'Vertical solution for specific industry',
         ],
-        summary: 'The market shows opportunity for a streamlined, affordable solution targeting SMBs with AI-powered features.'
+        summary:
+          'The market shows opportunity for a streamlined, affordable solution targeting SMBs with AI-powered features.',
       }
-      
+
       setResult(mockResult)
-      setDailyUsage(prev => prev + 1)
+      setDailyUsage((prev) => prev + 1)
     } catch (err) {
       setError('Analysis failed. Please try again.')
     } finally {
@@ -89,7 +99,7 @@ export default function CompetitiveAnalyzerClient() {
   // Copy results to clipboard
   const handleCopy = useCallback(() => {
     if (!result) return
-    
+
     const text = `
 COMPETITIVE ANALYSIS REPORT
 
@@ -98,11 +108,15 @@ Category: ${category}
 Target Market: ${targetMarket}
 
 COMPETITORS:
-${result.competitors.map(c => `
+${result.competitors
+  .map(
+    (c) => `
 ${c.name}
 Strengths: ${c.strengths.join(', ')}
 Weaknesses: ${c.weaknesses.join(', ')}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 MARKET GAPS:
 ${result.marketGaps.map((g, i) => `${i + 1}. ${g}`).join('\n')}
@@ -113,7 +127,7 @@ ${result.productIdeas.map((idea, i) => `${i + 1}. ${idea}`).join('\n')}
 SUMMARY:
 ${result.summary}
     `.trim()
-    
+
     navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -122,17 +136,17 @@ ${result.summary}
   // Download as JSON
   const handleDownload = useCallback(() => {
     if (!result) return
-    
+
     const data = {
       metadata: {
         product: productName,
         category,
         targetMarket,
-        analyzedAt: new Date().toISOString()
+        analyzedAt: new Date().toISOString(),
       },
-      analysis: result
+      analysis: result,
     }
-    
+
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -179,7 +193,6 @@ ${result.summary}
 
       {/* Main Card */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">Competitive Analysis</h2>
@@ -188,7 +201,6 @@ ${result.summary}
 
         {/* Input/Output Grid */}
         <div className="grid md:grid-cols-2 gap-6">
-          
           {/* Input Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-cyan-500/20">
             <div className="flex items-center gap-2 mb-4">
@@ -205,9 +217,7 @@ ${result.summary}
             <div className="space-y-4">
               {/* Product Name */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">
-                  Product Name *
-                </label>
+                <label className="block text-xs text-gray-400 mb-1">Product Name *</label>
                 <input
                   type="text"
                   value={productName}
@@ -219,9 +229,7 @@ ${result.summary}
 
               {/* Category */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">
-                  Category
-                </label>
+                <label className="block text-xs text-gray-400 mb-1">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -240,9 +248,7 @@ ${result.summary}
 
               {/* Target Market */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">
-                  Target Market *
-                </label>
+                <label className="block text-xs text-gray-400 mb-1">Target Market *</label>
                 <input
                   type="text"
                   value={targetMarket}
@@ -254,9 +260,7 @@ ${result.summary}
 
               {/* Key Features */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">
-                  Key Features (optional)
-                </label>
+                <label className="block text-xs text-gray-400 mb-1">Key Features (optional)</label>
                 <textarea
                   value={features}
                   onChange={(e) => setFeatures(e.target.value)}

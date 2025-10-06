@@ -1,24 +1,24 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Flame, 
-  BookOpen, 
-  Wrench, 
-  Code2, 
-  Copy, 
-  Check, 
-  Sparkles, 
+import {
+  Flame,
+  BookOpen,
+  Wrench,
+  Code2,
+  Copy,
+  Check,
+  Sparkles,
   AlertCircle,
   Download,
   FileCode,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react'
-import { 
-  validateInput, 
-  checkSubmissionLimit, 
+import {
+  validateInput,
+  checkSubmissionLimit,
   incrementSubmissionCount,
-  detectLanguage
+  detectLanguage,
 } from '../lib/submission-guard'
 import { showToast } from '../lib/toast'
 
@@ -62,7 +62,7 @@ export default function CodeRoasterClient() {
       const used = data[todayKey] || 0
       setAttemptsLeft(Math.max(0, 3 - used))
     }
-    
+
     checkAttempts()
     const interval = setInterval(checkAttempts, 60000)
     return () => clearInterval(interval)
@@ -86,7 +86,7 @@ export default function CodeRoasterClient() {
     }
 
     if (!checkSubmissionLimit()) {
-      showToast("Daily limit reached! Come back tomorrow for 3 more attempts.")
+      showToast('Daily limit reached! Come back tomorrow for 3 more attempts.')
       return
     }
 
@@ -94,18 +94,18 @@ export default function CodeRoasterClient() {
     setActiveMode(mode)
     setOutput('Processing your code...')
     incrementSubmissionCount()
-    
-    setAttemptsLeft(prev => Math.max(0, prev - 1))
+
+    setAttemptsLeft((prev) => Math.max(0, prev - 1))
 
     try {
       const response = await fetch('/api/code-roaster', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, mode })
+        body: JSON.stringify({ code, mode }),
       })
 
       const data = await response.json()
-      
+
       if (data.error) {
         setOutput(`Error: ${data.error}`)
         showToast(data.error)
@@ -135,7 +135,7 @@ export default function CodeRoasterClient() {
 
   const handleDownload = () => {
     if (!output) return
-    
+
     const timestamp = new Date().toISOString().split('T')[0]
     const modeText = activeMode || 'result'
     const blob = new Blob([output], { type: 'text/plain' })
@@ -241,10 +241,10 @@ export default function CodeRoasterClient() {
               disabled={isLoading || attemptsLeft === 0}
               className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
                         disabled:opacity-50 disabled:cursor-not-allowed ${
-                activeMode === 'roast'
-                  ? 'bg-gradient-to-r from-orange-600 to-red-600 scale-95 ring-4 ring-orange-400/50'
-                  : 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 hover:scale-105'
-              }`}
+                          activeMode === 'roast'
+                            ? 'bg-gradient-to-r from-orange-600 to-red-600 scale-95 ring-4 ring-orange-400/50'
+                            : 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 hover:scale-105'
+                        }`}
             >
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2">
@@ -262,10 +262,10 @@ export default function CodeRoasterClient() {
               disabled={isLoading || attemptsLeft === 0}
               className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
                         disabled:opacity-50 disabled:cursor-not-allowed ${
-                activeMode === 'explain'
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-95 ring-4 ring-blue-400/50'
-                  : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105'
-              }`}
+                          activeMode === 'explain'
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-95 ring-4 ring-blue-400/50'
+                            : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105'
+                        }`}
             >
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2">
@@ -283,10 +283,10 @@ export default function CodeRoasterClient() {
               disabled={isLoading || attemptsLeft === 0}
               className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
                         disabled:opacity-50 disabled:cursor-not-allowed ${
-                activeMode === 'fix'
-                  ? 'bg-gradient-to-r from-green-600 to-teal-600 scale-95 ring-4 ring-green-400/50'
-                  : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 hover:scale-105'
-              }`}
+                          activeMode === 'fix'
+                            ? 'bg-gradient-to-r from-green-600 to-teal-600 scale-95 ring-4 ring-green-400/50'
+                            : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 hover:scale-105'
+                        }`}
             >
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2">
@@ -313,70 +313,78 @@ export default function CodeRoasterClient() {
         </div>
 
         {/* Output Panel */}
-{/* Output Panel */}
-<div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-  <div className="flex items-center justify-between mb-4">
-    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-      <span className="text-2xl">🤖</span>
-      AI Response
-    </h3>
-    <div className="flex gap-2">
-      <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
-      <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse" 
-           style={{ animationDelay: '0.3s' }} />
-      <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" 
-           style={{ animationDelay: '0.6s' }} />
-    </div>
-  </div>
+        {/* Output Panel */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-2xl">🤖</span>
+              AI Response
+            </h3>
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
+              <div
+                className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"
+                style={{ animationDelay: '0.3s' }}
+              />
+              <div
+                className="w-3 h-3 rounded-full bg-green-500 animate-pulse"
+                style={{ animationDelay: '0.6s' }}
+              />
+            </div>
+          </div>
 
-  {/* アクションボタン（テキストエリアの上） */}
-  {output && !isLoading && (
-    <div className="mb-3 flex gap-2">
-      <button
-        onClick={handleDownload}
-        className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50"
-      >
-        <Download className="w-3 h-3 inline mr-1" />
-        Download
-      </button>
-      <button
-        onClick={handleCopy}
-        className={`px-3 py-1.5 text-xs rounded-lg transition-all border ${
-          copied
-            ? 'bg-green-500/20 text-green-300 border-green-400/50'
-            : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
-        }`}
-      >
-        {copied ? (
-          <>
-            <Check className="w-3 h-3 inline mr-1" />
-            Copied
-          </>
-        ) : (
-          <>
-            <Copy className="w-3 h-3 inline mr-1" />
-            Copy
-          </>
-        )}
-      </button>
-    </div>
-  )}
+          {/* アクションボタン（テキストエリアの上） */}
+          {output && !isLoading && (
+            <div className="mb-3 flex gap-2">
+              <button
+                onClick={handleDownload}
+                className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50"
+              >
+                <Download className="w-3 h-3 inline mr-1" />
+                Download
+              </button>
+              <button
+                onClick={handleCopy}
+                className={`px-3 py-1.5 text-xs rounded-lg transition-all border ${
+                  copied
+                    ? 'bg-green-500/20 text-green-300 border-green-400/50'
+                    : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
+                }`}
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 inline mr-1" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 inline mr-1" />
+                    Copy
+                  </>
+                )}
+              </button>
+            </div>
+          )}
 
-  {/* テキストエリア */}
-  <div className="relative">
-    <div className="w-full h-[400px] p-4 rounded-xl bg-black/40 backdrop-blur-sm 
-                  border-2 border-orange-500/30 text-white font-mono text-sm overflow-auto whitespace-pre-wrap">
-      {isLoading ? (
-        <div className="flex items-center gap-2 text-orange-400">
-          <Sparkles className="w-5 h-5 animate-spin" />
-          <span className="animate-pulse">AI is thinking...</span>
+          {/* テキストエリア */}
+          <div className="relative">
+            <div
+              className="w-full h-[400px] p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+                  border-2 border-orange-500/30 text-white font-mono text-sm overflow-auto whitespace-pre-wrap"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2 text-orange-400">
+                  <Sparkles className="w-5 h-5 animate-spin" />
+                  <span className="animate-pulse">AI is thinking...</span>
+                </div>
+              ) : (
+                output || (
+                  <span className="text-gray-400">Your AI feedback will appear here...</span>
+                )
+              )}
+            </div>
+          </div>
         </div>
-      ) : output || (
-        <span className="text-gray-400">Your AI feedback will appear here...</span>
-      )}
-    </div>
-  </div>
-</div>
       </div>
 
       {/* Quick Tip */}

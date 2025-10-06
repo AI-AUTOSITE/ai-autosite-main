@@ -1,6 +1,7 @@
 # YouTube Thumbnail Downloader Tool - Status File v1.0
 
 ## 📌 Tool Overview
+
 **Name:** YouTube Thumbnail Downloader
 **URL:** /tools/youtube-thumbnail
 **Category:** quick-tools
@@ -8,6 +9,7 @@
 **Language Level:** Elementary English (age 10-12)
 
 ## 🎯 Core Features (MVP)
+
 1. **Paste URL** - YouTube video link
 2. **Get Thumbnails** - All quality versions
 3. **Preview** - Show all sizes
@@ -15,13 +17,15 @@
 5. **Copy URL** - Direct image link
 
 ## 📁 File Structure
+
 app/tools/youtube-thumbnail/
-├── page.tsx                    # Metadata only
+├── page.tsx # Metadata only
 ├── components/
-│   └── YoutubeThumbnailClient.tsx # Main component
-└── guide.tsx                   # Help guide
+│ └── YoutubeThumbnailClient.tsx # Main component
+└── guide.tsx # Help guide
 
 ## 🔧 Technical Requirements
+
 - **No API needed** - URL parsing only
 - **Quality options:** maxres, hq, mq, sd, default
 - **Formats:** JPG images
@@ -29,11 +33,13 @@ app/tools/youtube-thumbnail/
 - **URL patterns:** youtube.com, youtu.be, shorts
 
 ## 💭 User Flow (3-Second Rule)
+
 1. **Paste URL** → YouTube link
 2. **See thumbnails** → All sizes
 3. **Download** → Save image
 
 ## 🎨 UI Design
+
 [YouTube Thumbnail Downloader]
 [URL input: "Paste YouTube URL..."]
 [Get Thumbnails button]
@@ -44,6 +50,7 @@ Thumbnails:
 [Normal (480x360)] [Download]
 
 ## 📝 Simple English Copy
+
 Title: "YouTube Thumbnail Downloader"
 Subtitle: "Save video thumbnails"
 Placeholder: "Paste YouTube URL..."
@@ -51,6 +58,7 @@ Button: "Get Thumbnails"
 Quality: "HD | SD | Normal"
 
 ## 🚫 What NOT to Include
+
 - YouTube API
 - Video downloading
 - Private videos
@@ -59,6 +67,7 @@ Quality: "HD | SD | Normal"
 - Video details
 
 ## 📊 Success Metrics
+
 - Parse URL: Instant
 - Show thumbnails: < 1s
 - Download: Direct

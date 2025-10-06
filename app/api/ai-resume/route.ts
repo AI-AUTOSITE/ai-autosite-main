@@ -1,7 +1,7 @@
 // app/api/ai-resume/route.ts
 import Anthropic from '@anthropic-ai/sdk'
 
-const anthropic = process.env.ANTHROPIC_API_KEY 
+const anthropic = process.env.ANTHROPIC_API_KEY
   ? new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     })
@@ -56,24 +56,24 @@ Format both documents with clear headers and sections. Make them ready to use im
           messages: [
             {
               role: 'user',
-              content: prompt
-            }
-          ]
+              content: prompt,
+            },
+          ],
         })
 
-        const result = response.content[0].type === 'text' 
-          ? response.content[0].text 
-          : 'Failed to generate content'
+        const result =
+          response.content[0].type === 'text'
+            ? response.content[0].text
+            : 'Failed to generate content'
 
-        return Response.json({ 
-          result, 
+        return Response.json({
+          result,
           aiPowered: true,
           tokens: {
             input: response.usage.input_tokens,
-            output: response.usage.output_tokens
-          }
+            output: response.usage.output_tokens,
+          },
         })
-        
       } catch (aiError) {
         console.error('Claude API error:', aiError)
         // Fallback to template
@@ -100,7 +100,10 @@ ${experience}
 
 CORE COMPETENCIES
 ────────────────────────────────────────────────────
-${skills.split(',').map(skill => `• ${skill.trim()}`).join('\n')}
+${skills
+  .split(',')
+  .map((skill) => `• ${skill.trim()}`)
+  .join('\n')}
 
 ╚═══════════════════════════════════════════════════╝
 `
@@ -112,9 +115,16 @@ Dear Hiring Manager,
 
 I am writing to express my strong interest in the ${jobTitle} position at your organization. With my comprehensive experience and proven expertise in ${skills.split(',').slice(0, 3).join(', ')}, I am confident in my ability to contribute effectively to your team.
 
-${coverDraft || `Throughout my career, I have demonstrated exceptional capabilities in delivering results. My experience includes:
+${
+  coverDraft ||
+  `Throughout my career, I have demonstrated exceptional capabilities in delivering results. My experience includes:
 
-${experience.split('\n').slice(0, 3).map(exp => `• ${exp.trim()}`).join('\n')}`}
+${experience
+  .split('\n')
+  .slice(0, 3)
+  .map((exp) => `• ${exp.trim()}`)
+  .join('\n')}`
+}
 
 I would welcome the opportunity to discuss how my background and skills can contribute to your organization's success.
 
@@ -135,7 +145,6 @@ ${resume}
 ${coverLetter}`
 
     return Response.json({ result, aiPowered: false })
-    
   } catch (error) {
     console.error('Error generating documents:', error)
     return Response.json({ error: 'Failed to generate documents' }, { status: 500 })
@@ -144,10 +153,10 @@ ${coverLetter}`
 
 export async function GET() {
   const hasAI = !!process.env.ANTHROPIC_API_KEY
-  return Response.json({ 
-    ok: true, 
+  return Response.json({
+    ok: true,
     service: 'AI Resume Generator API',
     aiEnabled: hasAI,
-    model: hasAI ? 'claude-3-5-haiku' : 'template-based'
+    model: hasAI ? 'claude-3-5-haiku' : 'template-based',
   })
-} 
+}

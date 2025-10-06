@@ -4,8 +4,10 @@ import { ArrowLeft, Youtube, Download, Image, Camera } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'YouTube Thumbnail Downloader - Get Video Thumbnails HD | AI AutoSite',
-  description: 'Download YouTube thumbnails in HD quality. Get video thumbnails in all sizes. Free YouTube thumbnail grabber tool.',
-  keywords: 'youtube thumbnail downloader, youtube thumbnail grabber, download youtube thumbnail, video thumbnail download, youtube thumbnail hd',
+  description:
+    'Download YouTube thumbnails in HD quality. Get video thumbnails in all sizes. Free YouTube thumbnail grabber tool.',
+  keywords:
+    'youtube thumbnail downloader, youtube thumbnail grabber, download youtube thumbnail, video thumbnail download, youtube thumbnail hd',
   openGraph: {
     title: 'YouTube Thumbnail Downloader Guide',
     description: 'Download any YouTube video thumbnail in HD quality',
@@ -20,8 +22,8 @@ export default function YoutubeThumbnailGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-red-500 hover:text-red-400 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -30,9 +32,7 @@ export default function YoutubeThumbnailGuidePage() {
 
       <header className="mb-12">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-          <span className="px-3 py-1 bg-red-500/20 text-red-500 rounded-full">
-            Creative Tools
-          </span>
+          <span className="px-3 py-1 bg-red-500/20 text-red-500 rounded-full">Creative Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
           <span>•</span>
@@ -42,8 +42,8 @@ export default function YoutubeThumbnailGuidePage() {
           YouTube Thumbnail Downloader Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Download YouTube video thumbnails in HD quality. Perfect for creators, 
-          researchers, and content curators.
+          Download YouTube video thumbnails in HD quality. Perfect for creators, researchers, and
+          content curators.
         </p>
       </header>
 
@@ -55,23 +55,17 @@ export default function YoutubeThumbnailGuidePage() {
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Camera className="w-8 h-8 text-red-500 mb-2" />
               <h3 className="text-white font-semibold mb-2">Content Analysis</h3>
-              <p className="text-gray-400 text-sm">
-                Study successful thumbnail designs
-              </p>
+              <p className="text-gray-400 text-sm">Study successful thumbnail designs</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Image className="w-8 h-8 text-blue-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Inspiration</h3>
-              <p className="text-gray-400 text-sm">
-                Get ideas for your own thumbnails
-              </p>
+              <p className="text-gray-400 text-sm">Get ideas for your own thumbnails</p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Download className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Archive</h3>
-              <p className="text-gray-400 text-sm">
-                Save thumbnails for reference
-              </p>
+              <p className="text-gray-400 text-sm">Save thumbnails for reference</p>
             </div>
           </div>
         </div>
@@ -126,27 +120,19 @@ export default function YoutubeThumbnailGuidePage() {
             <ol className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-red-500 font-bold">1.</span>
-                <p className="text-gray-300">
-                  Copy the YouTube video URL from your browser
-                </p>
+                <p className="text-gray-300">Copy the YouTube video URL from your browser</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500 font-bold">2.</span>
-                <p className="text-gray-300">
-                  Paste it into the thumbnail downloader tool
-                </p>
+                <p className="text-gray-300">Paste it into the thumbnail downloader tool</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500 font-bold">3.</span>
-                <p className="text-gray-300">
-                  Select your preferred quality/size
-                </p>
+                <p className="text-gray-300">Select your preferred quality/size</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500 font-bold">4.</span>
-                <p className="text-gray-300">
-                  Click download to save the thumbnail
-                </p>
+                <p className="text-gray-300">Click download to save the thumbnail</p>
               </li>
             </ol>
           </div>
@@ -159,27 +145,19 @@ export default function YoutubeThumbnailGuidePage() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-red-500">🎨</span>
-                <p className="text-gray-300">
-                  Use high contrast colors that stand out
-                </p>
+                <p className="text-gray-300">Use high contrast colors that stand out</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500">📸</span>
-                <p className="text-gray-300">
-                  Include faces with clear expressions
-                </p>
+                <p className="text-gray-300">Include faces with clear expressions</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500">📝</span>
-                <p className="text-gray-300">
-                  Add bold, readable text (max 3-5 words)
-                </p>
+                <p className="text-gray-300">Add bold, readable text (max 3-5 words)</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-500">🎯</span>
-                <p className="text-gray-300">
-                  Maintain consistent branding across videos
-                </p>
+                <p className="text-gray-300">Maintain consistent branding across videos</p>
               </li>
             </ul>
           </div>
@@ -188,14 +166,12 @@ export default function YoutubeThumbnailGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Download YouTube Thumbnails
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Download YouTube Thumbnails</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free YouTube thumbnail downloader. Get any video thumbnail in HD quality.
         </p>
-        <Link 
-          href="/tools/youtube-thumbnail" 
+        <Link
+          href="/tools/youtube-thumbnail"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Youtube className="mr-2" size={20} />

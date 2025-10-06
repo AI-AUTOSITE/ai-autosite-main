@@ -7,10 +7,7 @@ interface VirtualGridOptions {
   gap: number
 }
 
-export function useVirtualGrid<T>(
-  items: T[],
-  options: VirtualGridOptions
-) {
+export function useVirtualGrid<T>(items: T[], options: VirtualGridOptions) {
   const { itemHeight, itemsPerRow, gap } = options
   const containerRef = useRef<HTMLDivElement>(null)
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 })
@@ -21,14 +18,14 @@ export function useVirtualGrid<T>(
 
     const scrollTop = container.scrollTop
     const containerHeight = container.clientHeight
-    
+
     const rowHeight = itemHeight + gap
     const startRow = Math.floor(scrollTop / rowHeight)
     const endRow = Math.ceil((scrollTop + containerHeight) / rowHeight)
-    
+
     const start = startRow * itemsPerRow
     const end = Math.min(endRow * itemsPerRow, items.length)
-    
+
     setVisibleRange({ start, end })
   }, [itemHeight, itemsPerRow, gap, items.length])
 
@@ -50,6 +47,6 @@ export function useVirtualGrid<T>(
     containerRef,
     visibleItems: items.slice(visibleRange.start, visibleRange.end),
     totalHeight,
-    offsetY
+    offsetY,
   }
 }

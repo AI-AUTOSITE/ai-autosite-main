@@ -1,7 +1,6 @@
-
 'use client'
 import Link from 'next/link'
-import { ChevronRight, Home } from 'lucide-react'  // HelpCircle削除
+import { ChevronRight, Home } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { usePathname } from 'next/navigation'
@@ -17,7 +16,7 @@ const getToolTitle = (pathname: string) => {
     '/tools/text-case': 'Text Case Converter',
     '/tools/json-format': 'JSON Formatter',
     '/tools/image-grid-maker': 'Image Grid Maker',
-    '/tools/image-splitter': 'Image Splitter', 
+    '/tools/image-splitter': 'Image Splitter',
     '/tools/json-csv': 'JSON to CSV',
     '/tools/age-calculator': 'Age Calculator',
     '/tools/japanese-ocr': 'Japanese OCR',
@@ -59,11 +58,7 @@ const getToolTitle = (pathname: string) => {
   return toolMap[pathname] || ''
 }
 
-export default function ToolsLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [toolTitle, setToolTitle] = useState('')
 
@@ -76,36 +71,26 @@ export default function ToolsLayout({
     <>
       {/* Header */}
       <Header />
-      
+
       {/* Main wrapper with background */}
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
-        {/* Tool-specific header (breadcrumb + title) - ヘルプアイコン削除 */}
+        {/* Tool-specific header (breadcrumb + title) */}
         {pathname !== '/tools' && toolTitle && (
           <nav className="container mx-auto px-4 pt-6 pb-4">
             <div className="relative flex items-center">
-              {/* Breadcrumb - left aligned */}
-              <div className="absolute left-0 text-xs text-gray-500">
-                <Link 
-                  href="/" 
-                  className="hover:text-gray-300 transition-colors"
-                >
+              {/* Breadcrumb - hidden on mobile */}
+              <div className="hidden md:block absolute left-0 text-xs text-gray-500">
+                <Link href="/" className="hover:text-gray-300 transition-colors">
                   Home
                 </Link>
                 <span className="mx-2">›</span>
-                <Link 
-                  href="/tools" 
-                  className="hover:text-gray-300 transition-colors"
-                >
+                <Link href="/tools" className="hover:text-gray-300 transition-colors">
                   Tools
                 </Link>
               </div>
-              
-              {/* Tool title - center */}
-              <h1 className="text-xl font-medium text-white mx-auto">
-                {toolTitle}
-              </h1>
 
-              {/* ヘルプアイコン削除 */}
+              {/* Tool title - center on desktop, left on mobile */}
+              <h1 className="text-xl font-medium text-white md:mx-auto">{toolTitle}</h1>
             </div>
           </nav>
         )}
@@ -115,8 +100,8 @@ export default function ToolsLayout({
           <nav className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
             <div className="container mx-auto px-4 py-3">
               <div className="flex items-center gap-2 text-sm">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
                 >
                   <Home className="w-4 h-4" />
@@ -129,8 +114,6 @@ export default function ToolsLayout({
           </nav>
         )}
 
-        {/* ガイドモーダル関連のコード削除 */}
-
         {/* Background effects */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -138,9 +121,7 @@ export default function ToolsLayout({
         </div>
 
         {/* Main content */}
-        <main className="relative z-10">
-          {children}
-        </main>
+        <main className="relative z-10">{children}</main>
       </div>
 
       {/* Footer */}

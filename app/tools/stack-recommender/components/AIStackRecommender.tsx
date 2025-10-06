@@ -1,124 +1,127 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Zap, Code, Database, Cloud, DollarSign, Clock, Rocket, Copy, Check } from 'lucide-react';
+import { useState } from 'react'
+import { Zap, Code, Database, Cloud, DollarSign, Clock, Rocket, Copy, Check } from 'lucide-react'
 
 interface Recommendation {
-  primaryStack: string[];
-  database: string[];
-  hosting: string[];
-  additionalTools: string[];
-  estimatedCost: string;
-  learningTime: string;
-  setupCommands?: string[];
+  primaryStack: string[]
+  database: string[]
+  hosting: string[]
+  additionalTools: string[]
+  estimatedCost: string
+  learningTime: string
+  setupCommands?: string[]
 }
 
 const AIStackRecommender = () => {
-  const [projectDescription, setProjectDescription] = useState('');
-  const [budget, setBudget] = useState('under-20');
-  const [timeline, setTimeline] = useState('1-week');
-  const [experience, setExperience] = useState('beginner');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [projectDescription, setProjectDescription] = useState('')
+  const [budget, setBudget] = useState('under-20')
+  const [timeline, setTimeline] = useState('1-week')
+  const [experience, setExperience] = useState('beginner')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
+  const [copied, setCopied] = useState(false)
 
   // Project templates for quick start
   const projectTemplates = [
     {
-      title: "Voice to Text",
-      description: "I want to build an app that converts audio files to text with editing features",
-      icon: <Zap className="w-4 h-4" />
+      title: 'Voice to Text',
+      description: 'I want to build an app that converts audio files to text with editing features',
+      icon: <Zap className="w-4 h-4" />,
     },
     {
-      title: "AI Chat App", 
-      description: "Create a chatbot with AI responses and conversation history",
-      icon: <Zap className="w-4 h-4" />
+      title: 'AI Chat App',
+      description: 'Create a chatbot with AI responses and conversation history',
+      icon: <Zap className="w-4 h-4" />,
     },
     {
-      title: "E-commerce",
-      description: "Build an online store with payment processing and inventory management",
-      icon: <Zap className="w-4 h-4" />
+      title: 'E-commerce',
+      description: 'Build an online store with payment processing and inventory management',
+      icon: <Zap className="w-4 h-4" />,
     },
     {
-      title: "Dashboard",
-      description: "Create a data visualization dashboard with user authentication",
-      icon: <Zap className="w-4 h-4" />
+      title: 'Dashboard',
+      description: 'Create a data visualization dashboard with user authentication',
+      icon: <Zap className="w-4 h-4" />,
     },
     {
-      title: "Blog/Portfolio",
-      description: "Build a personal website with blog posts and project showcase",
-      icon: <Zap className="w-4 h-4" />
+      title: 'Blog/Portfolio',
+      description: 'Build a personal website with blog posts and project showcase',
+      icon: <Zap className="w-4 h-4" />,
     },
     {
-      title: "Mobile PWA",
-      description: "Create a mobile-first progressive web application",
-      icon: <Zap className="w-4 h-4" />
-    }
-  ];
+      title: 'Mobile PWA',
+      description: 'Create a mobile-first progressive web application',
+      icon: <Zap className="w-4 h-4" />,
+    },
+  ]
 
   const handleAnalyze = async () => {
-    if (!projectDescription) return;
-    
-    setIsAnalyzing(true);
-    
+    if (!projectDescription) return
+
+    setIsAnalyzing(true)
+
     // Mock AI analysis - Replace with actual API call
     setTimeout(() => {
-      const isEcommerce = projectDescription.toLowerCase().includes('store') || 
-                         projectDescription.toLowerCase().includes('commerce');
-      const isAI = projectDescription.toLowerCase().includes('ai') || 
-                   projectDescription.toLowerCase().includes('chat');
-      const isBlog = projectDescription.toLowerCase().includes('blog') || 
-                     projectDescription.toLowerCase().includes('portfolio');
-      
+      const isEcommerce =
+        projectDescription.toLowerCase().includes('store') ||
+        projectDescription.toLowerCase().includes('commerce')
+      const isAI =
+        projectDescription.toLowerCase().includes('ai') ||
+        projectDescription.toLowerCase().includes('chat')
+      const isBlog =
+        projectDescription.toLowerCase().includes('blog') ||
+        projectDescription.toLowerCase().includes('portfolio')
+
       let stack: Recommendation = {
-        primaryStack: ["Next.js 14", "TypeScript", "Tailwind CSS"],
-        database: ["Supabase"],
-        hosting: ["Vercel"],
+        primaryStack: ['Next.js 14', 'TypeScript', 'Tailwind CSS'],
+        database: ['Supabase'],
+        hosting: ['Vercel'],
         additionalTools: [],
-        estimatedCost: "$0-20/month",
-        learningTime: "2-3 weeks",
+        estimatedCost: '$0-20/month',
+        learningTime: '2-3 weeks',
         setupCommands: [
-          "npx create-next-app@latest my-app --typescript --tailwind --app",
-          "cd my-app",
-          "npm install @supabase/supabase-js",
-          "npm run dev"
-        ]
-      };
+          'npx create-next-app@latest my-app --typescript --tailwind --app',
+          'cd my-app',
+          'npm install @supabase/supabase-js',
+          'npm run dev',
+        ],
+      }
 
       // Customize based on project type
       if (isEcommerce) {
-        stack.additionalTools = ["Stripe", "Resend"];
-        stack.estimatedCost = "$25-40/month";
+        stack.additionalTools = ['Stripe', 'Resend']
+        stack.estimatedCost = '$25-40/month'
       } else if (isAI) {
-        stack.additionalTools = ["OpenAI API", "Pinecone"];
-        stack.estimatedCost = "$20-50/month (usage-based)";
+        stack.additionalTools = ['OpenAI API', 'Pinecone']
+        stack.estimatedCost = '$20-50/month (usage-based)'
       } else if (isBlog) {
-        stack.primaryStack = ["Astro", "Markdown", "Tailwind CSS"];
-        stack.database = [];
-        stack.hosting = ["Cloudflare Pages"];
-        stack.estimatedCost = "$0/month";
-        stack.learningTime = "1 week";
+        stack.primaryStack = ['Astro', 'Markdown', 'Tailwind CSS']
+        stack.database = []
+        stack.hosting = ['Cloudflare Pages']
+        stack.estimatedCost = '$0/month'
+        stack.learningTime = '1 week'
       }
 
       // Adjust for experience level
       if (experience === 'advanced') {
-        stack.learningTime = "3-5 days";
+        stack.learningTime = '3-5 days'
       } else if (experience === 'intermediate') {
-        stack.learningTime = "1-2 weeks";
+        stack.learningTime = '1-2 weeks'
       }
 
-      setRecommendation(stack);
-      setIsAnalyzing(false);
-    }, 2000);
-  };
+      setRecommendation(stack)
+      setIsAnalyzing(false)
+    }, 2000)
+  }
 
   const copySetupCommands = () => {
     if (recommendation?.setupCommands) {
-      navigator.clipboard.writeText(recommendation.setupCommands.join('\n'));
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      navigator.clipboard.writeText(recommendation.setupCommands.join('\n'))
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-3xl">
@@ -169,7 +172,7 @@ const AIStackRecommender = () => {
         <div className="grid md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm text-gray-400 mb-2">Budget</label>
-            <select 
+            <select
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white 
@@ -236,10 +239,20 @@ const AIStackRecommender = () => {
           {isAnalyzing ? (
             <>
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" 
-                        stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" 
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
               </svg>
               Analyzing...
             </>
@@ -261,7 +274,7 @@ const AIStackRecommender = () => {
               <Check className="w-5 h-5 text-green-400" />
               Your Recommended Stack
             </h3>
-            
+
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <span className="text-sm text-gray-400">Estimated Cost:</span>
@@ -271,9 +284,7 @@ const AIStackRecommender = () => {
               </div>
               <div>
                 <span className="text-sm text-gray-400">Time to Learn:</span>
-                <p className="text-lg font-semibold text-cyan-400">
-                  {recommendation.learningTime}
-                </p>
+                <p className="text-lg font-semibold text-cyan-400">{recommendation.learningTime}</p>
               </div>
             </div>
           </div>
@@ -286,8 +297,11 @@ const AIStackRecommender = () => {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {recommendation.primaryStack.map((tech) => (
-                  <span key={tech} className="px-3 py-1 bg-cyan-600/20 
-                                             text-cyan-300 rounded-full text-sm">
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-cyan-600/20 
+                                             text-cyan-300 rounded-full text-sm"
+                  >
                     {tech}
                   </span>
                 ))}
@@ -301,8 +315,11 @@ const AIStackRecommender = () => {
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {recommendation.database.map((tech) => (
-                    <span key={tech} className="px-3 py-1 bg-green-500/20 
-                                               text-green-300 rounded-full text-sm">
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-green-500/20 
+                                               text-green-300 rounded-full text-sm"
+                    >
                       {tech}
                     </span>
                   ))}
@@ -316,8 +333,11 @@ const AIStackRecommender = () => {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {recommendation.hosting.map((tech) => (
-                  <span key={tech} className="px-3 py-1 bg-purple-500/20 
-                                             text-purple-300 rounded-full text-sm">
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-purple-500/20 
+                                             text-purple-300 rounded-full text-sm"
+                  >
                     {tech}
                   </span>
                 ))}
@@ -329,8 +349,11 @@ const AIStackRecommender = () => {
                 <h4 className="text-sm font-medium text-gray-400 mb-2">Additional Tools</h4>
                 <div className="flex flex-wrap gap-2">
                   {recommendation.additionalTools.map((tech) => (
-                    <span key={tech} className="px-3 py-1 bg-orange-500/20 
-                                               text-orange-300 rounded-full text-sm">
+                    <span
+                      key={tech}
+                      className="px-3 py-1 bg-orange-500/20 
+                                               text-orange-300 rounded-full text-sm"
+                    >
                       {tech}
                     </span>
                   ))}
@@ -348,10 +371,10 @@ const AIStackRecommender = () => {
                   onClick={copySetupCommands}
                   className={`px-3 py-1.5 rounded-lg text-sm transition-all 
                             flex items-center gap-2 ${
-                    copied 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-white/5 text-gray-300 hover:bg-white/10'
-                  }`}
+                              copied
+                                ? 'bg-green-500 text-white'
+                                : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                            }`}
                 >
                   {copied ? (
                     <>
@@ -379,7 +402,7 @@ const AIStackRecommender = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AIStackRecommender;
+export default AIStackRecommender

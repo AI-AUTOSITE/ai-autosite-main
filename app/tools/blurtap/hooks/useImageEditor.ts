@@ -42,11 +42,14 @@ export const useImageEditor = (): UseImageEditorReturn => {
     setHistory(newHistory)
   }, [history, masks])
 
-  const addMask = useCallback((mask: MaskRegion) => {
-    saveHistory()
-    setMasks(prev => [...prev, mask])
-    setSuccessMessage('Mask added!')
-  }, [saveHistory])
+  const addMask = useCallback(
+    (mask: MaskRegion) => {
+      saveHistory()
+      setMasks((prev) => [...prev, mask])
+      setSuccessMessage('Mask added!')
+    },
+    [saveHistory]
+  )
 
   const undoMask = useCallback(() => {
     if (history.length === 0) return
@@ -54,7 +57,7 @@ export const useImageEditor = (): UseImageEditorReturn => {
     const lastState = history[history.length - 1]
     const restoredMasks = JSON.parse(lastState)
     setMasks(restoredMasks)
-    setHistory(prev => prev.slice(0, -1))
+    setHistory((prev) => prev.slice(0, -1))
     setSuccessMessage('Undone!')
   }, [history])
 
@@ -65,15 +68,15 @@ export const useImageEditor = (): UseImageEditorReturn => {
   }, [])
 
   const setMode = useCallback((mode: MaskMode) => {
-    setSettings(prev => ({ ...prev, mode }))
+    setSettings((prev) => ({ ...prev, mode }))
   }, [])
 
   const setMaskSize = useCallback((maskSize: MaskSize) => {
-    setSettings(prev => ({ ...prev, maskSize }))
+    setSettings((prev) => ({ ...prev, maskSize }))
   }, [])
 
   const setFormat = useCallback((format: ImageFormat) => {
-    setSettings(prev => ({ ...prev, format }))
+    setSettings((prev) => ({ ...prev, format }))
   }, [])
 
   return {
@@ -87,6 +90,6 @@ export const useImageEditor = (): UseImageEditorReturn => {
     addMask,
     undoMask,
     resetMasks,
-    setSuccessMessage
+    setSuccessMessage,
   }
 }

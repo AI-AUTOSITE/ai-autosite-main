@@ -40,7 +40,7 @@ export function getOptimalColumns(itemCount: number) {
     mobile: 1,
     tablet: Math.min(2, itemCount),
     desktop: Math.min(3, itemCount),
-    wide: Math.min(4, itemCount)
+    wide: Math.min(4, itemCount),
   }
 }
 

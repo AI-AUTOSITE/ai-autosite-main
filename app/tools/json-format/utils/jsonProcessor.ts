@@ -38,9 +38,9 @@ export function processJson(
 ): ProcessResult {
   // Handle empty input
   if (!text.trim()) {
-    return { 
-      success: true, 
-      output: '' 
+    return {
+      success: true,
+      output: '',
     }
   }
 
@@ -50,25 +50,26 @@ export function processJson(
     return {
       success: false,
       output: '',
-      error: validation.error
+      error: validation.error,
     }
   }
 
   // Format based on mode
   try {
-    const output = mode === 'beautify'
-      ? JSON.stringify(validation.parsedData, null, indentSize)
-      : JSON.stringify(validation.parsedData)
+    const output =
+      mode === 'beautify'
+        ? JSON.stringify(validation.parsedData, null, indentSize)
+        : JSON.stringify(validation.parsedData)
 
     return {
       success: true,
-      output
+      output,
     }
   } catch (err) {
     return {
       success: false,
       output: '',
-      error: `Formatting error: ${err instanceof Error ? err.message : 'Unknown error'}`
+      error: `Formatting error: ${err instanceof Error ? err.message : 'Unknown error'}`,
     }
   }
 }
@@ -81,7 +82,7 @@ export function validateJson(text: string): ValidationResult {
     const parsedData = JSON.parse(text)
     return {
       isValid: true,
-      parsedData
+      parsedData,
     }
   } catch (err) {
     const error = err instanceof Error ? err.message : 'Invalid JSON'
@@ -89,10 +90,10 @@ export function validateJson(text: string): ValidationResult {
     const improvedError = error
       .replace(/JSON\.parse: /, '')
       .replace(/at position (\d+)/, 'at character $1')
-    
+
     return {
       isValid: false,
-      error: `Invalid JSON: ${improvedError}`
+      error: `Invalid JSON: ${improvedError}`,
     }
   }
 }
@@ -112,7 +113,7 @@ export function calculateJsonStats(jsonString: string): JsonStats {
 
     return {
       ...stats,
-      size
+      size,
     }
   } catch {
     return { keys: 0, arrays: 0, objects: 0, size: 0 }
@@ -133,7 +134,7 @@ function analyzeJsonStructure(data: any): Omit<JsonStats, 'size'> {
       obj.forEach(traverse)
     } else if (obj !== null && typeof obj === 'object') {
       objects++
-      Object.keys(obj).forEach(key => {
+      Object.keys(obj).forEach((key) => {
         keys++
         traverse(obj[key])
       })
@@ -149,13 +150,13 @@ function analyzeJsonStructure(data: any): Omit<JsonStats, 'size'> {
  */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0B'
-  
+
   const units = ['B', 'KB', 'MB', 'GB']
   const k = 1024
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  
+
   if (i === 0) return `${bytes}${units[i]}`
-  
+
   return `${(bytes / Math.pow(k, i)).toFixed(1)}${units[i]}`
 }
 
@@ -169,11 +170,7 @@ export function isFileSizeValid(bytes: number): boolean {
 /**
  * Get JSON path of a specific value
  */
-export function getJsonPath(
-  data: any,
-  targetValue: any,
-  currentPath: string = '$'
-): string | null {
+export function getJsonPath(data: any, targetValue: any, currentPath: string = '$'): string | null {
   if (data === targetValue) {
     return currentPath
   }
@@ -197,11 +194,7 @@ export function getJsonPath(
 /**
  * Compare two JSON objects and find differences
  */
-export function compareJson(
-  obj1: any,
-  obj2: any,
-  path: string = ''
-): string[] {
+export function compareJson(obj1: any, obj2: any, path: string = ''): string[] {
   const differences: string[] = []
 
   // Check if types are different
@@ -231,7 +224,7 @@ export function compareJson(
 
     for (const key of allKeys) {
       const newPath = path ? `${path}.${key}` : key
-      
+
       if (!(key in obj1)) {
         differences.push(`Missing key "${newPath}" in first object`)
       } else if (!(key in obj2)) {
@@ -243,7 +236,9 @@ export function compareJson(
   }
   // Handle primitives
   else if (obj1 !== obj2) {
-    differences.push(`Value mismatch at ${path || 'root'}: ${JSON.stringify(obj1)} vs ${JSON.stringify(obj2)}`)
+    differences.push(
+      `Value mismatch at ${path || 'root'}: ${JSON.stringify(obj1)} vs ${JSON.stringify(obj2)}`
+    )
   }
 
   return differences
@@ -256,17 +251,17 @@ export function sortJsonKeys(data: any): any {
   if (Array.isArray(data)) {
     return data.map(sortJsonKeys)
   }
-  
+
   if (data !== null && typeof data === 'object') {
     const sorted: any = {}
     Object.keys(data)
       .sort()
-      .forEach(key => {
+      .forEach((key) => {
         sorted[key] = sortJsonKeys(data[key])
       })
     return sorted
   }
-  
+
   return data
 }
 
@@ -276,10 +271,10 @@ export function sortJsonKeys(data: any): any {
 export function cleanJson(data: any, removeEmpty = false): any {
   if (Array.isArray(data)) {
     return data
-      .filter(item => item !== null && item !== undefined)
-      .map(item => cleanJson(item, removeEmpty))
+      .filter((item) => item !== null && item !== undefined)
+      .map((item) => cleanJson(item, removeEmpty))
   }
-  
+
   if (data !== null && typeof data === 'object') {
     const cleaned: any = {}
     Object.entries(data).forEach(([key, value]) => {
@@ -291,6 +286,6 @@ export function cleanJson(data: any, removeEmpty = false): any {
     })
     return cleaned
   }
-  
+
   return data
 }

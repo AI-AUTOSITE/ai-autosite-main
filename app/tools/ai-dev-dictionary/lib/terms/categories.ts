@@ -9,52 +9,52 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { 
-    id: 'all', 
-    name: 'All Terms', 
+  {
+    id: 'all',
+    name: 'All Terms',
     icon: '🎯',
-    description: 'Browse all available UI terms' 
+    description: 'Browse all available UI terms',
   },
-  { 
-    id: 'ui-components', 
-    name: 'UI Components', 
+  {
+    id: 'ui-components',
+    name: 'UI Components',
     icon: '🎨',
-    description: 'Modals, cards, buttons, chips, and other interface elements' 
+    description: 'Modals, cards, buttons, chips, and other interface elements',
   },
-  { 
-    id: 'data-display', 
-    name: 'Data Display', 
+  {
+    id: 'data-display',
+    name: 'Data Display',
     icon: '📊',
-    description: 'Tables, lists, charts, carousels, and data visualization' 
+    description: 'Tables, lists, charts, carousels, and data visualization',
   },
-  { 
-    id: 'forms', 
-    name: 'Forms & Input', 
+  {
+    id: 'forms',
+    name: 'Forms & Input',
     icon: '📝',
-    description: 'Input fields, checkboxes, selects, and form controls' 
+    description: 'Input fields, checkboxes, selects, and form controls',
   },
-  { 
-    id: 'layout', 
-    name: 'Layout', 
+  {
+    id: 'layout',
+    name: 'Layout',
     icon: '📐',
-    description: 'Headers, sidebars, grids, and page structure' 
+    description: 'Headers, sidebars, grids, and page structure',
   },
-  { 
-    id: 'navigation', 
-    name: 'Navigation', 
+  {
+    id: 'navigation',
+    name: 'Navigation',
     icon: '🧭',
-    description: 'Menus, breadcrumbs, pagination, and navigation patterns' 
+    description: 'Menus, breadcrumbs, pagination, and navigation patterns',
   },
-  { 
-    id: 'feedback', 
-    name: 'Feedback', 
+  {
+    id: 'feedback',
+    name: 'Feedback',
     icon: '💬',
-    description: 'Toasts, alerts, loading states, and user notifications' 
+    description: 'Toasts, alerts, loading states, and user notifications',
   },
-  { 
-    id: 'advanced', 
-    name: 'Advanced', 
+  {
+    id: 'advanced',
+    name: 'Advanced',
     icon: '⚡',
-    description: 'Dropdowns, tooltips, drag & drop, and complex interactions' 
-  }
+    description: 'Dropdowns, tooltips, drag & drop, and complex interactions',
+  },
 ]

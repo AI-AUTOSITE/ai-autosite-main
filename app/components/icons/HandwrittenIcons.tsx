@@ -1,14 +1,14 @@
 // components/icons/HandwrittenIcons.tsx
-import { FC } from 'react';
+import { FC } from 'react'
 
 export interface IconProps {
-  size?: number;
-  color?: string;
-  className?: string;
-  strokeWidth?: number;
+  size?: number
+  color?: string
+  className?: string
+  strokeWidth?: number
 }
 
-export type HandwrittenIconName = 
+export type HandwrittenIconName =
   | 'hand-heart'
   | 'hand-star'
   | 'hand-home'
@@ -18,7 +18,7 @@ export type HandwrittenIconName =
   | 'hand-check'
   | 'hand-arrow'
   | 'hand-cloud'
-  | 'hand-mail';
+  | 'hand-mail'
 
 // Handwritten style icons with rough, sketchy paths
 const handwrittenIcons = {
@@ -35,12 +35,16 @@ const handwrittenIcons = {
       strokeLinejoin="round"
       className={props.className}
     >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" 
-            style={{ strokeDasharray: '0.5 0.5' }} />
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        style={{ strokeDasharray: '0.5 0.5' }}
+      />
       {/* Double line for sketch effect */}
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" 
-            opacity="0.3"
-            transform="translate(0.2, 0.2)" />
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        opacity="0.3"
+        transform="translate(0.2, 0.2)"
+      />
     </svg>
   ),
 
@@ -252,31 +256,33 @@ const handwrittenIcons = {
       <path d="M20.5 18.5l-5-4" opacity="0.3" strokeDasharray="0.5 0.5" />
     </svg>
   ),
-};
+}
 
 // Main Handwritten Icon component
-export const HandwrittenIcon: FC<{ name: HandwrittenIconName } & IconProps> = ({ 
-  name, 
-  ...props 
+export const HandwrittenIcon: FC<{ name: HandwrittenIconName } & IconProps> = ({
+  name,
+  ...props
 }) => {
-  const IconComponent = handwrittenIcons[name];
-  
+  const IconComponent = handwrittenIcons[name]
+
   if (!IconComponent) {
-    console.warn(`Handwritten icon "${name}" not found`);
-    return null;
+    console.warn(`Handwritten icon "${name}" not found`)
+    return null
   }
-  
-  return <IconComponent {...props} />;
-};
+
+  return <IconComponent {...props} />
+}
 
 // Individual exports
-export const HandHeartIcon = (props: IconProps) => <HandwrittenIcon name="hand-heart" {...props} />;
-export const HandStarIcon = (props: IconProps) => <HandwrittenIcon name="hand-star" {...props} />;
-export const HandHomeIcon = (props: IconProps) => <HandwrittenIcon name="hand-home" {...props} />;
-export const HandSmileIcon = (props: IconProps) => <HandwrittenIcon name="hand-smile" {...props} />;
-export const HandSunIcon = (props: IconProps) => <HandwrittenIcon name="hand-sun" {...props} />;
-export const HandFlowerIcon = (props: IconProps) => <HandwrittenIcon name="hand-flower" {...props} />;
-export const HandCheckIcon = (props: IconProps) => <HandwrittenIcon name="hand-check" {...props} />;
-export const HandArrowIcon = (props: IconProps) => <HandwrittenIcon name="hand-arrow" {...props} />;
-export const HandCloudIcon = (props: IconProps) => <HandwrittenIcon name="hand-cloud" {...props} />;
-export const HandMailIcon = (props: IconProps) => <HandwrittenIcon name="hand-mail" {...props} />;
+export const HandHeartIcon = (props: IconProps) => <HandwrittenIcon name="hand-heart" {...props} />
+export const HandStarIcon = (props: IconProps) => <HandwrittenIcon name="hand-star" {...props} />
+export const HandHomeIcon = (props: IconProps) => <HandwrittenIcon name="hand-home" {...props} />
+export const HandSmileIcon = (props: IconProps) => <HandwrittenIcon name="hand-smile" {...props} />
+export const HandSunIcon = (props: IconProps) => <HandwrittenIcon name="hand-sun" {...props} />
+export const HandFlowerIcon = (props: IconProps) => (
+  <HandwrittenIcon name="hand-flower" {...props} />
+)
+export const HandCheckIcon = (props: IconProps) => <HandwrittenIcon name="hand-check" {...props} />
+export const HandArrowIcon = (props: IconProps) => <HandwrittenIcon name="hand-arrow" {...props} />
+export const HandCloudIcon = (props: IconProps) => <HandwrittenIcon name="hand-cloud" {...props} />
+export const HandMailIcon = (props: IconProps) => <HandwrittenIcon name="hand-mail" {...props} />

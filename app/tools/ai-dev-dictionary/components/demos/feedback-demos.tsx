@@ -16,7 +16,7 @@ export const feedbackDemos: Record<string, DemoFunction> = {
       >
         Show Toast Notification
       </button>
-      
+
       {demoState.toast && (
         <div className="absolute bottom-4 right-4 px-4 py-3 bg-green-500 text-white rounded-lg shadow-lg flex items-center gap-2">
           <CheckCircle className="w-5 h-5" />
@@ -36,7 +36,9 @@ export const feedbackDemos: Record<string, DemoFunction> = {
               <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 mr-3 flex-shrink-0" />
               <div className="flex-1">
                 <h4 className="text-yellow-400 font-semibold mb-1">Warning</h4>
-                <p className="text-gray-300 text-sm">Please review your settings before continuing.</p>
+                <p className="text-gray-300 text-sm">
+                  Please review your settings before continuing.
+                </p>
               </div>
               <button
                 onClick={() => setDemoState({ ...demoState, alert: false })}
@@ -98,7 +100,7 @@ export const feedbackDemos: Record<string, DemoFunction> = {
             <span className="text-cyan-400">{demoState.progress}%</span>
           </div>
           <div className="w-full bg-gray-700 rounded-full h-2">
-            <div 
+            <div
               className="bg-cyan-500 h-2 rounded-full transition-all duration-500"
               style={{ width: `${demoState.progress}%` }}
             ></div>
@@ -170,14 +172,14 @@ export const feedbackDemos: Record<string, DemoFunction> = {
   // PUSH NOTIFICATION DEMO
   'push-notification': (demoState, setDemoState) => (
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10">
-      <button 
+      <button
         onClick={() => {
           if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
+            Notification.requestPermission().then((permission) => {
               if (permission === 'granted') {
                 new Notification('New Message', {
                   body: 'You have a new message from John',
-                  icon: '/icon.png'
+                  icon: '/icon.png',
                 })
               } else {
                 alert('Please enable notifications in your browser settings')
@@ -222,7 +224,9 @@ export const feedbackDemos: Record<string, DemoFunction> = {
     <div className="h-64 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-white/10 flex items-center justify-center">
       <div className="bg-slate-800 rounded-lg p-6 border border-white/20 max-w-sm">
         <h3 className="text-white font-semibold mb-3">Confirm Delete</h3>
-        <p className="text-gray-400 text-sm mb-4">Are you sure you want to delete this item? This action cannot be undone.</p>
+        <p className="text-gray-400 text-sm mb-4">
+          Are you sure you want to delete this item? This action cannot be undone.
+        </p>
         <div className="flex gap-3">
           <button className="flex-1 px-4 py-2 bg-white/10 text-gray-300 rounded hover:bg-white/20">
             Cancel
@@ -246,5 +250,5 @@ export const feedbackDemos: Record<string, DemoFunction> = {
         <p className="text-gray-400 text-sm">Your changes have been saved</p>
       </div>
     </div>
-  )
+  ),
 }

@@ -6,24 +6,127 @@ import { Type, Copy, Check, RefreshCw, FileText, Hash, AlignLeft } from 'lucide-
 type GenerationType = 'words' | 'sentences' | 'paragraphs'
 
 const LOREM_WORDS = [
-  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-  'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-  'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-  'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-  'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-  'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-  'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-  'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'perspiciatis', 'unde',
-  'omnis', 'iste', 'natus', 'error', 'voluptatem', 'accusantium', 'doloremque',
-  'laudantium', 'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo',
-  'inventore', 'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta',
-  'explicabo', 'nemo', 'enim', 'ipsam', 'quia', 'voluptas', 'aspernatur', 'aut',
-  'odit', 'fugit', 'consequuntur', 'magni', 'dolores', 'eos', 'ratione', 'sequi',
-  'nesciunt', 'neque', 'porro', 'quisquam', 'dolorem', 'adipisci', 'numquam',
-  'eius', 'modi', 'tempora', 'incidunt', 'magnam', 'quaerat', 'etiam'
+  'lorem',
+  'ipsum',
+  'dolor',
+  'sit',
+  'amet',
+  'consectetur',
+  'adipiscing',
+  'elit',
+  'sed',
+  'do',
+  'eiusmod',
+  'tempor',
+  'incididunt',
+  'ut',
+  'labore',
+  'et',
+  'dolore',
+  'magna',
+  'aliqua',
+  'enim',
+  'ad',
+  'minim',
+  'veniam',
+  'quis',
+  'nostrud',
+  'exercitation',
+  'ullamco',
+  'laboris',
+  'nisi',
+  'aliquip',
+  'ex',
+  'ea',
+  'commodo',
+  'consequat',
+  'duis',
+  'aute',
+  'irure',
+  'in',
+  'reprehenderit',
+  'voluptate',
+  'velit',
+  'esse',
+  'cillum',
+  'fugiat',
+  'nulla',
+  'pariatur',
+  'excepteur',
+  'sint',
+  'occaecat',
+  'cupidatat',
+  'non',
+  'proident',
+  'sunt',
+  'culpa',
+  'qui',
+  'officia',
+  'deserunt',
+  'mollit',
+  'anim',
+  'id',
+  'est',
+  'laborum',
+  'perspiciatis',
+  'unde',
+  'omnis',
+  'iste',
+  'natus',
+  'error',
+  'voluptatem',
+  'accusantium',
+  'doloremque',
+  'laudantium',
+  'totam',
+  'rem',
+  'aperiam',
+  'eaque',
+  'ipsa',
+  'quae',
+  'ab',
+  'illo',
+  'inventore',
+  'veritatis',
+  'quasi',
+  'architecto',
+  'beatae',
+  'vitae',
+  'dicta',
+  'explicabo',
+  'nemo',
+  'enim',
+  'ipsam',
+  'quia',
+  'voluptas',
+  'aspernatur',
+  'aut',
+  'odit',
+  'fugit',
+  'consequuntur',
+  'magni',
+  'dolores',
+  'eos',
+  'ratione',
+  'sequi',
+  'nesciunt',
+  'neque',
+  'porro',
+  'quisquam',
+  'dolorem',
+  'adipisci',
+  'numquam',
+  'eius',
+  'modi',
+  'tempora',
+  'incidunt',
+  'magnam',
+  'quaerat',
+  'etiam',
 ]
 
-const LOREM_START = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+const LOREM_START =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
 
 export default function LoremIpsumClient() {
   const [amount, setAmount] = useState('5')
@@ -64,7 +167,7 @@ export default function LoremIpsumClient() {
   const handleGenerate = () => {
     const num = parseInt(amount) || 1
     let result = ''
-    
+
     switch (type) {
       case 'words':
         if (startWithLorem) {
@@ -78,7 +181,7 @@ export default function LoremIpsumClient() {
           result = generateWords(num)
         }
         break
-        
+
       case 'sentences':
         const sentences: string[] = []
         if (startWithLorem) {
@@ -93,7 +196,7 @@ export default function LoremIpsumClient() {
         }
         result = sentences.join(' ')
         break
-        
+
       case 'paragraphs':
         const paragraphs: string[] = []
         if (startWithLorem) {
@@ -106,15 +209,15 @@ export default function LoremIpsumClient() {
             paragraphs.push(generateParagraph())
           }
         }
-        
+
         if (includeHtml) {
-          result = paragraphs.map(p => `<p>${p}</p>`).join('\n\n')
+          result = paragraphs.map((p) => `<p>${p}</p>`).join('\n\n')
         } else {
           result = paragraphs.join('\n\n')
         }
         break
     }
-    
+
     setGeneratedText(result)
   }
 
@@ -125,7 +228,10 @@ export default function LoremIpsumClient() {
   }
 
   const getWordCount = () => {
-    return generatedText.replace(/<[^>]*>/g, '').split(/\s+/).filter(w => w).length
+    return generatedText
+      .replace(/<[^>]*>/g, '')
+      .split(/\s+/)
+      .filter((w) => w).length
   }
 
   const getCharCount = () => {
@@ -134,7 +240,7 @@ export default function LoremIpsumClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
-{/* Controls */}
+      {/* Controls */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
         <div className="grid sm:grid-cols-2 gap-4 mb-4">
           {/* Amount Input */}
@@ -149,7 +255,7 @@ export default function LoremIpsumClient() {
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-gray-400 transition-colors"
             />
           </div>
-          
+
           {/* Type Selection */}
           <div>
             <label className="block text-white font-medium mb-2">Type</label>
@@ -182,7 +288,7 @@ export default function LoremIpsumClient() {
             />
             <span>Start with "Lorem ipsum..."</span>
           </label>
-          
+
           {type === 'paragraphs' && (
             <label className="flex items-center gap-2 text-gray-300 cursor-pointer">
               <input
@@ -217,9 +323,7 @@ export default function LoremIpsumClient() {
             <button
               onClick={handleCopy}
               className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                copied
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                copied ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
               }`}
             >
               {copied ? (
@@ -235,11 +339,9 @@ export default function LoremIpsumClient() {
               )}
             </button>
           </div>
-          
+
           <div className="bg-black/20 rounded-xl p-4 max-h-96 overflow-y-auto">
-            <pre className="text-gray-300 whitespace-pre-wrap font-sans">
-              {generatedText}
-            </pre>
+            <pre className="text-gray-300 whitespace-pre-wrap font-sans">{generatedText}</pre>
           </div>
         </div>
       )}
@@ -248,8 +350,8 @@ export default function LoremIpsumClient() {
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
         <h3 className="text-white font-medium mb-3">About Lorem Ipsum</h3>
         <p className="text-gray-400 text-sm">
-          Lorem Ipsum has been the industry's standard dummy text since the 1500s. 
-          It's used by designers and developers to fill layouts with text before final content is ready.
+          Lorem Ipsum has been the industry's standard dummy text since the 1500s. It's used by
+          designers and developers to fill layouts with text before final content is ready.
         </p>
       </div>
     </div>

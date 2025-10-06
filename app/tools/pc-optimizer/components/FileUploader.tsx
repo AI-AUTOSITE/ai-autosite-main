@@ -1,78 +1,78 @@
 // app/tools/pc-optimizer/components/FileUploader.tsx
 
-import React, { useState, useCallback } from 'react';
-import { Upload, FileText, AlertCircle } from 'lucide-react';
+import React, { useState, useCallback } from 'react'
+import { Upload, FileText, AlertCircle } from 'lucide-react'
 
 interface FileUploaderProps {
-  onFileUpload: (content: string) => void;
-  isAnalyzing: boolean;
+  onFileUpload: (content: string) => void
+  isAnalyzing: boolean
 }
 
 export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploaderProps) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [fileName, setFileName] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false)
+  const [fileName, setFileName] = useState<string>('')
+  const [error, setError] = useState<string>('')
 
   const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
 
   const handleDragIn = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  }, []);
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }, [])
 
   const handleDragOut = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  }, []);
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }, [])
 
   const processFile = (file: File) => {
-    setError('');
-    
+    setError('')
+
     if (!file.name.endsWith('.csv')) {
-      setError('CSV files only');
-      return;
+      setError('CSV files only')
+      return
     }
-    
+
     if (file.size > 10 * 1024 * 1024) {
-      setError('Max 10MB');
-      return;
+      setError('Max 10MB')
+      return
     }
-    
-    setFileName(file.name);
-    
-    const reader = new FileReader();
+
+    setFileName(file.name)
+
+    const reader = new FileReader()
     reader.onload = (e) => {
-      const content = e.target?.result as string;
-      onFileUpload(content);
-    };
+      const content = e.target?.result as string
+      onFileUpload(content)
+    }
     reader.onerror = () => {
-      setError('Failed to read file');
-    };
-    reader.readAsText(file, 'UTF-8');
-  };
+      setError('Failed to read file')
+    }
+    reader.readAsText(file, 'UTF-8')
+  }
 
   const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    
-    const files = e.dataTransfer.files;
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = e.dataTransfer.files
     if (files && files.length > 0) {
-      processFile(files[0]);
+      processFile(files[0])
     }
-  }, []);
+  }, [])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
+    const files = e.target.files
     if (files && files.length > 0) {
-      processFile(files[0]);
+      processFile(files[0])
     }
-  };
+  }
 
   return (
     <div
@@ -82,9 +82,10 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
       onDrop={handleDrop}
       className={`
         relative border-2 border-dashed rounded-xl p-16 text-center transition-all cursor-pointer
-        ${isDragging
-          ? 'border-cyan-500 bg-cyan-500/10'
-          : 'border-gray-600 hover:border-cyan-400 hover:bg-white/5'
+        ${
+          isDragging
+            ? 'border-cyan-500 bg-cyan-500/10'
+            : 'border-gray-600 hover:border-cyan-400 hover:bg-white/5'
         }
         ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}
       `}
@@ -96,7 +97,7 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         disabled={isAnalyzing}
       />
-      
+
       <div className="space-y-4">
         {isAnalyzing ? (
           <>
@@ -113,14 +114,14 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
             </div>
           </>
         )}
-        
+
         {fileName && !isAnalyzing && (
           <div className="flex items-center justify-center space-x-2 text-sm text-green-400">
             <FileText className="w-4 h-4" />
             <span>{fileName}</span>
           </div>
         )}
-        
+
         {error && (
           <div className="flex items-center justify-center space-x-2 text-sm text-red-400">
             <AlertCircle className="w-4 h-4" />
@@ -129,5 +130,5 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
         )}
       </div>
     </div>
-  );
+  )
 }

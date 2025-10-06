@@ -4,8 +4,10 @@ import { ArrowLeft, Palette, Sparkles, Code, Download } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Gradient Generator CSS - Beautiful Color Combinations | AI AutoSite',
-  description: 'Create stunning CSS gradients for your website. Generate linear and radial gradients with custom colors. Free gradient generator tool.',
-  keywords: 'gradient generator, css gradient, linear gradient, radial gradient, color gradient, gradient maker',
+  description:
+    'Create stunning CSS gradients for your website. Generate linear and radial gradients with custom colors. Free gradient generator tool.',
+  keywords:
+    'gradient generator, css gradient, linear gradient, radial gradient, color gradient, gradient maker',
   openGraph: {
     title: 'CSS Gradient Generator - Design Guide',
     description: 'Create beautiful gradients for modern web design',
@@ -20,8 +22,8 @@ export default function GradientGeneratorGuidePage() {
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -42,8 +44,8 @@ export default function GradientGeneratorGuidePage() {
           CSS Gradient Generator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Master the art of CSS gradients. Create stunning backgrounds and 
-          effects for modern web design.
+          Master the art of CSS gradients. Create stunning backgrounds and effects for modern web
+          design.
         </p>
       </header>
 
@@ -54,22 +56,41 @@ export default function GradientGeneratorGuidePage() {
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Linear Gradient</h3>
-              <div className="h-24 rounded-lg mb-2" style={{background: 'linear-gradient(90deg, #667eea, #764ba2)'}}></div>
-              <code className="text-purple-400 text-xs">linear-gradient(90deg, #667eea, #764ba2)</code>
+              <div
+                className="h-24 rounded-lg mb-2"
+                style={{ background: 'linear-gradient(90deg, #667eea, #764ba2)' }}
+              ></div>
+              <code className="text-purple-400 text-xs">
+                linear-gradient(90deg, #667eea, #764ba2)
+              </code>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Radial Gradient</h3>
-              <div className="h-24 rounded-lg mb-2" style={{background: 'radial-gradient(circle, #667eea, #764ba2)'}}></div>
-              <code className="text-purple-400 text-xs">radial-gradient(circle, #667eea, #764ba2)</code>
+              <div
+                className="h-24 rounded-lg mb-2"
+                style={{ background: 'radial-gradient(circle, #667eea, #764ba2)' }}
+              ></div>
+              <code className="text-purple-400 text-xs">
+                radial-gradient(circle, #667eea, #764ba2)
+              </code>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Conic Gradient</h3>
-              <div className="h-24 rounded-lg mb-2" style={{background: 'conic-gradient(from 180deg, #667eea, #764ba2, #667eea)'}}></div>
+              <div
+                className="h-24 rounded-lg mb-2"
+                style={{ background: 'conic-gradient(from 180deg, #667eea, #764ba2, #667eea)' }}
+              ></div>
               <code className="text-purple-400 text-xs">conic-gradient(from 180deg, ...)</code>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Repeating Gradient</h3>
-              <div className="h-24 rounded-lg mb-2" style={{background: 'repeating-linear-gradient(45deg, #667eea 0px, #667eea 10px, #764ba2 10px, #764ba2 20px)'}}></div>
+              <div
+                className="h-24 rounded-lg mb-2"
+                style={{
+                  background:
+                    'repeating-linear-gradient(45deg, #667eea 0px, #667eea 10px, #764ba2 10px, #764ba2 20px)',
+                }}
+              ></div>
               <code className="text-purple-400 text-xs">repeating-linear-gradient(...)</code>
             </div>
           </div>
@@ -208,15 +229,11 @@ export default function GradientGeneratorGuidePage() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">⚡</span>
-                <p className="text-gray-300">
-                  Use CSS gradients instead of images when possible
-                </p>
+                <p className="text-gray-300">Use CSS gradients instead of images when possible</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">⚡</span>
-                <p className="text-gray-300">
-                  Limit gradient stops to 3-4 colors maximum
-                </p>
+                <p className="text-gray-300">Limit gradient stops to 3-4 colors maximum</p>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">⚡</span>
@@ -226,9 +243,7 @@ export default function GradientGeneratorGuidePage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-purple-400">⚡</span>
-                <p className="text-gray-300">
-                  Consider using CSS variables for reusable gradients
-                </p>
+                <p className="text-gray-300">Consider using CSS variables for reusable gradients</p>
               </li>
             </ul>
           </div>
@@ -237,14 +252,12 @@ export default function GradientGeneratorGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Create Beautiful Gradients
-        </h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Create Beautiful Gradients</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
           Free gradient generator with live preview and CSS code export.
         </p>
-        <Link 
-          href="/tools/gradient-generator" 
+        <Link
+          href="/tools/gradient-generator"
           className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
         >
           <Palette className="mr-2" size={20} />

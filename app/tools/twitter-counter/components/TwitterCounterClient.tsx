@@ -25,19 +25,19 @@ function splitIntoThread(text: string): ThreadPart[] {
   if (getTwitterLength(text) <= TWITTER_LIMIT) {
     return [{ text, number: 1, total: 1, charCount: getTwitterLength(text) }]
   }
-  
+
   const parts: ThreadPart[] = []
   const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]
   let currentPart = ''
   let partNumber = 1
-  
+
   // Estimate total tweets
   const roughTotal = Math.ceil(getTwitterLength(text) / (TWITTER_LIMIT - 10))
-  
+
   for (const sentence of sentences) {
     const testPart = currentPart ? `${currentPart} ${sentence}` : sentence
     const suffix = ` (${partNumber}/${roughTotal})`
-    
+
     if (getTwitterLength(testPart + suffix) <= TWITTER_LIMIT) {
       currentPart = testPart
     } else {
@@ -47,7 +47,7 @@ function splitIntoThread(text: string): ThreadPart[] {
           text: finalText,
           number: partNumber,
           total: roughTotal,
-          charCount: getTwitterLength(finalText)
+          charCount: getTwitterLength(finalText),
         })
         partNumber++
         currentPart = sentence
@@ -55,7 +55,7 @@ function splitIntoThread(text: string): ThreadPart[] {
         // Single sentence too long, split by words
         const words = sentence.split(' ')
         let wordPart = ''
-        
+
         for (const word of words) {
           const testWord = wordPart ? `${wordPart} ${word}` : word
           if (getTwitterLength(testWord + suffix) <= TWITTER_LIMIT) {
@@ -67,21 +67,21 @@ function splitIntoThread(text: string): ThreadPart[] {
                 text: finalText,
                 number: partNumber,
                 total: roughTotal,
-                charCount: getTwitterLength(finalText)
+                charCount: getTwitterLength(finalText),
               })
               partNumber++
               wordPart = word
             }
           }
         }
-        
+
         if (wordPart) {
           currentPart = wordPart
         }
       }
     }
   }
-  
+
   // Add the last part
   if (currentPart) {
     const finalText = currentPart + ` (${partNumber}/${roughTotal})`
@@ -89,19 +89,19 @@ function splitIntoThread(text: string): ThreadPart[] {
       text: finalText,
       number: partNumber,
       total: roughTotal,
-      charCount: getTwitterLength(finalText)
+      charCount: getTwitterLength(finalText),
     })
   }
-  
+
   // Update total in all parts
   const actualTotal = parts.length
-  return parts.map(part => {
+  return parts.map((part) => {
     const updatedText = part.text.replace(/\(\d+\/\d+\)/, `(${part.number}/${actualTotal})`)
     return {
       ...part,
       text: updatedText,
       total: actualTotal,
-      charCount: getTwitterLength(updatedText)
+      charCount: getTwitterLength(updatedText),
     }
   })
 }
@@ -118,14 +118,14 @@ export default function TwitterCounterClient() {
     const remaining = TWITTER_LIMIT - charCount
     const percentage = Math.min((charCount / TWITTER_LIMIT) * 100, 100)
     const isOverLimit = charCount > TWITTER_LIMIT
-    
+
     // Quick stats
     const words = text.trim() ? text.trim().split(/\s+/).length : 0
     const hashtags = (text.match(/#[\w]+/g) || []).length
     const mentions = (text.match(/@[\w]+/g) || []).length
     const urls = (text.match(/https?:\/\/[^\s]+/g) || []).length
     const lines = text ? text.split('\n').length : 0
-    
+
     return {
       charCount,
       remaining,
@@ -135,7 +135,7 @@ export default function TwitterCounterClient() {
       hashtags,
       mentions,
       urls,
-      lines
+      lines,
     }
   }, [text])
 
@@ -177,7 +177,7 @@ export default function TwitterCounterClient() {
 
   const handleCopyAllThread = async () => {
     if (!thread) return
-    const fullThread = thread.map(p => p.text).join('\n\n')
+    const fullThread = thread.map((p) => p.text).join('\n\n')
     await navigator.clipboard.writeText(fullThread)
     setCopiedThread(-1)
     setTimeout(() => setCopiedThread(null), 2000)
@@ -202,7 +202,7 @@ export default function TwitterCounterClient() {
             {stats.remaining > 0 ? `${stats.remaining} left` : `${Math.abs(stats.remaining)} over`}
           </div>
         </div>
-        
+
         {/* Progress Bar */}
         <div className="w-full max-w-xs mx-auto">
           <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
@@ -262,7 +262,7 @@ export default function TwitterCounterClient() {
                    focus:outline-none focus:border-cyan-400 transition-all resize-none font-sans text-base"
           autoFocus
         />
-        
+
         {/* Actions */}
         <div className="flex gap-3 mt-4">
           <button
@@ -274,7 +274,7 @@ export default function TwitterCounterClient() {
             <Trash2 className="w-4 h-4 inline mr-2" />
             Clear
           </button>
-          
+
           {stats.isOverLimit && (
             <button
               onClick={() => setShowThread(!showThread)}
@@ -284,7 +284,7 @@ export default function TwitterCounterClient() {
               {showThread ? 'Hide' : 'Show'} Thread
             </button>
           )}
-          
+
           <button
             onClick={stats.isOverLimit ? handleCopyAllThread : handleCopy}
             disabled={!text}
@@ -314,22 +314,25 @@ export default function TwitterCounterClient() {
         <div className="space-y-3 mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Zap className="w-5 h-5 text-yellow-400" />
-            <span className="text-white font-medium">
-              Auto-split into {thread.length} tweets
-            </span>
+            <span className="text-white font-medium">Auto-split into {thread.length} tweets</span>
           </div>
-          
+
           {thread.map((part) => (
-            <div key={part.number} className="group relative bg-white/5 rounded-xl p-4 border border-white/10 
-                                              hover:bg-white/[0.07] transition-all">
+            <div
+              key={part.number}
+              className="group relative bg-white/5 rounded-xl p-4 border border-white/10 
+                                              hover:bg-white/[0.07] transition-all"
+            >
               <div className="flex justify-between items-start mb-2">
                 <span className="text-xs font-medium text-cyan-400">
                   Tweet {part.number}/{part.total}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs ${
-                    part.charCount > TWITTER_LIMIT ? 'text-red-400' : 'text-gray-500'
-                  }`}>
+                  <span
+                    className={`text-xs ${
+                      part.charCount > TWITTER_LIMIT ? 'text-red-400' : 'text-gray-500'
+                    }`}
+                  >
                     {part.charCount}/{TWITTER_LIMIT}
                   </span>
                   <button
@@ -356,19 +359,35 @@ export default function TwitterCounterClient() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
         <div className="bg-white/5 rounded-lg p-3">
           <div className="text-lg mb-1">📱</div>
-          <div className="text-xs text-gray-400">Best under<br/>100 chars</div>
+          <div className="text-xs text-gray-400">
+            Best under
+            <br />
+            100 chars
+          </div>
         </div>
         <div className="bg-white/5 rounded-lg p-3">
           <div className="text-lg mb-1">🔗</div>
-          <div className="text-xs text-gray-400">Links = 23<br/>characters</div>
+          <div className="text-xs text-gray-400">
+            Links = 23
+            <br />
+            characters
+          </div>
         </div>
         <div className="bg-white/5 rounded-lg p-3">
           <div className="text-lg mb-1">#️⃣</div>
-          <div className="text-xs text-gray-400">1-2 hashtags<br/>optimal</div>
+          <div className="text-xs text-gray-400">
+            1-2 hashtags
+            <br />
+            optimal
+          </div>
         </div>
         <div className="bg-white/5 rounded-lg p-3">
           <div className="text-lg mb-1">🧵</div>
-          <div className="text-xs text-gray-400">Threads get<br/>more reach</div>
+          <div className="text-xs text-gray-400">
+            Threads get
+            <br />
+            more reach
+          </div>
         </div>
       </div>
     </div>

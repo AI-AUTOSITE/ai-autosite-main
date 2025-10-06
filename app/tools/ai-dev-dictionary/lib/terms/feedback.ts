@@ -1,13 +1,21 @@
 // app/tools/ai-dev-dictionary/lib/terms/feedback.ts
 
-import { TechTerm } from './types';
+import { TechTerm } from './types'
 
 export const feedbackTerms: TechTerm[] = [
   {
     id: 'toast',
     term: 'Toast',
     category: 'feedback',
-    aiSynonyms: ['Notification', 'Alert', 'Snackbar', 'Flash Message', 'Popup Message', 'Brief Alert', 'Temporary Notification'],
+    aiSynonyms: [
+      'Notification',
+      'Alert',
+      'Snackbar',
+      'Flash Message',
+      'Popup Message',
+      'Brief Alert',
+      'Temporary Notification',
+    ],
     description: 'A brief message that appears temporarily, usually at the edge of the screen',
     beginnerTip: 'Like a notification on your phone - pops up briefly then disappears!',
     aiPhrases: [
@@ -16,7 +24,7 @@ export const feedbackTerms: TechTerm[] = [
       'Add a snackbar for error messages',
       'Create a temporary alert',
       'Flash a success message to the user',
-      'Show notification toast'
+      'Show notification toast',
     ],
     codeExample: `// React Toast Example - Quick Message!
 const Toast = ({ message, type = 'info' }) => {
@@ -28,14 +36,22 @@ const Toast = ({ message, type = 'info' }) => {
   );
 }`,
     demoType: 'toast',
-    relatedTerms: ['Modal', 'Alert', 'Notification']
+    relatedTerms: ['Modal', 'Alert', 'Notification'],
   },
 
   {
     id: 'alert',
     term: 'Alert',
     category: 'feedback',
-    aiSynonyms: ['Warning', 'Notice', 'Message Box', 'Info Box', 'Notification Banner', 'Callout', 'Announcement'],
+    aiSynonyms: [
+      'Warning',
+      'Notice',
+      'Message Box',
+      'Info Box',
+      'Notification Banner',
+      'Callout',
+      'Announcement',
+    ],
     description: 'A prominent message box that displays important information or warnings',
     beginnerTip: 'Like a warning sign - stays visible to make sure you see important information!',
     aiPhrases: [
@@ -44,7 +60,7 @@ const Toast = ({ message, type = 'info' }) => {
       'Add info box for tips',
       'Create notification banner',
       'Implement callout for important info',
-      'Make announcement banner'
+      'Make announcement banner',
     ],
     codeExample: `// React Alert Example - Important Info!
 const Alert = ({ type, title, message }) => {
@@ -57,14 +73,22 @@ const Alert = ({ type, title, message }) => {
   );
 }`,
     demoType: 'alert',
-    relatedTerms: ['Toast', 'Modal', 'Banner']
+    relatedTerms: ['Toast', 'Modal', 'Banner'],
   },
 
   {
     id: 'badge',
     term: 'Badge',
     category: 'feedback',
-    aiSynonyms: ['Tag', 'Chip', 'Label', 'Pill', 'Status Indicator', 'Count Bubble', 'Notification Dot'],
+    aiSynonyms: [
+      'Tag',
+      'Chip',
+      'Label',
+      'Pill',
+      'Status Indicator',
+      'Count Bubble',
+      'Notification Dot',
+    ],
     description: 'Small label or indicator often used to show status, count, or category',
     beginnerTip: 'Like the red number on your app icons showing unread messages!',
     aiPhrases: [
@@ -73,7 +97,7 @@ const Alert = ({ type, title, message }) => {
       'Show categories using tags',
       'Create notification badges',
       'Implement status chips',
-      'Add count indicator'
+      'Add count indicator',
     ],
     codeExample: `// React Badge Example - Small but Important!
 const Badge = ({ text, variant = 'primary' }) => {
@@ -85,14 +109,21 @@ const Badge = ({ text, variant = 'primary' }) => {
   );
 }`,
     demoType: 'badge',
-    relatedTerms: ['Tag', 'Chip', 'Label']
+    relatedTerms: ['Tag', 'Chip', 'Label'],
   },
 
   {
     id: 'progress',
     term: 'Progress Bar',
     category: 'feedback',
-    aiSynonyms: ['Progress Indicator', 'Loading Bar', 'Progress Track', 'Completion Bar', 'Status Bar', 'Progress Meter'],
+    aiSynonyms: [
+      'Progress Indicator',
+      'Loading Bar',
+      'Progress Track',
+      'Completion Bar',
+      'Status Bar',
+      'Progress Meter',
+    ],
     description: 'Visual indicator showing the completion status of a task or process',
     beginnerTip: 'Like a loading bar in a game - shows how much is done and how much is left!',
     aiPhrases: [
@@ -101,7 +132,7 @@ const Badge = ({ text, variant = 'primary' }) => {
       'Add completion indicator',
       'Create a progress track',
       'Implement status bar for tasks',
-      'Make progress meter'
+      'Make progress meter',
     ],
     codeExample: `// React Progress Bar Example - How Far Along?
 const ProgressBar = ({ percent }) => {
@@ -115,14 +146,21 @@ const ProgressBar = ({ percent }) => {
   );
 }`,
     demoType: 'progress',
-    relatedTerms: ['Spinner', 'Loading', 'Status']
+    relatedTerms: ['Spinner', 'Loading', 'Status'],
   },
 
   {
     id: 'spinner',
     term: 'Spinner',
     category: 'feedback',
-    aiSynonyms: ['Loading Spinner', 'Loader', 'Loading Indicator', 'Progress Circle', 'Activity Indicator', 'Busy Indicator'],
+    aiSynonyms: [
+      'Loading Spinner',
+      'Loader',
+      'Loading Indicator',
+      'Progress Circle',
+      'Activity Indicator',
+      'Busy Indicator',
+    ],
     description: 'Animated indicator that shows something is loading or processing',
     beginnerTip: 'The spinning circle you see when something is loading - means "please wait"!',
     aiPhrases: [
@@ -131,7 +169,7 @@ const ProgressBar = ({ percent }) => {
       'Display activity indicator',
       'Create a spinning loader',
       'Implement busy state indicator',
-      'Add loading animation'
+      'Add loading animation',
     ],
     codeExample: `// React Spinner Example - Loading...
 const Spinner = ({ size = 'medium' }) => {
@@ -143,15 +181,22 @@ const Spinner = ({ size = 'medium' }) => {
   );
 }`,
     demoType: 'spinner',
-    relatedTerms: ['Skeleton', 'Progress', 'Loading']
+    relatedTerms: ['Skeleton', 'Progress', 'Loading'],
   },
 
   {
     id: 'skeleton',
     term: 'Skeleton',
     category: 'feedback',
-    aiSynonyms: ['Loading Placeholder', 'Content Loader', 'Ghost Element', 'Shimmer', 'Loading State', 'Placeholder UI'],
-    description: 'Placeholder UI that shows the structure of content while it\'s loading',
+    aiSynonyms: [
+      'Loading Placeholder',
+      'Content Loader',
+      'Ghost Element',
+      'Shimmer',
+      'Loading State',
+      'Placeholder UI',
+    ],
+    description: "Placeholder UI that shows the structure of content while it's loading",
     beginnerTip: 'Gray boxes that show where content will appear - like a preview while loading!',
     aiPhrases: [
       'Show skeleton while loading',
@@ -159,7 +204,7 @@ const Spinner = ({ size = 'medium' }) => {
       'Display ghost elements during fetch',
       'Create shimmer effect for loading',
       'Implement content loaders',
-      'Use placeholder UI'
+      'Use placeholder UI',
     ],
     codeExample: `// React Skeleton Example - Loading Preview!
 const Skeleton = ({ width, height }) => {
@@ -171,7 +216,7 @@ const Skeleton = ({ width, height }) => {
   );
 }`,
     demoType: 'skeleton',
-    relatedTerms: ['Spinner', 'Loading', 'Progress']
+    relatedTerms: ['Spinner', 'Loading', 'Progress'],
   },
 
   {
@@ -179,7 +224,7 @@ const Skeleton = ({ width, height }) => {
     term: 'Empty State',
     category: 'feedback',
     aiSynonyms: ['No Data', 'Empty View', 'Zero State', 'No Results', 'Blank State', 'No Content'],
-    description: 'Message or illustration shown when there\'s no data to display',
+    description: "Message or illustration shown when there's no data to display",
     beginnerTip: 'What you see when your inbox is empty - a friendly message saying "No messages"!',
     aiPhrases: [
       'Show empty state when no data',
@@ -187,7 +232,7 @@ const Skeleton = ({ width, height }) => {
       'Add zero state illustration',
       'Create blank state view',
       'Implement no content message',
-      'Design empty view'
+      'Design empty view',
     ],
     codeExample: `// React Empty State Example - Nothing Here!
 const EmptyState = ({ message, icon }) => {
@@ -200,23 +245,30 @@ const EmptyState = ({ message, icon }) => {
   );
 }`,
     demoType: 'empty',
-    relatedTerms: ['Loading', 'Error State', 'Placeholder']
+    relatedTerms: ['Loading', 'Error State', 'Placeholder'],
   },
 
   {
     id: 'push-notification',
     term: 'Push Notification',
     category: 'feedback',
-    aiSynonyms: ['Browser Notification', 'Desktop Notification', 'System Alert', 'Native Notification', 'Pop-up Alert'],
+    aiSynonyms: [
+      'Browser Notification',
+      'Desktop Notification',
+      'System Alert',
+      'Native Notification',
+      'Pop-up Alert',
+    ],
     description: 'System-level notifications that appear outside the browser',
-    beginnerTip: 'Those pop-up messages from websites that appear in your system tray or notification center!',
+    beginnerTip:
+      'Those pop-up messages from websites that appear in your system tray or notification center!',
     aiPhrases: [
       'Send push notifications',
       'Add browser notifications',
       'Implement desktop alerts',
       'Create system notifications',
       'Build native alerts',
-      'Enable push messages'
+      'Enable push messages',
     ],
     codeExample: `// Browser Push Notification Example
 const sendNotification = (title, body) => {
@@ -232,23 +284,31 @@ const sendNotification = (title, body) => {
   }
 };`,
     demoType: 'push-notification',
-    relatedTerms: ['Notification', 'Alert', 'Toast']
+    relatedTerms: ['Notification', 'Alert', 'Toast'],
   },
 
   {
     id: 'loading-overlay',
     term: 'Loading Overlay',
     category: 'feedback',
-    aiSynonyms: ['Loading Screen', 'Loading Mask', 'Busy Overlay', 'Processing Screen', 'Wait Screen', 'Loader Overlay'],
+    aiSynonyms: [
+      'Loading Screen',
+      'Loading Mask',
+      'Busy Overlay',
+      'Processing Screen',
+      'Wait Screen',
+      'Loader Overlay',
+    ],
     description: 'Full-screen or partial overlay showing content is loading',
-    beginnerTip: 'A semi-transparent layer with a spinner that covers the page while loading - prevents clicking!',
+    beginnerTip:
+      'A semi-transparent layer with a spinner that covers the page while loading - prevents clicking!',
     aiPhrases: [
       'Show loading overlay',
       'Add loading screen',
       'Create busy state overlay',
       'Implement processing mask',
       'Build wait screen',
-      'Display loader overlay'
+      'Display loader overlay',
     ],
     codeExample: `// React Loading Overlay Example
 const LoadingOverlay = ({ isLoading, children }) => {
@@ -265,14 +325,21 @@ const LoadingOverlay = ({ isLoading, children }) => {
   );
 }`,
     demoType: 'loading-overlay',
-    relatedTerms: ['Spinner', 'Loading', 'Overlay']
+    relatedTerms: ['Spinner', 'Loading', 'Overlay'],
   },
 
   {
     id: 'confirmation-modal',
     term: 'Confirmation Modal',
     category: 'feedback',
-    aiSynonyms: ['Confirm Dialog', 'Confirmation Popup', 'Confirm Box', 'Decision Modal', 'Yes/No Dialog', 'Action Confirmation'],
+    aiSynonyms: [
+      'Confirm Dialog',
+      'Confirmation Popup',
+      'Confirm Box',
+      'Decision Modal',
+      'Yes/No Dialog',
+      'Action Confirmation',
+    ],
     description: 'Modal asking user to confirm an action before proceeding',
     beginnerTip: 'The "Are you sure?" popup that appears before deleting something important!',
     aiPhrases: [
@@ -281,7 +348,7 @@ const LoadingOverlay = ({ isLoading, children }) => {
       'Create yes/no dialog',
       'Implement delete confirmation',
       'Build action verification',
-      'Add decision popup'
+      'Add decision popup',
     ],
     codeExample: `// React Confirmation Modal Example
 const ConfirmModal = ({ isOpen, onConfirm, onCancel, message }) => {
@@ -301,14 +368,21 @@ const ConfirmModal = ({ isOpen, onConfirm, onCancel, message }) => {
   );
 }`,
     demoType: 'confirmation-modal',
-    relatedTerms: ['Modal', 'Dialog', 'Alert']
+    relatedTerms: ['Modal', 'Dialog', 'Alert'],
   },
 
   {
     id: 'success-state',
     term: 'Success State',
     category: 'feedback',
-    aiSynonyms: ['Success Message', 'Completion State', 'Success Screen', 'Done State', 'Successful Result', 'Achievement State'],
+    aiSynonyms: [
+      'Success Message',
+      'Completion State',
+      'Success Screen',
+      'Done State',
+      'Successful Result',
+      'Achievement State',
+    ],
     description: 'Visual feedback showing an action completed successfully',
     beginnerTip: 'The green checkmark or success message you see after submitting a form!',
     aiPhrases: [
@@ -317,7 +391,7 @@ const ConfirmModal = ({ isOpen, onConfirm, onCancel, message }) => {
       'Add success screen',
       'Create done state',
       'Implement successful feedback',
-      'Build achievement display'
+      'Build achievement display',
     ],
     codeExample: `// React Success State Example
 const SuccessState = ({ message }) => {
@@ -330,6 +404,6 @@ const SuccessState = ({ message }) => {
   );
 }`,
     demoType: 'success-state',
-    relatedTerms: ['Feedback', 'Alert', 'Confirmation']
-  }
-];
+    relatedTerms: ['Feedback', 'Alert', 'Confirmation'],
+  },
+]

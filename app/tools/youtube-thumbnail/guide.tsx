@@ -6,19 +6,19 @@ export const toolGuide = {
     { icon: '1', text: 'Copy YouTube video URL' },
     { icon: '2', text: 'Paste URL in the input field' },
     { icon: '3', text: 'Select quality (HD recommended)' },
-    { icon: '4', text: 'Download thumbnail image' }
+    { icon: '4', text: 'Download thumbnail image' },
   ],
   tips: [
     'Max quality: 1280x720 (HD)',
     'Works with shorts and regular videos',
     'All YouTube URLs supported',
-    'Right-click to save on desktop'
+    'Right-click to save on desktop',
   ],
   troubleshooting: [
     { problem: 'URL not working', solution: 'Check if video is public' },
     { problem: 'Low quality image', solution: 'Select maximum resolution option' },
-    { problem: 'Download failed', solution: 'Try different browser or clear cache' }
-  ]
+    { problem: 'Download failed', solution: 'Try different browser or clear cache' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -37,12 +37,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <Youtube className="w-6 h-6 text-red-500" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
         {toolGuide.steps.map((step, index) => (
@@ -54,16 +54,18 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Features</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20">
         <p className="text-xs text-red-400">
           <Camera className="w-3 h-3 inline mr-1" />

@@ -8,7 +8,7 @@ export const toolGuide = {
     { icon: '1', text: 'Enter your product or business idea name' },
     { icon: '2', text: 'Select your industry category' },
     { icon: '3', text: 'Describe your target market clearly' },
-    { icon: '4', text: 'Click Analyze to get AI-powered insights' }
+    { icon: '4', text: 'Click Analyze to get AI-powered insights' },
   ],
   tips: [
     'Be specific about your target market for better results',
@@ -16,19 +16,19 @@ export const toolGuide = {
     'Free limit: 3 analyses per day',
     'Analysis takes 3-5 seconds on average',
     'Results include competitors, gaps, and ideas',
-    'Export as JSON for further processing'
+    'Export as JSON for further processing',
   ],
   troubleshooting: [
     { problem: 'Analysis not starting', solution: 'Check if required fields are filled' },
     { problem: 'Daily limit reached', solution: 'Wait 24 hours or use your own API key' },
     { problem: 'Generic results', solution: 'Provide more specific target market details' },
-    { problem: 'Export not working', solution: 'Check browser download settings' }
+    { problem: 'Export not working', solution: 'Check browser download settings' },
   ],
   bestPractices: [
     { title: 'Target Market', tip: 'Be specific: "Remote teams of 10-50 people" vs just "teams"' },
     { title: 'Features', tip: 'List unique features that differentiate your product' },
-    { title: 'Category', tip: 'Choose the closest match, use "Other" if unsure' }
-  ]
+    { title: 'Category', tip: 'Choose the closest match, use "Other" if unsure' },
+  ],
 }
 
 interface ToolGuideProps {
@@ -70,12 +70,12 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <TrendingUp className="w-6 h-6 text-purple-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       {/* Steps Section */}
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>
@@ -110,7 +110,7 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           </div>
         </div>
       </div>
-      
+
       {/* Features & Tips */}
       <div className="mb-6">
         <h4 className="text-sm font-semibold text-gray-300 mb-3">Features & Limits</h4>
@@ -131,8 +131,8 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <div>
             <h4 className="text-sm font-semibold text-yellow-400 mb-1">Usage Limits</h4>
             <p className="text-xs text-gray-300">
-              Free tier includes 3 analyses per day. Need more? You can bring your own API key 
-              or wait 24 hours for the limit to reset.
+              Free tier includes 3 analyses per day. Need more? You can bring your own API key or
+              wait 24 hours for the limit to reset.
             </p>
           </div>
         </div>
@@ -145,13 +145,13 @@ export default function ToolGuide({ onClose, compact = false }: ToolGuideProps) 
           <div>
             <h4 className="text-sm font-semibold text-green-400 mb-1">Privacy & Security</h4>
             <p className="text-xs text-gray-300">
-              Your business ideas are processed securely and never stored. All analysis happens 
-              in real-time and data is immediately discarded after results are generated.
+              Your business ideas are processed securely and never stored. All analysis happens in
+              real-time and data is immediately discarded after results are generated.
             </p>
           </div>
         </div>
       </div>
-      
+
       {/* Troubleshooting */}
       <div className="mb-6">
         <h4 className="text-sm font-semibold text-gray-300 mb-3">Troubleshooting</h4>

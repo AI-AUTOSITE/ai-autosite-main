@@ -1,11 +1,11 @@
 // app/tools/color-palette/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
   Palette,
   RefreshCw,
   Lock,
@@ -14,40 +14,40 @@ import {
   Brush,
   Sparkles,
   Info,
-  Monitor
-} from 'lucide-react';
+  Monitor,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function ColorPaletteGuide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
-  const examplePalette = ['#3b82f6', '#60a5fa', '#fbbf24', '#f59e0b', '#d97706'];
+  const examplePalette = ['#3b82f6', '#60a5fa', '#fbbf24', '#f59e0b', '#d97706']
   const colorHarmonies = [
-    { 
-      name: 'Monochromatic', 
+    {
+      name: 'Monochromatic',
       description: 'Different shades of the same color',
-      colors: ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#93bbfc']
+      colors: ['#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa', '#93bbfc'],
     },
-    { 
-      name: 'Complementary', 
+    {
+      name: 'Complementary',
       description: 'Opposite colors on the wheel',
-      colors: ['#3b82f6', '#60a5fa', '#fbbf24', '#f59e0b', '#d97706']
+      colors: ['#3b82f6', '#60a5fa', '#fbbf24', '#f59e0b', '#d97706'],
     },
-    { 
-      name: 'Analogous', 
+    {
+      name: 'Analogous',
       description: 'Neighboring colors',
-      colors: ['#10b981', '#14b8a6', '#06b6d4', '#0284c7', '#0369a1']
-    }
-  ];
+      colors: ['#10b981', '#14b8a6', '#06b6d4', '#0284c7', '#0369a1'],
+    },
+  ]
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -94,13 +94,8 @@ export default function ColorPaletteGuide({ onClose }: GuideProps) {
             <div className="grid grid-cols-5 gap-2 mb-3">
               {examplePalette.map((color, index) => (
                 <div key={index}>
-                  <div 
-                    className="aspect-square rounded-lg"
-                    style={{ backgroundColor: color }}
-                  />
-                  <code className="text-xs text-gray-400 mt-1 block text-center">
-                    {color}
-                  </code>
+                  <div className="aspect-square rounded-lg" style={{ backgroundColor: color }} />
+                  <code className="text-xs text-gray-400 mt-1 block text-center">{color}</code>
                 </div>
               ))}
             </div>
@@ -139,7 +134,7 @@ export default function ColorPaletteGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -152,7 +147,7 @@ export default function ColorPaletteGuide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -198,7 +193,7 @@ export default function ColorPaletteGuide({ onClose }: GuideProps) {
                 </div>
                 <div className="flex gap-1">
                   {harmony.colors.map((color, i) => (
-                    <div 
+                    <div
                       key={i}
                       className="h-6 flex-1 rounded"
                       style={{ backgroundColor: color }}
@@ -294,7 +289,7 @@ export default function ColorPaletteGuide({ onClose }: GuideProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -302,4 +297,4 @@ export const guideMetadata = {
   title: 'Color Palette Generator Guide',
   icon: '🎨',
   available: true,
-};
+}

@@ -60,7 +60,7 @@ const articles: Record<string, any> = {
       <p>Protecting privacy in screenshots is a simple but critical practice. By taking a few seconds to mask sensitive information, you can prevent data leaks, maintain compliance, and protect both personal and business information.</p>
       
       <p>Start implementing these practices today with free tools like <a href="/">BlurTap</a>, which offers instant, local processing for maximum privacy protection.</p>
-    `
+    `,
   },
   // 他の記事も同様に追加
 }
@@ -73,7 +73,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = articles[params.slug]
-  
+
   if (!article) {
     return {
       title: 'Article Not Found | BlurTap Blog',
@@ -94,7 +94,7 @@ export default function BlogPostPage({ params }: Props) {
       <div className="text-center py-20">
         <h1 className="text-3xl font-bold text-white mb-4">Article Not Found</h1>
         <p className="text-gray-400 mb-8">The article you're looking for doesn't exist.</p>
-        <Link 
+        <Link
           href="/blog"
           className="inline-flex items-center space-x-2 text-cyan-400 hover:text-cyan-300"
         >
@@ -108,7 +108,7 @@ export default function BlogPostPage({ params }: Props) {
   return (
     <article className="max-w-3xl mx-auto">
       {/* 戻るリンク */}
-      <Link 
+      <Link
         href="/blog"
         className="inline-flex items-center space-x-2 text-gray-400 hover:text-cyan-400 mb-8 transition-colors"
       >
@@ -131,14 +131,12 @@ export default function BlogPostPage({ params }: Props) {
             <span>{article.readTime}</span>
           </span>
         </div>
-        
-        <h1 className="text-3xl sm:text-4xl font-bold text-white">
-          {article.title}
-        </h1>
+
+        <h1 className="text-3xl sm:text-4xl font-bold text-white">{article.title}</h1>
       </header>
 
       {/* 記事本文 */}
-      <div 
+      <div
         className="prose prose-invert prose-lg max-w-none
           prose-headings:text-white prose-headings:font-bold
           prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
@@ -159,7 +157,8 @@ export default function BlogPostPage({ params }: Props) {
           <h3 className="text-xl font-bold text-white">Try BlurTap Now</h3>
         </div>
         <p className="text-gray-300 mb-4">
-          Protect your privacy with our free image masking tool. No signup required, 100% local processing.
+          Protect your privacy with our free image masking tool. No signup required, 100% local
+          processing.
         </p>
         <Link
           href="/"
@@ -173,12 +172,16 @@ export default function BlogPostPage({ params }: Props) {
       <div className="mt-12 pt-8 border-t border-white/10">
         <h3 className="text-xl font-bold text-white mb-4">Related Articles</h3>
         <div className="space-y-3">
-          <Link 
+          <Link
             href="/blog/gdpr-compliance-image-masking"
             className="block p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-all"
           >
-            <h4 className="text-white font-semibold mb-1">GDPR Compliance: Why Image Masking Matters</h4>
-            <p className="text-sm text-gray-400">Learn about compliance requirements for handling personal data in images.</p>
+            <h4 className="text-white font-semibold mb-1">
+              GDPR Compliance: Why Image Masking Matters
+            </h4>
+            <p className="text-sm text-gray-400">
+              Learn about compliance requirements for handling personal data in images.
+            </p>
           </Link>
         </div>
       </div>

@@ -6,19 +6,25 @@ export const toolGuide = {
     { icon: '1', text: 'Drop or select your PDF file' },
     { icon: '2', text: 'AI extracts tables automatically' },
     { icon: '3', text: 'Download as CSV or Excel' },
-    { icon: '4', text: 'Process unlimited files for free' }
+    { icon: '4', text: 'Process unlimited files for free' },
   ],
   tips: [
     'Supports PDFs up to 10MB',
     'Extracts tables with high accuracy',
     'Download in both CSV and Excel formats',
-    'All processing happens securely'
+    'All processing happens securely',
   ],
   troubleshooting: [
-    { problem: 'File too large', solution: 'Maximum file size is 10MB. Try compressing your PDF first' },
+    {
+      problem: 'File too large',
+      solution: 'Maximum file size is 10MB. Try compressing your PDF first',
+    },
     { problem: 'No tables found', solution: 'PDF must contain structured table data' },
-    { problem: 'Extraction failed', solution: 'Try a different PDF or check if tables are scanned images' }
-  ]
+    {
+      problem: 'Extraction failed',
+      solution: 'Try a different PDF or check if tables are scanned images',
+    },
+  ],
 }
 
 interface ToolGuideProps {
@@ -37,12 +43,12 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           <X className="w-5 h-5 text-gray-400 hover:text-white" />
         </button>
       )}
-      
+
       <div className="flex items-center gap-2 mb-6">
         <FileText className="w-6 h-6 text-cyan-400" />
         <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
         {toolGuide.steps.map((step, index) => (
@@ -54,16 +60,18 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           </div>
         ))}
       </div>
-      
+
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Features</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">• {tip}</p>
+            <p key={index} className="text-xs text-gray-300">
+              • {tip}
+            </p>
           ))}
         </div>
       </div>
-      
+
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Troubleshooting</h4>
         <div className="space-y-2">
@@ -75,7 +83,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
           ))}
         </div>
       </div>
-      
+
       <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
         <p className="text-xs text-green-400">
           <Shield className="w-3 h-3 inline mr-1" />

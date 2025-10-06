@@ -21,12 +21,12 @@ interface UnifiedToolLayoutProps {
 
 // ヘルパー関数：URLからツールを取得
 function getToolByUrl(url: string): Tool | undefined {
-  return TOOLS.find(tool => tool.url === url)
+  return TOOLS.find((tool) => tool.url === url)
 }
 
 // ヘルパー関数：カテゴリーIDからカテゴリーを取得
 function getCategoryById(categoryId: string): Category | undefined {
-  return CATEGORIES.find(cat => cat.id === categoryId)
+  return CATEGORIES.find((cat) => cat.id === categoryId)
 }
 
 export default function UnifiedToolLayout({
@@ -35,7 +35,7 @@ export default function UnifiedToolLayout({
   showCrossSell = true,
   showToolInfo = true,
   showSidebar = true,
-  containerWidth = 'xl'
+  containerWidth = 'xl',
 }: UnifiedToolLayoutProps) {
   const pathname = usePathname()
   const [tool, setTool] = useState<Tool | undefined>()
@@ -44,10 +44,8 @@ export default function UnifiedToolLayout({
 
   useEffect(() => {
     // Get tool info from URL or toolId
-    const currentTool = toolId ? 
-      getToolByUrl(`/tools/${toolId}`) : 
-      getToolByUrl(pathname)
-    
+    const currentTool = toolId ? getToolByUrl(`/tools/${toolId}`) : getToolByUrl(pathname)
+
     if (currentTool) {
       setTool(currentTool)
       const cat = getCategoryById(currentTool.category)
@@ -57,12 +55,12 @@ export default function UnifiedToolLayout({
 
   // Container width classes
   const containerClasses = {
-    'sm': 'max-w-sm',
-    'md': 'max-w-3xl',
-    'lg': 'max-w-5xl',
-    'xl': 'max-w-7xl',
+    sm: 'max-w-sm',
+    md: 'max-w-3xl',
+    lg: 'max-w-5xl',
+    xl: 'max-w-7xl',
     '2xl': 'max-w-[1600px]',
-    'full': 'max-w-full'
+    full: 'max-w-full',
   }
 
   return (
@@ -81,14 +79,8 @@ export default function UnifiedToolLayout({
       {/* Tool header */}
       {tool && (
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
-            {tool.name}
-          </h1>
-          {tool.description && (
-            <p className="text-lg text-gray-400">
-              {tool.description}
-            </p>
-          )}
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">{tool.name}</h1>
+          {tool.description && <p className="text-lg text-gray-400">{tool.description}</p>}
         </div>
       )}
 
@@ -140,9 +132,7 @@ export default function UnifiedToolLayout({
       )}
 
       {/* Related tools (with sidebar) */}
-      {tool && category && showSidebar && (
-        <RelatedTools currentTool={tool} category={category} />
-      )}
+      {tool && category && showSidebar && <RelatedTools currentTool={tool} category={category} />}
     </div>
   )
 }

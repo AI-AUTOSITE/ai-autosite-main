@@ -28,13 +28,15 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
           <>
             {/* Tool Status */}
             <div className="flex items-center gap-2 mb-4">
-              <span className={`px-2 py-1 text-xs rounded-full ${
-                tool.status === 'live' 
-                  ? 'bg-green-500/20 text-green-400'
-                  : tool.status === 'coming'
-                  ? 'bg-yellow-500/20 text-yellow-400'
-                  : 'bg-gray-500/20 text-gray-400'
-              }`}>
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${
+                  tool.status === 'live'
+                    ? 'bg-green-500/20 text-green-400'
+                    : tool.status === 'coming'
+                      ? 'bg-yellow-500/20 text-yellow-400'
+                      : 'bg-gray-500/20 text-gray-400'
+                }`}
+              >
                 {tool.status.toUpperCase()}
               </span>
               {tool.new && (
@@ -42,9 +44,7 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
                   NEW
                 </span>
               )}
-              {tool.featured && (
-                <Star className="w-4 h-4 text-yellow-400" />
-              )}
+              {tool.featured && <Star className="w-4 h-4 text-yellow-400" />}
             </div>
 
             {/* Tool Stats */}
@@ -99,10 +99,7 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
               <p className="text-xs text-gray-400 mb-2">Tags</p>
               <div className="flex flex-wrap gap-1">
                 {tool.tags.map((tag, index) => (
-                  <span 
-                    key={index}
-                    className="px-2 py-1 text-xs bg-white/5 text-gray-300 rounded"
-                  >
+                  <span key={index} className="px-2 py-1 text-xs bg-white/5 text-gray-300 rounded">
                     {tag}
                   </span>
                 ))}
@@ -112,15 +109,20 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
             {/* Pricing */}
             <div className="mb-6">
               <p className="text-xs text-gray-400 mb-2">Pricing</p>
-              <div className={`inline-block px-3 py-1 text-sm rounded-full ${
-                tool.pricing === 'free' || !tool.pricing
-                  ? 'bg-green-500/20 text-green-400'
+              <div
+                className={`inline-block px-3 py-1 text-sm rounded-full ${
+                  tool.pricing === 'free' || !tool.pricing
+                    ? 'bg-green-500/20 text-green-400'
+                    : tool.pricing === 'freemium'
+                      ? 'bg-blue-500/20 text-blue-400'
+                      : 'bg-purple-500/20 text-purple-400'
+                }`}
+              >
+                {!tool.pricing || tool.pricing === 'free'
+                  ? 'Free Forever'
                   : tool.pricing === 'freemium'
-                  ? 'bg-blue-500/20 text-blue-400'
-                  : 'bg-purple-500/20 text-purple-400'
-              }`}>
-                {!tool.pricing || tool.pricing === 'free' ? 'Free Forever' : 
-                 tool.pricing === 'freemium' ? 'Free + Premium' : 'Premium'}
+                    ? 'Free + Premium'
+                    : 'Premium'}
               </div>
             </div>
 

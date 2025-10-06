@@ -77,7 +77,7 @@ export default function ImageGrid() {
       cvs.width = totalW
       cvs.height = totalH
       const ctx = cvs.getContext('2d')!
-      
+
       // Dark background
       ctx.fillStyle = '#1a1a1a'
       ctx.fillRect(0, 0, totalW, totalH)
@@ -88,10 +88,10 @@ export default function ImageGrid() {
         for (let c = 0; c < cols; c++) {
           const idx = r * cols + c
           const bm = bitmaps[idx]
-          
+
           if (bm) {
             ctx.drawImage(bm, x * scale, y * scale, bm.width * scale, bm.height * scale)
-            
+
             if (showNumbers) {
               const fontSize = Math.max(12, 26 * scale)
               ctx.fillStyle = 'rgba(0,0,0,.7)'
@@ -104,7 +104,7 @@ export default function ImageGrid() {
             ctx.strokeStyle = 'rgba(255,255,255,0.1)'
             ctx.strokeRect(x * scale, y * scale, colWidths[c] * scale, rowHeights[r] * scale)
           }
-          
+
           x += colWidths[c]
         }
         y += rowHeights[r]
@@ -123,25 +123,25 @@ export default function ImageGrid() {
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return
-    
+
     setCells((prev) => {
       const next = [...prev]
       let i = 0
-      
+
       // Find first empty cell
       while (i < next.length && next[i]) i++
-      
+
       for (const f of Array.from(files)) {
         while (i < next.length && next[i]) i++
         if (i >= next.length) break
         if (!f.type.startsWith('image/')) continue
-        
+
         const old = next[i]
         if (old?.url) URL.revokeObjectURL(old.url)
         next[i] = { file: f, url: URL.createObjectURL(f) }
         i++
       }
-      
+
       return next
     })
   }
@@ -184,7 +184,7 @@ export default function ImageGrid() {
     cvs.width = totalW
     cvs.height = totalH
     const ctx = cvs.getContext('2d')!
-    
+
     // White background
     ctx.fillStyle = '#f5f5f5'
     ctx.fillRect(0, 0, totalW, totalH)
@@ -195,10 +195,10 @@ export default function ImageGrid() {
       for (let c = 0; c < cols; c++) {
         const idx = r * cols + c
         const bm = bitmaps[idx]
-        
+
         if (bm) {
           ctx.drawImage(bm, x, y, bm.width, bm.height)
-          
+
           if (showNumbers) {
             ctx.fillStyle = 'rgba(0,0,0,.7)'
             ctx.fillRect(x, y, 60, 42)
@@ -207,7 +207,7 @@ export default function ImageGrid() {
             ctx.fillText(String(idx + 1), x + 18, y + 32)
           }
         }
-        
+
         x += colWidths[c]
       }
       y += rowHeights[r]
@@ -239,7 +239,7 @@ export default function ImageGrid() {
             className="w-16 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
           />
         </label>
-        
+
         <label className="flex items-center gap-2 text-white">
           <span>Columns:</span>
           <input
@@ -251,7 +251,7 @@ export default function ImageGrid() {
             className="w-16 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
           />
         </label>
-        
+
         <label className="flex items-center gap-2 text-white cursor-pointer">
           <input
             type="checkbox"
@@ -261,7 +261,7 @@ export default function ImageGrid() {
           />
           <span>Show numbers</span>
         </label>
-        
+
         <button
           className="ml-auto px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={filledCount < 1}
@@ -331,7 +331,7 @@ export default function ImageGrid() {
 
 function Dropzone({ onFiles }: { onFiles: (files: FileList | null) => void }) {
   const fileInput = React.useRef<HTMLInputElement>(null)
-  
+
   return (
     <>
       <div
@@ -401,11 +401,7 @@ function Cell({
     >
       {image ? (
         <>
-          <img
-            src={image.url}
-            alt={`Cell ${index + 1}`}
-            className="h-full w-full object-cover"
-          />
+          <img src={image.url} alt={`Cell ${index + 1}`} className="h-full w-full object-cover" />
           {showNumbers && (
             <div className="absolute top-2 left-2 bg-black/70 px-3 py-1 rounded-md text-white text-sm font-bold">
               {index + 1}

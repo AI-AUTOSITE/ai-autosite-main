@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Code, Database, Cloud, Zap, Globe, Gauge } from 'lucide-react';
+import { useState } from 'react'
+import { Code, Database, Cloud, Zap, Globe, Gauge } from 'lucide-react'
 
 // Tech data structure
 interface TechData {
-  id: string;
-  name: string;
-  category: string;
-  icon: React.ReactNode;
-  features: string[];
-  useCases: string[];
-  learningCurve: 'Beginner' | 'Intermediate' | 'Advanced';
-  learningNote: string;
-  pros: string;
-  cons: string;
+  id: string
+  name: string
+  category: string
+  icon: React.ReactNode
+  features: string[]
+  useCases: string[]
+  learningCurve: 'Beginner' | 'Intermediate' | 'Advanced'
+  learningNote: string
+  pros: string
+  cons: string
 }
 
 // All technologies data
@@ -30,7 +30,7 @@ const techData: TechData[] = [
       'File-based routing',
       'API Routes',
       'Image optimization',
-      'Edge runtime'
+      'Edge runtime',
     ],
     useCases: [
       'SEO-critical websites',
@@ -38,12 +38,12 @@ const techData: TechData[] = [
       'Corporate websites',
       'Full-stack applications',
       'Content-heavy sites',
-      'Blogs with features'
+      'Blogs with features',
     ],
     learningCurve: 'Intermediate',
     learningNote: 'React + framework concepts',
     pros: 'Best SEO, zero config, rich ecosystem',
-    cons: 'Steeper learning curve, heavier builds'
+    cons: 'Steeper learning curve, heavier builds',
   },
   {
     id: 'astro',
@@ -56,7 +56,7 @@ const techData: TechData[] = [
       'Minimal JavaScript',
       'Component Islands',
       'Markdown support',
-      'Content collections'
+      'Content collections',
     ],
     useCases: [
       'Documentation sites',
@@ -64,12 +64,12 @@ const techData: TechData[] = [
       'Landing pages',
       'Portfolio websites',
       'Marketing sites',
-      'Fast static sites'
+      'Fast static sites',
     ],
     learningCurve: 'Intermediate',
     learningNote: 'Unique syntax & concepts',
     pros: 'Fastest performance, great SEO, lightweight',
-    cons: 'Limited interactivity, smaller ecosystem'
+    cons: 'Limited interactivity, smaller ecosystem',
   },
   {
     id: 'sveltekit',
@@ -82,7 +82,7 @@ const techData: TechData[] = [
       'Intuitive syntax',
       'Small bundle sizes',
       'Built-in reactivity',
-      'TypeScript support'
+      'TypeScript support',
     ],
     useCases: [
       'High-performance apps',
@@ -90,12 +90,12 @@ const techData: TechData[] = [
       'Interactive dashboards',
       'Real-time applications',
       'Animation-heavy sites',
-      'Lightweight SPAs'
+      'Lightweight SPAs',
     ],
     learningCurve: 'Intermediate',
     learningNote: 'New concepts to learn',
     pros: 'Fast runtime, small bundles, great DX',
-    cons: 'Smaller adoption, fewer resources'
+    cons: 'Smaller adoption, fewer resources',
   },
   {
     id: 'vite',
@@ -108,7 +108,7 @@ const techData: TechData[] = [
       'Instant HMR',
       'Framework agnostic',
       'Plugin ecosystem',
-      'Production optimized'
+      'Production optimized',
     ],
     useCases: [
       'SPAs & admin panels',
@@ -116,12 +116,12 @@ const techData: TechData[] = [
       'Library development',
       'Learning projects',
       'Developer tooling',
-      'Multi-page apps'
+      'Multi-page apps',
     ],
     learningCurve: 'Beginner',
     learningNote: 'Minimal configuration',
     pros: 'Best dev experience, fast, simple setup',
-    cons: 'Weak SEO without SSR setup'
+    cons: 'Weak SEO without SSR setup',
   },
   {
     id: 'tailwind',
@@ -134,7 +134,7 @@ const techData: TechData[] = [
       'Component-friendly',
       'Design system',
       'JIT compilation',
-      'Plugin ecosystem'
+      'Plugin ecosystem',
     ],
     useCases: [
       'Rapid UI development',
@@ -142,12 +142,12 @@ const techData: TechData[] = [
       'Component libraries',
       'Responsive design',
       'Team collaboration',
-      'Prototyping'
+      'Prototyping',
     ],
     learningCurve: 'Beginner',
     learningNote: 'Learn utility classes',
     pros: 'Fast development, consistent design, great DX',
-    cons: 'Large HTML classes, learning curve'
+    cons: 'Large HTML classes, learning curve',
   },
   {
     id: 'supabase',
@@ -160,7 +160,7 @@ const techData: TechData[] = [
       'Built-in auth',
       'File storage',
       'Edge functions',
-      'Firebase alternative'
+      'Firebase alternative',
     ],
     useCases: [
       'Chat applications',
@@ -168,12 +168,12 @@ const techData: TechData[] = [
       'User auth systems',
       'CRUD applications',
       'Collaborative tools',
-      'MVP development'
+      'MVP development',
     ],
     learningCurve: 'Beginner',
     learningNote: 'If familiar with SQL',
     pros: 'Easy setup, full-featured, generous free tier',
-    cons: 'PostgreSQL-only, vendor lock-in'
+    cons: 'PostgreSQL-only, vendor lock-in',
   },
   {
     id: 'vercel',
@@ -186,7 +186,7 @@ const techData: TechData[] = [
       'Preview deployments',
       'Analytics included',
       'Next.js optimized',
-      'Custom domains'
+      'Custom domains',
     ],
     useCases: [
       'Next.js applications',
@@ -194,51 +194,51 @@ const techData: TechData[] = [
       'Team collaboration',
       'Preview environments',
       'Jamstack sites',
-      'Rapid deployment'
+      'Rapid deployment',
     ],
     learningCurve: 'Beginner',
     learningNote: 'Git integration',
     pros: 'Easy deployment, great performance, excellent DX',
-    cons: 'Can get expensive, vendor lock-in'
-  }
-];
+    cons: 'Can get expensive, vendor lock-in',
+  },
+]
 
 const TechStackComparison = () => {
-  const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'compare'>('grid');
+  const [selectedTechs, setSelectedTechs] = useState<string[]>([])
+  const [viewMode, setViewMode] = useState<'grid' | 'compare'>('grid')
 
   const toggleTechSelection = (techId: string) => {
-    setSelectedTechs(prev => {
+    setSelectedTechs((prev) => {
       if (prev.includes(techId)) {
-        return prev.filter(id => id !== techId);
+        return prev.filter((id) => id !== techId)
       }
       if (prev.length >= 3) {
         // Replace oldest selection
-        return [...prev.slice(1), techId];
+        return [...prev.slice(1), techId]
       }
-      return [...prev, techId];
-    });
-  };
+      return [...prev, techId]
+    })
+  }
 
-  const selectedTechData = techData.filter(tech => selectedTechs.includes(tech.id));
+  const selectedTechData = techData.filter((tech) => selectedTechs.includes(tech.id))
 
   // Get category colors
   const getCategoryStyle = (category: string) => {
-    switch(category) {
+    switch (category) {
       case 'Framework':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30'
       case 'Build Tool':
-        return 'bg-green-500/20 text-green-300 border-green-500/30';
+        return 'bg-green-500/20 text-green-300 border-green-500/30'
       case 'Styling':
-        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
       case 'Database':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30'
       case 'Hosting':
-        return 'bg-red-500/20 text-red-300 border-red-500/30';
+        return 'bg-red-500/20 text-red-300 border-red-500/30'
       default:
-        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
     }
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-5xl">
@@ -247,9 +247,7 @@ const TechStackComparison = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-medium text-white">Compare Technologies</h2>
-            <p className="text-sm text-gray-400 mt-1">
-              Select up to 3 technologies to compare
-            </p>
+            <p className="text-sm text-gray-400 mt-1">Select up to 3 technologies to compare</p>
           </div>
           <div className="flex gap-2">
             <button
@@ -278,10 +276,13 @@ const TechStackComparison = () => {
 
         {selectedTechs.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {selectedTechs.map(techId => {
-              const tech = techData.find(t => t.id === techId);
+            {selectedTechs.map((techId) => {
+              const tech = techData.find((t) => t.id === techId)
               return (
-                <span key={techId} className="px-3 py-1 bg-cyan-600/20 text-cyan-300 rounded-full text-sm flex items-center gap-2">
+                <span
+                  key={techId}
+                  className="px-3 py-1 bg-cyan-600/20 text-cyan-300 rounded-full text-sm flex items-center gap-2"
+                >
                   {tech?.name}
                   <button
                     onClick={() => toggleTechSelection(techId)}
@@ -290,7 +291,7 @@ const TechStackComparison = () => {
                     ×
                   </button>
                 </span>
-              );
+              )
             })}
           </div>
         )}
@@ -299,7 +300,7 @@ const TechStackComparison = () => {
       {/* Grid View */}
       {viewMode === 'grid' && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {techData.map(tech => (
+          {techData.map((tech) => (
             <div
               key={tech.id}
               onClick={() => toggleTechSelection(tech.id)}
@@ -311,7 +312,9 @@ const TechStackComparison = () => {
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 border ${getCategoryStyle(tech.category)}`}>
+                  <span
+                    className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 border ${getCategoryStyle(tech.category)}`}
+                  >
                     {tech.category}
                   </span>
                   <h3 className="text-lg font-medium text-white flex items-center gap-2">
@@ -319,25 +322,35 @@ const TechStackComparison = () => {
                     {tech.name}
                   </h3>
                 </div>
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  selectedTechs.includes(tech.id)
-                    ? 'bg-cyan-600 border-cyan-600'
-                    : 'border-gray-500'
-                }`}>
+                <div
+                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    selectedTechs.includes(tech.id)
+                      ? 'bg-cyan-600 border-cyan-600'
+                      : 'border-gray-500'
+                  }`}
+                >
                   {selectedTechs.includes(tech.id) && (
                     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   )}
                 </div>
               </div>
-              
+
               <div className="mb-3">
-                <span className={`text-sm ${
-                  tech.learningCurve === 'Beginner' ? 'text-green-400' :
-                  tech.learningCurve === 'Intermediate' ? 'text-yellow-400' :
-                  'text-red-400'
-                }`}>
+                <span
+                  className={`text-sm ${
+                    tech.learningCurve === 'Beginner'
+                      ? 'text-green-400'
+                      : tech.learningCurve === 'Intermediate'
+                        ? 'text-yellow-400'
+                        : 'text-red-400'
+                  }`}
+                >
                   <Gauge className="w-3 h-3 inline mr-1" />
                   {tech.learningCurve} Level
                 </span>
@@ -358,13 +371,20 @@ const TechStackComparison = () => {
             <table className="w-full">
               <thead>
                 <tr className="bg-white/5 border-b border-white/20">
-                  <th className="text-left py-4 px-6 font-medium text-gray-400 min-w-[150px]">Aspect</th>
-                  {selectedTechData.map(tech => (
-                    <th key={tech.id} className="text-left py-4 px-6 font-medium text-white min-w-[250px]">
+                  <th className="text-left py-4 px-6 font-medium text-gray-400 min-w-[150px]">
+                    Aspect
+                  </th>
+                  {selectedTechData.map((tech) => (
+                    <th
+                      key={tech.id}
+                      className="text-left py-4 px-6 font-medium text-white min-w-[250px]"
+                    >
                       <div className="flex items-center gap-2">
                         {tech.icon}
                         <div>
-                          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium mb-1 border ${getCategoryStyle(tech.category)}`}>
+                          <span
+                            className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium mb-1 border ${getCategoryStyle(tech.category)}`}
+                          >
                             {tech.category}
                           </span>
                           <div className="text-lg">{tech.name}</div>
@@ -378,7 +398,7 @@ const TechStackComparison = () => {
                 {/* Key Features */}
                 <tr className="border-b border-white/10">
                   <td className="py-4 px-6 font-medium text-gray-400">Features</td>
-                  {selectedTechData.map(tech => (
+                  {selectedTechData.map((tech) => (
                     <td key={tech.id} className="py-4 px-6 text-sm text-gray-300">
                       <ul className="space-y-1">
                         {tech.features.map((feature, idx) => (
@@ -392,7 +412,7 @@ const TechStackComparison = () => {
                 {/* Use Cases */}
                 <tr className="border-b border-white/10 bg-white/5">
                   <td className="py-4 px-6 font-medium text-gray-400">Use Cases</td>
-                  {selectedTechData.map(tech => (
+                  {selectedTechData.map((tech) => (
                     <td key={tech.id} className="py-4 px-6 text-sm text-cyan-400">
                       <ul className="space-y-1">
                         {tech.useCases.map((useCase, idx) => (
@@ -406,18 +426,20 @@ const TechStackComparison = () => {
                 {/* Learning Curve */}
                 <tr className="border-b border-white/10">
                   <td className="py-4 px-6 font-medium text-gray-400">Learning</td>
-                  {selectedTechData.map(tech => (
+                  {selectedTechData.map((tech) => (
                     <td key={tech.id} className="py-4 px-6">
-                      <div className={`font-medium ${
-                        tech.learningCurve === 'Beginner' ? 'text-green-400' :
-                        tech.learningCurve === 'Intermediate' ? 'text-yellow-400' :
-                        'text-red-400'
-                      }`}>
+                      <div
+                        className={`font-medium ${
+                          tech.learningCurve === 'Beginner'
+                            ? 'text-green-400'
+                            : tech.learningCurve === 'Intermediate'
+                              ? 'text-yellow-400'
+                              : 'text-red-400'
+                        }`}
+                      >
                         {tech.learningCurve}
                       </div>
-                      <div className="text-sm text-gray-400 mt-1">
-                        {tech.learningNote}
-                      </div>
+                      <div className="text-sm text-gray-400 mt-1">{tech.learningNote}</div>
                     </td>
                   ))}
                 </tr>
@@ -425,7 +447,7 @@ const TechStackComparison = () => {
                 {/* Pros */}
                 <tr className="border-b border-white/10 bg-white/5">
                   <td className="py-4 px-6 font-medium text-gray-400">Pros</td>
-                  {selectedTechData.map(tech => (
+                  {selectedTechData.map((tech) => (
                     <td key={tech.id} className="py-4 px-6 text-sm text-green-400">
                       {tech.pros}
                     </td>
@@ -435,7 +457,7 @@ const TechStackComparison = () => {
                 {/* Cons */}
                 <tr>
                   <td className="py-4 px-6 font-medium text-gray-400">Cons</td>
-                  {selectedTechData.map(tech => (
+                  {selectedTechData.map((tech) => (
                     <td key={tech.id} className="py-4 px-6 text-sm text-red-400">
                       {tech.cons}
                     </td>
@@ -467,7 +489,7 @@ const TechStackComparison = () => {
       {/* Recommended Stacks */}
       <div className="mt-8 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
         <h3 className="text-lg font-medium text-white mb-4">Recommended Stacks</h3>
-        
+
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <div className="text-sm font-medium text-white mb-2">E-commerce</div>
@@ -503,7 +525,7 @@ const TechStackComparison = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TechStackComparison;
+export default TechStackComparison

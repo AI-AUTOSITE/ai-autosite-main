@@ -17,23 +17,23 @@ export const blogCategories: BlogCategory[] = [
     shortName: 'Study',
     icon: Brain,
     color: 'from-green-500 to-teal-500',
-    description: 'AI-powered learning and debate tools'
+    description: 'AI-powered learning and debate tools',
   },
   {
-  id: 'creative',
-  name: 'Creative Tools',
-  shortName: 'Creative',
-  icon: Palette,
-  color: 'from-pink-500 to-purple-500',
-  description: 'Design and creative content tools'
-},
+    id: 'creative',
+    name: 'Creative Tools',
+    shortName: 'Creative',
+    icon: Palette,
+    color: 'from-pink-500 to-purple-500',
+    description: 'Design and creative content tools',
+  },
   {
     id: 'dev-tools',
     name: 'Developer Tools',
     shortName: 'Dev',
     icon: Code,
     color: 'from-purple-500 to-indigo-500',
-    description: 'Code analysis and optimization guides'
+    description: 'Code analysis and optimization guides',
   },
   {
     id: 'quick-tools',
@@ -41,7 +41,7 @@ export const blogCategories: BlogCategory[] = [
     shortName: 'Quick',
     icon: Zap,
     color: 'from-cyan-500 to-blue-500',
-    description: 'Instant productivity boosters'
+    description: 'Instant productivity boosters',
   },
   {
     id: 'learning',
@@ -49,7 +49,7 @@ export const blogCategories: BlogCategory[] = [
     shortName: 'Learn',
     icon: BookOpen,
     color: 'from-amber-500 to-orange-500',
-    description: 'Interactive tutorials and guides'
+    description: 'Interactive tutorials and guides',
   },
   {
     id: 'business',
@@ -57,6 +57,6 @@ export const blogCategories: BlogCategory[] = [
     shortName: 'Business',
     icon: Briefcase,
     color: 'from-blue-500 to-purple-600',
-    description: 'Professional tools for business analysis'
-  }
+    description: 'Professional tools for business analysis',
+  },
 ]

@@ -23,9 +23,9 @@ export function ProcessingState() {
       <p className="text-sm text-gray-400 mt-2">This may take a moment</p>
       <div className="mt-6 w-48 mx-auto">
         <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse" 
-            style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} 
+          <div
+            className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-pulse"
+            style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
           />
         </div>
       </div>
@@ -46,14 +46,12 @@ export function SuccessState({ fileName, csvUrl, excelUrl, onReset }: SuccessSta
     <div className="text-center">
       <CheckCircle className="w-20 h-20 text-green-400 mb-4 mx-auto" />
       <p className="text-2xl font-semibold text-white mb-2">Ready!</p>
-      <p className="text-sm text-gray-400 mb-8 max-w-xs mx-auto truncate">
-        {fileName}
-      </p>
-      
+      <p className="text-sm text-gray-400 mb-8 max-w-xs mx-auto truncate">{fileName}</p>
+
       {/* Download Buttons */}
       <div className="flex gap-4 justify-center mb-8 flex-wrap">
         {csvUrl && (
-          <a 
+          <a
             href={csvUrl}
             download={fileName.replace('.pdf', '.csv')}
             className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 
@@ -66,7 +64,7 @@ export function SuccessState({ fileName, csvUrl, excelUrl, onReset }: SuccessSta
           </a>
         )}
         {excelUrl && (
-          <a 
+          <a
             href={excelUrl}
             download={fileName.replace('.pdf', '.xlsx')}
             className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 
@@ -79,7 +77,7 @@ export function SuccessState({ fileName, csvUrl, excelUrl, onReset }: SuccessSta
           </a>
         )}
       </div>
-      
+
       {/* Reset Button */}
       <button
         onClick={onReset}

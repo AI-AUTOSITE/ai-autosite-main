@@ -2,7 +2,6 @@
 import { createWorker, PSM } from 'tesseract.js'
 import { translateToEnglish } from './translation-helper'
 
-
 export interface OCRResult {
   text: string
   confidence: number
@@ -19,11 +18,15 @@ export async function processTesseractWithTranslation(
   try {
     const { data } = await worker.recognize(imageData)
     const extractedText = data.text.trim()
-    
+
     let translation: string | undefined = undefined
-    
+
     // 自動翻訳が有効で、日本語テキストが検出された場合
-    if (autoTranslate && extractedText && /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(extractedText)) {
+    if (
+      autoTranslate &&
+      extractedText &&
+      /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(extractedText)
+    ) {
       try {
         translation = await translateToEnglish(extractedText)
       } catch (error) {
@@ -31,11 +34,11 @@ export async function processTesseractWithTranslation(
         translation = 'Translation failed. Please try again later.'
       }
     }
-    
+
     return {
       text: extractedText,
       confidence: data.confidence / 100,
-      translation
+      translation,
     }
   } finally {
     await worker.terminate()
@@ -55,11 +58,11 @@ export async function processTesseract(imageData: string): Promise<OCRResult> {
 
   try {
     const { data } = await worker.recognize(imageData)
-    
+
     return {
       text: data.text.trim(),
       confidence: data.confidence / 100,
-      translation: undefined
+      translation: undefined,
     }
   } catch (error) {
     console.error('OCR Error:', error)
@@ -78,7 +81,7 @@ export async function processTesseractAdvanced(
   }
 ): Promise<OCRResult> {
   const languages = options?.lang || ['jpn', 'eng']
-  
+
   // 言語配列で作成
   const worker = await createWorker(languages)
 
@@ -86,16 +89,16 @@ export async function processTesseractAdvanced(
     // PSM設定がある場合
     if (options?.psm !== undefined) {
       await worker.setParameters({
-        tessedit_pageseg_mode: options.psm
+        tessedit_pageseg_mode: options.psm,
       })
     }
 
     const { data } = await worker.recognize(imageData)
-    
+
     return {
       text: data.text.trim(),
       confidence: data.confidence / 100,
-      translation: undefined
+      translation: undefined,
     }
   } finally {
     await worker.terminate()
@@ -113,20 +116,20 @@ export async function processJapaneseText(
     // 縦書きテキスト用のPSM設定
     if (isVertical) {
       await worker.setParameters({
-        tessedit_pageseg_mode: PSM.SINGLE_BLOCK_VERT_TEXT
+        tessedit_pageseg_mode: PSM.SINGLE_BLOCK_VERT_TEXT,
       })
     } else {
       await worker.setParameters({
-        tessedit_pageseg_mode: PSM.AUTO
+        tessedit_pageseg_mode: PSM.AUTO,
       })
     }
 
     const { data } = await worker.recognize(imageData)
-    
+
     return {
       text: data.text.trim(),
       confidence: data.confidence / 100,
-      translation: undefined
+      translation: undefined,
     }
   } finally {
     await worker.terminate()
@@ -146,17 +149,17 @@ export async function processTesseractWithProgress(
         if (m.status === 'recognizing text' && m.progress && onProgress) {
           onProgress(m.progress)
         }
-      }
+      },
     }
   )
 
   try {
     const { data } = await worker.recognize(imageData)
-    
+
     return {
       text: data.text.trim(),
       confidence: data.confidence / 100,
-      translation: undefined
+      translation: undefined,
     }
   } finally {
     await worker.terminate()

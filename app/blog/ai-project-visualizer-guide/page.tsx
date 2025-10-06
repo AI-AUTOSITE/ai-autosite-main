@@ -2,12 +2,28 @@
 
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, FolderTree, Upload, Download, Shield, Zap, Code, FileText, GitBranch, Users, Sparkles, TrendingUp } from 'lucide-react'
+import {
+  ArrowLeft,
+  FolderTree,
+  Upload,
+  Download,
+  Shield,
+  Zap,
+  Code,
+  FileText,
+  GitBranch,
+  Users,
+  Sparkles,
+  TrendingUp,
+} from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Introducing AI Project Visualizer: Transform Your Code Structure into Shareable Diagrams | AI AutoSite',
-  description: 'Convert your project file structure into Mermaid diagrams, tree formats, JSON, or Markdown. Perfect for AI collaboration, documentation, and code reviews. No ads, no tracking, completely free.',
-  keywords: 'project visualizer, file structure diagram, mermaid diagram generator, tree structure tool, AI collaboration, code documentation, project mapping, developer tools',
+  title:
+    'Introducing AI Project Visualizer: Transform Your Code Structure into Shareable Diagrams | AI AutoSite',
+  description:
+    'Convert your project file structure into Mermaid diagrams, tree formats, JSON, or Markdown. Perfect for AI collaboration, documentation, and code reviews. No ads, no tracking, completely free.',
+  keywords:
+    'project visualizer, file structure diagram, mermaid diagram generator, tree structure tool, AI collaboration, code documentation, project mapping, developer tools',
   openGraph: {
     title: 'AI Project Visualizer: Share Your Code Structure with AI Tools',
     description: 'Transform project structures into shareable formats for better AI collaboration',
@@ -18,7 +34,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'AI Project Visualizer: Perfect for AI Collaboration',
     description: 'Convert file structures to Mermaid, Tree, JSON, or Markdown formats',
-  }
+  },
 }
 
 export default function AIProjectVisualizerBlogPost() {
@@ -30,41 +46,44 @@ export default function AIProjectVisualizerBlogPost() {
     {
       icon: Upload,
       title: 'Drag & Drop Upload',
-      description: 'Simply drag your project folder or select files - works instantly in your browser'
+      description:
+        'Simply drag your project folder or select files - works instantly in your browser',
     },
     {
       icon: Shield,
       title: 'Privacy First',
-      description: 'Automatically excludes sensitive files like .env, node_modules, and credentials'
+      description:
+        'Automatically excludes sensitive files like .env, node_modules, and credentials',
     },
     {
       icon: FileText,
       title: 'Multiple Export Formats',
-      description: 'Export as Tree, Mermaid diagram, JSON, or Markdown - perfect for any use case'
+      description: 'Export as Tree, Mermaid diagram, JSON, or Markdown - perfect for any use case',
     },
     {
       icon: Zap,
       title: '100% Local Processing',
-      description: 'Your files never leave your browser - lightning fast and completely private'
-    }
+      description: 'Your files never leave your browser - lightning fast and completely private',
+    },
   ]
 
   const useCases = [
     {
       title: 'For AI Collaboration',
-      description: 'Share your project structure with Claude, ChatGPT, or GitHub Copilot for better context',
-      highlights: ['Optimized formats for LLMs', 'Clean, readable output', 'Context preservation']
+      description:
+        'Share your project structure with Claude, ChatGPT, or GitHub Copilot for better context',
+      highlights: ['Optimized formats for LLMs', 'Clean, readable output', 'Context preservation'],
     },
     {
       title: 'For Documentation',
       description: 'Generate professional project structure diagrams for README files and docs',
-      highlights: ['Mermaid diagrams for GitHub', 'Markdown for wikis', 'Visual representations']
+      highlights: ['Mermaid diagrams for GitHub', 'Markdown for wikis', 'Visual representations'],
     },
     {
       title: 'For Code Reviews',
       description: 'Quickly share project organization with team members or reviewers',
-      highlights: ['Instant visualization', 'No setup required', 'Universal formats']
-    }
+      highlights: ['Instant visualization', 'No setup required', 'Universal formats'],
+    },
   ]
 
   const formats = [
@@ -75,7 +94,7 @@ export default function AIProjectVisualizerBlogPost() {
 ├── src/
 │   ├── components/
 │   └── utils/
-└── package.json`
+└── package.json`,
     },
     {
       name: 'Mermaid Diagram',
@@ -83,7 +102,7 @@ export default function AIProjectVisualizerBlogPost() {
       example: `graph TD
     A[my-project]
     A --> B[src]
-    B --> C[components]`
+    B --> C[components]`,
     },
     {
       name: 'JSON Format',
@@ -91,7 +110,7 @@ export default function AIProjectVisualizerBlogPost() {
       example: `{
   "name": "my-project",
   "children": [...]
-}`
+}`,
     },
     {
       name: 'Markdown',
@@ -99,15 +118,15 @@ export default function AIProjectVisualizerBlogPost() {
       example: `## Project Structure
 - **src/**
   - components/
-  - utils/`
-    }
+  - utils/`,
+    },
   ]
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Back to Blog */}
-      <Link 
-        href="/blog" 
+      <Link
+        href="/blog"
         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors mb-8 group"
       >
         <ArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" size={20} />
@@ -121,21 +140,28 @@ export default function AIProjectVisualizerBlogPost() {
             New Tool
           </span>
           <span>•</span>
-          <time dateTime={publishDate}>{new Date(publishDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+          <time dateTime={publishDate}>
+            {new Date(publishDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
+            })}
+          </time>
           <span>•</span>
           <span>{readTime}</span>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
           Introducing AI Project Visualizer:
           <span className="block text-3xl sm:text-4xl mt-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
             Transform Your Code Structure into Shareable Diagrams
           </span>
         </h1>
-        
+
         <p className="text-xl text-gray-300 leading-relaxed">
-          Convert your project's file structure into beautiful diagrams and formats that AI tools can understand. 
-          Perfect for getting better help from Claude, ChatGPT, or creating documentation.
+          Convert your project's file structure into beautiful diagrams and formats that AI tools
+          can understand. Perfect for getting better help from Claude, ChatGPT, or creating
+          documentation.
         </p>
       </header>
 
@@ -162,17 +188,18 @@ export default function AIProjectVisualizerBlogPost() {
         <h2 className="text-3xl font-bold text-white mb-6">Why We Built This Tool</h2>
         <div className="prose prose-invert max-w-none">
           <p className="text-gray-300 mb-4">
-            When working with AI assistants like Claude or ChatGPT, providing context about your project structure 
-            is crucial for getting accurate help. Manually typing out file structures is tedious and error-prone.
+            When working with AI assistants like Claude or ChatGPT, providing context about your
+            project structure is crucial for getting accurate help. Manually typing out file
+            structures is tedious and error-prone.
           </p>
           <p className="text-gray-300 mb-4">
-            We created AI Project Visualizer to solve this problem. In seconds, you can transform your entire 
-            project structure into a format that AI tools can understand, making collaboration more effective 
-            and saving valuable development time.
+            We created AI Project Visualizer to solve this problem. In seconds, you can transform
+            your entire project structure into a format that AI tools can understand, making
+            collaboration more effective and saving valuable development time.
           </p>
           <p className="text-gray-300 mb-4">
-            Plus, with automatic exclusion of sensitive files and 100% local processing, your code and credentials 
-            stay safe on your machine.
+            Plus, with automatic exclusion of sensitive files and 100% local processing, your code
+            and credentials stay safe on your machine.
           </p>
         </div>
       </section>
@@ -184,7 +211,10 @@ export default function AIProjectVisualizerBlogPost() {
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all">
+              <div
+                key={index}
+                className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-purple-500/30 transition-all"
+              >
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 bg-opacity-20">
                     <Icon className="w-6 h-6 text-purple-400" />
@@ -210,27 +240,36 @@ export default function AIProjectVisualizerBlogPost() {
             </div>
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Upload Your Project</h3>
-              <p className="text-gray-400">Drag and drop your project folder or select files. Node_modules and sensitive files are automatically excluded.</p>
+              <p className="text-gray-400">
+                Drag and drop your project folder or select files. Node_modules and sensitive files
+                are automatically excluded.
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">
               2
             </div>
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Choose Your Format</h3>
-              <p className="text-gray-400">Select from Tree (best for AI), Mermaid (for diagrams), JSON (for processing), or Markdown (for docs).</p>
+              <p className="text-gray-400">
+                Select from Tree (best for AI), Mermaid (for diagrams), JSON (for processing), or
+                Markdown (for docs).
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">
               3
             </div>
             <div>
               <h3 className="text-xl font-semibold text-white mb-2">Copy or Download</h3>
-              <p className="text-gray-400">Instantly copy to clipboard or download as a file. Share with AI tools or add to your documentation.</p>
+              <p className="text-gray-400">
+                Instantly copy to clipboard or download as a file. Share with AI tools or add to
+                your documentation.
+              </p>
             </div>
           </div>
         </div>
@@ -257,7 +296,10 @@ export default function AIProjectVisualizerBlogPost() {
         <h2 className="text-3xl font-bold text-white mb-8">Perfect For Every Scenario</h2>
         <div className="grid lg:grid-cols-3 gap-6">
           {useCases.map((useCase, index) => (
-            <div key={index} className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/10">
+            <div
+              key={index}
+              className="bg-gradient-to-br from-white/5 to-white/10 rounded-xl p-6 border border-white/10"
+            >
               <h3 className="text-xl font-semibold text-white mb-3">{useCase.title}</h3>
               <p className="text-gray-400 mb-4">{useCase.description}</p>
               <ul className="space-y-2">
@@ -284,19 +326,31 @@ export default function AIProjectVisualizerBlogPost() {
               <ul className="space-y-2 text-gray-300">
                 <li className="flex items-start">
                   <span className="text-green-400 mr-2">✓</span>
-                  <span><strong className="text-white">100% Local Processing:</strong> Files never leave your browser</span>
+                  <span>
+                    <strong className="text-white">100% Local Processing:</strong> Files never leave
+                    your browser
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-400 mr-2">✓</span>
-                  <span><strong className="text-white">Auto-Exclusion:</strong> .env, credentials, and API keys are automatically filtered</span>
+                  <span>
+                    <strong className="text-white">Auto-Exclusion:</strong> .env, credentials, and
+                    API keys are automatically filtered
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-400 mr-2">✓</span>
-                  <span><strong className="text-white">No Storage:</strong> Nothing is saved or cached on any server</span>
+                  <span>
+                    <strong className="text-white">No Storage:</strong> Nothing is saved or cached
+                    on any server
+                  </span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-400 mr-2">✓</span>
-                  <span><strong className="text-white">Open Source:</strong> Full code transparency on GitHub</span>
+                  <span>
+                    <strong className="text-white">Open Source:</strong> Full code transparency on
+                    GitHub
+                  </span>
                 </li>
               </ul>
             </div>
@@ -314,19 +368,31 @@ export default function AIProjectVisualizerBlogPost() {
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start">
               <Code className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Web File API:</strong> Native browser APIs for instant file processing</span>
+              <span>
+                <strong className="text-white">Web File API:</strong> Native browser APIs for
+                instant file processing
+              </span>
             </li>
             <li className="flex items-start">
               <Code className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">React Hooks:</strong> Optimized state management with useCallback and useMemo</span>
+              <span>
+                <strong className="text-white">React Hooks:</strong> Optimized state management with
+                useCallback and useMemo
+              </span>
             </li>
             <li className="flex items-start">
               <Code className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Smart Filtering:</strong> Efficient exclusion of build artifacts and dependencies</span>
+              <span>
+                <strong className="text-white">Smart Filtering:</strong> Efficient exclusion of
+                build artifacts and dependencies
+              </span>
             </li>
             <li className="flex items-start">
               <Code className="w-5 h-5 text-cyan-400 mr-3 mt-0.5 flex-shrink-0" />
-              <span><strong className="text-white">Handles Large Projects:</strong> Processes up to 1000 files without performance issues</span>
+              <span>
+                <strong className="text-white">Handles Large Projects:</strong> Processes up to 1000
+                files without performance issues
+              </span>
             </li>
           </ul>
         </div>
@@ -368,7 +434,8 @@ export default function AIProjectVisualizerBlogPost() {
             <p className="text-sm text-gray-400">4. Paste into Claude/ChatGPT with your question</p>
           </div>
           <p className="text-cyan-400 text-sm">
-            Result: AI understands your project structure instantly and provides more accurate, context-aware assistance.
+            Result: AI understands your project structure instantly and provides more accurate,
+            context-aware assistance.
           </p>
         </div>
       </section>
@@ -377,9 +444,7 @@ export default function AIProjectVisualizerBlogPost() {
       <section className="mb-12">
         <h2 className="text-3xl font-bold text-white mb-6">What's Coming Next</h2>
         <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl p-6 border border-white/10">
-          <p className="text-gray-300 mb-4">
-            We're constantly improving based on user feedback:
-          </p>
+          <p className="text-gray-300 mb-4">We're constantly improving based on user feedback:</p>
           <ul className="space-y-2 text-gray-300">
             <li className="flex items-center">
               <Sparkles className="w-4 h-4 text-cyan-400 mr-2" />
@@ -405,8 +470,8 @@ export default function AIProjectVisualizerBlogPost() {
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-2xl border border-white/10">
         <h2 className="text-3xl font-bold text-white mb-4">Start Visualizing Your Projects</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Join thousands of developers who are already using AI Project Visualizer to improve their AI 
-          collaborations and documentation workflow.
+          Join thousands of developers who are already using AI Project Visualizer to improve their
+          AI collaborations and documentation workflow.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -438,12 +503,8 @@ export default function AIProjectVisualizerBlogPost() {
             <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
               Development
             </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              Tools
-            </span>
-            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">
-              AI
-            </span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">Tools</span>
+            <span className="px-3 py-1 bg-white/10 text-gray-300 rounded-md text-xs">AI</span>
           </div>
         </div>
       </footer>

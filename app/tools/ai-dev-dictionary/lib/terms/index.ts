@@ -1,20 +1,20 @@
 // app/tools/ai-dev-dictionary/lib/terms/index.ts
 
 // 型定義をインポート
-import { TechTerm } from './types';
+import { TechTerm } from './types'
 
 // 型定義とカテゴリーのエクスポート
-export { type TechTerm } from './types';
-export { categories, type Category } from './categories';
+export { type TechTerm } from './types'
+export { categories, type Category } from './categories'
 
 // 各カテゴリーのtermsをインポート
-import { uiComponentTerms } from './ui-components';
-import { dataDisplayTerms } from './data-display';
-import { formsInputTerms } from './forms-input';
-import { layoutTerms } from './layout';
-import { navigationTerms } from './navigation';
-import { feedbackTerms } from './feedback';
-import { advancedTerms } from './advanced';
+import { uiComponentTerms } from './ui-components'
+import { dataDisplayTerms } from './data-display'
+import { formsInputTerms } from './forms-input'
+import { layoutTerms } from './layout'
+import { navigationTerms } from './navigation'
+import { feedbackTerms } from './feedback'
+import { advancedTerms } from './advanced'
 
 // 個別のカテゴリーをエクスポート（必要に応じて）
 export {
@@ -24,8 +24,8 @@ export {
   layoutTerms,
   navigationTerms,
   feedbackTerms,
-  advancedTerms
-};
+  advancedTerms,
+}
 
 // すべての用語を結合した配列をエクスポート
 export const techTerms: TechTerm[] = [
@@ -35,42 +35,43 @@ export const techTerms: TechTerm[] = [
   ...layoutTerms,
   ...navigationTerms,
   ...feedbackTerms,
-  ...advancedTerms
-];
+  ...advancedTerms,
+]
 
 // カテゴリー別に用語を取得する関数
 export function getTermsByCategory(categoryId: string): TechTerm[] {
   if (categoryId === 'all') {
-    return techTerms;
+    return techTerms
   }
-  return techTerms.filter((term: TechTerm) => term.category === categoryId);
+  return techTerms.filter((term: TechTerm) => term.category === categoryId)
 }
 
 // 検索関数
 export function searchTerms(query: string): TechTerm[] {
-  const lowerQuery = query.toLowerCase();
-  return techTerms.filter((term: TechTerm) => 
-    term.term.toLowerCase().includes(lowerQuery) ||
-    term.aiSynonyms.some((syn: string) => syn.toLowerCase().includes(lowerQuery)) ||
-    term.aiPhrases.some((phrase: string) => phrase.toLowerCase().includes(lowerQuery)) ||
-    term.description.toLowerCase().includes(lowerQuery) ||
-    term.beginnerTip.toLowerCase().includes(lowerQuery)
-  );
+  const lowerQuery = query.toLowerCase()
+  return techTerms.filter(
+    (term: TechTerm) =>
+      term.term.toLowerCase().includes(lowerQuery) ||
+      term.aiSynonyms.some((syn: string) => syn.toLowerCase().includes(lowerQuery)) ||
+      term.aiPhrases.some((phrase: string) => phrase.toLowerCase().includes(lowerQuery)) ||
+      term.description.toLowerCase().includes(lowerQuery) ||
+      term.beginnerTip.toLowerCase().includes(lowerQuery)
+  )
 }
 
 // ID で用語を取得
 export function getTermById(id: string): TechTerm | undefined {
-  return techTerms.find((term: TechTerm) => term.id === id);
+  return techTerms.find((term: TechTerm) => term.id === id)
 }
 
 // 関連用語を取得
 export function getRelatedTerms(termId: string): TechTerm[] {
-  const term = getTermById(termId);
+  const term = getTermById(termId)
   if (!term || !term.relatedTerms) {
-    return [];
+    return []
   }
-  
+
   return term.relatedTerms
     .map((relatedTermName: string) => techTerms.find((t: TechTerm) => t.term === relatedTermName))
-    .filter((t): t is TechTerm => t !== undefined);
+    .filter((t): t is TechTerm => t !== undefined)
 }

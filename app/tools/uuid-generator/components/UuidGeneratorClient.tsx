@@ -31,11 +31,11 @@ export default function UuidGeneratorClient() {
     if (typeof window !== 'undefined' && window.crypto?.randomUUID) {
       return window.crypto.randomUUID()
     }
-    
+
     // Fallback
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-      const r = Math.random() * 16 | 0
-      const v = c === 'x' ? r : (r & 0x3 | 0x8)
+      const r = (Math.random() * 16) | 0
+      const v = c === 'x' ? r : (r & 0x3) | 0x8
       return v.toString(16)
     })
   }
@@ -60,9 +60,9 @@ export default function UuidGeneratorClient() {
     const newUuid: UUID = {
       id: rawUuid,
       value: formatUUID(rawUuid, format),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
-    
+
     setUuids([newUuid, ...uuids].slice(0, 50)) // Keep max 50
   }
 
@@ -74,7 +74,7 @@ export default function UuidGeneratorClient() {
       newUuids.push({
         id: rawUuid,
         value: formatUUID(rawUuid, format),
-        timestamp: Date.now() + i
+        timestamp: Date.now() + i,
       })
     }
     setUuids([...newUuids, ...uuids].slice(0, 50))
@@ -94,7 +94,7 @@ export default function UuidGeneratorClient() {
     newUuids[index] = {
       id: rawUuid,
       value: formatUUID(rawUuid, format),
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
     setUuids(newUuids)
   }
@@ -108,7 +108,7 @@ export default function UuidGeneratorClient() {
 
   // Copy all
   const copyAll = async () => {
-    const allUuids = uuids.map(u => u.value).join('\n')
+    const allUuids = uuids.map((u) => u.value).join('\n')
     await navigator.clipboard.writeText(allUuids)
     setCopiedAll(true)
     setTimeout(() => setCopiedAll(false), 2000)
@@ -116,7 +116,7 @@ export default function UuidGeneratorClient() {
 
   // Download
   const downloadUUIDs = () => {
-    const content = uuids.map(u => u.value).join('\n')
+    const content = uuids.map((u) => u.value).join('\n')
     const blob = new Blob([content], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -130,9 +130,9 @@ export default function UuidGeneratorClient() {
   const updateFormat = (newFormat: FormatType) => {
     setFormat(newFormat)
     if (uuids.length > 0) {
-      const updatedUuids = uuids.map(uuid => ({
+      const updatedUuids = uuids.map((uuid) => ({
         ...uuid,
-        value: formatUUID(uuid.id, newFormat)
+        value: formatUUID(uuid.id, newFormat),
       }))
       setUuids(updatedUuids)
     }
@@ -154,8 +154,8 @@ export default function UuidGeneratorClient() {
             <button
               onClick={() => copyUUID(0)}
               className={`absolute -right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg transition-all ${
-                copiedIndex === 0 
-                  ? 'bg-green-500 text-white' 
+                copiedIndex === 0
+                  ? 'bg-green-500 text-white'
                   : 'bg-white/10 text-gray-400 opacity-0 group-hover:opacity-100'
               }`}
             >
@@ -178,7 +178,7 @@ export default function UuidGeneratorClient() {
           <Fingerprint className="w-5 h-5" />
           Generate UUID
         </button>
-        
+
         <button
           onClick={generateBulk}
           className="py-4 bg-white/5 text-gray-300 rounded-xl font-medium 
@@ -196,7 +196,7 @@ export default function UuidGeneratorClient() {
           <div>
             <label className="text-xs text-gray-400 mb-2 block">Format</label>
             <div className="grid grid-cols-2 gap-2">
-              {formatOptions.map(option => (
+              {formatOptions.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => updateFormat(option.value as FormatType)}
@@ -217,7 +217,7 @@ export default function UuidGeneratorClient() {
           <div>
             <label className="text-xs text-gray-400 mb-2 block">Bulk Count</label>
             <div className="grid grid-cols-4 gap-2">
-              {[5, 10, 20, 50].map(count => (
+              {[5, 10, 20, 50].map((count) => (
                 <button
                   key={count}
                   onClick={() => setBulkCount(count)}
@@ -243,22 +243,20 @@ export default function UuidGeneratorClient() {
             <button
               onClick={copyAll}
               className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
-                copiedAll
-                  ? 'bg-green-500 text-white'
-                  : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                copiedAll ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
               }`}
             >
               {copiedAll ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               {copiedAll ? 'Copied!' : 'Copy All'}
             </button>
-            
+
             <button
               onClick={downloadUUIDs}
               className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
             >
               <Download className="w-4 h-4" />
             </button>
-            
+
             <button
               onClick={clearAll}
               className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
@@ -296,7 +294,11 @@ export default function UuidGeneratorClient() {
                       }`}
                       title="Copy"
                     >
-                      {copiedIndex === index ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                      {copiedIndex === index ? (
+                        <Check className="w-3 h-3" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
                     </button>
                   </div>
                 </div>

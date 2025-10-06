@@ -6,36 +6,36 @@ export interface BlogPost {
   id: string
   title: string
   description: string
-  
+
   // Time-related
   readTime: string
   publishDate: string
-  lastUpdated?: string  // New: for tracking updates
-  
+  lastUpdated?: string // New: for tracking updates
+
   // Visual
   icon: LucideIcon
-  coverImage?: string   // New: optional cover image
-  
+  coverImage?: string // New: optional cover image
+
   // Status & Display
   featured: boolean
   status: 'published' | 'coming-soon' | 'draft'
-  
+
   // Related content
   relatedTool?: {
     name: string
     url: string
   }
-  
+
   // New fields for better organization
-  tags?: string[]       // New: for better categorization
-  author?: string       // New: author attribution
-  views?: number        // New: for tracking popularity
-  category?: string     // New: explicit category reference
-  
+  tags?: string[] // New: for better categorization
+  author?: string // New: author attribution
+  views?: number // New: for tracking popularity
+  category?: string // New: explicit category reference
+
   // SEO & Social
-  seoTitle?: string     // New: custom SEO title
-  seoDescription?: string  // New: custom SEO description
-  ogImage?: string      // New: Open Graph image
+  seoTitle?: string // New: custom SEO title
+  seoDescription?: string // New: custom SEO description
+  ogImage?: string // New: Open Graph image
 }
 
 // Category type

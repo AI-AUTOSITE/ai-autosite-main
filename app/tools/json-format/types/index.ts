@@ -240,8 +240,8 @@ export const SAMPLE_DATA_SETS: SampleData[] = [
       name: 'AI AutoSite',
       version: '1.0.0',
       active: true,
-      count: 42
-    }
+      count: 42,
+    },
   },
   {
     name: 'Nested Structure',
@@ -249,16 +249,16 @@ export const SAMPLE_DATA_SETS: SampleData[] = [
     data: {
       users: [
         { id: 1, name: 'Alice', roles: ['admin', 'user'] },
-        { id: 2, name: 'Bob', roles: ['user'] }
+        { id: 2, name: 'Bob', roles: ['user'] },
       ],
       settings: {
         theme: 'dark',
         notifications: {
           email: true,
-          push: false
-        }
-      }
-    }
+          push: false,
+        },
+      },
+    },
   },
   {
     name: 'API Response',
@@ -270,10 +270,10 @@ export const SAMPLE_DATA_SETS: SampleData[] = [
         pagination: {
           page: 1,
           totalPages: 10,
-          totalItems: 100
-        }
+          totalItems: 100,
+        },
       },
-      timestamp: new Date().toISOString()
-    }
-  }
+      timestamp: new Date().toISOString(),
+    },
+  },
 ]

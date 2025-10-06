@@ -12,7 +12,7 @@ export interface SummarizeResponse {
 }
 
 // Error codes
-export type ErrorCode = 
+export type ErrorCode =
   | 'NO_FILE'
   | 'FILE_TOO_LARGE'
   | 'INVALID_FILE_TYPE'

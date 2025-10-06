@@ -1,22 +1,30 @@
 // app/tools/ai-dev-dictionary/lib/terms/advanced.ts
 
-import { TechTerm } from './types';
+import { TechTerm } from './types'
 
 export const advancedTerms: TechTerm[] = [
   {
     id: 'dropdown',
     term: 'Dropdown',
     category: 'advanced',
-    aiSynonyms: ['Dropdown Menu', 'Menu', 'Context Menu', 'Options Menu', 'Pull-down Menu', 'Action Menu'],
+    aiSynonyms: [
+      'Dropdown Menu',
+      'Menu',
+      'Context Menu',
+      'Options Menu',
+      'Pull-down Menu',
+      'Action Menu',
+    ],
     description: 'A menu that appears when clicked, showing a list of actions or options',
-    beginnerTip: 'Click to reveal hidden options - like the menu that appears when you right-click!',
+    beginnerTip:
+      'Click to reveal hidden options - like the menu that appears when you right-click!',
     aiPhrases: [
       'Add a dropdown menu for actions',
       'Create context menu',
       'Implement options dropdown',
       'Show menu on click',
       'Display action menu',
-      'Build dropdown list'
+      'Build dropdown list',
     ],
     codeExample: `// React Dropdown Example - Hidden Options!
 import { useState } from 'react';
@@ -42,14 +50,21 @@ const Dropdown = ({ options, onSelect }) => {
   );
 }`,
     demoType: 'dropdown',
-    relatedTerms: ['Select', 'Menu', 'Context Menu']
+    relatedTerms: ['Select', 'Menu', 'Context Menu'],
   },
 
   {
     id: 'accordion',
     term: 'Accordion',
     category: 'advanced',
-    aiSynonyms: ['Collapsible', 'Expandable', 'Dropdown Panel', 'Toggle Content', 'Foldable Section', 'Collapse Panel'],
+    aiSynonyms: [
+      'Collapsible',
+      'Expandable',
+      'Dropdown Panel',
+      'Toggle Content',
+      'Foldable Section',
+      'Collapse Panel',
+    ],
     description: 'Expandable/collapsible content sections that show or hide information',
     beginnerTip: 'Like FAQ sections - click a question to reveal the answer, click again to hide!',
     aiPhrases: [
@@ -58,7 +73,7 @@ const Dropdown = ({ options, onSelect }) => {
       'Implement toggle panels for details',
       'Make sections that can be collapsed',
       'Build an accordion for Q&A',
-      'Design foldable content'
+      'Design foldable content',
     ],
     codeExample: `// React Accordion Example - Expand & Collapse!
 import { useState } from 'react';
@@ -82,14 +97,21 @@ const Accordion = ({ items }) => {
   );
 }`,
     demoType: 'accordion',
-    relatedTerms: ['Tabs', 'Collapsible', 'Expandable']
+    relatedTerms: ['Tabs', 'Collapsible', 'Expandable'],
   },
 
   {
     id: 'tabs',
     term: 'Tabs',
     category: 'advanced',
-    aiSynonyms: ['Tab Panel', 'Tabbed Interface', 'Tab Navigation', 'Page Tabs', 'Section Switcher', 'Tab Bar'],
+    aiSynonyms: [
+      'Tab Panel',
+      'Tabbed Interface',
+      'Tab Navigation',
+      'Page Tabs',
+      'Section Switcher',
+      'Tab Bar',
+    ],
     description: 'Navigation component that switches between different views or content sections',
     beginnerTip: 'Like browser tabs or file folders - click each tab to see different content!',
     aiPhrases: [
@@ -98,7 +120,7 @@ const Accordion = ({ items }) => {
       'Implement tab navigation for sections',
       'Use tabs to organize content',
       'Build a tab panel for categories',
-      'Make section switcher'
+      'Make section switcher',
     ],
     codeExample: `// React Tabs Example - Switch Views!
 import { useState } from 'react';
@@ -126,15 +148,24 @@ const Tabs = ({ tabs }) => {
   );
 }`,
     demoType: 'tabs',
-    relatedTerms: ['Accordion', 'Navigation', 'Switcher']
+    relatedTerms: ['Accordion', 'Navigation', 'Switcher'],
   },
 
   {
     id: 'tooltip',
     term: 'Tooltip',
     category: 'advanced',
-    aiSynonyms: ['Hover Text', 'Help Text', 'Info Bubble', 'Hint', 'Popover', 'Helper Text', 'Hover Hint'],
-    description: 'Small text that appears when hovering over an element to provide additional information',
+    aiSynonyms: [
+      'Hover Text',
+      'Help Text',
+      'Info Bubble',
+      'Hint',
+      'Popover',
+      'Helper Text',
+      'Hover Hint',
+    ],
+    description:
+      'Small text that appears when hovering over an element to provide additional information',
     beginnerTip: 'Hover your mouse over something to see extra info - like hints in a game!',
     aiPhrases: [
       'Show a tooltip on hover',
@@ -142,7 +173,7 @@ const Tabs = ({ tabs }) => {
       'Display additional info in a bubble',
       'Create hover hints for buttons',
       'Implement helper text on mouseover',
-      'Add info popover'
+      'Add info popover',
     ],
     codeExample: `// React Tooltip Example - Hover for Help!
 import { useState } from 'react';
@@ -164,23 +195,31 @@ const Tooltip = ({ children, text }) => {
   );
 }`,
     demoType: 'tooltip',
-    relatedTerms: ['Popover', 'Help Text', 'Hint']
+    relatedTerms: ['Popover', 'Help Text', 'Hint'],
   },
 
   {
     id: 'drawer',
     term: 'Drawer',
     category: 'advanced',
-    aiSynonyms: ['Sidebar Drawer', 'Slide Panel', 'Side Menu', 'Navigation Drawer', 'Sliding Panel', 'Off-canvas Menu'],
+    aiSynonyms: [
+      'Sidebar Drawer',
+      'Slide Panel',
+      'Side Menu',
+      'Navigation Drawer',
+      'Sliding Panel',
+      'Off-canvas Menu',
+    ],
     description: 'A panel that slides in from the edge of the screen',
-    beginnerTip: 'Like pulling out a drawer - slides in from the side with extra options or navigation!',
+    beginnerTip:
+      'Like pulling out a drawer - slides in from the side with extra options or navigation!',
     aiPhrases: [
       'Add a drawer for mobile navigation',
       'Create a sliding sidebar',
       'Implement a side panel for settings',
       'Build an off-canvas menu',
       'Show navigation in a drawer',
-      'Make sliding panel'
+      'Make sliding panel',
     ],
     codeExample: `// React Drawer Example - Slide In!
 const Drawer = ({ isOpen, onClose, children }) => {
@@ -197,23 +236,32 @@ const Drawer = ({ isOpen, onClose, children }) => {
   );
 }`,
     demoType: 'drawer',
-    relatedTerms: ['Modal', 'Sidebar', 'Panel']
+    relatedTerms: ['Modal', 'Sidebar', 'Panel'],
   },
 
   {
     id: 'infinite-scroll',
     term: 'Infinite Scroll',
     category: 'advanced',
-    aiSynonyms: ['Endless Scroll', 'Lazy Load List', 'Auto-load Content', 'Continuous Scroll', 'Dynamic Loading', 'Scroll Pagination'],
-    description: 'Automatically loads more content as the user scrolls down, like social media feeds',
-    beginnerTip: 'Like Facebook or Twitter - new posts appear automatically when you scroll to the bottom!',
+    aiSynonyms: [
+      'Endless Scroll',
+      'Lazy Load List',
+      'Auto-load Content',
+      'Continuous Scroll',
+      'Dynamic Loading',
+      'Scroll Pagination',
+    ],
+    description:
+      'Automatically loads more content as the user scrolls down, like social media feeds',
+    beginnerTip:
+      'Like Facebook or Twitter - new posts appear automatically when you scroll to the bottom!',
     aiPhrases: [
       'Implement infinite scrolling for the feed',
       'Add endless scroll to the list',
       'Create auto-loading content',
       'Make continuous scroll pagination',
       'Build dynamic content loading',
-      'Add scroll-triggered loading'
+      'Add scroll-triggered loading',
     ],
     codeExample: `// React Infinite Scroll Example
 import { useEffect } from 'react';
@@ -233,14 +281,20 @@ const InfiniteScroll = ({ loadMore }) => {
   return <div>Content here...</div>;
 }`,
     demoType: 'infinite-scroll',
-    relatedTerms: ['Pagination', 'Lazy Loading', 'Virtual List']
+    relatedTerms: ['Pagination', 'Lazy Loading', 'Virtual List'],
   },
 
   {
     id: 'lazy-loading',
     term: 'Lazy Loading',
     category: 'advanced',
-    aiSynonyms: ['Deferred Loading', 'On-demand Loading', 'Progressive Loading', 'Delayed Loading', 'Async Loading'],
+    aiSynonyms: [
+      'Deferred Loading',
+      'On-demand Loading',
+      'Progressive Loading',
+      'Delayed Loading',
+      'Async Loading',
+    ],
     description: 'Loading content only when needed, improving initial page load speed',
     beginnerTip: 'Images load only when you scroll to them - makes the page load faster initially!',
     aiPhrases: [
@@ -249,7 +303,7 @@ const InfiniteScroll = ({ loadMore }) => {
       'Create on-demand content loading',
       'Use progressive image loading',
       'Add delayed component loading',
-      'Build async content loading'
+      'Build async content loading',
     ],
     codeExample: `// React Lazy Loading Example
 import { useState, useEffect, useRef } from 'react';
@@ -274,23 +328,31 @@ const LazyImage = ({ src, alt }) => {
   );
 }`,
     demoType: 'lazy-loading',
-    relatedTerms: ['Infinite Scroll', 'Performance', 'Loading']
+    relatedTerms: ['Infinite Scroll', 'Performance', 'Loading'],
   },
 
   {
     id: 'drag-drop',
     term: 'Drag and Drop',
     category: 'advanced',
-    aiSynonyms: ['Draggable', 'Drag & Drop', 'Sortable List', 'Reorderable', 'Moveable Items', 'DnD Interface'],
+    aiSynonyms: [
+      'Draggable',
+      'Drag & Drop',
+      'Sortable List',
+      'Reorderable',
+      'Moveable Items',
+      'DnD Interface',
+    ],
     description: 'Interface allowing users to drag items and drop them in different locations',
-    beginnerTip: 'Click and hold to grab an item, then drag it to a new position - like rearranging apps on your phone!',
+    beginnerTip:
+      'Click and hold to grab an item, then drag it to a new position - like rearranging apps on your phone!',
     aiPhrases: [
       'Add drag and drop functionality',
       'Make items draggable',
       'Create sortable list',
       'Implement reorderable items',
       'Build drag & drop interface',
-      'Enable item rearrangement'
+      'Enable item rearrangement',
     ],
     codeExample: `// React Drag & Drop Example
 const DraggableItem = ({ item, onDragStart, onDragEnd }) => {
@@ -306,23 +368,31 @@ const DraggableItem = ({ item, onDragStart, onDragEnd }) => {
   );
 }`,
     demoType: 'drag-drop',
-    relatedTerms: ['Sortable', 'Reorder', 'Interactive']
+    relatedTerms: ['Sortable', 'Reorder', 'Interactive'],
   },
 
   {
     id: 'swipe-gesture',
     term: 'Swipe Gesture',
     category: 'advanced',
-    aiSynonyms: ['Swipe Action', 'Touch Swipe', 'Slide Gesture', 'Swipe to Delete', 'Swipe Navigation', 'Touch Gesture'],
+    aiSynonyms: [
+      'Swipe Action',
+      'Touch Swipe',
+      'Slide Gesture',
+      'Swipe to Delete',
+      'Swipe Navigation',
+      'Touch Gesture',
+    ],
     description: 'Touch or mouse gesture to trigger actions by swiping',
-    beginnerTip: 'Like swiping photos on your phone or swiping to delete emails - slide left or right!',
+    beginnerTip:
+      'Like swiping photos on your phone or swiping to delete emails - slide left or right!',
     aiPhrases: [
       'Add swipe to delete',
       'Implement swipe gestures',
       'Create touch swipe actions',
       'Build swipe navigation',
       'Add slide to reveal',
-      'Make swipeable cards'
+      'Make swipeable cards',
     ],
     codeExample: `// React Swipe Gesture Example
 import { useState } from 'react';
@@ -351,14 +421,20 @@ const SwipeableCard = ({ onSwipeLeft, onSwipeRight }) => {
   );
 }`,
     demoType: 'swipe',
-    relatedTerms: ['Gesture', 'Touch', 'Mobile Interaction']
+    relatedTerms: ['Gesture', 'Touch', 'Mobile Interaction'],
   },
 
   {
     id: 'pull-refresh',
     term: 'Pull to Refresh',
     category: 'advanced',
-    aiSynonyms: ['Swipe to Refresh', 'Pull Down Refresh', 'Drag to Reload', 'Pull to Update', 'Refresh on Pull'],
+    aiSynonyms: [
+      'Swipe to Refresh',
+      'Pull Down Refresh',
+      'Drag to Reload',
+      'Pull to Update',
+      'Refresh on Pull',
+    ],
     description: 'Pulling down on content to refresh or reload it',
     beginnerTip: 'Like refreshing your Instagram feed - pull down from the top to get new content!',
     aiPhrases: [
@@ -367,7 +443,7 @@ const SwipeableCard = ({ onSwipeLeft, onSwipeRight }) => {
       'Create pull to update',
       'Build refresh on pull gesture',
       'Add drag to refresh',
-      'Make content refreshable'
+      'Make content refreshable',
     ],
     codeExample: `// React Pull to Refresh Example
 import { useState } from 'react';
@@ -399,14 +475,20 @@ const PullToRefresh = ({ onRefresh }) => {
   );
 }`,
     demoType: 'pull-refresh',
-    relatedTerms: ['Refresh', 'Reload', 'Update']
+    relatedTerms: ['Refresh', 'Reload', 'Update'],
   },
 
   {
     id: 'search-filter',
     term: 'Search with Filters',
     category: 'advanced',
-    aiSynonyms: ['Advanced Search', 'Filtered Search', 'Search and Filter', 'Faceted Search', 'Search Refinement'],
+    aiSynonyms: [
+      'Advanced Search',
+      'Filtered Search',
+      'Search and Filter',
+      'Faceted Search',
+      'Search Refinement',
+    ],
     description: 'Search functionality combined with multiple filter options',
     beginnerTip: 'Like shopping sites - search for "shoes" then filter by size, color, and price!',
     aiPhrases: [
@@ -415,7 +497,7 @@ const PullToRefresh = ({ onRefresh }) => {
       'Implement faceted search',
       'Build filtered search results',
       'Add search refinement',
-      'Make multi-filter search'
+      'Make multi-filter search',
     ],
     codeExample: `// React Search with Filters Example
 import { useState } from 'react';
@@ -452,14 +534,20 @@ const SearchWithFilters = ({ data }) => {
   );
 }`,
     demoType: 'search-filter',
-    relatedTerms: ['Search', 'Filter', 'Facets']
+    relatedTerms: ['Search', 'Filter', 'Facets'],
   },
 
   {
     id: 'live-search',
     term: 'Live Search',
     category: 'advanced',
-    aiSynonyms: ['Instant Search', 'Real-time Search', 'As-you-type Search', 'Dynamic Search', 'Immediate Results'],
+    aiSynonyms: [
+      'Instant Search',
+      'Real-time Search',
+      'As-you-type Search',
+      'Dynamic Search',
+      'Immediate Results',
+    ],
     description: 'Search that shows results instantly as you type',
     beginnerTip: 'Results appear immediately as you type each letter - no need to press Enter!',
     aiPhrases: [
@@ -468,7 +556,7 @@ const SearchWithFilters = ({ data }) => {
       'Create real-time search',
       'Build as-you-type search',
       'Make dynamic search',
-      'Add immediate search feedback'
+      'Add immediate search feedback',
     ],
     codeExample: `// React Live Search Example
 import { useState, useEffect } from 'react';
@@ -504,7 +592,7 @@ const LiveSearch = ({ data }) => {
   );
 }`,
     demoType: 'live-search',
-    relatedTerms: ['Search', 'Instant', 'Real-time']
+    relatedTerms: ['Search', 'Instant', 'Real-time'],
   },
 
   {
@@ -520,7 +608,7 @@ const LiveSearch = ({ data }) => {
       'Implement bottom drawer',
       'Build action sheet',
       'Make bottom modal',
-      'Design bottom panel'
+      'Design bottom panel',
     ],
     codeExample: `// React Bottom Sheet Example
 const BottomSheet = ({ isOpen, onClose, children }) => {
@@ -537,6 +625,6 @@ const BottomSheet = ({ isOpen, onClose, children }) => {
   );
 }`,
     demoType: 'bottom-sheet',
-    relatedTerms: ['Drawer', 'Modal', 'Panel']
-  }
-];
+    relatedTerms: ['Drawer', 'Modal', 'Panel'],
+  },
+]

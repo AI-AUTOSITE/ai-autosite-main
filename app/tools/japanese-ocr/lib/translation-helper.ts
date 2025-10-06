@@ -27,17 +27,17 @@ export async function translateText(
   }
 
   const [source, target] = direction.split('-') as [string, string]
-  
+
   // Try MyMemory API first (most reliable for CORS)
   try {
     const textToTranslate = text.substring(0, 500) // MyMemory has 500 char limit
     const encodedText = encodeURIComponent(textToTranslate)
     const langPair = `${source}|${target}`
-    
+
     const response = await fetch(
       `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=${langPair}`
     )
-    
+
     if (response.ok) {
       const data = await response.json()
       if (data?.responseData?.translatedText) {
@@ -47,7 +47,7 @@ export async function translateText(
   } catch (error) {
     console.error('MyMemory translation error:', error)
   }
-  
+
   // Try LibreTranslate as fallback
   try {
     const response = await fetch('https://libretranslate.de/translate', {
@@ -59,10 +59,10 @@ export async function translateText(
         q: text,
         source: source === 'ja' ? 'ja' : 'en',
         target: target === 'ja' ? 'ja' : 'en',
-        format: 'text'
-      })
+        format: 'text',
+      }),
     })
-    
+
     if (response.ok) {
       const data = await response.json()
       if (data?.translatedText) {
@@ -72,12 +72,12 @@ export async function translateText(
   } catch (error) {
     console.error('LibreTranslate error:', error)
   }
-  
+
   // Google Translate fallback (unofficial API)
   try {
     const encodedText = encodeURIComponent(text)
     const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${target}&dt=t&q=${encodedText}`
-    
+
     const response = await fetch(googleUrl)
     if (response.ok) {
       const data = await response.json()
@@ -88,7 +88,7 @@ export async function translateText(
   } catch (error) {
     console.error('Google Translate fallback error:', error)
   }
-  
+
   throw new Error('All translation services unavailable. Please try again later.')
 }
 
@@ -112,10 +112,10 @@ export async function translateToJapanese(englishText: string): Promise<string> 
 function smartSplit(text: string, maxLength: number): string[] {
   const chunks: string[] = []
   let currentChunk = ''
-  
+
   // Try to split by sentences first
   const sentences = text.split(/(?<=[。．.!?！？\n])/g)
-  
+
   for (const sentence of sentences) {
     if (sentence.length > maxLength) {
       // Save current chunk if it has content
@@ -123,10 +123,10 @@ function smartSplit(text: string, maxLength: number): string[] {
         chunks.push(currentChunk)
         currentChunk = ''
       }
-      
+
       // Split long sentence into smaller parts by words or characters
       const words = sentence.split(/(?<=[、,，\s])/g)
-      
+
       for (const word of words) {
         if (word.length > maxLength) {
           // If even a word is too long, split by characters
@@ -150,11 +150,11 @@ function smartSplit(text: string, maxLength: number): string[] {
       currentChunk += sentence
     }
   }
-  
+
   if (currentChunk) {
     chunks.push(currentChunk)
   }
-  
+
   return chunks
 }
 
@@ -177,32 +177,32 @@ export async function translateInChunks(
   }
 
   console.log(`Processing ${text.length} characters in chunks of ${chunkSize}`)
-  
+
   const chunks = smartSplit(text, chunkSize)
   console.log(`Split into ${chunks.length} chunks`)
-  
+
   const translatedChunks: string[] = []
-  
+
   for (let i = 0; i < chunks.length; i++) {
     let retryCount = 0
     const maxRetries = 3
-    
+
     while (retryCount <= maxRetries) {
       try {
         const translated = await translateText(chunks[i], direction)
         translatedChunks.push(translated)
-        
+
         // Report progress
         if (onProgress) {
           onProgress(i + 1, chunks.length)
         }
-        
+
         // Break out of retry loop on success
         break
       } catch (error) {
         console.error(`Translation failed for chunk ${i + 1}, retry ${retryCount}:`, error)
         retryCount++
-        
+
         if (retryCount > maxRetries) {
           // If all retries failed, use original text
           translatedChunks.push(chunks[i])
@@ -210,17 +210,17 @@ export async function translateInChunks(
           break
         } else {
           // Exponential backoff
-          await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, retryCount)))
+          await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, retryCount)))
         }
       }
     }
-    
+
     // Delay between chunks to respect rate limits
     if (i < chunks.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
     }
   }
-  
+
   // Join translated chunks with appropriate spacing
   const joinChar = direction === 'en-ja' ? '' : ' '
   return translatedChunks.join(joinChar).trim()
@@ -234,37 +234,39 @@ export async function autoTranslate(text: string): Promise<TranslationResult> {
     return {
       translation: '',
       detectedLanguage: 'unknown',
-      direction: null
+      direction: null,
     }
   }
 
   // Detect language
   const hasJapanese = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(text)
   const hasOnlyEnglish = /^[A-Za-z0-9\s\W]+$/.test(text)
-  
+
   if (hasJapanese) {
-    const translation = text.length > 450 
-      ? await translateInChunks(text, 'ja-en', 450)
-      : await translateToEnglish(text)
+    const translation =
+      text.length > 450
+        ? await translateInChunks(text, 'ja-en', 450)
+        : await translateToEnglish(text)
     return {
       translation,
       detectedLanguage: 'japanese',
-      direction: 'ja-en'
+      direction: 'ja-en',
     }
   } else if (hasOnlyEnglish) {
-    const translation = text.length > 450
-      ? await translateInChunks(text, 'en-ja', 450)
-      : await translateToJapanese(text)
+    const translation =
+      text.length > 450
+        ? await translateInChunks(text, 'en-ja', 450)
+        : await translateToJapanese(text)
     return {
       translation,
       detectedLanguage: 'english',
-      direction: 'en-ja'
+      direction: 'en-ja',
     }
   } else {
     return {
       translation: text,
       detectedLanguage: 'unknown',
-      direction: null
+      direction: null,
     }
   }
 }
@@ -277,21 +279,22 @@ export async function batchTranslate(
   direction: TranslationDirection = 'ja-en'
 ): Promise<string[]> {
   const results: string[] = []
-  
+
   for (const text of texts) {
     try {
-      const translated = text.length > 450
-        ? await translateInChunks(text, direction, 450)
-        : await translateText(text, direction)
+      const translated =
+        text.length > 450
+          ? await translateInChunks(text, direction, 450)
+          : await translateText(text, direction)
       results.push(translated)
-      
+
       // Small delay between requests
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise((resolve) => setTimeout(resolve, 100))
     } catch (error) {
       console.error('Batch translation error:', error)
       results.push(text) // Return original text on error
     }
   }
-  
+
   return results
 }

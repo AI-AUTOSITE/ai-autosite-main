@@ -1,6 +1,6 @@
 export function showToast(message: string, duration: number = 3000): void {
   if (typeof window === 'undefined') return
-  
+
   // Remove existing toast if present
   const existingToast = document.getElementById('toast-notification')
   if (existingToast) {
@@ -37,7 +37,7 @@ export function showToast(message: string, duration: number = 3000): void {
       animation: slide-down 0.3s ease-out;
     }
   `
-  
+
   document.head.appendChild(style)
   document.body.appendChild(toast)
 
@@ -45,7 +45,7 @@ export function showToast(message: string, duration: number = 3000): void {
   setTimeout(() => {
     toast.style.transition = 'opacity 0.3s ease-out'
     toast.style.opacity = '0'
-    
+
     setTimeout(() => {
       toast.remove()
       style.remove()

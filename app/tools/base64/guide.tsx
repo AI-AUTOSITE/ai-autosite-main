@@ -1,11 +1,11 @@
 // app/tools/base64/guide.tsx
 
-import React, { useState } from 'react';
-import { 
-  X, 
-  Copy, 
-  Check, 
-  AlertCircle, 
+import React, { useState } from 'react'
+import {
+  X,
+  Copy,
+  Check,
+  AlertCircle,
   Code,
   Upload,
   FileText,
@@ -14,27 +14,28 @@ import {
   Zap,
   ArrowRight,
   Info,
-  Database
-} from 'lucide-react';
+  Database,
+} from 'lucide-react'
 
 interface GuideProps {
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export default function Base64Guide({ onClose }: GuideProps) {
-  const [copiedExample, setCopiedExample] = useState<string | null>(null);
+  const [copiedExample, setCopiedExample] = useState<string | null>(null)
 
   const examples = {
-    text: "Hello World",
-    encoded: "SGVsbG8gV29ybGQ=",
-    dataUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
-  };
+    text: 'Hello World',
+    encoded: 'SGVsbG8gV29ybGQ=',
+    dataUrl:
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+  }
 
   const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedExample(id);
-    setTimeout(() => setCopiedExample(null), 2000);
-  };
+    navigator.clipboard.writeText(text)
+    setCopiedExample(id)
+    setTimeout(() => setCopiedExample(null), 2000)
+  }
 
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
@@ -79,8 +80,8 @@ export default function Base64Guide({ onClose }: GuideProps) {
             <div className="text-sm text-blue-300">
               <p className="font-semibold mb-1">What is Base64?</p>
               <p className="text-gray-300">
-                Base64 converts binary data into text format using 64 ASCII characters.
-                It makes data safe to transmit through text-only systems.
+                Base64 converts binary data into text format using 64 ASCII characters. It makes
+                data safe to transmit through text-only systems.
               </p>
             </div>
           </div>
@@ -124,7 +125,7 @@ export default function Base64Guide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 2
@@ -139,7 +140,7 @@ export default function Base64Guide({ onClose }: GuideProps) {
                 </p>
               </div>
             </li>
-            
+
             <li className="flex items-start">
               <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                 3
@@ -166,7 +167,7 @@ export default function Base64Guide({ onClose }: GuideProps) {
                 <p className="text-xs text-gray-400">Preview images when decoding Base64</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
               <Upload className="w-5 h-5 text-blue-400" />
               <div>
@@ -174,7 +175,7 @@ export default function Base64Guide({ onClose }: GuideProps) {
                 <p className="text-xs text-gray-400">Support for text files and images (5MB max)</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
               <Zap className="w-5 h-5 text-yellow-400" />
               <div>
@@ -246,8 +247,8 @@ export default function Base64Guide({ onClose }: GuideProps) {
             <div className="text-sm text-green-300">
               <p className="font-semibold mb-1">100% Private</p>
               <p className="text-gray-300">
-                All processing happens in your browser. No data is sent to any server.
-                Your files and text never leave your device.
+                All processing happens in your browser. No data is sent to any server. Your files
+                and text never leave your device.
               </p>
             </div>
           </div>
@@ -265,7 +266,7 @@ export default function Base64Guide({ onClose }: GuideProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Export metadata for dynamic loading
@@ -273,4 +274,4 @@ export const guideMetadata = {
   title: 'Base64 Encoder/Decoder Guide',
   icon: '🔐',
   available: true,
-};
+}

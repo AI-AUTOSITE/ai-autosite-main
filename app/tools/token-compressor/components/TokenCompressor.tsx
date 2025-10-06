@@ -2,9 +2,24 @@
 
 import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react'
 import {
-  Zap, Upload, Copy, Check, Download, X, Trash2,
-  AlertTriangle, Shield, Loader2, FileText, TrendingDown,
-  Sparkles, Eye, EyeOff, Sliders, ChevronDown, Info
+  Zap,
+  Upload,
+  Copy,
+  Check,
+  Download,
+  X,
+  Trash2,
+  AlertTriangle,
+  Shield,
+  Loader2,
+  FileText,
+  TrendingDown,
+  Sparkles,
+  Eye,
+  EyeOff,
+  Sliders,
+  ChevronDown,
+  Info,
 } from 'lucide-react'
 
 // Type definitions
@@ -41,15 +56,18 @@ const AI_MODELS = {
   gpt4: { name: 'GPT-4', ratio: 4, color: 'text-green-400' },
   gpt35: { name: 'GPT-3.5', ratio: 4, color: 'text-blue-400' },
   claude: { name: 'Claude', ratio: 3.5, color: 'text-purple-400' },
-  gemini: { name: 'Gemini', ratio: 4, color: 'text-orange-400' }
+  gemini: { name: 'Gemini', ratio: 4, color: 'text-orange-400' },
 }
 
 // Compression levels with descriptions
-const COMPRESSION_LEVELS: Record<CompressionLevel, { name: string; description: string; icon: string }> = {
+const COMPRESSION_LEVELS: Record<
+  CompressionLevel,
+  { name: string; description: string; icon: string }
+> = {
   light: { name: 'Light', description: 'Keep readability', icon: '🌤️' },
   standard: { name: 'Standard', description: 'Balanced', icon: '⚖️' },
   aggressive: { name: 'Aggressive', description: 'Max compression', icon: '🔥' },
-  extreme: { name: 'Extreme', description: 'AI only', icon: '⚡' }
+  extreme: { name: 'Extreme', description: 'AI only', icon: '⚡' },
 }
 
 // Enhanced compression function
@@ -99,7 +117,7 @@ function compressText(text: string, level: CompressionLevel = 'standard'): strin
       .replace(/[^\x20-\x7E]+/g, '') // Remove non-printable
       .replace(/\s+/g, ' ')
       .trim()
-    
+
     // Additional extreme optimizations
     if (compressed.length > 1000) {
       // Remove all unnecessary quotes in JSON-like structures
@@ -116,36 +134,36 @@ function calculateModelTokens(text: string): ModelTokens {
     gpt4: Math.ceil(text.length / AI_MODELS.gpt4.ratio),
     gpt35: Math.ceil(text.length / AI_MODELS.gpt35.ratio),
     claude: Math.ceil(text.length / AI_MODELS.claude.ratio),
-    gemini: Math.ceil(text.length / AI_MODELS.gemini.ratio)
+    gemini: Math.ceil(text.length / AI_MODELS.gemini.ratio),
   }
 }
 
 // Security check
 function checkSecurity(content: string): SecurityIssue[] {
   const issues: SecurityIssue[] = []
-  
+
   // API Keys
   if (/(?:api[_\-]?key|apikey|token)[\s:=]+["']?[a-zA-Z0-9\-_]{20,}/gi.test(content)) {
     issues.push({ type: 'api_key', severity: 'high', count: 1 })
   }
-  
+
   // Emails
   const emails = content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g)
   if (emails?.length) {
     issues.push({ type: 'email', severity: 'medium', count: emails.length })
   }
-  
+
   // Phone numbers
   const phones = content.match(/(\+\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g)
   if (phones?.length) {
     issues.push({ type: 'phone', severity: 'medium', count: phones.length })
   }
-  
+
   // Private keys
   if (/-----BEGIN (RSA |EC )?PRIVATE KEY-----/.test(content)) {
     issues.push({ type: 'private_key', severity: 'high', count: 1 })
   }
-  
+
   return issues
 }
 
@@ -177,97 +195,110 @@ export default function TokenCompressor() {
     const compressed = files.reduce((sum, f) => sum + (f.compressedTokens || 0), 0)
     const saved = original - compressed
     const rate = original > 0 ? Math.round((saved / original) * 100) : 0
-    
+
     return { original, compressed, saved, rate }
   }, [files])
 
   // Process files
-  const processFiles = useCallback(async (uploadedFiles: File[]) => {
-    setIsProcessing(true)
-    
-    try {
-      const processed: ProcessedFile[] = []
-      
-      for (const file of uploadedFiles) {
-        const content = await file.text()
-        const id = `${Date.now()}-${Math.random()}`
-        
-        // Check security
-        const issues = checkSecurity(content)
-        if (issues.length > 0) {
-          setSecurityIssues(prev => [...prev, ...issues])
+  const processFiles = useCallback(
+    async (uploadedFiles: File[]) => {
+      setIsProcessing(true)
+
+      try {
+        const processed: ProcessedFile[] = []
+
+        for (const file of uploadedFiles) {
+          const content = await file.text()
+          const id = `${Date.now()}-${Math.random()}`
+
+          // Check security
+          const issues = checkSecurity(content)
+          if (issues.length > 0) {
+            setSecurityIssues((prev) => [...prev, ...issues])
+          }
+
+          // Calculate tokens
+          const originalTokens = Math.ceil(content.length / AI_MODELS[selectedModel].ratio)
+          const compressedContent = compressText(content, compressionLevel)
+          const compressedTokens = Math.ceil(
+            compressedContent.length / AI_MODELS[selectedModel].ratio
+          )
+
+          processed.push({
+            id,
+            name: file.name,
+            type: file.type || 'text/plain',
+            size: file.size,
+            content,
+            compressedContent,
+            originalTokens,
+            compressedTokens,
+            compressionLevel,
+          })
         }
-        
-        // Calculate tokens
-        const originalTokens = Math.ceil(content.length / AI_MODELS[selectedModel].ratio)
-        const compressedContent = compressText(content, compressionLevel)
-        const compressedTokens = Math.ceil(compressedContent.length / AI_MODELS[selectedModel].ratio)
-        
-        processed.push({
-          id,
-          name: file.name,
-          type: file.type || 'text/plain',
-          size: file.size,
-          content,
-          compressedContent,
-          originalTokens,
-          compressedTokens,
-          compressionLevel
-        })
+
+        setFiles((prev) => [...prev, ...processed])
+      } catch (error) {
+        console.error('Processing error:', error)
+      } finally {
+        setIsProcessing(false)
       }
-      
-      setFiles(prev => [...prev, ...processed])
-    } catch (error) {
-      console.error('Processing error:', error)
-    } finally {
-      setIsProcessing(false)
-    }
-  }, [compressionLevel, selectedModel])
+    },
+    [compressionLevel, selectedModel]
+  )
 
   // Handle file upload
-  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      processFiles(Array.from(files))
-    }
-  }, [processFiles])
+  const handleFileUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files
+      if (files) {
+        processFiles(Array.from(files))
+      }
+    },
+    [processFiles]
+  )
 
   // Handle drag and drop
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    
-    const files = Array.from(e.dataTransfer.files)
-    if (files.length > 0) {
-      processFiles(files)
-    }
-  }, [processFiles])
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setIsDragging(false)
+
+      const files = Array.from(e.dataTransfer.files)
+      if (files.length > 0) {
+        processFiles(files)
+      }
+    },
+    [processFiles]
+  )
 
   // Recompress all files when level changes
   useEffect(() => {
     if (autoCompress && files.length > 0) {
-      const recompressed = files.map(file => {
+      const recompressed = files.map((file) => {
         const compressedContent = compressText(file.content, compressionLevel)
-        const compressedTokens = Math.ceil(compressedContent.length / AI_MODELS[selectedModel].ratio)
-        
+        const compressedTokens = Math.ceil(
+          compressedContent.length / AI_MODELS[selectedModel].ratio
+        )
+
         return {
           ...file,
           compressedContent,
           compressedTokens,
-          compressionLevel
+          compressionLevel,
         }
       })
-      
+
       setFiles(recompressed)
     }
   }, [compressionLevel, selectedModel, autoCompress])
 
   // Copy to clipboard
   const handleCopy = async () => {
-    const output = files.map(f => 
-      `### ${f.name}\n${f.compressedContent || f.content}`
-    ).join('\n\n')
-    
+    const output = files
+      .map((f) => `### ${f.name}\n${f.compressedContent || f.content}`)
+      .join('\n\n')
+
     await navigator.clipboard.writeText(output)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -275,10 +306,10 @@ export default function TokenCompressor() {
 
   // Generate download
   const handleDownload = () => {
-    const output = files.map(f => 
-      `### ${f.name}\n${f.compressedContent || f.content}`
-    ).join('\n\n---\n\n')
-    
+    const output = files
+      .map((f) => `### ${f.name}\n${f.compressedContent || f.content}`)
+      .join('\n\n---\n\n')
+
     const blob = new Blob([output], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -290,7 +321,7 @@ export default function TokenCompressor() {
 
   // Remove file
   const handleRemoveFile = (id: string) => {
-    setFiles(prev => prev.filter(f => f.id !== id))
+    setFiles((prev) => prev.filter((f) => f.id !== id))
   }
 
   // Clear all
@@ -304,8 +335,7 @@ export default function TokenCompressor() {
       {/* Main Stats - Tool First */}
       <div className="text-center mb-8">
         {files.length === 0 ? (
-          <>
-          </>
+          <></>
         ) : (
           <div className="space-y-4">
             {/* Big Numbers */}
@@ -318,13 +348,11 @@ export default function TokenCompressor() {
               </div>
               <TrendingDown className="w-8 h-8 text-green-400" />
               <div>
-                <div className="text-5xl font-bold text-green-400">
-                  {totals.rate}%
-                </div>
+                <div className="text-5xl font-bold text-green-400">{totals.rate}%</div>
                 <div className="text-sm text-gray-400 mt-1">Saved</div>
               </div>
             </div>
-            
+
             {/* Progress Bar */}
             <div className="w-full max-w-md mx-auto">
               <div className="flex justify-between text-xs text-gray-400 mb-1">
@@ -332,7 +360,7 @@ export default function TokenCompressor() {
                 <span>{totals.saved.toLocaleString()} saved</span>
               </div>
               <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-cyan-400 to-green-400 transition-all duration-500"
                   style={{ width: `${totals.rate}%` }}
                 />
@@ -352,24 +380,26 @@ export default function TokenCompressor() {
               <span className="text-sm font-medium text-gray-300">Compression Level</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {(Object.entries(COMPRESSION_LEVELS) as [CompressionLevel, any][]).map(([level, info]) => (
-                <button
-                  key={level}
-                  onClick={() => setCompressionLevel(level)}
-                  className={`h-[72px] px-4 rounded-lg transition-all flex items-center gap-3 ${
-                    compressionLevel === level
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  }`}
-                  title={info.description}
-                >
-                  <span className="text-2xl flex-shrink-0">{info.icon}</span>
-                  <div className="text-left">
-                    <div className="font-medium text-sm">{info.name}</div>
-                    <div className="text-xs opacity-70">{info.description}</div>
-                  </div>
-                </button>
-              ))}
+              {(Object.entries(COMPRESSION_LEVELS) as [CompressionLevel, any][]).map(
+                ([level, info]) => (
+                  <button
+                    key={level}
+                    onClick={() => setCompressionLevel(level)}
+                    className={`h-[72px] px-4 rounded-lg transition-all flex items-center gap-3 ${
+                      compressionLevel === level
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    }`}
+                    title={info.description}
+                  >
+                    <span className="text-2xl flex-shrink-0">{info.icon}</span>
+                    <div className="text-left">
+                      <div className="font-medium text-sm">{info.name}</div>
+                      <div className="text-xs opacity-70">{info.description}</div>
+                    </div>
+                  </button>
+                )
+              )}
             </div>
           </div>
 
@@ -384,29 +414,33 @@ export default function TokenCompressor() {
                   className="ml-auto text-gray-400 hover:text-cyan-400 transition-colors p-1"
                   title="Show token comparison across models"
                 >
-                  <ChevronDown className={`w-4 h-4 transition-transform ${showModelDetails ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${showModelDetails ? 'rotate-180' : ''}`}
+                  />
                 </button>
               )}
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(([model, info]) => (
-                <button
-                  key={model}
-                  onClick={() => setSelectedModel(model)}
-                  className={`h-[72px] px-4 rounded-lg transition-all flex flex-col justify-center ${
-                    selectedModel === model
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  }`}
-                >
-                  <div className={`font-medium text-sm ${selectedModel === model ? 'text-white' : info.color}`}>
-                    {info.name}
-                  </div>
-                  <div className="text-xs mt-1 opacity-70">
-                    1 token ≈ {info.ratio} chars
-                  </div>
-                </button>
-              ))}
+              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(
+                ([model, info]) => (
+                  <button
+                    key={model}
+                    onClick={() => setSelectedModel(model)}
+                    className={`h-[72px] px-4 rounded-lg transition-all flex flex-col justify-center ${
+                      selectedModel === model
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    }`}
+                  >
+                    <div
+                      className={`font-medium text-sm ${selectedModel === model ? 'text-white' : info.color}`}
+                    >
+                      {info.name}
+                    </div>
+                    <div className="text-xs mt-1 opacity-70">1 token ≈ {info.ratio} chars</div>
+                  </button>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -416,25 +450,27 @@ export default function TokenCompressor() {
           <div className="mt-6 pt-6 border-t border-white/10">
             <p className="text-xs text-gray-400 mb-3">Token count comparison across models</p>
             <div className="grid grid-cols-4 gap-2">
-              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(([model, info]) => {
-                const modelTokens = files.reduce((sum, f) => {
-                  return sum + Math.ceil((f.compressedContent || f.content).length / info.ratio)
-                }, 0)
-                
-                return (
-                  <div 
-                    key={model} 
-                    className={`text-center p-3 rounded-lg ${
-                      selectedModel === model ? 'bg-white/10' : 'bg-black/20'
-                    }`}
-                  >
-                    <div className={`text-lg font-bold ${info.color}`}>
-                      {modelTokens.toLocaleString()}
+              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(
+                ([model, info]) => {
+                  const modelTokens = files.reduce((sum, f) => {
+                    return sum + Math.ceil((f.compressedContent || f.content).length / info.ratio)
+                  }, 0)
+
+                  return (
+                    <div
+                      key={model}
+                      className={`text-center p-3 rounded-lg ${
+                        selectedModel === model ? 'bg-white/10' : 'bg-black/20'
+                      }`}
+                    >
+                      <div className={`text-lg font-bold ${info.color}`}>
+                        {modelTokens.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-gray-500">{info.name}</div>
                     </div>
-                    <div className="text-xs text-gray-500">{info.name}</div>
-                  </div>
-                )
-              })}
+                  )
+                }
+              )}
             </div>
           </div>
         )}
@@ -443,11 +479,11 @@ export default function TokenCompressor() {
       {/* Drop Zone */}
       <div
         className={`relative border-2 border-dashed rounded-2xl p-8 transition-all ${
-          isDragging 
-            ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]' 
+          isDragging
+            ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]'
             : files.length > 0
-            ? 'border-white/20 bg-white/5'
-            : 'border-white/20 bg-white/5 hover:border-cyan-400/50'
+              ? 'border-white/20 bg-white/5'
+              : 'border-white/20 bg-white/5 hover:border-cyan-400/50'
         }`}
         onDragOver={(e) => {
           e.preventDefault()
@@ -467,7 +503,7 @@ export default function TokenCompressor() {
           onChange={handleFileUpload}
           accept="*"
         />
-        
+
         {files.length === 0 ? (
           <div className="text-center">
             <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -492,8 +528,8 @@ export default function TokenCompressor() {
           <div className="space-y-3">
             {/* File List */}
             <div className="max-h-48 overflow-y-auto space-y-2">
-              {files.map(file => (
-                <div 
+              {files.map((file) => (
+                <div
                   key={file.id}
                   className="flex items-center justify-between p-3 bg-black/30 rounded-lg group"
                 >
@@ -502,11 +538,12 @@ export default function TokenCompressor() {
                     <div>
                       <div className="text-sm text-white font-medium">{file.name}</div>
                       <div className="text-xs text-gray-500">
-                        {file.originalTokens?.toLocaleString()} → {file.compressedTokens?.toLocaleString()} tokens
+                        {file.originalTokens?.toLocaleString()} →{' '}
+                        {file.compressedTokens?.toLocaleString()} tokens
                       </div>
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={() => handleRemoveFile(file.id)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
@@ -516,7 +553,7 @@ export default function TokenCompressor() {
                 </div>
               ))}
             </div>
-            
+
             {/* Add More Button */}
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -537,7 +574,7 @@ export default function TokenCompressor() {
               <p className="text-yellow-400 font-medium mb-2">Security Issues Found</p>
               <div className="flex flex-wrap gap-2">
                 {securityIssues.map((issue, i) => (
-                  <span 
+                  <span
                     key={i}
                     className="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full"
                   >
@@ -547,10 +584,10 @@ export default function TokenCompressor() {
               </div>
               <button
                 onClick={() => {
-                  const cleaned = files.map(f => ({
+                  const cleaned = files.map((f) => ({
                     ...f,
                     content: removeSensitiveData(f.content),
-                    compressedContent: removeSensitiveData(f.compressedContent || '')
+                    compressedContent: removeSensitiveData(f.compressedContent || ''),
                   }))
                   setFiles(cleaned)
                   setSecurityIssues([])
@@ -574,23 +611,31 @@ export default function TokenCompressor() {
             <Trash2 className="inline mr-2" size={16} />
             Clear
           </button>
-          
+
           <button
             onClick={() => setShowPreview(!showPreview)}
             className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
           >
-            {showPreview ? <EyeOff className="inline mr-2" size={16} /> : <Eye className="inline mr-2" size={16} />}
+            {showPreview ? (
+              <EyeOff className="inline mr-2" size={16} />
+            ) : (
+              <Eye className="inline mr-2" size={16} />
+            )}
             Preview
           </button>
-          
+
           <button
             onClick={handleCopy}
             className="flex-1 px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
           >
-            {copied ? <Check className="inline mr-2" size={16} /> : <Copy className="inline mr-2" size={16} />}
+            {copied ? (
+              <Check className="inline mr-2" size={16} />
+            ) : (
+              <Copy className="inline mr-2" size={16} />
+            )}
             {copied ? 'Copied!' : 'Copy'}
           </button>
-          
+
           <button
             onClick={handleDownload}
             className="flex-1 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
@@ -606,11 +651,15 @@ export default function TokenCompressor() {
         <div className="mt-6 bg-black/40 rounded-xl p-4 border border-white/10">
           <h3 className="text-sm font-medium text-gray-400 mb-3">Compressed Output Preview</h3>
           <pre className="text-xs text-gray-300 font-mono overflow-x-auto whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
-            {files.slice(0, 2).map(f => 
-              `### ${f.name}\n${(f.compressedContent || f.content).substring(0, 500)}${
-                (f.compressedContent || f.content).length > 500 ? '...' : ''
-              }`
-            ).join('\n\n')}
+            {files
+              .slice(0, 2)
+              .map(
+                (f) =>
+                  `### ${f.name}\n${(f.compressedContent || f.content).substring(0, 500)}${
+                    (f.compressedContent || f.content).length > 500 ? '...' : ''
+                  }`
+              )
+              .join('\n\n')}
             {files.length > 2 && `\n\n... and ${files.length - 2} more files`}
           </pre>
         </div>
