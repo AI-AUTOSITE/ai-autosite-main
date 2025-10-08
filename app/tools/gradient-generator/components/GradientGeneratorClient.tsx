@@ -83,7 +83,7 @@ export default function GradientGeneratorClient() {
           <div className="flex gap-2">
             <button
               onClick={() => setType('linear')}
-              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-3 rounded-lg font-medium transition-all ${
                 type === 'linear'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                   : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
@@ -93,7 +93,7 @@ export default function GradientGeneratorClient() {
             </button>
             <button
               onClick={() => setType('radial')}
-              className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-3 rounded-lg font-medium transition-all ${
                 type === 'radial'
                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                   : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
@@ -104,39 +104,39 @@ export default function GradientGeneratorClient() {
           </div>
 
           {/* Colors - Side by side */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="text-white text-sm mb-1 block">Start Color</label>
-              <div className="flex gap-2">
+              <label className="text-white text-sm mb-1 block">Start</label>
+              <div className="flex gap-1.5">
                 <input
                   type="color"
                   value={color1}
                   onChange={(e) => setColor1(e.target.value)}
-                  className="w-12 h-10 rounded cursor-pointer bg-transparent"
+                  className="w-9 h-9 rounded cursor-pointer bg-transparent flex-shrink-0"
                 />
                 <input
                   type="text"
                   value={color1}
                   onChange={(e) => setColor1(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white
+                  className="flex-1 min-w-0 px-1.5 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-xs
                            hover:bg-white/15 focus:outline-none focus:border-purple-400 transition-colors"
                 />
               </div>
             </div>
             <div>
-              <label className="text-white text-sm mb-1 block">End Color</label>
-              <div className="flex gap-2">
+              <label className="text-white text-sm mb-1 block">End</label>
+              <div className="flex gap-1.5">
                 <input
                   type="color"
                   value={color2}
                   onChange={(e) => setColor2(e.target.value)}
-                  className="w-12 h-10 rounded cursor-pointer bg-transparent"
+                  className="w-9 h-9 rounded cursor-pointer bg-transparent flex-shrink-0"
                 />
                 <input
                   type="text"
                   value={color2}
                   onChange={(e) => setColor2(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white
+                  className="flex-1 min-w-0 px-1.5 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-xs
                            hover:bg-white/15 focus:outline-none focus:border-purple-400 transition-colors"
                 />
               </div>
@@ -163,8 +163,8 @@ export default function GradientGeneratorClient() {
         </div>
 
         {/* CSS Output */}
-        <div className="bg-black/30 rounded-lg p-3 mb-6">
-          <code className="text-purple-400 text-xs font-mono">{generateCSS()}</code>
+        <div className="bg-black/30 rounded-lg p-3 mb-6 overflow-x-auto">
+          <code className="text-purple-400 text-xs font-mono whitespace-nowrap">{generateCSS()}</code>
         </div>
 
         {/* Action Buttons */}
@@ -180,12 +180,12 @@ export default function GradientGeneratorClient() {
             {copied ? (
               <>
                 <Check className="w-5 h-5" />
-                Copied!
+                <span>Copied!</span>
               </>
             ) : (
               <>
                 <Copy className="w-5 h-5" />
-                Copy CSS
+                <span>Copy CSS</span>
               </>
             )}
           </button>
@@ -202,7 +202,7 @@ export default function GradientGeneratorClient() {
         {/* Quick Presets */}
         <div className="mt-6 pt-6 border-t border-white/10">
           <p className="text-xs text-gray-400 mb-3">Quick Presets</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {PRESETS.map((preset, index) => (
               <button
                 key={index}

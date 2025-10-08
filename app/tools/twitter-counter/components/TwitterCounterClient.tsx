@@ -1,16 +1,23 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { Twitter, Copy, Check, Trash2, Scissors, Hash, AtSign, Link, Zap } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { Twitter, Copy, Check, Trash2, Scissors, Hash, AtSign, Link, Zap, Smartphone } from 'lucide-react'
 
 const TWITTER_LIMIT = 280
-const URL_LENGTH = 23 // Twitter counts all URLs as 23 characters
+const URL_LENGTH = 23
 
 interface ThreadPart {
   text: string
   number: number
   total: number
   charCount: number
+}
+
+// Vibration helper
+const vibrate = (duration: number) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(duration)
+  }
 }
 
 // Twitter character counting
@@ -31,7 +38,6 @@ function splitIntoThread(text: string): ThreadPart[] {
   let currentPart = ''
   let partNumber = 1
 
-  // Estimate total tweets
   const roughTotal = Math.ceil(getTwitterLength(text) / (TWITTER_LIMIT - 10))
 
   for (const sentence of sentences) {
@@ -52,7 +58,6 @@ function splitIntoThread(text: string): ThreadPart[] {
         partNumber++
         currentPart = sentence
       } else {
-        // Single sentence too long, split by words
         const words = sentence.split(' ')
         let wordPart = ''
 
@@ -82,7 +87,6 @@ function splitIntoThread(text: string): ThreadPart[] {
     }
   }
 
-  // Add the last part
   if (currentPart) {
     const finalText = currentPart + ` (${partNumber}/${roughTotal})`
     parts.push({
@@ -93,7 +97,6 @@ function splitIntoThread(text: string): ThreadPart[] {
     })
   }
 
-  // Update total in all parts
   const actualTotal = parts.length
   return parts.map((part) => {
     const updatedText = part.text.replace(/\(\d+\/\d+\)/, `(${part.number}/${actualTotal})`)
@@ -111,6 +114,20 @@ export default function TwitterCounterClient() {
   const [copied, setCopied] = useState(false)
   const [copiedThread, setCopiedThread] = useState<number | null>(null)
   const [showThread, setShowThread] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Device detection
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      const smallScreen = window.innerWidth < 768
+      setIsMobile(mobile || smallScreen)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -119,7 +136,6 @@ export default function TwitterCounterClient() {
     const percentage = Math.min((charCount / TWITTER_LIMIT) * 100, 100)
     const isOverLimit = charCount > TWITTER_LIMIT
 
-    // Quick stats
     const words = text.trim() ? text.trim().split(/\s+/).length : 0
     const hashtags = (text.match(/#[\w]+/g) || []).length
     const mentions = (text.match(/@[\w]+/g) || []).length
@@ -164,38 +180,67 @@ export default function TwitterCounterClient() {
 
   // Copy handlers
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      vibrate(30)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error('Copy failed:', error)
+    }
   }
 
   const handleCopyThread = async (part: ThreadPart) => {
-    await navigator.clipboard.writeText(part.text)
-    setCopiedThread(part.number)
-    setTimeout(() => setCopiedThread(null), 2000)
+    try {
+      await navigator.clipboard.writeText(part.text)
+      setCopiedThread(part.number)
+      vibrate(30)
+      setTimeout(() => setCopiedThread(null), 2000)
+    } catch (error) {
+      console.error('Copy failed:', error)
+    }
   }
 
   const handleCopyAllThread = async () => {
     if (!thread) return
-    const fullThread = thread.map((p) => p.text).join('\n\n')
-    await navigator.clipboard.writeText(fullThread)
-    setCopiedThread(-1)
-    setTimeout(() => setCopiedThread(null), 2000)
+    try {
+      const fullThread = thread.map((p) => p.text).join('\n\n')
+      await navigator.clipboard.writeText(fullThread)
+      setCopiedThread(-1)
+      vibrate(30)
+      setTimeout(() => setCopiedThread(null), 2000)
+    } catch (error) {
+      console.error('Copy failed:', error)
+    }
   }
 
   const handleClear = () => {
     setText('')
     setCopied(false)
     setCopiedThread(null)
+    vibrate(30)
   }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
+      {/* Mobile indicator */}
+      {isMobile && (
+        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-start gap-2">
+          <Smartphone className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+          <div className="text-sm">
+            <p className="text-blue-300 font-medium">Mobile Optimized</p>
+            <p className="text-blue-400/70 text-xs mt-1">
+              Count X/Twitter characters - Auto-split threads - Works offline
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main Display */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6 sm:mb-8">
         {/* Big Character Count */}
         <div className="mb-4">
-          <div className={`text-6xl font-bold ${statusColor} transition-colors`}>
+          <div className={`text-5xl sm:text-6xl md:text-7xl font-bold ${statusColor} transition-colors`}>
             {stats.charCount}
           </div>
           <div className="text-gray-400 text-sm mt-1">
@@ -211,98 +256,110 @@ export default function TwitterCounterClient() {
               style={{ width: `${stats.percentage}%` }}
             />
           </div>
-          <div className="text-xs text-gray-500 mt-1">{TWITTER_LIMIT} max</div>
+          <div className="text-xs text-gray-500 mt-1">{TWITTER_LIMIT} character limit</div>
         </div>
       </div>
 
       {/* Quick Stats Bar */}
       {(stats.words > 0 || stats.hashtags > 0 || stats.mentions > 0) && (
-        <div className="flex justify-center gap-6 mb-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white">{stats.words}</div>
-            <div className="text-xs text-gray-500">Words</div>
+        <div className="mb-6">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <div className="text-center min-w-[60px]">
+              <div className="text-2xl font-bold text-white">{stats.words}</div>
+              <div className="text-xs text-gray-500">Words</div>
+            </div>
+            {stats.hashtags > 0 && (
+              <div className="text-center min-w-[60px]">
+                <div className="text-2xl font-bold text-blue-400">{stats.hashtags}</div>
+                <div className="text-xs text-gray-500 flex items-center gap-1 justify-center">
+                  <Hash className="w-3 h-3" />
+                  Tags
+                </div>
+              </div>
+            )}
+            {stats.mentions > 0 && (
+              <div className="text-center min-w-[60px]">
+                <div className="text-2xl font-bold text-cyan-400">{stats.mentions}</div>
+                <div className="text-xs text-gray-500 flex items-center gap-1 justify-center">
+                  <AtSign className="w-3 h-3" />
+                  Mentions
+                </div>
+              </div>
+            )}
+            {stats.urls > 0 && (
+              <div className="text-center min-w-[60px]">
+                <div className="text-2xl font-bold text-purple-400">{stats.urls}</div>
+                <div className="text-xs text-gray-500 flex items-center gap-1 justify-center">
+                  <Link className="w-3 h-3" />
+                  Links
+                </div>
+              </div>
+            )}
+            {stats.lines > 1 && (
+              <div className="text-center min-w-[60px]">
+                <div className="text-2xl font-bold text-green-400">{stats.lines}</div>
+                <div className="text-xs text-gray-500">Lines</div>
+              </div>
+            )}
           </div>
-          {stats.hashtags > 0 && (
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-400">{stats.hashtags}</div>
-              <div className="text-xs text-gray-500 flex items-center gap-1">
-                <Hash className="w-3 h-3" />
-                Tags
-              </div>
-            </div>
-          )}
-          {stats.mentions > 0 && (
-            <div className="text-center">
-              <div className="text-2xl font-bold text-cyan-400">{stats.mentions}</div>
-              <div className="text-xs text-gray-500 flex items-center gap-1">
-                <AtSign className="w-3 h-3" />
-                Mentions
-              </div>
-            </div>
-          )}
-          {stats.urls > 0 && (
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">{stats.urls}</div>
-              <div className="text-xs text-gray-500 flex items-center gap-1">
-                <Link className="w-3 h-3" />
-                Links
-              </div>
-            </div>
-          )}
         </div>
       )}
 
       {/* Text Input */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 mb-6">
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type or paste your tweet..."
-          className="w-full h-32 p-4 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 
+          className="w-full h-32 sm:h-36 p-4 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-500 
                    focus:outline-none focus:border-cyan-400 transition-all resize-none font-sans text-base"
-          autoFocus
+          autoFocus={!isMobile}
         />
 
-        {/* Actions */}
-        <div className="flex gap-3 mt-4">
+        {/* Actions - Mobile optimized buttons (48px height) */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <button
             onClick={handleClear}
             disabled={!text}
-            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 
-                     transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="min-h-[48px] px-6 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 
+                     transition-all disabled:opacity-30 disabled:cursor-not-allowed
+                     flex items-center justify-center gap-2 active:scale-95"
           >
-            <Trash2 className="w-4 h-4 inline mr-2" />
-            Clear
+            <Trash2 className="w-4 h-4" />
+            <span>Clear</span>
           </button>
 
           {stats.isOverLimit && (
             <button
               onClick={() => setShowThread(!showThread)}
-              className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
+              className="min-h-[48px] px-6 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all
+                       flex items-center justify-center gap-2 active:scale-95"
             >
-              <Scissors className="w-4 h-4 inline mr-2" />
-              {showThread ? 'Hide' : 'Show'} Thread
+              <Scissors className="w-4 h-4" />
+              <span>{showThread ? 'Hide' : 'Show'} Thread</span>
             </button>
           )}
 
           <button
             onClick={stats.isOverLimit ? handleCopyAllThread : handleCopy}
             disabled={!text}
-            className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed ${
-              copied || copiedThread === -1
-                ? 'bg-green-500 text-white'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-lg'
-            }`}
+            className={`flex-1 min-h-[48px] px-6 rounded-lg font-medium transition-all disabled:opacity-30 
+                      disabled:cursor-not-allowed flex items-center justify-center gap-2
+                      shadow-lg active:scale-95 ${
+                        copied || copiedThread === -1
+                          ? 'bg-green-500 text-white shadow-green-500/30'
+                          : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-cyan-500/30 hover:opacity-90'
+                      }`}
           >
             {copied || copiedThread === -1 ? (
               <>
-                <Check className="w-4 h-4 inline mr-2" />
-                Copied!
+                <Check className="w-4 h-4" />
+                <span>Copied!</span>
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4 inline mr-2" />
-                Copy {stats.isOverLimit ? 'Thread' : 'Tweet'}
+                <Copy className="w-4 h-4" />
+                <span>Copy {stats.isOverLimit ? 'Thread' : 'Tweet'}</span>
               </>
             )}
           </button>
@@ -321,13 +378,13 @@ export default function TwitterCounterClient() {
             <div
               key={part.number}
               className="group relative bg-white/5 rounded-xl p-4 border border-white/10 
-                                              hover:bg-white/[0.07] transition-all"
+                       hover:bg-white/[0.07] transition-all"
             >
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-medium text-cyan-400">
+              <div className="flex justify-between items-start mb-3 gap-3">
+                <span className="text-xs font-medium text-cyan-400 flex-shrink-0">
                   Tweet {part.number}/{part.total}
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <span
                     className={`text-xs ${
                       part.charCount > TWITTER_LIMIT ? 'text-red-400' : 'text-gray-500'
@@ -337,17 +394,28 @@ export default function TwitterCounterClient() {
                   </span>
                   <button
                     onClick={() => handleCopyThread(part)}
-                    className={`px-3 py-1 rounded text-xs font-medium transition-all ${
-                      copiedThread === part.number
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                    }`}
+                    className={`min-h-[48px] min-w-[80px] px-4 rounded-lg text-sm font-medium transition-all active:scale-95 
+                              flex items-center justify-center gap-2 ${
+                                copiedThread === part.number
+                                  ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
+                                  : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                              }`}
                   >
-                    {copiedThread === part.number ? 'Copied!' : 'Copy'}
+                    {copiedThread === part.number ? (
+                      <>
+                        <Check className="w-4 h-4" />
+                        <span>Done</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        <span>Copy</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
-              <p className="text-gray-300 whitespace-pre-wrap text-sm leading-relaxed">
+              <p className="text-gray-300 whitespace-pre-wrap text-sm sm:text-base leading-relaxed">
                 {part.text}
               </p>
             </div>
@@ -355,41 +423,50 @@ export default function TwitterCounterClient() {
         </div>
       )}
 
-      {/* Tips - Simplified */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-        <div className="bg-white/5 rounded-lg p-3">
-          <div className="text-lg mb-1">📱</div>
-          <div className="text-xs text-gray-400">
+      {/* Tips - No emojis, using Lucide icons */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-all">
+          <Smartphone className="w-6 h-6 mb-2 mx-auto text-cyan-400" />
+          <div className="text-xs text-gray-400 text-center">
             Best under
             <br />
             100 chars
           </div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
-          <div className="text-lg mb-1">🔗</div>
-          <div className="text-xs text-gray-400">
+        <div className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-all">
+          <Link className="w-6 h-6 mb-2 mx-auto text-purple-400" />
+          <div className="text-xs text-gray-400 text-center">
             Links = 23
             <br />
             characters
           </div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
-          <div className="text-lg mb-1">#️⃣</div>
-          <div className="text-xs text-gray-400">
+        <div className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-all">
+          <Hash className="w-6 h-6 mb-2 mx-auto text-blue-400" />
+          <div className="text-xs text-gray-400 text-center">
             1-2 hashtags
             <br />
             optimal
           </div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3">
-          <div className="text-lg mb-1">🧵</div>
-          <div className="text-xs text-gray-400">
+        <div className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-all">
+          <Twitter className="w-6 h-6 mb-2 mx-auto text-cyan-400" />
+          <div className="text-xs text-gray-400 text-center">
             Threads get
             <br />
             more reach
           </div>
         </div>
       </div>
+
+      {/* Mobile specific tip */}
+      {isMobile && (
+        <div className="mt-4 p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
+          <p className="text-cyan-300 text-xs text-center">
+            All processing happens on your device - No data sent anywhere
+          </p>
+        </div>
+      )}
     </div>
   )
 }

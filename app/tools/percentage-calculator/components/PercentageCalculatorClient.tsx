@@ -8,15 +8,16 @@ type CalculationType = 'basic' | 'change' | 'what' | 'discount' | 'tip'
 interface TabConfig {
   id: CalculationType
   label: string
+  shortLabel: string
   icon: React.ReactNode
 }
 
 const TABS: TabConfig[] = [
-  { id: 'basic', label: 'Basic', icon: <Percent className="w-4 h-4" /> },
-  { id: 'change', label: 'Change', icon: <TrendingUp className="w-4 h-4" /> },
-  { id: 'what', label: 'What %', icon: <Calculator className="w-4 h-4" /> },
-  { id: 'discount', label: 'Discount', icon: <Tag className="w-4 h-4" /> },
-  { id: 'tip', label: 'Tip', icon: <DollarSign className="w-4 h-4" /> },
+  { id: 'basic', label: 'Basic', shortLabel: 'Basic', icon: <Percent className="w-4 h-4" /> },
+  { id: 'change', label: 'Change', shortLabel: 'Chng', icon: <TrendingUp className="w-4 h-4" /> },
+  { id: 'what', label: 'What %', shortLabel: 'What', icon: <Calculator className="w-4 h-4" /> },
+  { id: 'discount', label: 'Discount', shortLabel: 'Disc', icon: <Tag className="w-4 h-4" /> },
+  { id: 'tip', label: 'Tip', shortLabel: 'Tip', icon: <DollarSign className="w-4 h-4" /> },
 ]
 
 const TIP_PRESETS = [10, 15, 18, 20, 25]
@@ -59,13 +60,29 @@ export default function PercentageCalculatorClient() {
     perPerson: number
   } | null>(null)
 
+  // Vibration feedback helper
+  const vibrate = (duration: number = 30) => {
+    if (navigator.vibrate) {
+      navigator.vibrate(duration)
+    }
+  }
+
+  // Handle tab change with smooth scroll
+  const handleTabChange = (tab: CalculationType) => {
+    setActiveTab(tab)
+    vibrate(30) // Tab change feedback
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   // Calculate Basic Percentage
   useEffect(() => {
     if (basicPercent && basicValue) {
       const percent = parseFloat(basicPercent)
       const value = parseFloat(basicValue)
       if (!isNaN(percent) && !isNaN(value)) {
-        setBasicResult((percent / 100) * value)
+        const result = (percent / 100) * value
+        setBasicResult(result)
+        vibrate(10) // Subtle calculation feedback
       } else {
         setBasicResult(null)
       }
@@ -85,6 +102,7 @@ export default function PercentageCalculatorClient() {
           percent: Math.abs(change),
           type: change >= 0 ? 'increase' : 'decrease',
         })
+        vibrate(10)
       } else {
         setChangeResult(null)
       }
@@ -99,7 +117,9 @@ export default function PercentageCalculatorClient() {
       const value = parseFloat(whatValue)
       const total = parseFloat(whatTotal)
       if (!isNaN(value) && !isNaN(total) && total !== 0) {
-        setWhatResult((value / total) * 100)
+        const result = (value / total) * 100
+        setWhatResult(result)
+        vibrate(10)
       } else {
         setWhatResult(null)
       }
@@ -119,6 +139,7 @@ export default function PercentageCalculatorClient() {
           saved: saved,
           final: price - saved,
         })
+        vibrate(10)
       } else {
         setDiscountResult(null)
       }
@@ -141,6 +162,7 @@ export default function PercentageCalculatorClient() {
           total: total,
           perPerson: total / split,
         })
+        vibrate(10)
       } else {
         setTipResult(null)
       }
@@ -161,25 +183,29 @@ export default function PercentageCalculatorClient() {
     setBillAmount('')
     setTipPercent('15')
     setSplitCount('1')
+    vibrate(30) // Clear feedback
   }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-3xl">
-      {/* Tab Navigation - Tool First */}
+      {/* Tab Navigation */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-1.5 mb-6">
         <div className="flex gap-1">
           {TABS.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-3 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
+              onClick={() => handleTabChange(tab.id)}
+              className={`min-h-[44px] flex-1 px-2 py-2.5 rounded-lg font-medium transition-all flex flex-col sm:flex-row items-center justify-center gap-1 ${
                 activeTab === tab.id
                   ? 'bg-cyan-600 text-white'
                   : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {tab.icon}
-              <span className="hidden sm:inline text-sm">{tab.label}</span>
+              <span className="text-[10px] sm:text-sm">
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.shortLabel}</span>
+              </span>
             </button>
           ))}
         </div>
@@ -196,6 +222,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Percentage (%)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={basicPercent}
                   onChange={(e) => setBasicPercent(e.target.value)}
                   placeholder="25"
@@ -206,6 +235,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Value</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={basicValue}
                   onChange={(e) => setBasicValue(e.target.value)}
                   placeholder="100"
@@ -234,6 +266,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">From</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={changeFrom}
                   onChange={(e) => setChangeFrom(e.target.value)}
                   placeholder="100"
@@ -244,6 +279,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">To</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={changeTo}
                   onChange={(e) => setChangeTo(e.target.value)}
                   placeholder="150"
@@ -287,6 +325,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Value (X)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={whatValue}
                   onChange={(e) => setWhatValue(e.target.value)}
                   placeholder="25"
@@ -297,6 +338,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Total (Y)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={whatTotal}
                   onChange={(e) => setWhatTotal(e.target.value)}
                   placeholder="100"
@@ -325,6 +369,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Original Price</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={originalPrice}
                   onChange={(e) => setOriginalPrice(e.target.value)}
                   placeholder="100"
@@ -335,6 +382,9 @@ export default function PercentageCalculatorClient() {
                 <label className="block text-gray-400 text-sm mb-1">Discount %</label>
                 <input
                   type="number"
+                  inputMode="decimal"
+                  autoComplete="off"
+                  autoFocus={false}
                   value={discountPercent}
                   onChange={(e) => setDiscountPercent(e.target.value)}
                   placeholder="20"
@@ -371,6 +421,9 @@ export default function PercentageCalculatorClient() {
               <label className="block text-gray-400 text-sm mb-1">Bill Amount</label>
               <input
                 type="number"
+                inputMode="decimal"
+                autoComplete="off"
+                autoFocus={false}
                 value={billAmount}
                 onChange={(e) => setBillAmount(e.target.value)}
                 placeholder="50.00"
@@ -384,8 +437,11 @@ export default function PercentageCalculatorClient() {
                 {TIP_PRESETS.map((preset) => (
                   <button
                     key={preset}
-                    onClick={() => setTipPercent(preset.toString())}
-                    className={`flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
+                    onClick={() => {
+                      setTipPercent(preset.toString())
+                      vibrate(30)
+                    }}
+                    className={`min-h-[44px] flex-1 py-2 rounded-lg font-medium text-sm transition-all ${
                       tipPercent === preset.toString()
                         ? 'bg-cyan-600 text-white'
                         : 'bg-white/5 text-gray-400 hover:text-white'
@@ -397,6 +453,9 @@ export default function PercentageCalculatorClient() {
               </div>
               <input
                 type="number"
+                inputMode="decimal"
+                autoComplete="off"
+                autoFocus={false}
                 value={tipPercent}
                 onChange={(e) => setTipPercent(e.target.value)}
                 placeholder="15"
@@ -408,6 +467,9 @@ export default function PercentageCalculatorClient() {
               <label className="block text-gray-400 text-sm mb-1">Split Between</label>
               <input
                 type="number"
+                inputMode="numeric"
+                autoComplete="off"
+                autoFocus={false}
                 value={splitCount}
                 onChange={(e) => setSplitCount(e.target.value)}
                 min="1"
@@ -428,7 +490,7 @@ export default function PercentageCalculatorClient() {
                     <p className="text-2xl font-bold text-white">${tipResult.total.toFixed(2)}</p>
                   </div>
                   {parseInt(splitCount) > 1 && (
-                    <div>
+                    <div className="col-span-2 sm:col-span-1">
                       <p className="text-gray-400 text-sm mb-1">Each</p>
                       <p className="text-2xl font-bold text-green-400">
                         ${tipResult.perPerson.toFixed(2)}
@@ -445,14 +507,14 @@ export default function PercentageCalculatorClient() {
         <div className="mt-6 flex justify-end">
           <button
             onClick={clearAll}
-            className="px-4 py-2 bg-white/5 text-gray-300 rounded-xl hover:bg-white/10 transition-all"
+            className="min-h-[44px] px-4 py-2 bg-white/5 text-gray-300 rounded-xl hover:bg-white/10 transition-all"
           >
             Clear All
           </button>
         </div>
       </div>
 
-      {/* Examples - Simplified */}
+      {/* Examples */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
         <h3 className="text-white font-medium mb-3">Quick Examples</h3>
         <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">

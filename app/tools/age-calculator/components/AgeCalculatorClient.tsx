@@ -77,7 +77,7 @@ export default function AgeCalculatorClient() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Date Input - Main Focus */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 sm:p-8">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-purple-400" />
           <label className="text-white font-medium">Your Birthday</label>
@@ -89,7 +89,7 @@ export default function AgeCalculatorClient() {
           onChange={(e) => calculateAge(e.target.value)}
           max={getMaxDate()}
           min="1900-01-01"
-          className="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-lg 
+          className="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-base sm:text-lg 
                      focus:outline-none focus:border-purple-400 transition-colors
                      [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert
                      cursor-pointer hover:bg-white/10"
@@ -109,33 +109,35 @@ export default function AgeCalculatorClient() {
           {/* Main Age */}
           <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
             <div className="text-center">
-              <p className="text-gray-400 text-sm mb-2">You are exactly</p>
-              <p className="text-3xl font-bold text-white">
+              <p className="text-gray-400 text-sm mb-2">Your Age</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-tight px-2">
                 {age.years} years, {age.months} months, {age.days} days
               </p>
             </div>
           </div>
 
           {/* Quick Stats - 3 Key Numbers */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 text-center">
-              <p className="text-2xl font-bold text-white">{age.totalDays.toLocaleString()}</p>
-              <p className="text-gray-400 text-xs">Days old</p>
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 sm:p-4 text-center">
+              <p className="text-base sm:text-xl md:text-2xl font-bold text-white break-words leading-tight">
+                {age.totalDays.toLocaleString()}
+              </p>
+              <p className="text-gray-400 text-xs mt-1">Days old</p>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 text-center">
-              <p className="text-2xl font-bold text-white">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 sm:p-4 text-center">
+              <p className="text-base sm:text-xl md:text-2xl font-bold text-white break-words leading-tight">
                 {(age.totalDays * 24).toLocaleString()}
               </p>
-              <p className="text-gray-400 text-xs">Hours lived</p>
+              <p className="text-gray-400 text-xs mt-1">Hours</p>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 text-center">
-              <div className="flex items-center justify-center gap-1">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 sm:p-4 text-center">
+              <div className="flex items-center justify-center gap-1 mb-1">
                 <Gift className="w-4 h-4 text-pink-400" />
-                <p className="text-2xl font-bold text-white">{age.daysUntilBirthday}</p>
+                <p className="text-base sm:text-xl md:text-2xl font-bold text-white">{age.daysUntilBirthday}</p>
               </div>
-              <p className="text-gray-400 text-xs">Days to birthday</p>
+              <p className="text-gray-400 text-xs">To birthday</p>
             </div>
           </div>
         </div>

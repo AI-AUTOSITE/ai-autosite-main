@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
-import { SummaryLength, ErrorCode } from '@/lib/types'
+import { SummaryLength, ErrorCode } from '@/tools/pdf-summarizer/types'
 import {
   MAX_FILE_SIZE,
   ACCEPTED_FILE_TYPE,

@@ -147,14 +147,14 @@ export default function TextCaseConverter() {
             <button
               key={option.value}
               onClick={() => handleCaseChange(option.value)}
-              className={`p-3 rounded-lg border transition-all ${
+              className={`p-3 rounded-lg border transition-all min-h-[70px] sm:min-h-[80px] flex flex-col justify-center items-center ${
                 selectedCase === option.value
                   ? 'bg-cyan-600 text-white border-cyan-600'
                   : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
               }`}
             >
-              <p className="font-medium text-sm">{option.label}</p>
-              <p className="text-xs opacity-70 mt-1">{option.example}</p>
+              <p className="font-medium text-sm text-center">{option.label}</p>
+              <p className="text-xs opacity-70 mt-1 hidden sm:block text-center">{option.example}</p>
             </button>
           ))}
         </div>
@@ -165,7 +165,7 @@ export default function TextCaseConverter() {
         {/* Input */}
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-white font-medium">Input Text</h3>
+            <h3 className="text-white font-medium">Your Text</h3>
             <div className="flex gap-3 text-sm text-gray-400">
               <span>{stats.chars} chars</span>
               <span>{stats.words} words</span>
@@ -175,7 +175,7 @@ export default function TextCaseConverter() {
           <textarea
             value={inputText}
             onChange={(e) => handleTextChange(e.target.value)}
-            placeholder="Enter or paste your text here..."
+            placeholder="Type or paste your text here..."
             className="w-full h-64 p-4 bg-white/5 border border-white/10 rounded-xl 
                      text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 
                      transition-colors resize-none font-mono text-sm"
@@ -186,11 +186,11 @@ export default function TextCaseConverter() {
           <div className="flex gap-2 mt-4">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg 
-                       hover:bg-white/10 transition-all flex items-center gap-2"
+              className="px-4 py-3 bg-white/5 text-gray-300 rounded-lg 
+                       hover:bg-white/10 transition-all flex items-center gap-2 font-medium"
             >
-              <Upload className="w-4 h-4" />
-              Upload File
+              <Upload className="w-5 h-5" />
+              <span>Upload</span>
             </button>
             <input
               ref={fileInputRef}
@@ -202,11 +202,11 @@ export default function TextCaseConverter() {
 
             <button
               onClick={handleClear}
-              className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg 
-                       hover:bg-white/10 transition-all flex items-center gap-2"
+              className="px-4 py-3 bg-white/5 text-gray-300 rounded-lg 
+                       hover:bg-white/10 transition-all flex items-center gap-2 font-medium"
             >
-              <RefreshCw className="w-4 h-4" />
-              Clear
+              <RefreshCw className="w-5 h-5" />
+              <span>Clear</span>
             </button>
           </div>
         </div>
@@ -214,31 +214,31 @@ export default function TextCaseConverter() {
         {/* Output */}
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-white font-medium">Converted Text</h3>
+            <h3 className="text-white font-medium">Result</h3>
             <div className="flex gap-2">
               <button
                 onClick={handleCopy}
                 disabled={!outputText}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all 
+                className={`px-4 py-3 rounded-lg font-medium transition-all 
                           flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${
                             copied
                               ? 'bg-green-500 text-white'
                               : 'bg-white/5 text-gray-300 hover:bg-white/10'
                           }`}
               >
-                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                <span>{copied ? 'Copied!' : 'Copy'}</span>
               </button>
 
               <button
                 onClick={handleDownload}
                 disabled={!outputText}
-                className="px-3 py-1.5 bg-white/5 text-gray-300 rounded-lg text-sm
+                className="px-4 py-3 bg-white/5 text-gray-300 rounded-lg font-medium
                          hover:bg-white/10 transition-all flex items-center gap-2
                          disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Download className="w-3.5 h-3.5" />
-                Download
+                <Download className="w-5 h-5" />
+                <span>Save</span>
               </button>
             </div>
           </div>
@@ -246,7 +246,7 @@ export default function TextCaseConverter() {
           <textarea
             value={outputText}
             readOnly
-            placeholder="Converted text will appear here..."
+            placeholder="Result will appear here..."
             className="w-full h-64 p-4 bg-black/20 border border-white/10 rounded-xl 
                      text-gray-300 placeholder-gray-500 resize-none font-mono text-sm"
           />
@@ -272,7 +272,7 @@ export default function TextCaseConverter() {
           <div>
             <Download className="w-5 h-5 text-cyan-400 mb-2" />
             <p className="text-gray-300 font-medium">Export Options</p>
-            <p className="text-gray-400 text-xs mt-1">Copy or download as .txt</p>
+            <p className="text-gray-400 text-xs mt-1">Copy or save as .txt</p>
           </div>
         </div>
       </div>

@@ -1,128 +1,26 @@
 'use client'
 
 import { useState } from 'react'
-import { Type, Copy, Check, RefreshCw, FileText, Hash, AlignLeft } from 'lucide-react'
+import { Copy, Check, FileText } from 'lucide-react'
 
 type GenerationType = 'words' | 'sentences' | 'paragraphs'
 
 const LOREM_WORDS = [
-  'lorem',
-  'ipsum',
-  'dolor',
-  'sit',
-  'amet',
-  'consectetur',
-  'adipiscing',
-  'elit',
-  'sed',
-  'do',
-  'eiusmod',
-  'tempor',
-  'incididunt',
-  'ut',
-  'labore',
-  'et',
-  'dolore',
-  'magna',
-  'aliqua',
-  'enim',
-  'ad',
-  'minim',
-  'veniam',
-  'quis',
-  'nostrud',
-  'exercitation',
-  'ullamco',
-  'laboris',
-  'nisi',
-  'aliquip',
-  'ex',
-  'ea',
-  'commodo',
-  'consequat',
-  'duis',
-  'aute',
-  'irure',
-  'in',
-  'reprehenderit',
-  'voluptate',
-  'velit',
-  'esse',
-  'cillum',
-  'fugiat',
-  'nulla',
-  'pariatur',
-  'excepteur',
-  'sint',
-  'occaecat',
-  'cupidatat',
-  'non',
-  'proident',
-  'sunt',
-  'culpa',
-  'qui',
-  'officia',
-  'deserunt',
-  'mollit',
-  'anim',
-  'id',
-  'est',
-  'laborum',
-  'perspiciatis',
-  'unde',
-  'omnis',
-  'iste',
-  'natus',
-  'error',
-  'voluptatem',
-  'accusantium',
-  'doloremque',
-  'laudantium',
-  'totam',
-  'rem',
-  'aperiam',
-  'eaque',
-  'ipsa',
-  'quae',
-  'ab',
-  'illo',
-  'inventore',
-  'veritatis',
-  'quasi',
-  'architecto',
-  'beatae',
-  'vitae',
-  'dicta',
-  'explicabo',
-  'nemo',
-  'enim',
-  'ipsam',
-  'quia',
-  'voluptas',
-  'aspernatur',
-  'aut',
-  'odit',
-  'fugit',
-  'consequuntur',
-  'magni',
-  'dolores',
-  'eos',
-  'ratione',
-  'sequi',
-  'nesciunt',
-  'neque',
-  'porro',
-  'quisquam',
-  'dolorem',
-  'adipisci',
-  'numquam',
-  'eius',
-  'modi',
-  'tempora',
-  'incidunt',
-  'magnam',
-  'quaerat',
-  'etiam',
+  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
+  'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
+  'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
+  'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
+  'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
+  'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
+  'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
+  'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'perspiciatis', 'unde',
+  'omnis', 'iste', 'natus', 'error', 'voluptatem', 'accusantium', 'doloremque',
+  'laudantium', 'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo',
+  'inventore', 'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta',
+  'explicabo', 'nemo', 'ipsam', 'quia', 'voluptas', 'aspernatur', 'aut', 'odit',
+  'fugit', 'consequuntur', 'magni', 'dolores', 'eos', 'ratione', 'sequi',
+  'nesciunt', 'neque', 'porro', 'quisquam', 'dolorem', 'adipisci', 'numquam',
+  'eius', 'modi', 'tempora', 'incidunt', 'magnam', 'quaerat', 'etiam',
 ]
 
 const LOREM_START =
@@ -135,6 +33,13 @@ export default function LoremIpsumClient() {
   const [includeHtml, setIncludeHtml] = useState(false)
   const [generatedText, setGeneratedText] = useState('')
   const [copied, setCopied] = useState(false)
+
+  // Vibration helper
+  const vibrate = (duration: number = 30) => {
+    if (navigator.vibrate) {
+      navigator.vibrate(duration)
+    }
+  }
 
   const generateWords = (count: number): string => {
     const words: string[] = []
@@ -150,7 +55,6 @@ export default function LoremIpsumClient() {
     for (let i = 0; i < length; i++) {
       words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)])
     }
-    // Capitalize first word
     words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1)
     return words.join(' ') + '.'
   }
@@ -219,10 +123,12 @@ export default function LoremIpsumClient() {
     }
 
     setGeneratedText(result)
+    vibrate(30) // Generate feedback
   }
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(generatedText)
+    vibrate(30) // Copy feedback
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -248,6 +154,9 @@ export default function LoremIpsumClient() {
             <label className="block text-white font-medium mb-2">Amount</label>
             <input
               type="number"
+              inputMode="numeric"
+              autoComplete="off"
+              autoFocus={false}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               min="1"
@@ -263,14 +172,29 @@ export default function LoremIpsumClient() {
               {(['words', 'sentences', 'paragraphs'] as GenerationType[]).map((t) => (
                 <button
                   key={t}
-                  onClick={() => setType(t)}
-                  className={`px-3 py-3 rounded-lg capitalize transition-all ${
+                  onClick={() => {
+                    setType(t)
+                    vibrate(30)
+                  }}
+                  className={`min-h-[44px] px-2 py-3 rounded-lg capitalize transition-all text-xs sm:text-sm ${
                     type === t
                       ? 'bg-gray-600 text-white'
                       : 'bg-white/5 text-gray-400 hover:text-white'
                   }`}
                 >
-                  {t}
+                  {t === 'paragraphs' ? (
+                    <>
+                      <span className="hidden sm:inline">Paragraphs</span>
+                      <span className="sm:hidden">Para</span>
+                    </>
+                  ) : t === 'sentences' ? (
+                    <>
+                      <span className="hidden sm:inline">Sentences</span>
+                      <span className="sm:hidden">Sent</span>
+                    </>
+                  ) : (
+                    'Words'
+                  )}
                 </button>
               ))}
             </div>
@@ -279,25 +203,31 @@ export default function LoremIpsumClient() {
 
         {/* Options */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <label className="flex items-center gap-2 text-gray-300 cursor-pointer">
+          <label className="flex items-center gap-2 text-gray-300 cursor-pointer min-h-[44px]">
             <input
               type="checkbox"
               checked={startWithLorem}
-              onChange={(e) => setStartWithLorem(e.target.checked)}
+              onChange={(e) => {
+                setStartWithLorem(e.target.checked)
+                vibrate(30)
+              }}
               className="w-4 h-4 rounded"
             />
             <span>Start with "Lorem ipsum..."</span>
           </label>
 
           {type === 'paragraphs' && (
-            <label className="flex items-center gap-2 text-gray-300 cursor-pointer">
+            <label className="flex items-center gap-2 text-gray-300 cursor-pointer min-h-[44px]">
               <input
                 type="checkbox"
                 checked={includeHtml}
-                onChange={(e) => setIncludeHtml(e.target.checked)}
+                onChange={(e) => {
+                  setIncludeHtml(e.target.checked)
+                  vibrate(30)
+                }}
                 className="w-4 h-4 rounded"
               />
-              <span>Include HTML &lt;p&gt; tags</span>
+              <span>Include HTML <code className="text-xs bg-white/10 px-1 rounded">&lt;p&gt;</code> tags</span>
             </label>
           )}
         </div>
@@ -305,7 +235,7 @@ export default function LoremIpsumClient() {
         {/* Generate Button */}
         <button
           onClick={handleGenerate}
-          className="w-full px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-800 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="min-h-[44px] w-full px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-800 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <FileText className="w-5 h-5" />
           Generate Lorem Ipsum
@@ -322,7 +252,7 @@ export default function LoremIpsumClient() {
             </div>
             <button
               onClick={handleCopy}
-              className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              className={`min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
                 copied ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
               }`}
             >

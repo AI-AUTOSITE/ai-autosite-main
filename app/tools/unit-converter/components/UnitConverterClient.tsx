@@ -9,7 +9,6 @@ import {
   ArrowUpDown,
   Copy,
   Check,
-  TrendingUp,
 } from 'lucide-react'
 
 type Category = 'length' | 'weight' | 'temperature' | 'volume'
@@ -103,6 +102,13 @@ export default function UnitConverterClient() {
   const [copied, setCopied] = useState(false)
   const [recentConversions, setRecentConversions] = useState<string[]>([])
 
+  // Vibration helper
+  const vibrate = (duration: number = 30) => {
+    if (navigator.vibrate) {
+      navigator.vibrate(duration)
+    }
+  }
+
   // Convert temperature
   const convertTemperature = useCallback((value: number, from: string, to: string): number => {
     let celsius = value
@@ -176,6 +182,7 @@ export default function UnitConverterClient() {
     if (outputValue) {
       setInputValue(outputValue)
     }
+    vibrate(30) // Swap feedback
   }
 
   // Quick conversion
@@ -185,6 +192,7 @@ export default function UnitConverterClient() {
     if (!inputValue) {
       setInputValue('1')
     }
+    vibrate(30) // Quick convert feedback
   }
 
   // Copy result
@@ -198,6 +206,7 @@ export default function UnitConverterClient() {
     const fullText = `${inputValue} ${fromSymbol} = ${outputValue} ${toSymbol}`
 
     await navigator.clipboard.writeText(fullText)
+    vibrate(30) // Copy feedback
     setCopied(true)
 
     // Add to recent
@@ -209,10 +218,10 @@ export default function UnitConverterClient() {
   // Clear
   const handleClear = () => {
     setInputValue('')
+    vibrate(30) // Clear feedback
   }
 
   const currentData = conversionData[category]
-  const Icon = currentData.icon
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-3xl">
@@ -230,7 +239,7 @@ export default function UnitConverterClient() {
         </div>
       )}
 
-      {/* Category Selector - Simplified */}
+      {/* Category Selector */}
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-2 mb-6 border border-white/10">
         <div className="grid grid-cols-4 gap-1">
           {(Object.entries(conversionData) as [Category, typeof currentData][]).map(
@@ -241,15 +250,18 @@ export default function UnitConverterClient() {
               return (
                 <button
                   key={key}
-                  onClick={() => setCategory(key)}
-                  className={`py-3 rounded-xl font-medium transition-all flex flex-col items-center justify-center ${
+                  onClick={() => {
+                    setCategory(key)
+                    vibrate(30)
+                  }}
+                  className={`min-h-[44px] py-2 px-1 rounded-xl font-medium transition-all flex flex-col items-center justify-center ${
                     isActive
                       ? `bg-gradient-to-r ${data.color} text-white`
                       : 'text-gray-400 hover:bg-white/5'
                   }`}
                 >
-                  <CategoryIcon className="w-5 h-5 mb-1" />
-                  <span className="text-xs capitalize">{key}</span>
+                  <CategoryIcon className="w-5 h-5 mb-0.5" />
+                  <span className="text-[10px] sm:text-xs capitalize leading-tight">{key}</span>
                 </button>
               )
             }
@@ -261,27 +273,30 @@ export default function UnitConverterClient() {
       <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
         {/* Input */}
         <div className="mb-4">
-          <div className="flex gap-2 mb-2">
+          <label className="text-xs text-gray-500 mb-2 block">From</label>
+          <div className="flex flex-col sm:flex-row gap-2 mb-2">
             <input
               type="number"
+              inputMode="decimal"
+              autoComplete="off"
+              autoFocus={false}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Enter value"
-              className="flex-1 px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
+              className="w-full sm:flex-1 px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
                        text-white text-xl placeholder-gray-500 focus:outline-none 
                        focus:border-cyan-400 transition-all"
-              autoFocus
             />
             <select
               value={fromUnit}
               onChange={(e) => setFromUnit(e.target.value)}
-              className="px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
+              className="w-full sm:w-32 px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
                        text-white focus:outline-none focus:border-cyan-400 cursor-pointer
                        [&>option]:bg-gray-800 [&>option]:text-white"
             >
               {currentData.units.map((unit) => (
                 <option key={unit.value} value={unit.value}>
-                  {unit.name}
+                  {unit.symbol}
                 </option>
               ))}
             </select>
@@ -292,7 +307,7 @@ export default function UnitConverterClient() {
         <div className="flex justify-center my-3">
           <button
             onClick={swapUnits}
-            className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-all"
+            className="min-h-[44px] min-w-[44px] p-2 rounded-full bg-white/5 hover:bg-white/10 transition-all"
             title="Swap units"
           >
             <ArrowUpDown className="w-5 h-5 text-cyan-400" />
@@ -301,8 +316,9 @@ export default function UnitConverterClient() {
 
         {/* Output */}
         <div className="mb-4">
-          <div className="flex gap-2">
-            <div className="flex-1 px-4 py-3 bg-black/40 border border-white/20 rounded-xl">
+          <label className="text-xs text-gray-500 mb-2 block">To</label>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="w-full sm:flex-1 px-4 py-3 bg-black/40 border border-white/20 rounded-xl">
               <div className="text-white text-xl font-medium min-h-[28px]">
                 {outputValue || <span className="text-gray-500">Result</span>}
               </div>
@@ -310,13 +326,13 @@ export default function UnitConverterClient() {
             <select
               value={toUnit}
               onChange={(e) => setToUnit(e.target.value)}
-              className="px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
+              className="w-full sm:w-32 px-4 py-3 bg-black/30 border border-white/10 rounded-xl 
                        text-white focus:outline-none focus:border-cyan-400 cursor-pointer
                        [&>option]:bg-gray-800 [&>option]:text-white"
             >
               {currentData.units.map((unit) => (
                 <option key={unit.value} value={unit.value}>
-                  {unit.name}
+                  {unit.symbol}
                 </option>
               ))}
             </select>
@@ -327,7 +343,7 @@ export default function UnitConverterClient() {
         <div className="flex gap-3">
           <button
             onClick={handleClear}
-            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
+            className="min-h-[44px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
           >
             Clear
           </button>
@@ -335,7 +351,7 @@ export default function UnitConverterClient() {
           <button
             onClick={copyResult}
             disabled={!outputValue}
-            className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-30 
+            className={`min-h-[44px] flex-1 px-4 py-2.5 rounded-lg font-medium transition-all disabled:opacity-30 
                      disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
                        copied
                          ? 'bg-green-500 text-white'
@@ -365,7 +381,7 @@ export default function UnitConverterClient() {
             <button
               key={idx}
               onClick={() => applyQuickConversion(conv.from, conv.to)}
-              className={`px-3 py-2 rounded-lg text-sm transition-all ${
+              className={`min-h-[44px] px-3 py-2 rounded-lg text-sm transition-all ${
                 fromUnit === conv.from && toUnit === conv.to
                   ? 'bg-gradient-to-r ' + currentData.color + ' text-white'
                   : 'bg-white/5 text-gray-300 hover:bg-white/10'

@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import { UI_TEXT } from '@/lib/constants'
 import { Download, Image as ImageIcon, Sliders, Settings, Loader2, ZapOff, Zap } from 'lucide-react'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
@@ -325,12 +326,12 @@ export default function TestImageGeneratorClient() {
                 {isGenerating ? (
                   <>
                     <Loader2 className="animate-spin" size={20} />
-                    Generating...
+                    {UI_TEXT.STATUS.GENERATING}
                   </>
                 ) : (
                   <>
                     <Download size={20} />
-                    Download
+                      {UI_TEXT.BUTTON.DOWNLOAD}
                   </>
                 )}
               </button>

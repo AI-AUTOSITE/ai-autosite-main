@@ -51,6 +51,13 @@ export default function BmiCalculatorClient() {
   const [result, setResult] = useState<BmiResult | null>(null)
   const [error, setError] = useState('')
 
+  // Vibration feedback helper
+  const vibrate = (duration: number = 30) => {
+    if (navigator.vibrate) {
+      navigator.vibrate(duration)
+    }
+  }
+
   const handleCalculate = () => {
     setError('')
 
@@ -72,6 +79,7 @@ export default function BmiCalculatorClient() {
       const totalInches = ft * 12 + inches
       const bmi = calculateBMI(lbs, totalInches, unitSystem)
       setResult(getBMICategory(bmi))
+      vibrate() // Vibration feedback
     } else {
       if (!heightCm || !weight) {
         setError('Enter height and weight')
@@ -88,6 +96,7 @@ export default function BmiCalculatorClient() {
 
       const bmi = calculateBMI(kg, cm, unitSystem)
       setResult(getBMICategory(bmi))
+      vibrate() // Vibration feedback
     }
   }
 
@@ -113,7 +122,7 @@ export default function BmiCalculatorClient() {
         <div className="flex bg-white/10 rounded-xl p-1 mb-6">
           <button
             onClick={() => switchUnits('imperial')}
-            className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+            className={`flex-1 py-3 rounded-lg font-medium transition-all ${
               unitSystem === 'imperial'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white'
                 : 'text-gray-400 hover:text-white'
@@ -123,7 +132,7 @@ export default function BmiCalculatorClient() {
           </button>
           <button
             onClick={() => switchUnits('metric')}
-            className={`flex-1 py-2.5 rounded-lg font-medium transition-all ${
+            className={`flex-1 py-3 rounded-lg font-medium transition-all ${
               unitSystem === 'metric'
                 ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white'
                 : 'text-gray-400 hover:text-white'
@@ -139,11 +148,13 @@ export default function BmiCalculatorClient() {
           <div>
             <label className="text-white font-medium mb-2 block">Height</label>
             {unitSystem === 'imperial' ? (
-              <div className="flex gap-3">
-                <div className="flex-1">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
                   <div className="relative">
                     <input
                       type="number"
+                      inputMode="decimal"
+                      pattern="[0-9]*"
                       value={heightFt}
                       onChange={(e) => setHeightFt(e.target.value)}
                       placeholder="5"
@@ -152,17 +163,18 @@ export default function BmiCalculatorClient() {
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-lg
                                 placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors pr-8
                                 hover:bg-white/15"
-                      autoFocus
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                       ft
                     </span>
                   </div>
                 </div>
-                <div className="flex-1">
+                <div>
                   <div className="relative">
                     <input
                       type="number"
+                      inputMode="decimal"
+                      pattern="[0-9]*"
                       value={heightIn}
                       onChange={(e) => setHeightIn(e.target.value)}
                       placeholder="10"
@@ -182,6 +194,8 @@ export default function BmiCalculatorClient() {
               <div className="relative">
                 <input
                   type="number"
+                  inputMode="decimal"
+                  pattern="[0-9]*"
                   value={heightCm}
                   onChange={(e) => setHeightCm(e.target.value)}
                   placeholder="175"
@@ -190,7 +204,6 @@ export default function BmiCalculatorClient() {
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-lg
                             placeholder-gray-400 focus:outline-none focus:border-green-400 transition-colors pr-10
                             hover:bg-white/15"
-                  autoFocus
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                   cm
@@ -205,6 +218,8 @@ export default function BmiCalculatorClient() {
             <div className="relative">
               <input
                 type="number"
+                inputMode="decimal"
+                pattern="[0-9]*"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
                 placeholder={unitSystem === 'imperial' ? '150' : '70'}
@@ -235,15 +250,15 @@ export default function BmiCalculatorClient() {
                    font-medium text-lg hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <Calculator className="w-5 h-5" />
-          Calculate BMI
+          Calculate
         </button>
 
         {/* Result Display - Simplified */}
         {result && (
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
             <div className="text-center">
-              <h2 className="text-5xl font-bold text-white mb-2">{result.bmi.toFixed(1)}</h2>
-              <p className={`text-2xl font-medium ${result.color}`}>{result.category}</p>
+              <h2 className="text-4xl sm:text-5xl font-bold text-white mb-2">{result.bmi.toFixed(1)}</h2>
+              <p className={`text-xl sm:text-2xl font-medium ${result.color}`}>{result.category}</p>
             </div>
 
             {/* BMI Scale Visual - Simplified */}
@@ -276,8 +291,8 @@ export default function BmiCalculatorClient() {
             {/* Clear button */}
             <button
               onClick={handleReset}
-              className="w-full mt-4 py-2 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
-                       hover:text-white transition-all text-sm"
+              className="w-full mt-4 py-3 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
+                       hover:text-white transition-all font-medium"
             >
               Clear
             </button>
@@ -287,7 +302,7 @@ export default function BmiCalculatorClient() {
 
       {/* Minimal tip */}
       <p className="text-center text-xs text-gray-500 mt-4">
-        💡 BMI = weight (kg) ÷ height² (m²) • Screening tool only, not diagnostic
+        💡 BMI = weight (kg) ÷ height² (m²) • For reference only
       </p>
     </div>
   )

@@ -13,8 +13,8 @@ import {
   Info,
   X,
 } from 'lucide-react'
-import { SummaryLength, ProcessingStage, ErrorDetail } from '../../../lib/types'
-import { SUMMARY_CONFIGS, UI_TEXT, STAGE_MESSAGES } from '../../../lib/constants'
+import { SummaryLength, ProcessingStage, ErrorDetail } from '../types'
+import { SUMMARY_CONFIGS, UI_TEXT, STAGE_MESSAGES } from '../constants'
 import { validateFile, formatFileSize, parseApiError } from '../../../lib/utils/errorHandler'
 
 export default function PDFSummarizerClient() {

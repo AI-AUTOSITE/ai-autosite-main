@@ -1,4 +1,4 @@
-import { ErrorCode, ErrorDetail } from '../types'
+import { ErrorCode, ErrorDetail } from '../../tools/pdf-summarizer/types'
 import { ERROR_MESSAGES } from '../constants'
 
 /**

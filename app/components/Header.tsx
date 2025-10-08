@@ -3,7 +3,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Shield, Sparkles, Menu, X, HelpCircle } from 'lucide-react'
+import { Shield, Sparkles, Menu, X, HelpCircle, Home, FileText } from 'lucide-react'
 import { useState, useEffect, Suspense } from 'react'
 
 export default function Header() {
@@ -12,13 +12,20 @@ export default function Header() {
   const [showGuide, setShowGuide] = useState(false)
   const [GuideComponent, setGuideComponent] = useState<React.ComponentType<any> | null>(null)
 
+  // Navigation items with icons
+  const navItems = [
+    { href: '/', label: 'Home', icon: Home },
+    { href: '/blog', label: 'Blog', icon: FileText },
+    { href: '/faq', label: 'FAQ', icon: HelpCircle },
+  ]
+
+  // Check if current page is a tool page
+  const isToolPage = pathname.startsWith('/tools/') && pathname !== '/tools'
+
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false)
   }, [pathname])
-
-  // Check if tool page
-  const isToolPage = pathname.startsWith('/tools/') && pathname !== '/tools'
 
   // Load guide component dynamically
   useEffect(() => {
@@ -46,10 +53,10 @@ export default function Header() {
       }
     }
     loadGuide()
-    setShowGuide(false) // Reset when changing pages
+    setShowGuide(false)
   }, [pathname, isToolPage])
 
-  // Close guide/menu with ESC key
+  // Handle ESC key press
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -60,7 +67,6 @@ export default function Header() {
 
     if (showGuide) {
       document.addEventListener('keydown', handleEsc)
-      // Prevent scroll when modal is open
       document.body.style.overflow = 'hidden'
     } else if (mobileMenuOpen) {
       document.addEventListener('keydown', handleEsc)
@@ -76,13 +82,11 @@ export default function Header() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      // Ignore clicks inside header
       if (target.closest('header')) return
       setMobileMenuOpen(false)
     }
 
     if (mobileMenuOpen) {
-      // Add delay to avoid conflict with menu button click
       setTimeout(() => {
         document.addEventListener('click', handleClickOutside)
       }, 100)
@@ -93,14 +97,9 @@ export default function Header() {
     }
   }, [mobileMenuOpen])
 
-  const navItems = [
-    { href: '/', label: 'Home' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/faq', label: 'FAQ' },
-  ]
-
   return (
     <>
+      {/* Main Header */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -125,42 +124,43 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              {/* Guide button - before navigation items */}
-              {isToolPage && GuideComponent && (
-                <button
-                  onClick={() => setShowGuide(!showGuide)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-400 hover:text-cyan-400 hover:bg-white/10 transition-all mr-2"
-                  title="View tool guide"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="text-sm font-medium">Guide</span>
-                </button>
-              )}
+{/* Desktop Navigation */}
+<nav className="hidden md:flex items-center space-x-1">
+  {/* Guide button (only on tool pages) */}
+  {isToolPage && GuideComponent && (
+    <button
+      onClick={() => setShowGuide(!showGuide)}
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all mr-2"
+      title="View tool guide"
+    >
+      <HelpCircle className="w-4 h-4" />
+      <span className="text-sm font-medium">Guide</span>
+    </button>
+  )}
 
-              {navItems.map((item) => {
-                const isActive =
-                  pathname === item.href || (item.href === '/blog' && pathname.startsWith('/blog'))
+  {/* Navigation links */}
+  {navItems.map((item) => {
+    const isActive =
+      pathname === item.href || (item.href === '/blog' && pathname.startsWith('/blog'))
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`
-                      px-4 py-2 rounded-lg text-sm font-medium transition-all
-                      ${
-                        isActive
-                          ? 'bg-cyan-500/20 text-cyan-400'
-                          : 'text-gray-300 hover:text-white hover:bg-white/10'
-                      }
-                    `}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              })}
-            </nav>
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={`
+          px-4 py-2 rounded-lg text-sm font-medium transition-all
+          ${
+            isActive
+              ? 'bg-cyan-500/20 text-cyan-400'
+              : 'text-gray-300 hover:text-white hover:bg-white/10'
+          }
+        `}
+      >
+        {item.label}
+      </Link>
+    )
+  })}
+</nav>
 
             {/* Mobile Menu Button */}
             <button
@@ -177,15 +177,16 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu with Overlay */}
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
           <>
-            {/* Background overlay - click to close */}
+            {/* Background overlay */}
             <div
               className="md:hidden fixed inset-0 bg-black/30 z-40"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu overlay"
             />
+
             {/* Menu content */}
             <div className="md:hidden fixed right-0 top-16 left-0 z-50 border-t border-gray-700 bg-gray-900/95 backdrop-blur-xl animate-slide-down">
               <nav className="px-4 py-4 space-y-2">
@@ -196,17 +197,19 @@ export default function Header() {
                       setShowGuide(true)
                       setMobileMenuOpen(false)
                     }}
-                    className="flex items-center gap-2 w-full px-4 py-3 rounded-lg text-base font-medium bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 transition-all"
+                    className="flex items-center justify-start gap-2 w-full px-4 py-3 rounded-lg text-base font-medium bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 transition-all"
                   >
-                    <HelpCircle className="w-5 h-5" />
+                    <HelpCircle className="w-5 h-5 flex-shrink-0" />
                     <span>Tool Guide</span>
                   </button>
                 )}
 
+                {/* Navigation links */}
                 {navItems.map((item) => {
                   const isActive =
                     pathname === item.href ||
                     (item.href === '/blog' && pathname.startsWith('/blog'))
+                  const Icon = item.icon
 
                   return (
                     <Link
@@ -214,7 +217,7 @@ export default function Header() {
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`
-                        block px-4 py-3 rounded-lg text-base font-medium transition-all
+                        flex items-center justify-start gap-2 px-4 py-3 rounded-lg text-base font-medium transition-all
                         ${
                           isActive
                             ? 'bg-cyan-500/20 text-cyan-400'
@@ -222,7 +225,8 @@ export default function Header() {
                         }
                       `}
                     >
-                      {item.label}
+                      <Icon className="w-5 h-5 flex-shrink-0" />
+                      <span>{item.label}</span>
                     </Link>
                   )
                 })}
@@ -235,7 +239,7 @@ export default function Header() {
       {/* Guide Modal */}
       {showGuide && GuideComponent && (
         <>
-          {/* Background overlay - click to close */}
+          {/* Background overlay */}
           <div
             className="fixed inset-0 bg-black/50 z-[100000] backdrop-blur-sm animate-fade-in"
             onClick={() => setShowGuide(false)}
@@ -245,7 +249,7 @@ export default function Header() {
           {/* Modal content container */}
           <div className="fixed inset-0 z-[100001] overflow-y-auto pointer-events-none">
             <div className="flex min-h-screen items-center justify-center p-4">
-              {/* Modal body - separate clickable area */}
+              {/* Modal body */}
               <div className="pointer-events-auto animate-scale-in">
                 <Suspense
                   fallback={

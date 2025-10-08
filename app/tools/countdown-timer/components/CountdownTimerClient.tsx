@@ -144,10 +144,10 @@ export default function CountdownTimerClient() {
                   setTargetDate(e.target.value)
                   setIsActive(false)
                 }}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white 
+                className="w-full px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm
                          focus:outline-none focus:border-cyan-400 transition-colors
                          hover:bg-white/15 [&::-webkit-calendar-picker-indicator]:filter 
-                         [&::-webkit-calendar-picker-indicator]:invert"
+                         [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
             </div>
             <div>
@@ -159,23 +159,23 @@ export default function CountdownTimerClient() {
                   setTargetTime(e.target.value)
                   setIsActive(false)
                 }}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white 
+                className="w-full px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm
                          focus:outline-none focus:border-cyan-400 transition-colors
                          hover:bg-white/15 [&::-webkit-calendar-picker-indicator]:filter 
-                         [&::-webkit-calendar-picker-indicator]:invert"
+                         [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
             </div>
           </div>
 
           {/* Quick Presets */}
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <span className="text-xs text-gray-500">Quick:</span>
             {presets.map((preset) => (
               <button
                 key={preset.name}
                 onClick={() => setPreset(preset.name, preset.date)}
-                className="text-xs px-3 py-1 bg-white/5 text-gray-400 rounded-full 
-                         hover:bg-white/10 hover:text-white transition-all"
+                className="text-xs px-3 py-2 bg-white/5 text-gray-400 rounded-full 
+                         hover:bg-white/10 hover:text-white transition-all font-medium"
               >
                 {preset.name}
               </button>
@@ -198,12 +198,12 @@ export default function CountdownTimerClient() {
           {isActive ? (
             <>
               <Pause className="w-5 h-5" />
-              Stop Countdown
+              <span>Stop</span>
             </>
           ) : (
             <>
               <Play className="w-5 h-5" />
-              Start Countdown
+              <span>Start</span>
             </>
           )}
         </button>
@@ -242,14 +242,14 @@ export default function CountdownTimerClient() {
 
             {timeLeft.total <= 0 && (
               <div className="text-center mt-4">
-                <p className="text-xl font-bold text-green-400">🎉 Time\'s Up!</p>
+                <p className="text-xl font-bold text-green-400">🎉 Time's Up!</p>
               </div>
             )}
 
             {/* Share Button */}
             <button
               onClick={copyShareLink}
-              className={`w-full mt-4 py-2 rounded-lg text-sm transition-all 
+              className={`w-full mt-4 py-3 rounded-lg font-medium transition-all 
                         flex items-center justify-center gap-2 ${
                           copied
                             ? 'bg-green-500 text-white'
@@ -259,12 +259,12 @@ export default function CountdownTimerClient() {
               {copied ? (
                 <>
                   <Check className="w-4 h-4" />
-                  Link Copied!
+                  <span>Copied!</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4" />
-                  Copy Share Link
+                  <span>Copy Link</span>
                 </>
               )}
             </button>
@@ -274,7 +274,7 @@ export default function CountdownTimerClient() {
 
       {/* Minimal tip */}
       <p className="text-center text-xs text-gray-500 mt-4">
-        💡 Share the countdown link with friends • Works on any device
+        💡 Share the link with friends • Works on any device
       </p>
     </div>
   )

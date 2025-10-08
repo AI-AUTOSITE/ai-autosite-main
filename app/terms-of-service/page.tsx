@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
             <p className="text-xl text-gray-400">Simple, fair terms that put users first.</p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: August 31, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 9, 2025</p>
           </div>
 
           {/* Key Points */}
@@ -35,8 +35,8 @@ export default function TermsOfServicePage() {
             <div className="grid md:grid-cols-3 gap-4">
               <div className="text-center p-4">
                 <Shield className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-                <p className="text-white font-semibold">User-First</p>
-                <p className="text-gray-400 text-sm">Your rights are protected</p>
+                <p className="text-white font-semibold">Privacy-First</p>
+                <p className="text-gray-400 text-sm">Your data stays with you</p>
               </div>
               <div className="text-center p-4">
                 <Zap className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
@@ -62,11 +62,17 @@ export default function TermsOfServicePage() {
                   professionals. Our tools work directly in your browser with minimal data
                   collection and maximum privacy.
                 </p>
+                <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-4">
+                  <p className="text-cyan-300 text-sm">
+                    <strong>Privacy-First Design:</strong> Most tools run entirely in your browser. 
+                    We don't store your files, content, or personal data on our servers.
+                  </p>
+                </div>
                 <p>
-                  By using our service, you agree to these terms and our
+                  By using our service, you agree to these terms and our{' '}
                   <Link
                     href="/privacy-policy"
-                    className="text-cyan-400 hover:text-cyan-300 underline ml-1"
+                    className="text-cyan-400 hover:text-cyan-300 underline"
                   >
                     Privacy Policy
                   </Link>
@@ -89,28 +95,37 @@ export default function TermsOfServicePage() {
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                     <span>
-                      <strong>Own your data</strong> - anything you create belongs to you
+                      <strong>Own your data</strong> - anything you create belongs to you 100%
                     </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                     <span>
-                      <strong>Cancel anytime</strong> - no lock-in contracts for premium features
+                      <strong>Control your browser data</strong> - clear localStorage anytime to remove all settings
                     </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                     <span>
-                      <strong>Request data deletion</strong> - complete removal within 24 hours
+                      <strong>No lock-in</strong> - stop using our service anytime, no questions asked
                     </span>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 mr-3 flex-shrink-0" />
                     <span>
-                      <strong>Export your data</strong> - take it anywhere you want
+                      <strong>Verify our claims</strong> - inspect our open source code and browser data storage
                     </span>
                   </li>
                 </ul>
+
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mt-4">
+                  <p className="text-blue-300 text-sm">
+                    <strong>💡 About Data Deletion:</strong> Since we don't store your personal data on our servers, 
+                    there's nothing for us to delete. Your browser's localStorage is under your control - 
+                    clear your browser data and it's gone instantly. For premium purchases, your license 
+                    key is stored in your browser, and payment records are handled by Stripe.
+                  </p>
+                </div>
               </div>
             </section>
 
@@ -128,6 +143,7 @@ export default function TermsOfServicePage() {
                       <li>• Share tools with colleagues and friends</li>
                       <li>• Provide feedback to help us improve</li>
                       <li>• Report bugs or security issues</li>
+                      <li>• Verify our privacy claims via DevTools</li>
                     </ul>
                   </div>
 
@@ -138,6 +154,7 @@ export default function TermsOfServicePage() {
                       <li>• Use tools for illegal activities</li>
                       <li>• Spam or abuse our services</li>
                       <li>• Violate others' intellectual property</li>
+                      <li>• Reverse engineer paid features</li>
                     </ul>
                   </div>
                 </div>
@@ -163,13 +180,14 @@ export default function TermsOfServicePage() {
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3"></span>
-                    <span>We'll communicate major outages on our status page</span>
+                    <span>Tool updates may cause brief interruptions</span>
                   </li>
                 </ul>
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mt-4">
                   <p className="text-yellow-300 text-sm">
                     <strong>No Service Guarantees:</strong> While we work hard to maintain uptime,
-                    we cannot guarantee 100% availability for our free tools.
+                    we cannot guarantee 100% availability for our free tools. Most tools work in your 
+                    browser, so even during outages, many features remain functional.
                   </p>
                 </div>
               </div>
@@ -177,9 +195,9 @@ export default function TermsOfServicePage() {
 
             {/* Premium Services */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">5. Premium Services</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">5. Premium Services & Payments</h2>
               <div className="space-y-4 text-gray-300">
-                <p>Some advanced features may require a premium subscription:</p>
+                <p>Some advanced features may require a one-time payment or subscription:</p>
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
@@ -187,17 +205,37 @@ export default function TermsOfServicePage() {
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
-                    <span>7-day satisfaction guarantee with full refund</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
-                    <span>Cancel anytime - no questions asked</span>
+                    <span>License keys stored in your browser (you control them)</span>
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
                     <span>Clear pricing with no hidden fees</span>
                   </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
+                    <span>Lifetime access for one-time purchases</span>
+                  </li>
                 </ul>
+
+                <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mt-4">
+                  <p className="text-orange-300 text-sm mb-2">
+                    <strong>⚠️ Refund Policy:</strong>
+                  </p>
+                  <p className="text-gray-300 text-sm">
+                    Due to our privacy-first design (no personal data storage), refunds require manual 
+                    verification through Stripe. Contact us with your license key or payment email, 
+                    and we'll work with you to resolve any issues. We want you to be satisfied with 
+                    your purchase!
+                  </p>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                  <p className="text-blue-300 text-sm">
+                    <strong>💡 License Recovery:</strong> Lost your license key? We can recover it 
+                    via email verification through Stripe. This is why we recommend saving your 
+                    license key in a safe place after purchase.
+                  </p>
+                </div>
               </div>
             </section>
 
@@ -208,25 +246,69 @@ export default function TermsOfServicePage() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-lg font-semibold text-cyan-400 mb-3">Your Content</h3>
-                    <p className="text-sm">
+                    <p className="text-sm mb-3">
                       You retain full ownership of any content you create using our tools. We never
                       claim rights to your work.
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      This includes: Generated code, processed images, PDF outputs, text conversions, 
+                      and any other content you create with our tools.
                     </p>
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-purple-400 mb-3">Our Service</h3>
-                    <p className="text-sm">
-                      Our tools, code, and branding remain our intellectual property, but much of
-                      our code is open source.
+                    <p className="text-sm mb-3">
+                      Our tools, code, and branding remain our intellectual property. However, much of
+                      our code is available as open source on GitHub.
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      You may inspect, review, and learn from our code, but please don't create 
+                      identical competing services.
                     </p>
                   </div>
                 </div>
               </div>
             </section>
 
+            {/* AI Tools Disclaimer */}
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">7. AI-Powered Tools</h2>
+              <div className="space-y-4 text-gray-300">
+                <p>
+                  Some tools use third-party AI APIs (Claude, GPT-4, etc.) to provide advanced features:
+                </p>
+                <ul className="space-y-2 ml-6">
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
+                    <span>We clearly label which tools use AI processing</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
+                    <span>You'll see a privacy warning before sending data to AI services</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
+                    <span>AI-generated content may not always be accurate - verify important results</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
+                    <span>We don't store AI requests or responses on our servers</span>
+                  </li>
+                </ul>
+
+                <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
+                  <p className="text-purple-300 text-sm">
+                    <strong>🤖 AI Data Flow:</strong> Your input → Our API (temporary processing) → 
+                    AI Service → Result back to you → Nothing stored on our servers. The AI service 
+                    providers may have their own data retention policies.
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {/* Limitations */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">7. Limitations & Disclaimers</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">8. Limitations & Disclaimers</h2>
               <div className="space-y-4 text-gray-300">
                 <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4">
                   <div className="flex items-start">
@@ -234,29 +316,34 @@ export default function TermsOfServicePage() {
                     <div className="space-y-2 text-sm">
                       <p>
                         <strong>Use at Your Own Risk:</strong> Our tools are provided "as is"
-                        without warranties.
+                        without warranties of any kind.
                       </p>
                       <p>
-                        <strong>No Liability:</strong> We're not responsible for any damages from
-                        using our service.
+                        <strong>No Liability:</strong> We're not responsible for any damages, data loss, 
+                        or business impacts from using our service.
                       </p>
                       <p>
                         <strong>Results May Vary:</strong> Tool outputs depend on your input and may
-                        not always be perfect.
+                        not always be perfect. Always verify critical results.
+                      </p>
+                      <p>
+                        <strong>Browser Compatibility:</strong> Tools work best on modern browsers. 
+                        Some features may not work on older browsers.
                       </p>
                     </div>
                   </div>
                 </div>
                 <p className="text-sm">
                   We're a small team doing our best to provide helpful tools. Please use common
-                  sense and don't rely solely on our tools for critical business decisions.
+                  sense and don't rely solely on our tools for critical business or legal decisions.
+                  For important work, always verify results manually.
                 </p>
               </div>
             </section>
 
             {/* Changes to Terms */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">8. Changes to These Terms</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">9. Changes to These Terms</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
                   We may update these terms occasionally to improve clarity or comply with legal
@@ -265,23 +352,27 @@ export default function TermsOfServicePage() {
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>Posting updates on this page</span>
+                    <span>Posting updates on this page with the new "Last updated" date</span>
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>Sending email notifications for major changes</span>
+                    <span>Displaying a notice banner on our website for major changes</span>
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>Giving you time to review before changes take effect</span>
+                    <span>Giving you reasonable time to review before changes take effect</span>
                   </li>
                 </ul>
+                <p className="text-sm text-gray-400 mt-3">
+                  Note: Since we don't collect email addresses, we can't send email notifications. 
+                  Please check this page periodically if you're a regular user.
+                </p>
               </div>
             </section>
 
             {/* Contact */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">9. Questions or Disputes</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">10. Questions or Disputes</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
                   We believe in resolving issues through friendly communication. If you have
@@ -290,15 +381,21 @@ export default function TermsOfServicePage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
                     href="mailto:aiautosite@gmail.com"
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                   >
                     <span>Email Us</span>
                   </a>
                   <Link
                     href="/contact"
-                    className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
                   >
                     <span>Contact Page</span>
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className="inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
+                  >
+                    <span>Read FAQ</span>
                   </Link>
                 </div>
               </div>
@@ -309,7 +406,8 @@ export default function TermsOfServicePage() {
               <p className="text-sm text-gray-500">
                 These terms are governed by the laws of the United States. By using our service, you
                 agree to resolve disputes through good faith communication first, and arbitration if
-                necessary. These terms are effective as of August 31, 2025.
+                necessary. These terms are effective as of October 9, 2025 and supersede all 
+                previous versions.
               </p>
             </section>
           </div>

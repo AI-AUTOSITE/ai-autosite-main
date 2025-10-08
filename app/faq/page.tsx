@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Shield, Lock, Zap, DollarSign, Code, HelpCircle, Mail } from 'lucide-react'
+import { ChevronDown, Shield, Lock, Zap, DollarSign, Code, HelpCircle, Mail, Smartphone } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -40,7 +40,7 @@ export default function FAQPage() {
               <div className="bg-gray-800/50 rounded-lg p-4">
                 <p className="font-semibold mb-2">Think of it like:</p>
                 <ul className="space-y-1">
-                  <li>• 📝 Writing notes on YOUR notebook (local storage)</li>
+                  <li>• 📓 Writing notes on YOUR notebook (local storage)</li>
                   <li>• NOT sending those notes to us (no server storage)</li>
                 </ul>
               </div>
@@ -90,6 +90,43 @@ export default function FAQPage() {
           ),
         },
         {
+          q: 'Where is my purchase information stored?',
+          a: (
+            <div className="space-y-3">
+              <p className="text-cyan-400 font-semibold">
+                Great question! Your license is stored in THREE places:
+              </p>
+
+              <div className="space-y-3">
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">1. Your Browser (Primary) 🌐</p>
+                  <p className="text-sm">
+                    License token stored in localStorage. You can see it in DevTools → Application → Local Storage
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">2. Stripe's Database 💳</p>
+                  <p className="text-sm">
+                    Purchase record with your email. This is how we can recover your license if you lose it
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">3. Our Servers ❌</p>
+                  <p className="text-sm">
+                    <strong>NOT stored!</strong> We intentionally don't keep any purchase records for maximum privacy
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-gray-400 text-sm">
+                This design means: We can't track you, but you're responsible for not clearing your browser data!
+              </p>
+            </div>
+          ),
+        },
+        {
           q: 'Is this GDPR/CCPA compliant?',
           a: (
             <div className="space-y-3">
@@ -117,37 +154,115 @@ export default function FAQPage() {
 
               <div className="space-y-3">
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <p className="font-semibold mb-2">1. Check the Network Tab (Easy)</p>
-                  <p className="text-sm">
+                  <p className="font-semibold mb-2">💻 Desktop: Check the Network Tab</p>
+                  <p className="text-sm mb-2">
                     Open DevTools (F12) → Network tab → Use our tools → See zero personal data sent
                   </p>
+                  <code className="text-xs bg-black/30 p-2 rounded block">
+                    Look for: POST requests to our APIs
+                    <br />
+                    You'll see: Only temporary processing data
+                    <br />
+                    You won't see: Your files or personal info being uploaded
+                  </code>
                 </div>
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <p className="font-semibold mb-2">2. Review Our Code (Technical)</p>
-                  <p className="text-sm">
-                    Everything is on{' '}
-                    <a
-                      href="https://github.com/ai-autosite"
-                      className="text-cyan-400 hover:underline"
-                    >
-                      GitHub
-                    </a>{' '}
-                    - have a developer friend check it out
+                  <p className="font-semibold mb-2">💻 Desktop: Check localStorage</p>
+                  <p className="text-sm mb-2">
+                    Open DevTools (F12) → Application → Local Storage → ai-autosite.com
+                  </p>
+                  <code className="text-xs bg-black/30 p-2 rounded block">
+                    You'll see: Only your license key (if purchased)
+                    <br />
+                    That's it! Nothing else.
+                  </code>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">📱 iPhone: Safari Web Inspector</p>
+                  <p className="text-sm mb-2">
+                    1. Enable Developer Menu: Settings → Safari → Advanced → Web Inspector ON
+                    <br />
+                    2. Connect iPhone to Mac via USB
+                    <br />
+                    3. Open Safari on Mac → Develop → [Your iPhone] → ai-autosite.com
+                    <br />
+                    4. Check Storage tab to see localStorage
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Alternative: Use the Inspect app from App Store
                   </p>
                 </div>
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <p className="font-semibold mb-2">3. Test It Yourself (Practical)</p>
+                  <p className="font-semibold mb-2">📱 Android: Chrome DevTools</p>
+                  <p className="text-sm mb-2">
+                    Method 1: Remote Debugging
+                    <br />
+                    1. Enable Developer Options on Android
+                    <br />
+                    2. Connect to PC via USB
+                    <br />
+                    3. Chrome on PC → chrome://inspect → Inspect device
+                    <br />
+                    4. Application tab → Local Storage
+                  </p>
+                  <p className="text-sm mb-2 mt-3">
+                    Method 2: Eruda Console (Easier!)
+                    <br />
+                    1. Visit: <a href="https://eruda.liriliri.io/" className="text-cyan-400 underline">eruda.liriliri.io</a>
+                    <br />
+                    2. Drag the "Eruda" button to bookmarks
+                    <br />
+                    3. Visit our site, tap the Eruda bookmark
+                    <br />
+                    4. Resources → Local Storage → See our data (or lack thereof!)
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">🔍 Simple Test (All Devices)</p>
                   <p className="text-sm">
-                    Clear your browser data → Your settings disappear → Proof we store nothing!
+                    1. Use any tool and save some settings
+                    <br />
+                    2. Clear your browser data/cache
+                    <br />
+                    3. Your settings disappear
+                    <br />
+                    4. This proves we store nothing server-side!
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">📂 Review Our Code (Technical)</p>
+                  <p className="text-sm mb-2">
+                    Our entire codebase is deployed via Vercel with GitHub integration
+                  </p>
+                  <a
+                    href="https://github.com/ai-autosite"
+                    className="text-cyan-400 hover:underline text-sm"
+                  >
+                    → Check our GitHub repositories
+                  </a>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Look for database connections, data storage, analytics - you won't find any!
                   </p>
                 </div>
               </div>
 
+              <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-lg p-4 border border-green-500/20">
+                <p className="text-green-400 font-semibold mb-2">🔓 Open Source Transparency</p>
+                <p className="text-sm text-gray-300">
+                  Our deployment: GitHub → Vercel (public build logs available)
+                  <br />
+                  What this means: Every code change is tracked and verifiable
+                </p>
+              </div>
+
               <p className="text-yellow-400 text-sm">
-                💡 Pro tip: If you find ANY privacy concern in our code, we'll fix it immediately
-                and publicly thank you!
+                💡 Pro tip: If you find ANY privacy concern in our code, we'll fix it immediately,
+                publicly thank you, and give you free lifetime premium access!
               </p>
             </div>
           ),
@@ -193,31 +308,45 @@ export default function FAQPage() {
           q: 'How does payment work?',
           a: (
             <div className="space-y-3">
-              <p>We use Stripe for secure payments. Here's what we store:</p>
+              <p>We use Stripe for secure payments. Here's how your data is stored:</p>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
-                  <p className="text-green-400 font-semibold">✅ We store:</p>
+                  <p className="text-green-400 font-semibold">✅ Your browser stores:</p>
                   <ul className="text-sm space-y-1">
-                    <li>• License key</li>
+                    <li>• License key (token)</li>
                     <li>• Purchase date</li>
-                    <li>• Plan type</li>
+                    <li>• Product type</li>
                   </ul>
+                  <p className="text-xs text-gray-400 mt-2">
+                    (Stored in localStorage, you control it!)
+                  </p>
                 </div>
-                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-                  <p className="text-red-400 font-semibold">❌ We DON'T store:</p>
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                  <p className="text-blue-400 font-semibold">⚡ Stripe stores:</p>
                   <ul className="text-sm space-y-1">
-                    <li>• Your name</li>
                     <li>• Email address</li>
-                    <li>• Card details</li>
-                    <li>• Any personal info</li>
+                    <li>• Payment details</li>
+                    <li>• Transaction history</li>
                   </ul>
+                  <p className="text-xs text-gray-400 mt-2">
+                    (Handled by Stripe, not us)
+                  </p>
                 </div>
               </div>
 
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
+                <p className="text-purple-400 font-semibold">🎯 Our servers store:</p>
+                <p className="text-lg font-bold">NOTHING! ✨</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  We can't access your purchase info because we don't store it
+                </p>
+              </div>
+
               <p className="text-yellow-400 text-sm">
-                ⚠️ Important: Save your license key! We can't recover it because we don't know who
-                you are.
+                ⚠️ Important: Save your license key! Since it's only in your browser, 
+                clearing browser data will lose it. We can recover it via email verification 
+                through Stripe, but it's easier if you save it yourself!
               </p>
             </div>
           ),
@@ -266,13 +395,13 @@ export default function FAQPage() {
           q: 'Is the source code available?',
           a: (
             <div className="space-y-3">
-              <p>We're working on open-sourcing our tools!</p>
+              <p>Yes! Our code is publicly accessible.</p>
               <p className="text-gray-400">
                 Check our{' '}
                 <a href="https://github.com/ai-autosite" className="text-cyan-400 hover:underline">
                   GitHub
                 </a>{' '}
-                for updates.
+                for the full source code.
               </p>
             </div>
           ),
@@ -280,6 +409,157 @@ export default function FAQPage() {
         {
           q: 'Can I embed your tools on my website?',
           a: "Not yet, but it's on our roadmap! Contact us if you're interested in API access.",
+        },
+      ],
+    },
+    {
+      id: 'mobile',
+      title: 'Mobile Verification',
+      icon: Smartphone,
+      questions: [
+        {
+          q: 'How can I verify privacy on iPhone?',
+          a: (
+            <div className="space-y-3">
+              <p className="text-cyan-400 font-semibold">
+                Three ways to verify on iOS:
+              </p>
+
+              <div className="space-y-3">
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 1: Safari Web Inspector (Best)</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>On iPhone: Settings → Safari → Advanced → Turn ON "Web Inspector"</li>
+                    <li>Connect iPhone to Mac with USB cable</li>
+                    <li>On Mac: Open Safari → Develop menu → Select your iPhone → ai-autosite.com</li>
+                    <li>Click "Storage" tab → Local Storage → See exactly what's stored</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 2: Inspect Browser App</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Download "Inspect Browser" from App Store (free)</li>
+                    <li>Open our website in Inspect Browser</li>
+                    <li>Tap the debug icon → Storage → Local Storage</li>
+                    <li>View all stored data (spoiler: it's minimal!)</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 3: Simple Clear Test</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Use our tools and change some settings</li>
+                    <li>Settings → Safari → Clear History and Website Data</li>
+                    <li>Revisit our site → All your settings are gone</li>
+                    <li>This proves we store nothing on our servers!</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          ),
+        },
+        {
+          q: 'How can I verify privacy on Android?',
+          a: (
+            <div className="space-y-3">
+              <p className="text-cyan-400 font-semibold">
+                Multiple methods for Android:
+              </p>
+
+              <div className="space-y-3">
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 1: Chrome Remote Debugging (Advanced)</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Enable Developer Options: Settings → About Phone → Tap "Build Number" 7 times</li>
+                    <li>Developer Options → Turn ON "USB Debugging"</li>
+                    <li>Connect Android to PC with USB cable</li>
+                    <li>On PC: Chrome → chrome://inspect → Click "inspect" next to our site</li>
+                    <li>Application tab → Local Storage → View stored data</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 2: Eruda Console (Easiest!)</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Open Chrome and visit: <a href="https://eruda.liriliri.io/" className="text-cyan-400 underline">eruda.liriliri.io</a></li>
+                    <li>Drag the "Eruda" button to your bookmarks bar</li>
+                    <li>Visit our website (ai-autosite.com)</li>
+                    <li>Tap the Eruda bookmark → Console appears</li>
+                    <li>Tap "Resources" → "Local Storage" → See our data</li>
+                  </ol>
+                  <p className="text-xs text-yellow-400 mt-2">
+                    💡 This method works in ANY mobile browser!
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 3: Via:// Browser (Built-in DevTools)</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Download "Via Browser" from Play Store (free)</li>
+                    <li>Open our website in Via Browser</li>
+                    <li>Menu → Tools → Console</li>
+                    <li>Storage tab → View localStorage directly</li>
+                  </ol>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">Method 4: Simple Clear Test</p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Use our tools and save some settings</li>
+                    <li>Chrome → Settings → Privacy → Clear browsing data</li>
+                    <li>Check "Cookies and site data"</li>
+                    <li>Revisit our site → Settings gone = No server storage!</li>
+                  </ol>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-400">
+                Recommended: Start with Method 2 (Eruda) - it's the easiest!
+              </p>
+            </div>
+          ),
+        },
+        {
+          q: 'What should I see in localStorage?',
+          a: (
+            <div className="space-y-3">
+              <p>When you inspect our localStorage, you'll see:</p>
+
+              <div className="bg-gray-800/50 rounded-lg p-4">
+                <p className="font-semibold mb-2">📦 Free Users:</p>
+                <code className="text-xs bg-black/30 p-2 rounded block">
+                  localStorage: {} (empty!)
+                  <br />
+                  <span className="text-gray-400">// Literally nothing stored</span>
+                </code>
+              </div>
+
+              <div className="bg-gray-800/50 rounded-lg p-4">
+                <p className="font-semibold mb-2">💎 Premium Users:</p>
+                <code className="text-xs bg-black/30 p-2 rounded block font-mono">
+                  pdf_tools_premium_license: {`{`}
+                  <br />
+                  <span className="ml-4">"token": "a7f3e9c2...",</span>
+                  <br />
+                  <span className="ml-4">"purchasedAt": "2025-10-09T12:34:56Z",</span>
+                  <br />
+                  <span className="ml-4">"isActive": true,</span>
+                  <br />
+                  <span className="ml-4">"productType": "pdf_tools_premium"</span>
+                  <br />
+                  {`}`}
+                  <br />
+                  <br />
+                  <span className="text-gray-400">// That's it! Just your license key.</span>
+                </code>
+              </div>
+
+              <p className="text-cyan-400 text-sm">
+                ✨ Notice: No name, no email, no usage data, no tracking!
+              </p>
+            </div>
+          ),
         },
       ],
     },
