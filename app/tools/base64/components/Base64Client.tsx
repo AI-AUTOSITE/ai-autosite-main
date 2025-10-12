@@ -8,12 +8,20 @@ import {
   Image as ImageIcon,
   FileText,
   ArrowRight,
-  ArrowLeft,
+  Smartphone,
 } from 'lucide-react'
 
 type Mode = 'encode' | 'decode'
 
+// Vibration helper
+const vibrate = (duration: number) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(duration)
+  }
+}
+
 export default function Base64Client() {
+  const [isMobile, setIsMobile] = useState(false)
   const [mode, setMode] = useState<Mode>('encode')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
@@ -23,6 +31,19 @@ export default function Base64Client() {
     null
   )
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  // Device detection
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      const smallScreen = window.innerWidth < 768
+      setIsMobile(mobile || smallScreen)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Encode text to Base64
   const encodeText = useCallback((text: string): string => {
@@ -74,13 +95,11 @@ export default function Base64Client() {
         const encoded = encodeText(input)
         setOutput(encoded)
       } else {
-        // Check if it's a data URL
         if (input.startsWith('data:')) {
           const base64Part = input.split(',')[1]
           const decoded = decodeText(base64Part)
           setOutput(decoded)
 
-          // If it's an image, show preview
           if (input.startsWith('data:image/')) {
             setImagePreview(input)
           }
@@ -88,7 +107,6 @@ export default function Base64Client() {
           const decoded = decodeText(input)
           setOutput(decoded)
 
-          // Try to create image preview if it looks like image data
           if (isBase64Image(input)) {
             try {
               const formats = ['jpeg', 'png', 'gif', 'webp']
@@ -98,7 +116,7 @@ export default function Base64Client() {
                 break
               }
             } catch {
-              // Not an image, ignore
+              // Not an image
             }
           }
         }
@@ -106,6 +124,7 @@ export default function Base64Client() {
     } catch (err) {
       setOutput('')
       setError(err instanceof Error ? err.message : 'Processing failed')
+      vibrate(50)
     }
   }, [input, mode, encodeText, decodeText])
 
@@ -119,9 +138,9 @@ export default function Base64Client() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Check file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
       setError('File too large (max 5MB)')
+      vibrate(50)
       return
     }
 
@@ -152,6 +171,7 @@ export default function Base64Client() {
             setInput(result)
           }
         }
+        vibrate(30)
       }
 
       if (mode === 'encode') {
@@ -161,6 +181,7 @@ export default function Base64Client() {
       }
     } catch (err) {
       setError('Failed to read file')
+      vibrate(50)
     }
 
     e.target.value = ''
@@ -173,9 +194,11 @@ export default function Base64Client() {
     try {
       await navigator.clipboard.writeText(output)
       setCopied(true)
+      vibrate(30)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       setError('Failed to copy')
+      vibrate(50)
     }
   }
 
@@ -186,59 +209,77 @@ export default function Base64Client() {
     setError('')
     setFileInfo(null)
     setImagePreview(null)
+    vibrate(30)
   }
 
-  // Sample texts for quick testing
+  // Sample texts
   const sampleTexts = {
     encode: 'Hello, World!',
     decode: 'SGVsbG8sIFdvcmxkIQ==',
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-6 max-w-4xl">
+      {/* Mobile indicator */}
+      {isMobile && (
+        <div className="mb-4 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg flex items-center gap-3">
+          <Smartphone className="w-5 h-5 text-indigo-400 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-indigo-300 font-medium text-sm">Mobile Optimized</p>
+            <p className="text-indigo-400/70 text-xs mt-1 leading-relaxed">
+              Encode and decode Base64 - Works offline - Max 5MB files
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        {/* Mode Selector - Simplified */}
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
+        {/* Mode Selector - Mobile friendly */}
         <div className="flex justify-center mb-6">
-          <div className="inline-flex bg-white/10 rounded-xl p-1">
+          <div className="inline-flex bg-white/10 rounded-xl p-1 w-full sm:w-auto">
             <button
               onClick={() => {
                 setMode('encode')
                 handleClear()
               }}
-              className={`px-8 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              className={`flex-1 sm:flex-none min-h-[48px] px-4 sm:px-8 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 ${
                 mode === 'encode'
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              Text <ArrowRight className="w-4 h-4" /> Base64
+              <span className="text-xs sm:text-base">Text</span>
+              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-xs sm:text-base">B64</span>
             </button>
             <button
               onClick={() => {
                 setMode('decode')
                 handleClear()
               }}
-              className={`px-8 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              className={`flex-1 sm:flex-none min-h-[48px] px-4 sm:px-8 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 sm:gap-2 active:scale-95 ${
                 mode === 'decode'
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              Base64 <ArrowRight className="w-4 h-4" /> Text
+              <span className="text-xs sm:text-base">B64</span>
+              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="text-xs sm:text-base">Text</span>
             </button>
           </div>
         </div>
 
-        {/* Input/Output Grid - Simplified for mobile */}
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
+        {/* Input/Output Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {/* Input */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="text-white font-medium text-sm">
                 {mode === 'encode' ? 'Input' : 'Base64'}
               </label>
-              <div className="flex gap-1">
+              <div className="flex gap-2">
                 <label className="cursor-pointer">
                   <input
                     type="file"
@@ -246,15 +287,15 @@ export default function Base64Client() {
                     className="hidden"
                     accept={mode === 'encode' ? '*' : '.txt'}
                   />
-                  <div className="px-2 py-1 text-xs bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-all">
-                    <Upload className="w-3 h-3 inline mr-1" />
-                    File
+                  <div className="min-h-[32px] px-3 py-1.5 text-xs bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-all flex items-center gap-1">
+                    <Upload className="w-3 h-3" />
+                    <span>File</span>
                   </div>
                 </label>
                 {input && (
                   <button
                     onClick={() => setInput(sampleTexts[mode])}
-                    className="px-2 py-1 text-xs bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-all"
+                    className="min-h-[32px] px-3 py-1.5 text-xs bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded transition-all"
                   >
                     Sample
                   </button>
@@ -269,8 +310,8 @@ export default function Base64Client() {
                 ) : (
                   <FileText className="w-4 h-4 text-gray-400" />
                 )}
-                <span className="text-xs text-gray-300 truncate">{fileInfo.name}</span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-300 truncate flex-1">{fileInfo.name}</span>
+                <span className="text-xs text-gray-500 flex-shrink-0">
                   ({(fileInfo.size / 1024).toFixed(1)}KB)
                 </span>
               </div>
@@ -287,11 +328,11 @@ export default function Base64Client() {
                   ? 'Enter text or upload file...\n\nExample: Hello, World!'
                   : 'Enter Base64 string...\n\nExample: SGVsbG8sIFdvcmxkIQ=='
               }
-              className="w-full h-48 p-3 bg-white/10 border border-white/20 rounded-xl text-white 
+              className="w-full h-40 sm:h-48 p-3 bg-white/10 border border-white/20 rounded-xl text-white 
                          placeholder-gray-400 focus:outline-none focus:border-indigo-400 
                          transition-colors resize-none font-mono text-sm hover:bg-white/15"
               spellCheck={false}
-              autoFocus
+              autoFocus={!isMobile}
             />
 
             {/* Quick sample button */}
@@ -300,7 +341,7 @@ export default function Base64Client() {
                 onClick={() => setInput(sampleTexts[mode])}
                 className="mt-2 text-xs text-gray-500 hover:text-white transition-all"
               >
-                Try with sample →
+                Try with sample
               </button>
             )}
           </div>
@@ -314,7 +355,7 @@ export default function Base64Client() {
               {output && (
                 <button
                   onClick={handleCopy}
-                  className={`px-2 py-1 text-xs rounded transition-all flex items-center gap-1 ${
+                  className={`min-h-[32px] px-3 py-1.5 text-xs rounded transition-all flex items-center gap-1 active:scale-95 ${
                     copied
                       ? 'bg-green-500 text-white'
                       : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
@@ -323,12 +364,12 @@ export default function Base64Client() {
                   {copied ? (
                     <>
                       <Check className="w-3 h-3" />
-                      Copied!
+                      <span>Copied!</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3 h-3" />
-                      Copy
+                      <span>Copy</span>
                     </>
                   )}
                 </button>
@@ -339,20 +380,20 @@ export default function Base64Client() {
               value={output}
               readOnly
               placeholder="Result will appear here..."
-              className="w-full h-48 p-3 bg-black/30 border border-white/10 rounded-xl text-white 
+              className="w-full h-40 sm:h-48 p-3 bg-black/30 border border-white/10 rounded-xl text-white 
                          placeholder-gray-500 resize-none font-mono text-sm cursor-text"
               spellCheck={false}
             />
           </div>
         </div>
 
-        {/* Clear button */}
+        {/* Clear button - 48px minimum */}
         {(input || output) && (
           <div className="flex justify-center">
             <button
               onClick={handleClear}
-              className="px-4 py-2 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
-                       hover:text-white transition-all text-sm"
+              className="min-h-[48px] px-6 py-3 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
+                       hover:text-white transition-all text-sm active:scale-95"
             >
               Clear All
             </button>
@@ -361,14 +402,14 @@ export default function Base64Client() {
 
         {/* Error */}
         {error && (
-          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg animate-fadeIn">
+          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
             <p className="text-red-400 text-sm">{error}</p>
           </div>
         )}
 
-        {/* Image Preview - Simplified */}
+        {/* Image Preview */}
         {imagePreview && (
-          <div className="mt-4 p-4 bg-black/30 rounded-xl animate-fadeIn">
+          <div className="mt-4 p-4 bg-black/30 rounded-xl">
             <p className="text-xs text-gray-400 mb-2">Image Preview</p>
             <img
               src={imagePreview}
@@ -380,9 +421,18 @@ export default function Base64Client() {
         )}
       </div>
 
+      {/* Mobile tip */}
+      {isMobile && (
+        <div className="mt-4 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+          <p className="text-indigo-300 text-xs text-center leading-relaxed">
+            All processing happens on your device - No data sent anywhere
+          </p>
+        </div>
+      )}
+
       {/* Minimal tip */}
       <p className="text-center text-xs text-gray-500 mt-4">
-        💡 Base64 is encoding, not encryption • Output ~33% larger than input
+        Base64 is encoding, not encryption - Output about 33% larger than input
       </p>
     </div>
   )

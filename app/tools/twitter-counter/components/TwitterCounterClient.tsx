@@ -225,11 +225,11 @@ export default function TwitterCounterClient() {
     <div className="container mx-auto px-4 py-6 max-w-4xl">
       {/* Mobile indicator */}
       {isMobile && (
-        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-start gap-2">
-          <Smartphone className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-          <div className="text-sm">
-            <p className="text-blue-300 font-medium">Mobile Optimized</p>
-            <p className="text-blue-400/70 text-xs mt-1">
+        <div className="mb-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center gap-3">
+          <Smartphone className="w-5 h-5 text-blue-400 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-blue-300 font-medium text-sm">Mobile Optimized</p>
+            <p className="text-blue-400/70 text-xs mt-1 leading-relaxed">
               Count X/Twitter characters - Auto-split threads - Works offline
             </p>
           </div>

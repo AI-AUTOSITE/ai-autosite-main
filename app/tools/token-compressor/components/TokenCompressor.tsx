@@ -59,15 +59,15 @@ const AI_MODELS = {
   gemini: { name: 'Gemini', ratio: 4, color: 'text-orange-400' },
 }
 
-// Compression levels with descriptions
+// Compression levels with descriptions - NO EMOJI
 const COMPRESSION_LEVELS: Record<
   CompressionLevel,
-  { name: string; description: string; icon: string }
+  { name: string; description: string }
 > = {
-  light: { name: 'Light', description: 'Keep readability', icon: '🌤️' },
-  standard: { name: 'Standard', description: 'Balanced', icon: '⚖️' },
-  aggressive: { name: 'Aggressive', description: 'Max compression', icon: '🔥' },
-  extreme: { name: 'Extreme', description: 'AI only', icon: '⚡' },
+  light: { name: 'Light', description: 'Keep readability' },
+  standard: { name: 'Standard', description: 'Balanced' },
+  aggressive: { name: 'Aggressive', description: 'Max compression' },
+  extreme: { name: 'Extreme', description: 'AI only' },
 }
 
 // Enhanced compression function
@@ -339,17 +339,19 @@ export default function TokenCompressor() {
         ) : (
           <div className="space-y-4">
             {/* Big Numbers */}
-            <div className="flex justify-center items-baseline gap-8">
+            <div className="flex justify-center items-baseline gap-4 sm:gap-8">
               <div>
-                <div className="text-5xl font-bold text-white">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
                   {totals.compressed.toLocaleString()}
                 </div>
-                <div className="text-sm text-gray-400 mt-1">Compressed Tokens</div>
+                <div className="text-xs sm:text-sm text-gray-400 mt-1">Compressed</div>
               </div>
-              <TrendingDown className="w-8 h-8 text-green-400" />
+              <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
               <div>
-                <div className="text-5xl font-bold text-green-400">{totals.rate}%</div>
-                <div className="text-sm text-gray-400 mt-1">Saved</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-400">
+                  {totals.rate}%
+                </div>
+                <div className="text-xs sm:text-sm text-gray-400 mt-1">Saved</div>
               </div>
             </div>
 
@@ -371,13 +373,13 @@ export default function TokenCompressor() {
       </div>
 
       {/* Compression Controls */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-white/10">
-        <div className="grid md:grid-cols-2 gap-8">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 mb-6 border border-white/10">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
           {/* Compression Level */}
           <div>
-            <div className="flex items-center gap-2 h-6 mb-4">
+            <div className="flex items-center gap-2 h-6 mb-3 sm:mb-4">
               <Sliders className="w-4 h-4 text-gray-400" />
-              <span className="text-sm font-medium text-gray-300">Compression Level</span>
+              <span className="text-sm font-medium text-gray-300">Level</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {(Object.entries(COMPRESSION_LEVELS) as [CompressionLevel, any][]).map(
@@ -385,17 +387,16 @@ export default function TokenCompressor() {
                   <button
                     key={level}
                     onClick={() => setCompressionLevel(level)}
-                    className={`h-[72px] px-4 rounded-lg transition-all flex items-center gap-3 ${
+                    className={`min-h-[48px] sm:min-h-[56px] px-3 sm:px-4 py-3 rounded-lg transition-all ${
                       compressionLevel === level
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
                         : 'bg-white/5 text-gray-400 hover:bg-white/10'
                     }`}
                     title={info.description}
                   >
-                    <span className="text-2xl flex-shrink-0">{info.icon}</span>
                     <div className="text-left">
                       <div className="font-medium text-sm">{info.name}</div>
-                      <div className="text-xs opacity-70">{info.description}</div>
+                      <div className="text-xs opacity-70 hidden sm:block">{info.description}</div>
                     </div>
                   </button>
                 )
@@ -405,14 +406,14 @@ export default function TokenCompressor() {
 
           {/* AI Model Selection */}
           <div>
-            <div className="flex items-center gap-2 h-6 mb-4">
+            <div className="flex items-center gap-2 h-6 mb-3 sm:mb-4">
               <Zap className="w-4 h-4 text-gray-400" />
               <span className="text-sm font-medium text-gray-300">AI Model</span>
               {files.length > 0 && (
                 <button
                   onClick={() => setShowModelDetails(!showModelDetails)}
-                  className="ml-auto text-gray-400 hover:text-cyan-400 transition-colors p-1"
-                  title="Show token comparison across models"
+                  className="ml-auto min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-colors"
+                  title="Compare models"
                 >
                   <ChevronDown
                     className={`w-4 h-4 transition-transform ${showModelDetails ? 'rotate-180' : ''}`}
@@ -426,7 +427,7 @@ export default function TokenCompressor() {
                   <button
                     key={model}
                     onClick={() => setSelectedModel(model)}
-                    className={`h-[72px] px-4 rounded-lg transition-all flex flex-col justify-center ${
+                    className={`min-h-[48px] sm:min-h-[56px] px-3 sm:px-4 py-3 rounded-lg transition-all flex flex-col justify-center ${
                       selectedModel === model
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
                         : 'bg-white/5 text-gray-400 hover:bg-white/10'
@@ -437,7 +438,9 @@ export default function TokenCompressor() {
                     >
                       {info.name}
                     </div>
-                    <div className="text-xs mt-1 opacity-70">1 token ≈ {info.ratio} chars</div>
+                    <div className="text-xs mt-1 opacity-70 hidden sm:block">
+                      1 token = {info.ratio} chars
+                    </div>
                   </button>
                 )
               )}
@@ -448,8 +451,8 @@ export default function TokenCompressor() {
         {/* Model Details (collapsible) */}
         {showModelDetails && files.length > 0 && (
           <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-gray-400 mb-3">Token count comparison across models</p>
-            <div className="grid grid-cols-4 gap-2">
+            <p className="text-xs text-gray-400 mb-3">Token comparison</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(
                 ([model, info]) => {
                   const modelTokens = files.reduce((sum, f) => {
@@ -478,7 +481,7 @@ export default function TokenCompressor() {
 
       {/* Drop Zone */}
       <div
-        className={`relative border-2 border-dashed rounded-2xl p-8 transition-all ${
+        className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 transition-all ${
           isDragging
             ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]'
             : files.length > 0
@@ -506,13 +509,13 @@ export default function TokenCompressor() {
 
         {files.length === 0 ? (
           <div className="text-center">
-            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-white font-medium mb-2">Drop files here</p>
+            <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-white font-medium mb-2 text-sm sm:text-base">Drop files here</p>
             <p className="text-gray-400 text-sm mb-4">or</p>
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isProcessing}
-              className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50"
+              className="min-h-[48px] px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50"
             >
               {isProcessing ? (
                 <Loader2 className="animate-spin inline" size={16} />
@@ -520,9 +523,7 @@ export default function TokenCompressor() {
                 'Choose Files'
               )}
             </button>
-            <p className="text-xs text-gray-500 mt-4">
-              All file types • Automatic compression • Security scan
-            </p>
+            <p className="text-xs text-gray-500 mt-4">Auto compress with security scan</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -533,22 +534,23 @@ export default function TokenCompressor() {
                   key={file.id}
                   className="flex items-center justify-between p-3 bg-black/30 rounded-lg group"
                 >
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-4 h-4 text-gray-400" />
-                    <div>
-                      <div className="text-sm text-white font-medium">{file.name}</div>
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm text-white font-medium truncate">{file.name}</div>
                       <div className="text-xs text-gray-500">
-                        {file.originalTokens?.toLocaleString()} →{' '}
-                        {file.compressedTokens?.toLocaleString()} tokens
+                        {file.originalTokens?.toLocaleString()} to{' '}
+                        {file.compressedTokens?.toLocaleString()}
                       </div>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleRemoveFile(file.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
+                    className="ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-400 transition-all flex-shrink-0"
+                    aria-label="Remove file"
                   >
-                    <X size={16} />
+                    <X size={20} />
                   </button>
                 </div>
               ))}
@@ -557,9 +559,9 @@ export default function TokenCompressor() {
             {/* Add More Button */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full py-2 border border-dashed border-white/20 rounded-lg text-gray-400 hover:border-cyan-400 hover:text-cyan-400 transition-all"
+              className="w-full min-h-[48px] py-2.5 border border-dashed border-white/20 rounded-lg text-gray-400 hover:border-cyan-400 hover:text-cyan-400 transition-all"
             >
-              + Add More Files
+              + Add More
             </button>
           </div>
         )}
@@ -569,9 +571,11 @@ export default function TokenCompressor() {
       {securityIssues.length > 0 && (
         <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
           <div className="flex items-start gap-3">
-            <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
-            <div className="flex-1">
-              <p className="text-yellow-400 font-medium mb-2">Security Issues Found</p>
+            <Shield className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-yellow-400 font-medium mb-2 text-sm sm:text-base">
+                Security Alert
+              </p>
               <div className="flex flex-wrap gap-2">
                 {securityIssues.map((issue, i) => (
                   <span
@@ -592,7 +596,7 @@ export default function TokenCompressor() {
                   setFiles(cleaned)
                   setSecurityIssues([])
                 }}
-                className="mt-3 px-4 py-1.5 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm hover:bg-yellow-500/30 transition-all"
+                className="mt-3 min-h-[44px] px-4 py-2 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm hover:bg-yellow-500/30 transition-all"
               >
                 Remove Sensitive Data
               </button>
@@ -603,10 +607,10 @@ export default function TokenCompressor() {
 
       {/* Actions */}
       {files.length > 0 && (
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={handleClear}
-            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+            className="min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-1 sm:order-1"
           >
             <Trash2 className="inline mr-2" size={16} />
             Clear
@@ -614,31 +618,41 @@ export default function TokenCompressor() {
 
           <button
             onClick={() => setShowPreview(!showPreview)}
-            className="px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+            className="min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-2 sm:order-2"
           >
             {showPreview ? (
-              <EyeOff className="inline mr-2" size={16} />
+              <>
+                <EyeOff className="inline mr-2" size={16} />
+                Hide
+              </>
             ) : (
-              <Eye className="inline mr-2" size={16} />
+              <>
+                <Eye className="inline mr-2" size={16} />
+                Preview
+              </>
             )}
-            Preview
           </button>
 
           <button
             onClick={handleCopy}
-            className="flex-1 px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all"
+            className="flex-1 min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-3 sm:order-3"
           >
             {copied ? (
-              <Check className="inline mr-2" size={16} />
+              <>
+                <Check className="inline mr-2" size={16} />
+                Copied!
+              </>
             ) : (
-              <Copy className="inline mr-2" size={16} />
+              <>
+                <Copy className="inline mr-2" size={16} />
+                Copy
+              </>
             )}
-            {copied ? 'Copied!' : 'Copy'}
           </button>
 
           <button
             onClick={handleDownload}
-            className="flex-1 px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
+            className="flex-1 min-h-[48px] px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all order-4 sm:order-4"
           >
             <Download className="inline mr-2" size={16} />
             Download
@@ -649,7 +663,7 @@ export default function TokenCompressor() {
       {/* Preview */}
       {showPreview && files.length > 0 && (
         <div className="mt-6 bg-black/40 rounded-xl p-4 border border-white/10">
-          <h3 className="text-sm font-medium text-gray-400 mb-3">Compressed Output Preview</h3>
+          <h3 className="text-sm font-medium text-gray-400 mb-3">Preview</h3>
           <pre className="text-xs text-gray-300 font-mono overflow-x-auto whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
             {files
               .slice(0, 2)

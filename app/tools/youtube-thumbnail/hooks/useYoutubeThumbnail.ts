@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 
 interface ThumbnailOption {
   quality: string
@@ -8,11 +8,17 @@ interface ThumbnailOption {
   label: string
 }
 
+// Vibration helper
+const vibrate = (duration: number) => {
+  if (navigator.vibrate) {
+    navigator.vibrate(duration)
+  }
+}
+
 // Extract video ID from YouTube URL
 const extractVideoId = (url: string): string | null => {
   if (!url) return null
 
-  // Try direct patterns
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([^#&?]*).*/,
     /^([a-zA-Z0-9_-]{11})$/,
@@ -25,7 +31,6 @@ const extractVideoId = (url: string): string | null => {
     }
   }
 
-  // Try URL params
   try {
     const urlObj = new URL(url)
     const videoId = urlObj.searchParams.get('v')
@@ -46,21 +51,21 @@ const getThumbnailOptions = (videoId: string): ThumbnailOption[] => [
     url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
     width: 1280,
     height: 720,
-    label: 'HD (1280×720)',
+    label: 'HD (1280 x 720)',
   },
   {
     quality: 'sddefault',
     url: `https://img.youtube.com/vi/${videoId}/sddefault.jpg`,
     width: 640,
     height: 480,
-    label: 'SD (640×480)',
+    label: 'SD (640 x 480)',
   },
   {
     quality: 'mqdefault',
     url: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
     width: 320,
     height: 180,
-    label: 'Medium (320×180)',
+    label: 'Medium (320 x 180)',
   },
 ]
 
@@ -81,6 +86,7 @@ export function useYoutubeThumbnail() {
       setVideoId(null)
       setThumbnails([])
       setLoading(false)
+      vibrate(50)
       return
     }
 
@@ -88,6 +94,7 @@ export function useYoutubeThumbnail() {
     const options = getThumbnailOptions(id)
     setThumbnails(options)
     setLoading(false)
+    vibrate(30)
   }, [url])
 
   const downloadThumbnail = useCallback(async (thumbnail: ThumbnailOption) => {
@@ -102,9 +109,11 @@ export function useYoutubeThumbnail() {
       link.click()
 
       URL.revokeObjectURL(blobUrl)
+      vibrate(30)
       return true
     } catch {
-      setError('Download failed. Try right-click → Save Image')
+      setError('Download failed. Try right-click > Save Image')
+      vibrate(50)
       return false
     }
   }, [])
@@ -112,9 +121,11 @@ export function useYoutubeThumbnail() {
   const copyUrl = useCallback(async (urlToCopy: string): Promise<boolean> => {
     try {
       await navigator.clipboard.writeText(urlToCopy)
+      vibrate(30)
       return true
     } catch {
       setError('Could not copy URL')
+      vibrate(50)
       return false
     }
   }, [])

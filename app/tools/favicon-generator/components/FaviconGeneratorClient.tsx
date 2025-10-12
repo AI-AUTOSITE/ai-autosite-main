@@ -156,9 +156,11 @@ export default function FaviconGeneratorClient() {
               className="hidden"
             />
 
-            <Upload className="w-10 h-10 text-gray-400 mx-auto mb-4" />
-            <p className="text-white font-medium mb-1">Drop image here or click to upload</p>
-            <p className="text-gray-400 text-xs">
+            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-white font-medium mb-2 text-base sm:text-lg">
+              Drop image or click
+            </p>
+            <p className="text-gray-400 text-sm">
               PNG, JPG, SVG • Square images work best • Max 5MB
             </p>
 
@@ -166,7 +168,7 @@ export default function FaviconGeneratorClient() {
               <div className="mt-4">
                 <div className="inline-flex items-center gap-2 text-cyan-400">
                   <div className="animate-spin rounded-full h-4 w-4 border-2 border-cyan-400 border-t-transparent" />
-                  Generating favicons...
+                  <span className="text-sm">Creating icons...</span>
                 </div>
               </div>
             )}
@@ -177,18 +179,18 @@ export default function FaviconGeneratorClient() {
             {/* Preview Grid */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white font-medium">Generated Favicons</h3>
+                <h3 className="text-white font-medium text-base sm:text-lg">Your Icons</h3>
                 <button
                   onClick={reset}
-                  className="text-xs text-gray-400 hover:text-white transition-all"
+                  className="text-sm text-gray-400 hover:text-white transition-all px-3 py-2 min-h-[44px]"
                 >
-                  Upload new
+                  New Image
                 </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 {favicons.map((favicon, index) => (
-                  <div key={index} className="bg-black/30 rounded-lg p-3 text-center">
+                  <div key={index} className="bg-black/30 rounded-lg p-3 sm:p-4 text-center">
                     <div className="bg-white rounded p-2 mb-2 inline-block">
                       <img
                         src={favicon.dataUrl}
@@ -200,7 +202,7 @@ export default function FaviconGeneratorClient() {
                         className="pixelated"
                       />
                     </div>
-                    <p className="text-white text-xs font-medium">
+                    <p className="text-white text-xs sm:text-sm font-medium">
                       {favicon.size}×{favicon.size}
                     </p>
                   </div>
@@ -209,21 +211,21 @@ export default function FaviconGeneratorClient() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={downloadAll}
                 className="flex-1 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white 
                          rounded-xl font-medium hover:opacity-90 transition-all 
-                         flex items-center justify-center gap-2"
+                         flex items-center justify-center gap-2 min-h-[48px]"
               >
                 <Download className="w-5 h-5" />
-                Download ZIP
+                <span>Save All</span>
               </button>
 
               <button
                 onClick={copyHtmlCode}
-                className={`px-6 py-3 rounded-xl font-medium transition-all 
-                          flex items-center justify-center gap-2 ${
+                className={`sm:flex-none px-6 py-3 rounded-xl font-medium transition-all 
+                          flex items-center justify-center gap-2 min-h-[48px] ${
                             copied
                               ? 'bg-green-500 text-white'
                               : 'bg-white/10 text-white hover:bg-white/20'
@@ -231,13 +233,13 @@ export default function FaviconGeneratorClient() {
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4" />
-                    Copied!
+                    <Check className="w-5 h-5" />
+                    <span>Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4" />
-                    HTML
+                    <Copy className="w-5 h-5" />
+                    <span>Copy HTML</span>
                   </>
                 )}
               </button>
@@ -248,8 +250,8 @@ export default function FaviconGeneratorClient() {
 
       {/* Minimal tip */}
       {!favicons.length && (
-        <p className="text-center text-xs text-gray-500 mt-4">
-          💡 Use 512×512px or larger for best quality • Simple designs work better as icons
+        <p className="text-center text-xs sm:text-sm text-gray-500 mt-4 px-2">
+          💡 Use 512×512px or larger for best quality • Simple designs work better
         </p>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { X, FileJson, Download, Copy, Shield } from 'lucide-react'
+import { X, FileJson, Shield } from 'lucide-react'
 
 export const toolGuide = {
   title: 'How to use JSON to CSV Converter',
@@ -27,51 +27,83 @@ interface ToolGuideProps {
 
 export default function ToolGuide({ onClose }: ToolGuideProps) {
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md w-full relative">
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
-          aria-label="Close guide"
-        >
-          <X className="w-5 h-5 text-gray-400 hover:text-white" />
-        </button>
-      )}
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 max-h-[80vh] overflow-hidden flex flex-col relative w-full max-w-2xl">
+      {/* Header */}
+      <div className="p-6 border-b border-white/10 relative">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-2 right-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-white/10 rounded-lg transition-colors z-10"
+            aria-label="Close guide"
+          >
+            <X className="w-5 h-5 text-gray-400 hover:text-white" />
+          </button>
+        )}
 
-      <div className="flex items-center gap-2 mb-6">
-        <FileJson className="w-6 h-6 text-purple-400" />
-        <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
-      </div>
-
-      <div className="space-y-3 mb-6">
-        <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
-        {toolGuide.steps.map((step, index) => (
-          <div key={index} className="flex items-start gap-3">
-            <div className="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-xs text-purple-400 font-semibold">{step.icon}</span>
-            </div>
-            <p className="text-sm text-gray-300">{step.text}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-2 mb-6">
-        <h4 className="text-sm font-semibold text-gray-300">Pro Tips</h4>
-        <div className="bg-white/5 rounded-lg p-3 space-y-1">
-          {toolGuide.tips.map((tip, index) => (
-            <p key={index} className="text-xs text-gray-300">
-              • {tip}
-            </p>
-          ))}
+        <div className="flex items-center gap-2 pr-12">
+          <FileJson className="w-6 h-6 text-purple-400 flex-shrink-0" />
+          <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
         </div>
       </div>
 
-      <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-        <p className="text-xs text-green-400">
-          <Shield className="w-3 h-3 inline mr-1" />
-          <strong>100% Private:</strong> No data leaves your browser.
-        </p>
+      {/* Content - Scrollable with custom scrollbar */}
+      <div className="p-6 overflow-y-auto flex-1 custom-scrollbar">
+        <div className="space-y-3 mb-6">
+          <h4 className="text-sm font-semibold text-gray-300">Steps</h4>
+          {toolGuide.steps.map((step, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-xs text-purple-400 font-semibold">{step.icon}</span>
+              </div>
+              <p className="text-sm text-gray-300">{step.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-2 mb-6">
+          <h4 className="text-sm font-semibold text-gray-300">Pro Tips</h4>
+          <div className="bg-white/5 rounded-lg p-3 space-y-1">
+            {toolGuide.tips.map((tip, index) => (
+              <p key={index} className="text-xs text-gray-300">
+                - {tip}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+          <p className="text-xs text-green-400">
+            <Shield className="w-3 h-3 inline mr-1" />
+            <strong>100% Private:</strong> No data leaves your browser.
+          </p>
+        </div>
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+        }
+      `}</style>
     </div>
   )
 }

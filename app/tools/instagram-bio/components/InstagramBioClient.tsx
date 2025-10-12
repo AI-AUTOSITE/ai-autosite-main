@@ -95,27 +95,41 @@ export default function InstagramBioClient() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-2xl">
       {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
         {/* Style Selection */}
         <div className="mb-6">
-          <label className="text-white font-medium mb-3 block">Choose Your Style</label>
+          <label className="text-white font-medium mb-3 block">Style</label>
           <div className="grid grid-cols-3 gap-2">
             {(['professional', 'fun', 'creative'] as BioStyle[]).map((s) => (
               <button
                 key={s}
                 onClick={() => setStyle(s)}
-                className={`py-3 rounded-lg font-medium capitalize transition-all ${
+                className={`py-3 rounded-lg font-medium transition-all min-h-[48px] flex items-center justify-center ${
                   style === s
                     ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
                     : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
                 }`}
               >
-                {s === 'professional' && '💼 '}
-                {s === 'fun' && '🎉 '}
-                {s === 'creative' && '🎨 '}
-                {s}
+                {s === 'professional' && (
+                  <>
+                    <span className="text-xl sm:hidden">💼</span>
+                    <span className="hidden sm:inline">💼 Professional</span>
+                  </>
+                )}
+                {s === 'fun' && (
+                  <>
+                    <span className="text-xl sm:hidden">🎉</span>
+                    <span className="hidden sm:inline">🎉 Fun</span>
+                  </>
+                )}
+                {s === 'creative' && (
+                  <>
+                    <span className="text-xl sm:hidden">🎨</span>
+                    <span className="hidden sm:inline">🎨 Creative</span>
+                  </>
+                )}
               </button>
             ))}
           </div>
@@ -123,9 +137,7 @@ export default function InstagramBioClient() {
 
         {/* Keyword Input */}
         <div className="mb-6">
-          <label className="text-white font-medium mb-2 block">
-            Your Keywords (max 3, separated by commas)
-          </label>
+          <label className="text-white font-medium mb-2 block">Keywords (max 3)</label>
           <input
             type="text"
             value={keywords}
@@ -133,27 +145,29 @@ export default function InstagramBioClient() {
             onKeyDown={handleKeyDown}
             placeholder="e.g., photographer, travel, NYC"
             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white
-                     placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-colors"
-            autoFocus
+                     placeholder-gray-400 focus:outline-none focus:border-pink-400 transition-colors
+                     min-h-[48px]"
           />
 
           {/* Quick Examples */}
-          <div className="flex gap-2 mt-3 flex-wrap">
-            <span className="text-xs text-gray-500">Quick fill:</span>
-            {[
-              'developer, coffee, coding',
-              'fitness, coach, motivation',
-              'artist, digital, creative',
-            ].map((example, i) => (
-              <button
-                key={i}
-                onClick={() => setKeywords(example)}
-                className="text-xs px-3 py-1 bg-white/5 text-gray-400 rounded-full 
-                         hover:bg-white/10 hover:text-white transition-all"
-              >
-                {example.split(',')[0]}...
-              </button>
-            ))}
+          <div className="mt-3">
+            <span className="text-xs text-gray-500 block mb-2">Quick fill:</span>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: 'Developer', value: 'developer, coffee, coding' },
+                { label: 'Fitness', value: 'fitness, coach, motivation' },
+                { label: 'Artist', value: 'artist, digital, creative' },
+              ].map((example, i) => (
+                <button
+                  key={i}
+                  onClick={() => setKeywords(example.value)}
+                  className="text-sm px-4 py-2 bg-white/5 text-gray-400 rounded-lg 
+                           hover:bg-white/10 hover:text-white transition-all min-h-[44px]"
+                >
+                  {example.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -163,17 +177,17 @@ export default function InstagramBioClient() {
           disabled={!keywords.trim()}
           className="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl 
                    font-medium hover:opacity-90 transition-all disabled:opacity-50 
-                   disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                   disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[48px]"
         >
           <Sparkles className="w-5 h-5" />
-          Generate Bio
+          <span>Generate</span>
         </button>
 
         {/* Generated Bios */}
         {bios.length > 0 && (
           <div className="mt-6 pt-6 border-t border-white/10">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-white font-medium">Your Bio Options</h3>
+              <h3 className="text-white font-medium">Your Bios</h3>
               <button
                 onClick={() => {
                   const generatedBios = generateBios(
@@ -185,10 +199,11 @@ export default function InstagramBioClient() {
                   )
                   setBios(generatedBios)
                 }}
-                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 
+                         rounded-lg min-h-[44px] min-w-[44px] flex items-center justify-center"
                 title="Regenerate"
               >
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw className="w-5 h-5" />
               </button>
             </div>
 
@@ -198,12 +213,14 @@ export default function InstagramBioClient() {
                   key={index}
                   className="bg-black/30 rounded-xl p-4 group hover:bg-black/40 transition-all"
                 >
-                  <pre className="text-white text-sm whitespace-pre-wrap font-sans">{bio}</pre>
-                  <div className="flex justify-between items-center mt-3">
-                    <span className="text-xs text-gray-500">{bio.length}/150 characters</span>
+                  <pre className="text-white text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                    {bio}
+                  </pre>
+                  <div className="flex justify-between items-center mt-3 gap-2">
+                    <span className="text-xs text-gray-500">{bio.length}/150</span>
                     <button
                       onClick={() => handleCopy(bio, index)}
-                      className={`px-4 py-1.5 rounded-lg text-sm transition-all ${
+                      className={`px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 min-h-[44px] ${
                         copiedIndex === index
                           ? 'bg-green-500 text-white'
                           : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
@@ -211,13 +228,13 @@ export default function InstagramBioClient() {
                     >
                       {copiedIndex === index ? (
                         <>
-                          <Check className="w-3 h-3 inline mr-1" />
-                          Copied!
+                          <Check className="w-4 h-4" />
+                          <span>Copied!</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="w-3 h-3 inline mr-1" />
-                          Copy
+                          <Copy className="w-4 h-4" />
+                          <span>Copy</span>
                         </>
                       )}
                     </button>

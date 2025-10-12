@@ -430,83 +430,72 @@ export default function HashtagGeneratorClient() {
     }
   }
 
-  const getPlatformIcon = () => {
-    switch (platform) {
-      case 'instagram':
-        return <Instagram className="w-5 h-5" />
-      case 'twitter':
-        return <Twitter className="w-5 h-5" />
-      case 'tiktok':
-        return <Music2 className="w-5 h-5" />
-    }
-  }
-
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
       {/* Platform Selection */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-2 mb-6">
-        <div className="flex gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <button
             onClick={() => setPlatform('instagram')}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] ${
               platform === 'instagram'
                 ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Instagram className="w-5 h-5" />
-            Instagram
+            <Instagram className="w-5 h-5 flex-shrink-0" />
+            <span className="hidden sm:inline">Instagram</span>
           </button>
           <button
             onClick={() => setPlatform('twitter')}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] ${
               platform === 'twitter'
                 ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Twitter className="w-5 h-5" />
-            Twitter
+            <Twitter className="w-5 h-5 flex-shrink-0" />
+            <span className="hidden sm:inline">Twitter</span>
           </button>
           <button
             onClick={() => setPlatform('tiktok')}
-            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+            className={`px-3 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] ${
               platform === 'tiktok'
                 ? 'bg-gradient-to-r from-black to-gray-800 text-white'
                 : 'text-gray-400 hover:text-white hover:bg-white/5'
             }`}
           >
-            <Music2 className="w-5 h-5" />
-            TikTok
+            <Music2 className="w-5 h-5 flex-shrink-0" />
+            <span className="hidden sm:inline">TikTok</span>
           </button>
         </div>
       </div>
 
       {/* Topic Input */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
-        <label className="block text-white font-medium mb-3">Enter Your Topic</label>
-        <div className="flex gap-3">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 mb-6">
+        <label className="block text-white font-medium mb-3">Your Topic</label>
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="e.g. fitness, food, travel, fashion..."
-            className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 transition-colors"
+            placeholder="e.g. fitness, food, travel..."
+            className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 transition-colors min-h-[48px]"
           />
           <button
             onClick={handleGenerate}
             disabled={!topic.trim()}
-            className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-all disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-medium hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2 min-h-[48px]"
           >
             <Sparkles className="w-5 h-5" />
-            Generate
+            <span>Generate</span>
           </button>
         </div>
 
         <div className="flex items-center justify-between mt-3">
           <p className="text-gray-400 text-sm">
-            Max tags: {PLATFORM_LIMITS[platform]} for {platform}
+            Max {PLATFORM_LIMITS[platform]} tags for {platform}
           </p>
         </div>
       </div>
@@ -514,18 +503,18 @@ export default function HashtagGeneratorClient() {
       {/* Generated Hashtags */}
       {hashtags && (
         <>
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 mb-6">
             {/* Popular Tags */}
             <div className="mb-6">
               <h3 className="text-white font-medium mb-3 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-yellow-400" />
-                Popular Tags ({hashtags.popular.length})
+                <span>Popular ({hashtags.popular.length})</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {hashtags.popular.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-lg text-sm"
+                    className="px-3 py-1.5 bg-yellow-500/20 text-yellow-400 rounded-lg text-sm"
                   >
                     {tag}
                   </span>
@@ -537,13 +526,13 @@ export default function HashtagGeneratorClient() {
             <div className="mb-6">
               <h3 className="text-white font-medium mb-3 flex items-center gap-2">
                 <Hash className="w-5 h-5 text-blue-400" />
-                Medium Tags ({hashtags.medium.length})
+                <span>Medium ({hashtags.medium.length})</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {hashtags.medium.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm"
+                    className="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-sm"
                   >
                     {tag}
                   </span>
@@ -555,13 +544,13 @@ export default function HashtagGeneratorClient() {
             <div className="mb-6">
               <h3 className="text-white font-medium mb-3 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-purple-400" />
-                Niche Tags ({hashtags.niche.length})
+                <span>Niche ({hashtags.niche.length})</span>
               </h3>
               <div className="flex flex-wrap gap-2">
                 {hashtags.niche.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-lg text-sm"
+                    className="px-3 py-1.5 bg-purple-500/20 text-purple-400 rounded-lg text-sm"
                   >
                     {tag}
                   </span>
@@ -572,7 +561,7 @@ export default function HashtagGeneratorClient() {
             {/* Copy Button */}
             <button
               onClick={handleCopy}
-              className={`w-full px-6 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+              className={`w-full px-6 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] ${
                 copied
                   ? 'bg-green-500 text-white'
                   : 'bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:opacity-90'
@@ -581,34 +570,36 @@ export default function HashtagGeneratorClient() {
               {copied ? (
                 <>
                   <Check className="w-5 h-5" />
-                  Copied!
+                  <span>Copied!</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-5 h-5" />
-                  Copy All Tags
+                  <span>Copy All</span>
                 </>
               )}
             </button>
           </div>
 
           {/* Tips */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-            <h3 className="text-white font-medium mb-3">Pro Tips</h3>
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6">
+            <h3 className="text-white font-medium mb-3">Tips</h3>
             <div className="space-y-2 text-sm text-gray-400">
               <p className="flex items-start gap-2">
-                <span className="text-yellow-400">💡</span>
-                Mix popular and niche tags for best reach
+                <span className="text-yellow-400 text-base">💡</span>
+                <span>Mix popular and niche tags for best reach</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-blue-400">📊</span>
-                {platform === 'instagram' && 'Instagram allows up to 30 hashtags per post'}
-                {platform === 'twitter' && 'Twitter works best with 1-3 focused hashtags'}
-                {platform === 'tiktok' && 'TikTok recommends 3-5 hashtags including #fyp'}
+                <span className="text-blue-400 text-base">📊</span>
+                <span>
+                  {platform === 'instagram' && 'Instagram allows up to 30 hashtags per post'}
+                  {platform === 'twitter' && 'Twitter works best with 1-3 focused hashtags'}
+                  {platform === 'tiktok' && 'TikTok recommends 3-5 hashtags including #fyp'}
+                </span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-purple-400">🎯</span>
-                Use niche tags to reach your target audience
+                <span className="text-purple-400 text-base">🎯</span>
+                <span>Use niche tags to reach your target audience</span>
               </p>
             </div>
           </div>
@@ -617,9 +608,9 @@ export default function HashtagGeneratorClient() {
 
       {/* Quick Examples */}
       {!hashtags && (
-        <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-          <h3 className="text-white font-medium mb-4">Try These Topics</h3>
-          <div className="grid sm:grid-cols-3 gap-3">
+        <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6">
+          <h3 className="text-white font-medium mb-4">Examples</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {['fitness', 'food', 'travel', 'fashion', 'photography', 'business'].map((example) => (
               <button
                 key={example}
@@ -627,7 +618,7 @@ export default function HashtagGeneratorClient() {
                   setTopic(example)
                   setHashtags(generateHashtags(example, platform))
                 }}
-                className="px-4 py-2 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all capitalize"
+                className="px-4 py-3 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all capitalize min-h-[48px]"
               >
                 {example}
               </button>
