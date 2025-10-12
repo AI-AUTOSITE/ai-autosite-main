@@ -131,6 +131,11 @@ ${result.summary}
     navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+
+    // Vibration feedback on mobile
+    if (navigator.vibrate) {
+      navigator.vibrate(30)
+    }
   }, [result, productName, category, targetMarket])
 
   // Download as JSON
@@ -177,38 +182,38 @@ ${result.summary}
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-6xl">
       {/* Usage Tracker */}
-      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
+      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 sm:p-4 mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm text-white">AI Analysis Credits</span>
+            <Zap className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+            <span className="text-xs sm:text-sm text-white">AI Analysis Credits</span>
           </div>
-          <span className="text-sm text-yellow-400">
-            {MAX_DAILY - dailyUsage}/{MAX_DAILY} remaining today
+          <span className="text-xs sm:text-sm text-yellow-400 font-medium">
+            {MAX_DAILY - dailyUsage}/{MAX_DAILY} left
           </span>
         </div>
       </div>
 
       {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Competitive Analysis</h2>
-          <p className="text-gray-400 text-sm">AI-powered market research in seconds</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Competitive Analysis</h2>
+          <p className="text-gray-400 text-xs sm:text-sm">AI-powered market research in seconds</p>
         </div>
 
         {/* Input/Output Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Input Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-cyan-500/20">
             <div className="flex items-center gap-2 mb-4">
-              <Search className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-white font-semibold text-sm">Input Details</h3>
+              <Search className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+              <h3 className="text-white font-semibold text-sm flex-1">Input Details</h3>
               <button
                 onClick={loadSample}
-                className="ml-auto px-3 py-1 text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-all"
+                className="px-3 py-1.5 text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-all min-h-[32px]"
               >
                 Sample
               </button>
@@ -217,23 +222,23 @@ ${result.summary}
             <div className="space-y-4">
               {/* Product Name */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Product Name *</label>
+                <label className="block text-xs text-gray-400 mb-1.5">Product Name *</label>
                 <input
                   type="text"
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
                   placeholder="e.g., TaskFlow Pro"
-                  className="w-full px-3 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 transition-colors text-sm"
+                  className="w-full px-3 py-2.5 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none transition-colors text-sm sm:text-base min-h-[44px]"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Category</label>
+                <label className="block text-xs text-gray-400 mb-1.5">Category</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-3 py-2 bg-black/20 border border-white/10 rounded-lg text-white focus:border-cyan-400 transition-colors text-sm
+                  className="w-full px-3 py-2.5 bg-black/20 border border-white/10 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors text-sm sm:text-base min-h-[44px]
                              [&>option]:bg-gray-800 [&>option]:text-white"
                 >
                   <option value="saas">SaaS</option>
@@ -248,24 +253,24 @@ ${result.summary}
 
               {/* Target Market */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Target Market *</label>
+                <label className="block text-xs text-gray-400 mb-1.5">Target Market *</label>
                 <input
                   type="text"
                   value={targetMarket}
                   onChange={(e) => setTargetMarket(e.target.value)}
                   placeholder="e.g., Remote teams and freelancers"
-                  className="w-full px-3 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 transition-colors text-sm"
+                  className="w-full px-3 py-2.5 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none transition-colors text-sm sm:text-base min-h-[44px]"
                 />
               </div>
 
               {/* Key Features */}
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Key Features (optional)</label>
+                <label className="block text-xs text-gray-400 mb-1.5">Key Features (optional)</label>
                 <textarea
                   value={features}
                   onChange={(e) => setFeatures(e.target.value)}
                   placeholder="List main features, separated by commas"
-                  className="w-full px-3 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 transition-colors text-sm h-20 resize-none"
+                  className="w-full px-3 py-2.5 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none transition-colors text-sm sm:text-base h-20 resize-none"
                 />
               </div>
 
@@ -273,10 +278,10 @@ ${result.summary}
               <button
                 onClick={handleAnalyze}
                 disabled={isAnalyzing || dailyUsage >= MAX_DAILY || !productName || !targetMarket}
-                className={`w-full py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+                className={`w-full py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] text-sm sm:text-base ${
                   isAnalyzing || dailyUsage >= MAX_DAILY || !productName || !targetMarket
                     ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:opacity-90'
+                    : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:opacity-90 shadow-lg'
                 }`}
               >
                 {isAnalyzing ? (
@@ -296,7 +301,7 @@ ${result.summary}
               {(productName || targetMarket || features) && (
                 <button
                   onClick={handleClear}
-                  className="w-full py-2 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 hover:text-white transition-all text-sm"
+                  className="w-full py-2.5 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 hover:text-white transition-all text-sm min-h-[44px]"
                 >
                   Clear All
                 </button>
@@ -306,16 +311,16 @@ ${result.summary}
 
           {/* Output Section */}
           <div className="p-4 bg-white/5 rounded-xl border border-purple-500/20">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-purple-400" />
-                <h3 className="text-white font-semibold text-sm">Analysis Results</h3>
+            <div className="flex items-center justify-between mb-4 gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Lightbulb className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                <h3 className="text-white font-semibold text-sm truncate">Analysis Results</h3>
               </div>
               {result && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-shrink-0">
                   <button
                     onClick={handleCopy}
-                    className={`px-3 py-1 text-xs rounded-lg transition-all flex items-center gap-1 ${
+                    className={`px-3 py-1.5 text-xs rounded-lg transition-all flex items-center gap-1 min-h-[36px] ${
                       copied
                         ? 'bg-green-500 text-white'
                         : 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-400/50'
@@ -324,55 +329,55 @@ ${result.summary}
                     {copied ? (
                       <>
                         <Check className="w-3 h-3" />
-                        Copied!
+                        <span className="hidden sm:inline">Copied!</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
-                        Copy
+                        <span className="hidden sm:inline">Copy</span>
                       </>
                     )}
                   </button>
                   <button
                     onClick={handleDownload}
-                    className="px-3 py-1 text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg transition-all flex items-center gap-1 border border-purple-400/50"
+                    className="px-3 py-1.5 text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg transition-all flex items-center gap-1 border border-purple-400/50 min-h-[36px]"
                   >
                     <Download className="w-3 h-3" />
-                    JSON
+                    <span className="hidden sm:inline">JSON</span>
                   </button>
                 </div>
               )}
             </div>
 
             {!result ? (
-              <div className="h-96 flex items-center justify-center text-gray-500 text-sm">
+              <div className="min-h-[300px] sm:min-h-[400px] flex items-center justify-center text-gray-500 text-sm">
                 {isAnalyzing ? (
-                  <div className="text-center">
+                  <div className="text-center px-4">
                     <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
-                    <p className="text-white">Analyzing market data...</p>
+                    <p className="text-white text-sm sm:text-base">Analyzing market data...</p>
                     <p className="text-xs mt-2">This usually takes 3-5 seconds</p>
                   </div>
                 ) : (
-                  <div className="text-center">
+                  <div className="text-center px-4">
                     <TrendingUp className="w-8 h-8 text-gray-600 mx-auto mb-3" />
-                    <p>Your analysis will appear here</p>
+                    <p className="text-sm sm:text-base">Your analysis will appear here</p>
                     <p className="text-xs mt-2">Fill in the details and click Analyze</p>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="h-96 overflow-y-auto space-y-4 text-sm">
+              <div className="max-h-[400px] sm:max-h-[500px] overflow-y-auto space-y-4 text-sm">
                 {/* Competitors */}
                 <div>
-                  <h4 className="text-white font-medium mb-2">Competitors</h4>
+                  <h4 className="text-white font-medium mb-2 text-sm">Competitors</h4>
                   {result.competitors.map((comp, i) => (
                     <div key={i} className="bg-black/20 rounded-lg p-3 mb-2">
-                      <h5 className="text-cyan-400 font-medium mb-1">{comp.name}</h5>
+                      <h5 className="text-cyan-400 font-medium mb-1.5 text-sm">{comp.name}</h5>
                       <p className="text-green-400 text-xs mb-1">
-                        Strengths: {comp.strengths.join(', ')}
+                        <span className="font-medium">Strengths:</span> {comp.strengths.join(', ')}
                       </p>
                       <p className="text-red-400 text-xs">
-                        Weaknesses: {comp.weaknesses.join(', ')}
+                        <span className="font-medium">Weaknesses:</span> {comp.weaknesses.join(', ')}
                       </p>
                     </div>
                   ))}
@@ -380,12 +385,12 @@ ${result.summary}
 
                 {/* Market Gaps */}
                 <div>
-                  <h4 className="text-white font-medium mb-2">Market Gaps</h4>
-                  <ul className="space-y-1">
+                  <h4 className="text-white font-medium mb-2 text-sm">Market Gaps</h4>
+                  <ul className="space-y-1.5">
                     {result.marketGaps.map((gap, i) => (
                       <li key={i} className="text-gray-300 text-xs flex items-start">
-                        <span className="text-yellow-400 mr-2">•</span>
-                        {gap}
+                        <span className="text-yellow-400 mr-2 flex-shrink-0">•</span>
+                        <span className="flex-1">{gap}</span>
                       </li>
                     ))}
                   </ul>
@@ -393,21 +398,21 @@ ${result.summary}
 
                 {/* Product Ideas */}
                 <div>
-                  <h4 className="text-white font-medium mb-2">Product Ideas</h4>
-                  <ul className="space-y-1">
+                  <h4 className="text-white font-medium mb-2 text-sm">Product Ideas</h4>
+                  <ul className="space-y-1.5">
                     {result.productIdeas.map((idea, i) => (
                       <li key={i} className="text-gray-300 text-xs flex items-start">
-                        <span className="text-purple-400 mr-2">💡</span>
-                        {idea}
+                        <span className="mr-2 flex-shrink-0">💡</span>
+                        <span className="flex-1">{idea}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {/* Summary */}
-                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-3">
-                  <h4 className="text-white font-medium mb-1">Summary</h4>
-                  <p className="text-gray-300 text-xs">{result.summary}</p>
+                <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg p-3 border border-purple-500/20">
+                  <h4 className="text-white font-medium mb-1.5 text-sm">Summary</h4>
+                  <p className="text-gray-300 text-xs leading-relaxed">{result.summary}</p>
                 </div>
               </div>
             )}
@@ -418,21 +423,22 @@ ${result.summary}
         {error && (
           <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-400 text-xs sm:text-sm">{error}</p>
           </div>
         )}
 
         {/* Security Badge */}
         <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
-          <Shield className="w-3 h-3 text-green-400" />
-          <span>Your data is processed securely and never stored</span>
+          <Shield className="w-3 h-3 text-green-400 flex-shrink-0" />
+          <span className="text-center">Your data is processed securely and never stored</span>
         </div>
       </div>
 
       {/* Tips */}
-      <p className="text-center text-xs text-gray-500 mt-4">
-        💡 Pro tip: Be specific about your target market for better analysis
-      </p>
+      <div className="text-center text-xs text-gray-500 mt-4 flex items-center justify-center gap-1">
+        <span>💡</span>
+        <span>Pro tip: Be specific about your target market for better analysis</span>
+      </div>
     </div>
   )
 }

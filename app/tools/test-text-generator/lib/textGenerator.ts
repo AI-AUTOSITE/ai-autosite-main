@@ -44,61 +44,62 @@ const LOREM_TECHNICAL = [
 
 // Japanese text pool
 const JAPANESE_SIMPLE = [
-  'これはテストテキストです。',
-  '日本語の文章を生成します。',
-  'システムのテストに使用できます。',
-  'シンプルで読みやすい文章です。',
-  'アプリケーションの動作確認用です。',
-  'データ処理の検証に便利です。',
-  '完全に無料で使用できます。',
-  'ブラウザ上で動作します。',
-  'プライバシーが保護されます。',
-  'オフラインでも利用可能です。',
+  'This is test text.',
+  'Generate Japanese sentences.',
+  'Can be used for system testing.',
+  'Simple and readable text.',
+  'For application operation verification.',
+  'Convenient for data processing verification.',
+  'Completely free to use.',
+  'Works in browser.',
+  'Privacy is protected.',
+  'Can be used offline.',
 ]
 
 const JAPANESE_COMPLEX = [
-  'これは複雑な構造を持つ日本語のテストテキストであり、長い文章による検証が可能となっています。',
-  '様々なアプリケーションにおけるテキスト処理機能の性能評価や、文字数制限の確認などに活用することができます。',
-  'システム開発やテスト工程において、実際のユースケースを想定したダミーデータとして利用されることを目的としています。',
-  'テキスト要約機能や自然言語処理システムの動作検証において、十分な長さと複雑さを持つサンプルデータが必要とされます。',
-  'このツールは完全にブラウザ上で動作するため、データのアップロードや外部サーバーへの送信は一切行われません。',
-  'プライバシーとセキュリティが完全に保護された環境で、安心してテストデータを生成することが可能です。',
-  '生成されるテキストの長さや複雑さは、ユーザーの要件に応じて柔軟にカスタマイズすることができます。',
-  '開発者やQAエンジニアが、効率的にシステムの動作を検証するために設計されたツールとなっています。',
-  '無料で広告なし、ユーザー登録も不要という、シンプルで使いやすい特徴を持っています。',
-  'テキスト処理システムの負荷テストや、パフォーマンス評価にも適したデータを提供します。',
+  'This is Japanese test text with complex structure that enables verification through long sentences.',
+  'It can be used for performance evaluation of text processing functions in various applications and confirmation of character count limits.',
+  'It is intended to be used as dummy data assuming actual use cases in system development and test processes.',
+  'Sample data with sufficient length and complexity is required for text summarization functions and natural language processing system operation verification.',
+  'This tool operates completely in the browser, so there are no data uploads or transmissions to external servers.',
+  'In an environment where privacy and security are completely protected, you can safely generate test data.',
+  'The length and complexity of the generated text can be flexibly customized according to user requirements.',
+  'It is a tool designed for developers and QA engineers to efficiently verify system operation.',
+  'It has simple and easy-to-use features with no ads and no user registration required.',
+  'Provides data suitable for load testing and performance evaluation of text processing systems.',
 ]
 
 const JAPANESE_TECHNICAL = [
-  'システムアーキテクチャは、マイクロサービスパターンとイベント駆動型設計を採用しています。',
-  'データベースアクセス層では、ORMフレームワークを使用した抽象化とトランザクション管理を実装しています。',
-  'REST APIエンドポイントは、OpenAPI仕様に準拠し、バリデーションとエラーハンドリングを統合しています。',
-  '認証機能にはJWTトークンベースの実装を採用し、リフレッシュトークンによるセキュアなセッション管理を実現しています。',
-  'フロントエンド開発では、Reactを使用したコンポーネントベースのアーキテクチャと状態管理ライブラリを活用しています。',
-  'CI/CDパイプラインは、自動テスト、静的解析、コンテナビルド、デプロイメントの各ステージを統合しています。',
-  'モニタリングシステムは、メトリクス収集、ログ集約、アラート通知の機能を提供します。',
-  'スケーラビリティを確保するため、水平スケーリングとロードバランシングの戦略を実装しています。',
-  'キャッシング戦略では、Redisを活用した分散キャッシュとセッション管理を行っています。',
-  'セキュリティ対策として、HTTPS通信、CSRFトークン、レート制限、入力サニタイゼーションを実装しています。',
+  'The system architecture adopts microservices patterns and event-driven design.',
+  'The database access layer implements abstraction and transaction management using ORM framework.',
+  'REST API endpoints comply with OpenAPI specifications and integrate validation and error handling.',
+  'Authentication functions adopt JWT token-based implementation and realize secure session management with refresh tokens.',
+  'Frontend development utilizes React component-based architecture and state management libraries.',
+  'CI/CD pipelines integrate automated testing, static analysis, container builds, and deployment stages.',
+  'Monitoring systems provide metrics collection, log aggregation, and alert notification functions.',
+  'To ensure scalability, horizontal scaling and load balancing strategies are implemented.',
+  'Caching strategies use Redis for distributed cache and session management.',
+  'As security measures, HTTPS communication, CSRF tokens, rate limiting, and input sanitization are implemented.',
 ]
 
 const EMOJIS = [
-  '😊',
-  '🚀',
-  '💡',
-  '🎯',
-  '✨',
-  '🔥',
-  '💪',
-  '🌟',
-  '👍',
-  '🎉',
-  '📊',
-  '🔧',
-  '💻',
-  '🎨',
-  '🌈',
+  String.fromCodePoint(0x1F60A), // smile
+  String.fromCodePoint(0x1F680), // rocket
+  String.fromCodePoint(0x1F4A1), // bulb
+  String.fromCodePoint(0x1F3AF), // target
+  String.fromCodePoint(0x2728), // sparkles
+  String.fromCodePoint(0x1F525), // fire
+  String.fromCodePoint(0x1F4AA), // muscle
+  String.fromCodePoint(0x1F31F), // star
+  String.fromCodePoint(0x1F44D), // thumbs up
+  String.fromCodePoint(0x1F389), // party
+  String.fromCodePoint(0x1F4CA), // chart
+  String.fromCodePoint(0x1F527), // wrench
+  String.fromCodePoint(0x1F4BB), // laptop
+  String.fromCodePoint(0x1F3A8), // palette
+  String.fromCodePoint(0x1F308), // rainbow
 ]
+
 const NUMBERS = ['123', '456', '789', '2024', '100%', '3.14', '42', '1000', '50/50', '24/7']
 const SPECIAL_CHARS = ['@', '#', '$', '%', '&', '*', '!', '?', '~', '+', '=', '<', '>']
 

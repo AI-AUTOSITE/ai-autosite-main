@@ -83,9 +83,9 @@ export default function AIResumeGenerator() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    e.stopPropagation() // ✅ イベント伝播を停止
+    e.stopPropagation() // Stop event propagation
 
-    // ✅ 最後のステップでない場合は絶対に送信しない
+    // Do not submit unless on the last step
     if (step !== last) {
       return
     }
@@ -119,7 +119,7 @@ export default function AIResumeGenerator() {
   const gotoNext = () => setStep((s) => Math.min(s + 1, last))
   const gotoPrev = () => setStep((s) => Math.max(s - 1, 0))
 
-  // ✅ 明示的な生成ハンドラー
+  // Explicit generate handler
   const handleGenerate = () => {
     if (formRef.current && step === last) {
       formRef.current.requestSubmit()
@@ -130,6 +130,11 @@ export default function AIResumeGenerator() {
     await navigator.clipboard.writeText(text)
     setCopiedSection(section)
     setTimeout(() => setCopiedSection(null), 2000)
+
+    // Vibration feedback on mobile
+    if (navigator.vibrate) {
+      navigator.vibrate(30)
+    }
   }
 
   const downloadAsText = () => {
@@ -147,18 +152,18 @@ export default function AIResumeGenerator() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-3xl">
       {/* Main Form Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 md:p-8">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 md:p-8">
         <form ref={formRef} onSubmit={onSubmit}>
           {/* Progress Bar */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between">
               {STEPS.map((s, i) => (
                 <div key={i} className="flex items-center flex-1">
                   <div
                     className={`
-                    w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all text-sm font-semibold
+                    w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all text-xs sm:text-sm font-semibold
                     ${
                       i === step
                         ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white scale-110 shadow-lg shadow-indigo-500/50'
@@ -173,7 +178,7 @@ export default function AIResumeGenerator() {
                   {i < last && (
                     <div
                       className={`
-                      flex-1 h-0.5 mx-1 md:mx-2 transition-all
+                      flex-1 h-0.5 mx-1 sm:mx-2 transition-all
                       ${i < step ? 'bg-green-500/50' : 'bg-white/10'}
                     `}
                     />
@@ -187,10 +192,10 @@ export default function AIResumeGenerator() {
           </div>
 
           {/* Form Fields */}
-          <div className="min-h-[200px]">
+          <div className="min-h-[200px] sm:min-h-[220px]">
             {STEPS.map((s, i) => (
               <div key={s.key} className={i === step ? 'block animate-fadeIn' : 'hidden'}>
-                <label className="flex items-center gap-2 text-white font-medium mb-3">
+                <label className="flex items-center gap-2 text-white font-medium mb-3 text-sm sm:text-base">
                   {s.icon}
                   {s.label}
                   {s.required && <span className="text-red-400 text-sm">*</span>}
@@ -201,12 +206,12 @@ export default function AIResumeGenerator() {
                     name={s.key}
                     required={s.required}
                     placeholder={s.placeholder}
-                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl text-white text-lg
+                    className="w-full px-4 py-3 sm:py-4 bg-white/10 border border-white/20 rounded-xl text-white text-base sm:text-lg
                                placeholder-gray-400 focus:border-indigo-500 focus:outline-none 
-                               focus:ring-2 focus:ring-indigo-500/20 hover:bg-white/15 transition-all"
+                               focus:ring-2 focus:ring-indigo-500/20 hover:bg-white/15 transition-all min-h-[48px]"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        e.preventDefault() // ✅ Enterキーを完全に無効化
+                        e.preventDefault() // Disable Enter key completely
                         if (i < last) {
                           gotoNext()
                         }
@@ -219,13 +224,13 @@ export default function AIResumeGenerator() {
                     required={s.required}
                     placeholder={s.placeholder}
                     rows={6}
-                    className="w-full px-4 py-4 bg-white/10 border border-white/20 rounded-xl text-white
+                    className="w-full px-4 py-3 sm:py-4 bg-white/10 border border-white/20 rounded-xl text-white text-sm sm:text-base
                                placeholder-gray-400 focus:border-indigo-500 focus:outline-none 
                                focus:ring-2 focus:ring-indigo-500/20 hover:bg-white/15 transition-all resize-none"
                     onKeyDown={(e) => {
-                      // ✅ textareaでは通常の改行を許可
+                      // Allow normal line breaks in textarea
                       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                        // Ctrl/Cmd + Enterで次のステップへ（最後のステップでは何もしない）
+                        // Ctrl/Cmd + Enter to go to next step (do nothing on last step)
                         e.preventDefault()
                         if (i < last) {
                           gotoNext()
@@ -239,13 +244,13 @@ export default function AIResumeGenerator() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-6 sm:mt-8 gap-3">
             <button
               type="button"
               onClick={gotoPrev}
               disabled={step === 0 || loading}
               className={`
-                flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all
+                flex items-center gap-2 px-4 py-2.5 sm:py-3 rounded-xl font-medium transition-all min-h-[44px]
                 ${
                   step === 0 || loading
                     ? 'opacity-0 pointer-events-none'
@@ -254,7 +259,7 @@ export default function AIResumeGenerator() {
               `}
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
+              <span className="hidden sm:inline">Back</span>
             </button>
 
             {step < last ? (
@@ -262,11 +267,11 @@ export default function AIResumeGenerator() {
                 type="button"
                 onClick={gotoNext}
                 disabled={loading}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 
+                className="flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-indigo-500 to-blue-600 
                           text-white rounded-xl font-medium hover:shadow-lg hover:shadow-indigo-500/25 
-                          transition-all hover:scale-105"
+                          transition-all hover:scale-105 min-h-[44px] text-sm sm:text-base"
               >
-                Next
+                <span>Next</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             ) : (
@@ -274,19 +279,21 @@ export default function AIResumeGenerator() {
                 type="button"
                 onClick={handleGenerate}
                 disabled={loading}
-                className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 
-                          text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-purple-500/50 
-                          transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105"
+                className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 
+                          text-white rounded-xl font-bold text-base sm:text-lg hover:shadow-lg hover:shadow-purple-500/50 
+                          transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 min-h-[48px]"
               >
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                    Generating with AI...
+                    <span className="hidden sm:inline">Generating with AI...</span>
+                    <span className="sm:hidden">Generating...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5" />
-                    Generate with AI
+                    <span className="hidden sm:inline">Generate with AI</span>
+                    <span className="sm:hidden">Generate</span>
                   </>
                 )}
               </button>
@@ -297,17 +304,17 @@ export default function AIResumeGenerator() {
         {/* Error Display */}
         {error && (
           <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl animate-fadeIn">
-            <p className="text-red-400 text-sm">{error}</p>
+            <p className="text-red-400 text-xs sm:text-sm">{error}</p>
           </div>
         )}
 
         {/* Results Display */}
         {result && (
-          <div className="mt-8 animate-fadeIn">
-            <div className="border-t border-white/10 pt-8">
-              <div className="flex items-center justify-between mb-4">
+          <div className="mt-6 sm:mt-8 animate-fadeIn">
+            <div className="border-t border-white/10 pt-6 sm:pt-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold text-white">Your Documents</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-white">Your Documents</h3>
                   {aiPowered && (
                     <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full flex items-center gap-1 border border-purple-400/50">
                       <Sparkles className="w-3 h-3" />
@@ -315,18 +322,18 @@ export default function AIResumeGenerator() {
                     </span>
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <button
                     onClick={downloadAsText}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-400/50"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-all text-xs sm:text-sm bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-400/50 min-h-[40px]"
                   >
                     <Download className="w-4 h-4" />
-                    Download
+                    <span>Download</span>
                   </button>
                   <button
                     onClick={() => copyToClipboard(result, 'all')}
                     className={`
-                      flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm
+                      flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-all text-xs sm:text-sm min-h-[40px]
                       ${
                         copiedSection === 'all'
                           ? 'bg-green-500 text-white'
@@ -349,15 +356,15 @@ export default function AIResumeGenerator() {
                 </div>
               </div>
 
-              <div className="bg-black/30 rounded-xl p-4 border border-white/10">
-                <pre className="whitespace-pre-wrap text-gray-300 text-sm leading-relaxed font-mono">
+              <div className="bg-black/30 rounded-xl p-3 sm:p-4 border border-white/10">
+                <pre className="whitespace-pre-wrap text-gray-300 text-xs sm:text-sm leading-relaxed font-mono overflow-x-auto">
                   {result}
                 </pre>
               </div>
 
               {/* Action Tip */}
               <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                <p className="text-blue-300 text-xs">
+                <p className="text-blue-300 text-xs leading-relaxed">
                   💡 <strong>Next Steps:</strong> Copy to your favorite editor, customize with your
                   details, and save as PDF for applications.
                 </p>
@@ -369,8 +376,8 @@ export default function AIResumeGenerator() {
 
       {/* Quick Tips */}
       {!result && (
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-400">
+        <div className="mt-6 text-center px-4">
+          <p className="text-xs text-gray-400 leading-relaxed">
             💡 Tip: Use bullet points and specific metrics (e.g., "Increased sales by 30%") for
             better impact
           </p>

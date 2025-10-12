@@ -243,26 +243,26 @@ const TechStackComparison = () => {
   return (
     <div className="container mx-auto px-4 py-6 max-w-5xl">
       {/* Controls */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 mb-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6 mb-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-medium text-white">Compare Technologies</h2>
-            <p className="text-sm text-gray-400 mt-1">Select up to 3 technologies to compare</p>
+            <h2 className="text-lg sm:text-xl font-medium text-white">Compare Tech</h2>
+            <p className="text-sm text-gray-400 mt-1">Select up to 3</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full sm:w-auto">
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 sm:flex-none min-h-[48px] px-4 sm:px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                 viewMode === 'grid'
                   ? 'bg-cyan-600 text-white'
                   : 'bg-white/5 text-gray-300 hover:bg-white/10'
               }`}
             >
-              Grid View
+              Grid
             </button>
             <button
               onClick={() => setViewMode('compare')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 sm:flex-none min-h-[48px] px-4 sm:px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                 viewMode === 'compare'
                   ? 'bg-cyan-600 text-white'
                   : 'bg-white/5 text-gray-300 hover:bg-white/10'
@@ -281,14 +281,27 @@ const TechStackComparison = () => {
               return (
                 <span
                   key={techId}
-                  className="px-3 py-1 bg-cyan-600/20 text-cyan-300 rounded-full text-sm flex items-center gap-2"
+                  className="px-3 py-1.5 bg-cyan-600/20 text-cyan-300 rounded-full text-sm flex items-center gap-2"
                 >
                   {tech?.name}
                   <button
                     onClick={() => toggleTechSelection(techId)}
-                    className="text-cyan-300 hover:text-white"
+                    className="text-cyan-300 hover:text-white min-w-[24px] min-h-[24px] flex items-center justify-center"
+                    aria-label="Remove"
                   >
-                    ×
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
                   </button>
                 </span>
               )
@@ -299,12 +312,12 @@ const TechStackComparison = () => {
 
       {/* Grid View */}
       {viewMode === 'grid' && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {techData.map((tech) => (
             <div
               key={tech.id}
               onClick={() => toggleTechSelection(tech.id)}
-              className={`bg-white/5 backdrop-blur-xl rounded-xl p-5 border cursor-pointer transition-all hover:bg-white/10 ${
+              className={`bg-white/5 backdrop-blur-xl rounded-xl p-5 border cursor-pointer transition-all hover:bg-white/10 min-h-[48px] ${
                 selectedTechs.includes(tech.id)
                   ? 'border-cyan-500/50 ring-2 ring-cyan-500/20'
                   : 'border-white/10'
@@ -317,20 +330,20 @@ const TechStackComparison = () => {
                   >
                     {tech.category}
                   </span>
-                  <h3 className="text-lg font-medium text-white flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-medium text-white flex items-center gap-2">
                     {tech.icon}
                     {tech.name}
                   </h3>
                 </div>
                 <div
-                  className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                     selectedTechs.includes(tech.id)
                       ? 'bg-cyan-600 border-cyan-600'
                       : 'border-gray-500'
                   }`}
                 >
                   {selectedTechs.includes(tech.id) && (
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -343,7 +356,7 @@ const TechStackComparison = () => {
 
               <div className="mb-3">
                 <span
-                  className={`text-sm ${
+                  className={`text-xs sm:text-sm ${
                     tech.learningCurve === 'Beginner'
                       ? 'text-green-400'
                       : tech.learningCurve === 'Intermediate'
@@ -352,7 +365,7 @@ const TechStackComparison = () => {
                   }`}
                 >
                   <Gauge className="w-3 h-3 inline mr-1" />
-                  {tech.learningCurve} Level
+                  {tech.learningCurve}
                 </span>
               </div>
 
@@ -371,13 +384,13 @@ const TechStackComparison = () => {
             <table className="w-full">
               <thead>
                 <tr className="bg-white/5 border-b border-white/20">
-                  <th className="text-left py-4 px-6 font-medium text-gray-400 min-w-[150px]">
+                  <th className="text-left py-4 px-4 sm:px-6 font-medium text-gray-400 min-w-[120px] sm:min-w-[150px] text-sm sm:text-base">
                     Aspect
                   </th>
                   {selectedTechData.map((tech) => (
                     <th
                       key={tech.id}
-                      className="text-left py-4 px-6 font-medium text-white min-w-[250px]"
+                      className="text-left py-4 px-4 sm:px-6 font-medium text-white min-w-[200px] sm:min-w-[250px]"
                     >
                       <div className="flex items-center gap-2">
                         {tech.icon}
@@ -387,7 +400,7 @@ const TechStackComparison = () => {
                           >
                             {tech.category}
                           </span>
-                          <div className="text-lg">{tech.name}</div>
+                          <div className="text-base sm:text-lg">{tech.name}</div>
                         </div>
                       </div>
                     </th>
@@ -397,12 +410,14 @@ const TechStackComparison = () => {
               <tbody>
                 {/* Key Features */}
                 <tr className="border-b border-white/10">
-                  <td className="py-4 px-6 font-medium text-gray-400">Features</td>
+                  <td className="py-4 px-4 sm:px-6 font-medium text-gray-400 text-sm sm:text-base">
+                    Features
+                  </td>
                   {selectedTechData.map((tech) => (
-                    <td key={tech.id} className="py-4 px-6 text-sm text-gray-300">
+                    <td key={tech.id} className="py-4 px-4 sm:px-6 text-xs sm:text-sm text-gray-300">
                       <ul className="space-y-1">
                         {tech.features.map((feature, idx) => (
-                          <li key={idx}>• {feature}</li>
+                          <li key={idx}>- {feature}</li>
                         ))}
                       </ul>
                     </td>
@@ -411,12 +426,14 @@ const TechStackComparison = () => {
 
                 {/* Use Cases */}
                 <tr className="border-b border-white/10 bg-white/5">
-                  <td className="py-4 px-6 font-medium text-gray-400">Use Cases</td>
+                  <td className="py-4 px-4 sm:px-6 font-medium text-gray-400 text-sm sm:text-base">
+                    Use Cases
+                  </td>
                   {selectedTechData.map((tech) => (
-                    <td key={tech.id} className="py-4 px-6 text-sm text-cyan-400">
+                    <td key={tech.id} className="py-4 px-4 sm:px-6 text-xs sm:text-sm text-cyan-400">
                       <ul className="space-y-1">
                         {tech.useCases.map((useCase, idx) => (
-                          <li key={idx}>• {useCase}</li>
+                          <li key={idx}>- {useCase}</li>
                         ))}
                       </ul>
                     </td>
@@ -425,11 +442,13 @@ const TechStackComparison = () => {
 
                 {/* Learning Curve */}
                 <tr className="border-b border-white/10">
-                  <td className="py-4 px-6 font-medium text-gray-400">Learning</td>
+                  <td className="py-4 px-4 sm:px-6 font-medium text-gray-400 text-sm sm:text-base">
+                    Learning
+                  </td>
                   {selectedTechData.map((tech) => (
-                    <td key={tech.id} className="py-4 px-6">
+                    <td key={tech.id} className="py-4 px-4 sm:px-6">
                       <div
-                        className={`font-medium ${
+                        className={`font-medium text-sm sm:text-base ${
                           tech.learningCurve === 'Beginner'
                             ? 'text-green-400'
                             : tech.learningCurve === 'Intermediate'
@@ -439,16 +458,18 @@ const TechStackComparison = () => {
                       >
                         {tech.learningCurve}
                       </div>
-                      <div className="text-sm text-gray-400 mt-1">{tech.learningNote}</div>
+                      <div className="text-xs sm:text-sm text-gray-400 mt-1">{tech.learningNote}</div>
                     </td>
                   ))}
                 </tr>
 
                 {/* Pros */}
                 <tr className="border-b border-white/10 bg-white/5">
-                  <td className="py-4 px-6 font-medium text-gray-400">Pros</td>
+                  <td className="py-4 px-4 sm:px-6 font-medium text-gray-400 text-sm sm:text-base">
+                    Pros
+                  </td>
                   {selectedTechData.map((tech) => (
-                    <td key={tech.id} className="py-4 px-6 text-sm text-green-400">
+                    <td key={tech.id} className="py-4 px-4 sm:px-6 text-xs sm:text-sm text-green-400">
                       {tech.pros}
                     </td>
                   ))}
@@ -456,9 +477,11 @@ const TechStackComparison = () => {
 
                 {/* Cons */}
                 <tr>
-                  <td className="py-4 px-6 font-medium text-gray-400">Cons</td>
+                  <td className="py-4 px-4 sm:px-6 font-medium text-gray-400 text-sm sm:text-base">
+                    Cons
+                  </td>
                   {selectedTechData.map((tech) => (
-                    <td key={tech.id} className="py-4 px-6 text-sm text-red-400">
+                    <td key={tech.id} className="py-4 px-4 sm:px-6 text-xs sm:text-sm text-red-400">
                       {tech.cons}
                     </td>
                   ))}
@@ -471,29 +494,31 @@ const TechStackComparison = () => {
 
       {/* Empty State */}
       {viewMode === 'compare' && selectedTechData.length === 0 && (
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-12 text-center">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 sm:p-12 text-center">
           <Zap className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <h3 className="text-xl font-medium text-white mb-2">No Technologies Selected</h3>
-          <p className="text-gray-400 mb-6">
-            Switch to Grid View and select up to 3 technologies to compare
+          <h3 className="text-lg sm:text-xl font-medium text-white mb-2">No Tech Selected</h3>
+          <p className="text-sm sm:text-base text-gray-400 mb-6">
+            Select up to 3 tech in Grid view
           </p>
           <button
             onClick={() => setViewMode('grid')}
-            className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-all"
+            className="min-h-[48px] px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-all"
           >
-            Switch to Grid View
+            Grid View
           </button>
         </div>
       )}
 
       {/* Recommended Stacks */}
-      <div className="mt-8 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h3 className="text-lg font-medium text-white mb-4">Recommended Stacks</h3>
+      <div className="mt-8 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 sm:p-6">
+        <h3 className="text-lg sm:text-xl font-medium text-white mb-4">Recommended Stacks</h3>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <div className="text-sm font-medium text-white mb-2">E-commerce</div>
-            <div className="text-cyan-400 text-sm mb-2">Next.js + Tailwind + Supabase + Stripe</div>
+            <div className="text-cyan-400 text-xs sm:text-sm mb-2">
+              Next.js + Tailwind + Supabase + Stripe
+            </div>
             <div className="text-xs text-gray-400">
               Perfect SEO, payment integration, real-time updates
             </div>
@@ -501,7 +526,9 @@ const TechStackComparison = () => {
 
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <div className="text-sm font-medium text-white mb-2">SaaS Dashboard</div>
-            <div className="text-cyan-400 text-sm mb-2">Vite + React + Zustand + shadcn/ui</div>
+            <div className="text-cyan-400 text-xs sm:text-sm mb-2">
+              Vite + React + Zustand + shadcn/ui
+            </div>
             <div className="text-xs text-gray-400">
               Fast development, complex state management, pro UI
             </div>
@@ -509,7 +536,9 @@ const TechStackComparison = () => {
 
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <div className="text-sm font-medium text-white mb-2">Marketing Site</div>
-            <div className="text-cyan-400 text-sm mb-2">Astro + Tailwind + Cloudflare Pages</div>
+            <div className="text-cyan-400 text-xs sm:text-sm mb-2">
+              Astro + Tailwind + Cloudflare Pages
+            </div>
             <div className="text-xs text-gray-400">
               Maximum performance, excellent SEO, cost-effective
             </div>
@@ -517,7 +546,7 @@ const TechStackComparison = () => {
 
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <div className="text-sm font-medium text-white mb-2">Blog/Portfolio</div>
-            <div className="text-cyan-400 text-sm mb-2">Astro + Markdown + Vercel</div>
+            <div className="text-cyan-400 text-xs sm:text-sm mb-2">Astro + Markdown + Vercel</div>
             <div className="text-xs text-gray-400">
               Content-focused, minimal JS, easy management
             </div>

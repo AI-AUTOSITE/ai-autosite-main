@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { FileText, Download, Scissors } from 'lucide-react'
+import { FileText, Download, Scissors, X } from 'lucide-react'
 
 // Paper sizes in mm (width x height)
 const PAPER_SIZES = {
@@ -223,155 +223,177 @@ export default function ImageSplitterClient() {
 
   return (
     <div className="container mx-auto px-4 pt-2 pb-6">
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 sm:p-8">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 lg:p-8">
         <div className="space-y-6">
           {/* Mode Selection */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <label className="relative">
-              <input
-                type="radio"
-                name="splitMode"
-                checked={mode === 'paper'}
-                onChange={() => setMode('paper')}
-                className="peer sr-only"
-              />
-              <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all">
-                <FileText className="w-4 h-4 inline-block mb-1 text-cyan-400" />
-                <div className="text-xs text-white">Paper Size</div>
-              </div>
-            </label>
+          <div>
+            <label className="text-white text-sm font-medium mb-3 block">Split Mode</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="splitMode"
+                  checked={mode === 'paper'}
+                  onChange={() => setMode('paper')}
+                  className="peer sr-only"
+                />
+                <div className="min-h-[64px] px-4 py-3 rounded-xl bg-white/5 border-2 border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all hover:bg-white/10 flex flex-col items-center justify-center">
+                  <FileText className="w-5 h-5 mb-1 text-cyan-400" />
+                  <div className="text-sm text-white font-medium">Paper Size</div>
+                </div>
+              </label>
 
-            <label className="relative">
-              <input
-                type="radio"
-                name="splitMode"
-                checked={mode === 'height'}
-                onChange={() => setMode('height')}
-                className="peer sr-only"
-              />
-              <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all">
-                <div className="text-xs text-white">By Height</div>
-              </div>
-            </label>
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="splitMode"
+                  checked={mode === 'height'}
+                  onChange={() => setMode('height')}
+                  className="peer sr-only"
+                />
+                <div className="min-h-[64px] px-4 py-3 rounded-xl bg-white/5 border-2 border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all hover:bg-white/10 flex flex-col items-center justify-center">
+                  <div className="text-sm text-white font-medium">By Height</div>
+                </div>
+              </label>
 
-            <label className="relative">
-              <input
-                type="radio"
-                name="splitMode"
-                checked={mode === 'count'}
-                onChange={() => setMode('count')}
-                className="peer sr-only"
-              />
-              <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all">
-                <div className="text-xs text-white">By Count</div>
-              </div>
-            </label>
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="splitMode"
+                  checked={mode === 'count'}
+                  onChange={() => setMode('count')}
+                  className="peer sr-only"
+                />
+                <div className="min-h-[64px] px-4 py-3 rounded-xl bg-white/5 border-2 border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all hover:bg-white/10 flex flex-col items-center justify-center">
+                  <div className="text-sm text-white font-medium">By Count</div>
+                </div>
+              </label>
 
-            <label className="relative">
-              <input
-                type="radio"
-                name="splitMode"
-                checked={mode === 'manual'}
-                onChange={() => {
-                  setMode('manual')
-                  if (img && manualSplits.length === 0) {
-                    const defaultSplits = []
-                    for (let i = 1; i < 3; i++) {
-                      defaultSplits.push(Math.floor((img.height * i) / 3))
+              <label className="relative">
+                <input
+                  type="radio"
+                  name="splitMode"
+                  checked={mode === 'manual'}
+                  onChange={() => {
+                    setMode('manual')
+                    if (img && manualSplits.length === 0) {
+                      const defaultSplits = []
+                      for (let i = 1; i < 3; i++) {
+                        defaultSplits.push(Math.floor((img.height * i) / 3))
+                      }
+                      setManualSplits(defaultSplits)
                     }
-                    setManualSplits(defaultSplits)
-                  }
-                }}
-                className="peer sr-only"
-              />
-              <div className="px-3 py-2 rounded-lg bg-white/5 border border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all">
-                <div className="text-xs text-white">Manual</div>
-              </div>
-            </label>
+                  }}
+                  className="peer sr-only"
+                />
+                <div className="min-h-[64px] px-4 py-3 rounded-xl bg-white/5 border-2 border-white/20 peer-checked:bg-cyan-500/20 peer-checked:border-cyan-500 cursor-pointer text-center transition-all hover:bg-white/10 flex flex-col items-center justify-center">
+                  <div className="text-sm text-white font-medium">Manual</div>
+                </div>
+              </label>
+            </div>
           </div>
 
           {/* Mode-specific Options */}
-          <div className="flex flex-wrap items-center gap-4">
-            {mode === 'paper' && (
-              <>
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <div className="flex flex-wrap items-center gap-4">
+              {mode === 'paper' && (
+                <>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-300 font-medium">Size:</label>
+                    <select
+                      value={paperSize}
+                      onChange={(e) => setPaperSize(e.target.value as 'A4' | 'A5' | 'B5')}
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
+                      style={{
+                        colorScheme: 'dark'
+                      }}
+                    >
+                      <option value="A4" className="bg-gray-800 text-white">A4 (210x297mm)</option>
+                      <option value="A5" className="bg-gray-800 text-white">A5 (148x210mm)</option>
+                      <option value="B5" className="bg-gray-800 text-white">B5 (182x257mm)</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-300 font-medium">DPI:</label>
+                    <select
+                      value={dpi}
+                      onChange={(e) => setDpi(Number(e.target.value))}
+                      className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
+                      style={{
+                        colorScheme: 'dark'
+                      }}
+                    >
+                      {DPI_OPTIONS.map((d) => (
+                        <option key={d} value={d} className="bg-gray-800 text-white">
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="text-sm text-cyan-400 font-medium">= {getPaperHeightPx()}px per page</div>
+                </>
+              )}
+
+              {mode === 'height' && (
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-gray-300">Size:</label>
-                  <select
-                    value={paperSize}
-                    onChange={(e) => setPaperSize(e.target.value as 'A4' | 'A5' | 'B5')}
-                    className="px-3 py-1 rounded bg-white/10 border border-white/20 text-white text-sm"
-                  >
-                    <option value="A4">A4 (210×297mm)</option>
-                    <option value="A5">A5 (148×210mm)</option>
-                    <option value="B5">B5 (182×257mm)</option>
-                  </select>
+                  <label className="text-sm text-gray-300 font-medium">Height (px):</label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    className="w-28 min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-cyan-400"
+                    min={100}
+                    max={5000}
+                    value={heightPx}
+                    onChange={(e) => setHeightPx(Number(e.target.value))}
+                  />
                 </div>
+              )}
+
+              {mode === 'count' && (
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-gray-300">DPI:</label>
-                  <select
-                    value={dpi}
-                    onChange={(e) => setDpi(Number(e.target.value))}
-                    className="px-3 py-1 rounded bg-white/10 border border-white/20 text-white text-sm"
-                  >
-                    {DPI_OPTIONS.map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
+                  <label className="text-sm text-gray-300 font-medium">Parts:</label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    className="w-24 min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-cyan-400"
+                    min={2}
+                    max={100}
+                    value={count}
+                    onChange={(e) => setCount(Number(e.target.value))}
+                  />
                 </div>
-                <div className="text-xs text-cyan-400">= {getPaperHeightPx()}px per page</div>
-              </>
-            )}
+              )}
 
-            {mode === 'height' && (
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-300">Height (px):</label>
-                <input
-                  type="number"
-                  className="w-24 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
-                  min={100}
-                  max={5000}
-                  value={heightPx}
-                  onChange={(e) => setHeightPx(Number(e.target.value))}
-                />
-              </div>
-            )}
+              {mode === 'manual' && (
+                <div className="text-sm text-cyan-400">
+                  Click on the image below to add split lines
+                </div>
+              )}
 
-            {mode === 'count' && (
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-300">Parts:</label>
-                <input
-                  type="number"
-                  className="w-20 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
-                  min={2}
-                  max={100}
-                  value={count}
-                  onChange={(e) => setCount(Number(e.target.value))}
-                />
-              </div>
-            )}
-
-            {/* Download Options */}
-            {splitParts.length > 0 && (
-              <div className="ml-auto flex items-center gap-2">
-                <select
-                  value={downloadType}
-                  onChange={(e) => setDownloadType(e.target.value as 'merged' | 'separate')}
-                  className="px-3 py-1 rounded bg-white/10 border border-white/20 text-white text-sm"
-                >
-                  <option value="merged">Merged (Side by side)</option>
-                  <option value="separate">Separate files</option>
-                </select>
-                <button
-                  className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all"
-                  onClick={downloadType === 'merged' ? downloadMerged : downloadSeparate}
-                >
-                  <Download className="inline-block w-4 h-4 mr-2" />
-                  Download
-                </button>
-              </div>
-            )}
+              {/* Download Options */}
+              {splitParts.length > 0 && (
+                <div className="ml-auto flex flex-wrap items-center gap-3">
+                  <select
+                    value={downloadType}
+                    onChange={(e) => setDownloadType(e.target.value as 'merged' | 'separate')}
+                    className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
+                    style={{
+                      colorScheme: 'dark'
+                    }}
+                  >
+                    <option value="merged" className="bg-gray-800 text-white">Merged (Side by side)</option>
+                    <option value="separate" className="bg-gray-800 text-white">Separate files</option>
+                  </select>
+                  <button
+                    className="min-h-[48px] px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all flex items-center gap-2"
+                    onClick={downloadType === 'merged' ? downloadMerged : downloadSeparate}
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Drop Zone */}
@@ -391,9 +413,9 @@ export default function ImageSplitterClient() {
               e.currentTarget.classList.remove('border-cyan-400', 'bg-cyan-500/10')
             }}
             onDrop={handleDrop}
-            className="cursor-pointer rounded-2xl border-2 border-dashed border-white/30 text-gray-300 text-center py-12 hover:border-cyan-400 hover:bg-cyan-500/10 transition-all"
+            className="cursor-pointer rounded-2xl border-2 border-dashed border-white/30 text-gray-300 text-center py-12 min-h-[180px] hover:border-cyan-400 hover:bg-cyan-500/10 transition-all flex flex-col items-center justify-center"
           >
-            <Scissors className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+            <Scissors className="w-12 h-12 text-cyan-400 mb-4" />
             <div className="text-lg font-medium mb-2">Drop a long image here</div>
             <div className="text-sm">or click to select</div>
           </div>
@@ -402,14 +424,14 @@ export default function ImageSplitterClient() {
           {preview && (
             <div className="space-y-6">
               {/* Original with Split Lines */}
-              <div className="bg-white/5 rounded-xl p-4">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-white font-semibold">Original Image</h3>
                   {mode === 'manual' && (
-                    <span className="text-cyan-400 text-xs">Click to add split line</span>
+                    <span className="text-cyan-400 text-xs sm:text-sm">Click to add split line</span>
                   )}
                 </div>
-                <div className="max-h-96 overflow-auto">
+                <div className="max-h-96 overflow-auto rounded-lg bg-black/20 p-2">
                   <div className="relative inline-block">
                     <img
                       ref={imageRef}
@@ -429,8 +451,8 @@ export default function ImageSplitterClient() {
                             className="absolute w-full"
                             style={{ top: `${(y / img!.height) * 100}%` }}
                           >
-                            <div className="w-full h-0.5 bg-cyan-400" />
-                            <span className="absolute left-2 -mt-5 bg-black/80 text-cyan-400 text-xs rounded px-2 py-1">
+                            <div className="w-full h-0.5 bg-cyan-400 shadow-lg" />
+                            <span className="absolute left-2 -mt-6 bg-black/90 text-cyan-400 text-xs rounded px-2 py-1">
                               {y}px
                             </span>
                             <button
@@ -438,9 +460,10 @@ export default function ImageSplitterClient() {
                                 e.stopPropagation()
                                 removeSplitLine(index)
                               }}
-                              className="absolute right-2 -mt-8 bg-red-500 hover:bg-red-600 text-white text-xs rounded px-2 py-1 pointer-events-auto"
+                              className="absolute right-2 -mt-8 min-w-[44px] min-h-[32px] bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg px-3 py-1 pointer-events-auto transition-colors flex items-center gap-1"
                             >
-                              Remove
+                              <X className="w-3 h-3" />
+                              <span className="hidden sm:inline">Remove</span>
                             </button>
                           </div>
                         ))}
@@ -452,14 +475,14 @@ export default function ImageSplitterClient() {
 
               {/* Split Parts Preview */}
               {splitParts.length > 0 && (
-                <div className="bg-white/5 rounded-xl p-4">
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                   <h3 className="text-white font-semibold mb-3">
                     Split Result ({splitParts.length} parts)
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     {splitParts.map((part, index) => (
-                      <div key={index} className="bg-black/20 rounded-lg p-2">
-                        <div className="text-xs text-cyan-400 mb-1 text-center">
+                      <div key={index} className="bg-black/20 rounded-lg p-2 hover:bg-black/30 transition-colors">
+                        <div className="text-xs text-cyan-400 font-medium mb-1 text-center">
                           Part {index + 1}
                         </div>
                         <img

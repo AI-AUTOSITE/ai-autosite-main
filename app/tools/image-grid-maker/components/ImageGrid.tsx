@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState, useEffect } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Eye, X } from 'lucide-react'
 
 const MAX_CELLS = 64
 
@@ -226,72 +226,69 @@ export default function ImageGrid() {
 
   return (
     <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap items-center gap-4">
-        <label className="flex items-center gap-2 text-white">
-          <span>Rows:</span>
-          <input
-            type="number"
-            min={1}
-            max={8}
-            value={rows}
-            onChange={(e) => setRows(Math.max(1, Math.min(8, Number(e.target.value))))}
-            className="w-16 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
-          />
-        </label>
-
-        <label className="flex items-center gap-2 text-white">
-          <span>Columns:</span>
-          <input
-            type="number"
-            min={1}
-            max={8}
-            value={cols}
-            onChange={(e) => setCols(Math.max(1, Math.min(8, Number(e.target.value))))}
-            className="w-16 px-2 py-1 rounded bg-white/10 border border-white/20 text-white"
-          />
-        </label>
-
-        <label className="flex items-center gap-2 text-white cursor-pointer">
-          <input
-            type="checkbox"
-            checked={showNumbers}
-            onChange={(e) => setShowNumbers(e.target.checked)}
-            className="w-4 h-4"
-          />
-          <span>Show numbers</span>
-        </label>
-
-        <button
-          className="ml-auto px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={filledCount < 1}
-          onClick={merge}
-        >
-          Merge & Download
-        </button>
-      </div>
-
-      {/* Preview */}
-      {previewUrl && (
-        <div className="bg-black/20 rounded-xl p-4 border border-white/10">
-          <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-            <span className="text-cyan-400">👁</span> Live Preview
-          </h3>
-          <div className="flex justify-center">
-            <img
-              src={previewUrl}
-              alt="Grid preview"
-              className="max-w-full rounded-lg shadow-lg"
-              style={{ maxHeight: '300px' }}
+      {/* Controls - Clean grid layout */}
+      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Row Input */}
+          <div>
+            <label className="text-white text-sm font-medium mb-2 block">Rows</label>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={8}
+              value={rows}
+              onChange={(e) => setRows(Math.max(1, Math.min(8, Number(e.target.value))))}
+              className="w-full px-4 py-3 min-h-[48px] rounded-lg bg-white/10 border border-white/20 text-white text-center text-lg font-semibold focus:outline-none focus:border-cyan-400 transition-colors"
             />
           </div>
-          <p className="text-gray-300 text-xs text-center mt-2">
-            Preview only • Click "Merge & Download" for full size
-          </p>
-        </div>
-      )}
 
-      {/* Drop Zone */}
+          {/* Column Input */}
+          <div>
+            <label className="text-white text-sm font-medium mb-2 block">Columns</label>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={1}
+              max={8}
+              value={cols}
+              onChange={(e) => setCols(Math.max(1, Math.min(8, Number(e.target.value))))}
+              className="w-full px-4 py-3 min-h-[48px] rounded-lg bg-white/10 border border-white/20 text-white text-center text-lg font-semibold focus:outline-none focus:border-cyan-400 transition-colors"
+            />
+          </div>
+
+          {/* Show Numbers Toggle */}
+          <div>
+            <label className="text-white text-sm font-medium mb-2 block">Display</label>
+            <label className="flex items-center justify-center gap-3 min-h-[48px] px-4 py-3 rounded-lg bg-white/10 border border-white/20 cursor-pointer hover:bg-white/15 transition-colors">
+              <input
+                type="checkbox"
+                checked={showNumbers}
+                onChange={(e) => setShowNumbers(e.target.checked)}
+                className="w-5 h-5"
+              />
+              <span className="text-white font-medium">Numbers</span>
+            </label>
+          </div>
+
+          {/* Download Button */}
+          <div>
+            <label className="text-white text-sm font-medium mb-2 block">Action</label>
+            <button
+              className="w-full px-4 py-3 min-h-[48px] bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              disabled={filledCount < 1}
+              onClick={merge}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <span>Download</span>
+                <span className="text-xs opacity-75">({filledCount}/{total})</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Drop Zone - Moved up */}
       <Dropzone onFiles={handleFiles} />
 
       {/* Grid */}
@@ -325,6 +322,27 @@ export default function ImageGrid() {
           />
         ))}
       </div>
+
+      {/* Preview - Moved to bottom */}
+      {previewUrl && (
+        <div className="bg-black/20 rounded-xl p-4 border border-white/10">
+          <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+            <Eye className="w-5 h-5 text-cyan-400" />
+            <span>Preview</span>
+          </h3>
+          <div className="flex justify-center">
+            <img
+              src={previewUrl}
+              alt="Grid preview"
+              className="max-w-full rounded-lg shadow-lg"
+              style={{ maxHeight: '300px' }}
+            />
+          </div>
+          <p className="text-gray-300 text-xs text-center mt-2">
+            Preview only - Download for full size
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -352,7 +370,7 @@ function Dropzone({ onFiles }: { onFiles: (files: FileList | null) => void }) {
           e.currentTarget.classList.remove('border-cyan-400', 'bg-cyan-500/10')
           onFiles(e.dataTransfer.files)
         }}
-        className="cursor-pointer rounded-2xl border-2 border-dashed border-white/30 text-gray-300 text-center py-8 hover:border-cyan-400 hover:bg-cyan-500/10 transition-all"
+        className="cursor-pointer rounded-2xl border-2 border-dashed border-white/30 text-gray-300 text-center py-8 min-h-[120px] hover:border-cyan-400 hover:bg-cyan-500/10 transition-all"
       >
         <div className="text-lg font-medium mb-2">Drop images here</div>
         <div className="text-sm">or click to select files</div>
@@ -413,9 +431,9 @@ function Cell({
               e.stopPropagation()
               onRemove()
             }}
-            className="absolute bottom-2 right-2 bg-red-500/80 hover:bg-red-600 text-white rounded-md w-8 h-8 flex items-center justify-center text-lg font-bold transition-colors"
+            className="absolute bottom-2 right-2 bg-red-500/80 hover:bg-red-600 text-white rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
           >
-            ×
+            <X className="w-5 h-5" />
           </button>
         </>
       ) : (

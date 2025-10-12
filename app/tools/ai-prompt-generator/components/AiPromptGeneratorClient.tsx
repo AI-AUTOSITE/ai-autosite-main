@@ -30,6 +30,14 @@ const TASK_ICONS = {
   learning: <Zap className="w-4 h-4" />,
 }
 
+const TASK_LABELS: Record<TaskType, string> = {
+  writing: 'Writing',
+  coding: 'Coding',
+  analysis: 'Analysis',
+  creative: 'Creative',
+  learning: 'Learning',
+}
+
 const PROMPT_TEMPLATES: Record<TaskType, PromptTemplate> = {
   writing: {
     structure: [
@@ -250,6 +258,11 @@ export default function AiPromptGeneratorClient() {
     await navigator.clipboard.writeText(generatedPrompt)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+
+    // Vibration feedback on mobile
+    if (navigator.vibrate) {
+      navigator.vibrate(30)
+    }
   }
 
   const handleRegenerate = () => {
@@ -289,23 +302,24 @@ export default function AiPromptGeneratorClient() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-3xl">
       {/* Main Input Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
-        {/* Task Type Pills - Compact */}
-        <div className="flex flex-wrap gap-2 mb-6">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 mb-6">
+        {/* Task Type Pills - Mobile: Icon only, Desktop: Icon + Text */}
+        <div className="grid grid-cols-5 gap-2 sm:flex sm:flex-wrap sm:gap-2 mb-6">
           {Object.entries(TASK_ICONS).map(([key, icon]) => (
             <button
               key={key}
               onClick={() => setTaskType(key as TaskType)}
-              className={`px-4 py-2 rounded-full font-medium transition-all flex items-center gap-2 ${
+              className={`min-h-[48px] px-2 sm:px-4 py-2 rounded-xl sm:rounded-full font-medium transition-all flex items-center justify-center sm:justify-start gap-2 ${
                 taskType === key
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
                   : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
               }`}
+              aria-label={TASK_LABELS[key as TaskType]}
             >
-              {icon}
-              <span className="capitalize text-sm">{key}</span>
+              <span className="flex-shrink-0">{icon}</span>
+              <span className="hidden sm:inline capitalize text-sm">{key}</span>
             </button>
           ))}
         </div>
@@ -317,19 +331,19 @@ export default function AiPromptGeneratorClient() {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder="What do you need help with?"
-            className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white text-lg
+            className="w-full px-4 sm:px-5 py-4 bg-white/10 border border-white/20 rounded-xl text-white text-base sm:text-lg
                        placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-colors
-                       hover:bg-white/15"
+                       hover:bg-white/15 min-h-[56px]"
           />
 
-          {/* Quick Examples - Inline */}
+          {/* Quick Examples - Inline, mobile optimized */}
           <div className="flex flex-wrap gap-2 mt-3">
             {getExampleTopics().map((example, i) => (
               <button
                 key={i}
                 onClick={() => setTopic(example)}
-                className="text-xs px-3 py-1.5 bg-white/5 text-gray-400 rounded-full hover:bg-white/10 
-                          hover:text-white transition-all"
+                className="text-xs sm:text-sm px-3 py-2 bg-white/5 text-gray-400 rounded-full hover:bg-white/10 
+                          hover:text-white transition-all min-h-[36px]"
               >
                 {example}
               </button>
@@ -337,31 +351,35 @@ export default function AiPromptGeneratorClient() {
           </div>
         </div>
 
-        {/* Tone Selection - Simplified */}
-        <div className="flex gap-2 mb-4">
-          {(['professional', 'casual', 'technical', 'friendly', 'academic'] as ToneType[]).map(
-            (t) => (
-              <button
-                key={t}
-                onClick={() => setTone(t)}
-                className={`px-3 py-1.5 rounded-lg capitalize text-sm transition-all ${
-                  tone === t
-                    ? 'bg-purple-500/30 text-purple-300 border border-purple-400'
-                    : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
-                }`}
-              >
-                {t}
-              </button>
-            )
-          )}
+        {/* Tone Selection - Grid layout for mobile */}
+        <div className="mb-4">
+          <label className="block text-gray-400 text-sm mb-2">Tone</label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap gap-2">
+            {(['professional', 'casual', 'technical', 'friendly', 'academic'] as ToneType[]).map(
+              (t) => (
+                <button
+                  key={t}
+                  onClick={() => setTone(t)}
+                  className={`min-h-[44px] px-3 sm:px-4 py-2 rounded-lg capitalize text-sm transition-all ${
+                    tone === t
+                      ? 'bg-purple-500/30 text-purple-300 border border-purple-400'
+                      : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                  }`}
+                >
+                  {t}
+                </button>
+              )
+            )}
+          </div>
         </div>
 
         {/* Optional Details - Collapsible */}
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="text-gray-400 text-sm hover:text-white transition-colors mb-3"
+          className="text-gray-400 text-sm hover:text-white transition-colors mb-3 min-h-[44px] flex items-center"
         >
-          {showDetails ? '− Hide' : '+ Add'} details
+          <span className="mr-1">{showDetails ? '−' : '+'}</span>
+          {showDetails ? 'Hide' : 'Add'} details
         </button>
 
         {showDetails && (
@@ -369,8 +387,8 @@ export default function AiPromptGeneratorClient() {
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             placeholder="Any specific requirements..."
-            rows={2}
-            className="w-full px-4 py-3 mb-4 bg-white/5 border border-white/10 rounded-xl text-white 
+            rows={3}
+            className="w-full px-4 py-3 mb-4 bg-white/5 border border-white/10 rounded-xl text-white text-base
                       placeholder-gray-500 focus:outline-none focus:border-purple-400 transition-colors resize-none"
           />
         )}
@@ -380,8 +398,8 @@ export default function AiPromptGeneratorClient() {
           onClick={handleGenerate}
           disabled={!topic.trim()}
           className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl 
-                    font-medium text-lg hover:opacity-90 transition-all disabled:opacity-50 
-                    flex items-center justify-center gap-2"
+                    font-medium text-base sm:text-lg hover:opacity-90 transition-all disabled:opacity-50 
+                    disabled:cursor-not-allowed flex items-center justify-center gap-2 min-h-[56px] shadow-lg"
         >
           <Sparkles className="w-5 h-5" />
           Generate Prompt
@@ -390,28 +408,29 @@ export default function AiPromptGeneratorClient() {
 
       {/* Generated Prompt - Clean Display */}
       {generatedPrompt && (
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 animate-fadeIn">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6 animate-fadeIn">
           <div className="flex justify-between items-center mb-4">
             <span className="text-sm text-gray-400">Your AI Prompt</span>
             <button
               onClick={handleRegenerate}
-              className="text-gray-400 hover:text-white transition-colors p-1"
+              className="text-gray-400 hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
               title="Regenerate"
+              aria-label="Regenerate prompt"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="bg-black/30 rounded-xl p-4 mb-4">
-            <pre className="text-white whitespace-pre-wrap text-sm font-mono">
+          <div className="bg-black/30 rounded-xl p-3 sm:p-4 mb-4 overflow-x-auto">
+            <pre className="text-white whitespace-pre-wrap text-xs sm:text-sm font-mono break-words">
               {generatedPrompt}
             </pre>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleCopy}
-              className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 min-h-[48px] ${
                 copied
                   ? 'bg-green-500 text-white'
                   : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30'
@@ -432,8 +451,8 @@ export default function AiPromptGeneratorClient() {
 
             <button
               onClick={handleClear}
-              className="px-4 py-2.5 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
-                        hover:text-white transition-all"
+              className="sm:flex-shrink-0 px-4 sm:px-6 py-3 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 
+                        hover:text-white transition-all min-h-[48px]"
             >
               Clear
             </button>
