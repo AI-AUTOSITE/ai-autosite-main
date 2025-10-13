@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
             <p className="text-xl text-gray-400">Simple, fair terms that put users first.</p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: October 9, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 13, 2025</p>
           </div>
 
           {/* Key Points */}
@@ -59,12 +59,11 @@ export default function TermsOfServicePage() {
               <div className="space-y-4 text-gray-300">
                 <p>
                   AI-AutoSite provides free online tools for developers, creatives, and
-                  professionals. Our tools work directly in your browser with minimal data
-                  collection and maximum privacy.
+                  professionals. Most tools run entirely in your browser with minimal data collection and maximum privacy.
                 </p>
                 <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-4">
                   <p className="text-cyan-300 text-sm">
-                    <strong>Privacy-First Design:</strong> Most tools run entirely in your browser. 
+                    <strong>Privacy-First Design:</strong> Most tools process data directly in your browser. 
                     We don't store your files, content, or personal data on our servers.
                   </p>
                 </div>
@@ -198,7 +197,39 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">5. Premium Services & Payments</h2>
               <div className="space-y-4 text-gray-300">
                 <p>Some advanced features may require a one-time payment or subscription:</p>
-                <ul className="space-y-2 ml-6">
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-3">💳 Payment Processing Flow:</p>
+                  <ol className="space-y-2 list-decimal list-inside text-sm">
+                    <li>You initiate purchase → Data sent to Stripe (secure payment processor)</li>
+                    <li>Stripe processes your payment → Returns confirmation to our server</li>
+                    <li>We generate a unique license token (64-character key)</li>
+                    <li>License token sent to your browser → Stored in localStorage only</li>
+                    <li>No personal data or purchase records stored on our servers</li>
+                  </ol>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mt-4">
+                  <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                    <p className="text-purple-300 font-semibold mb-2">Your Browser Stores:</p>
+                    <ul className="text-sm space-y-1">
+                      <li>• License token (randomly generated)</li>
+                      <li>• Purchase date</li>
+                      <li>• Product type</li>
+                      <li>• Active status</li>
+                    </ul>
+                  </div>
+                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                    <p className="text-blue-300 font-semibold mb-2">Stripe Stores:</p>
+                    <ul className="text-sm space-y-1">
+                      <li>• Email address</li>
+                      <li>• Payment details</li>
+                      <li>• Transaction history</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <ul className="space-y-2 ml-6 mt-4">
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3"></span>
                     <span>All payments processed securely through Stripe</span>
@@ -232,8 +263,9 @@ export default function TermsOfServicePage() {
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
                   <p className="text-blue-300 text-sm">
                     <strong>💡 License Recovery:</strong> Lost your license key? We can recover it 
-                    via email verification through Stripe. This is why we recommend saving your 
-                    license key in a safe place after purchase.
+                    via email verification through Stripe. Your email is used to search Stripe's 
+                    purchase records, then we generate a new token and send it to you. This is why 
+                    we recommend saving your license key in a safe place after purchase.
                   </p>
                 </div>
               </div>
@@ -275,16 +307,30 @@ export default function TermsOfServicePage() {
               <h2 className="text-2xl font-bold text-white mb-4">7. AI-Powered Tools</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
-                  Some tools use third-party AI APIs (Claude, GPT-4, etc.) to provide advanced features:
+                  Tools displaying an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                  use Claude API (by Anthropic) to provide advanced AI features and require an internet connection.
                 </p>
+
+                <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
+                  <p className="text-purple-300 font-semibold mb-3">
+                    🤖 How AI Tools Work:
+                  </p>
+                  <ol className="space-y-2 text-sm list-decimal list-inside">
+                    <li>You submit your text or file → Sent to Claude API for processing</li>
+                    <li>Claude analyzes your input and generates results in real-time</li>
+                    <li>Results are displayed immediately in your browser</li>
+                    <li>Your input is NOT stored on our servers or Claude's servers after processing</li>
+                  </ol>
+                </div>
+
                 <ul className="space-y-2 ml-6">
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>We clearly label which tools use AI processing</span>
+                    <span>We clearly label which tools use AI processing with an AI badge</span>
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>You'll see a privacy warning before sending data to AI services</span>
+                    <span>Your data is processed temporarily and immediately discarded</span>
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
@@ -292,15 +338,15 @@ export default function TermsOfServicePage() {
                   </li>
                   <li className="flex items-start">
                     <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>We don't store AI requests or responses on our servers</span>
+                    <span>These tools cannot function offline as they require real-time API access</span>
                   </li>
                 </ul>
 
-                <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
-                  <p className="text-purple-300 text-sm">
-                    <strong>🤖 AI Data Flow:</strong> Your input → Our API (temporary processing) → 
-                    AI Service → Result back to you → Nothing stored on our servers. The AI service 
-                    providers may have their own data retention policies.
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                  <p className="text-blue-300 text-sm">
+                    <strong>💡 Which tools use AI?</strong> Look for the <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                    on any tool card. If you see this badge, the tool requires internet access and temporarily 
+                    sends your input to Claude's API for processing.
                   </p>
                 </div>
               </div>
@@ -406,7 +452,7 @@ export default function TermsOfServicePage() {
               <p className="text-sm text-gray-500">
                 These terms are governed by the laws of the United States. By using our service, you
                 agree to resolve disputes through good faith communication first, and arbitration if
-                necessary. These terms are effective as of October 9, 2025 and supersede all 
+                necessary. These terms are effective as of October 13, 2025 and supersede all 
                 previous versions.
               </p>
             </section>

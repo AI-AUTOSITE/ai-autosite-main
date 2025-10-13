@@ -100,9 +100,16 @@ export default function FAQPage() {
               <div className="space-y-3">
                 <div className="bg-gray-800/50 rounded-lg p-4">
                   <p className="font-semibold mb-2">1. Your Browser (Primary) 🌐</p>
-                  <p className="text-sm">
+                  <p className="text-sm mb-2">
                     License token stored in localStorage. You can see it in DevTools → Application → Local Storage
                   </p>
+                  <div className="bg-black/30 rounded p-2 text-xs font-mono">
+                    <p className="text-gray-400">pdf_tools_premium_license: {'{'}</p>
+                    <p className="text-gray-300 ml-3">"token": "a7f3e9c2..."</p>
+                    <p className="text-gray-300 ml-3">"purchasedAt": "2025-10-13T..."</p>
+                    <p className="text-gray-300 ml-3">"isActive": true</p>
+                    <p className="text-gray-400">{'}'}</p>
+                  </div>
                 </div>
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
@@ -294,10 +301,14 @@ export default function FAQPage() {
             <div className="space-y-3">
               <p>Only tools that use paid APIs:</p>
               <ul className="space-y-2">
-                <li>• 🤖 AI-powered features (GPT-4, Claude API)</li>
+                <li>• 🤖 AI-powered features (Claude API)</li>
                 <li>• 🖼️ Image generation</li>
                 <li>• 📊 Advanced data processing</li>
               </ul>
+              <p className="text-sm text-gray-400">
+                Look for the <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                on tool cards to identify AI-powered tools.
+              </p>
               <p className="text-gray-400 text-sm">
                 We charge exactly: API cost + 10% for maintenance
               </p>
@@ -308,7 +319,18 @@ export default function FAQPage() {
           q: 'How does payment work?',
           a: (
             <div className="space-y-3">
-              <p>We use Stripe for secure payments. Here's how your data is stored:</p>
+              <p>We use Stripe for secure payments. Here's the complete data flow:</p>
+
+              <div className="bg-gray-800/50 rounded-lg p-4 mb-3">
+                <p className="font-semibold mb-2">💳 Payment Process:</p>
+                <ol className="text-sm space-y-1 list-decimal list-inside">
+                  <li>You click "Purchase" → Stripe Checkout page opens</li>
+                  <li>Enter email & payment details (handled by Stripe, not us)</li>
+                  <li>Payment confirmed → We generate a random license token</li>
+                  <li>Token sent to your browser → Stored in localStorage</li>
+                  <li>Done! No data stored on our servers</li>
+                </ol>
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
@@ -366,9 +388,32 @@ export default function FAQPage() {
           q: 'Do the tools work offline?',
           a: (
             <div className="space-y-3">
-              <p>Most tools work offline after the initial page load!</p>
-              <p className="text-gray-400">
-                Exceptions: Tools that need API access (AI features, real-time data)
+              <p className="text-gray-300">
+                Most tools (40+ tools) work completely offline after the initial page load!
+              </p>
+              
+              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                <p className="text-green-400 font-semibold mb-2">✅ Offline Tools:</p>
+                <p className="text-sm text-gray-300">
+                  Base64 converter, Image compressor, PDF merger, QR code generator, 
+                  and most other tools work entirely in your browser without internet.
+                </p>
+              </div>
+
+              <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+                <p className="text-yellow-400 font-semibold mb-2">⚠️ Require Internet Connection:</p>
+                <p className="text-sm text-gray-300 mb-3">
+                  Tools marked with an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                  use Claude's API service and need an active internet connection.
+                </p>
+                <p className="text-xs text-gray-400">
+                  You can identify these tools easily - just look for the AI badge on the tool card!
+                  These tools temporarily send your input to Claude's API for processing.
+                </p>
+              </div>
+
+              <p className="text-sm text-gray-400 italic">
+                💡 Tip: Check the tool card for the AI badge before using it offline.
               </p>
             </div>
           ),
@@ -542,7 +587,7 @@ export default function FAQPage() {
                   <br />
                   <span className="ml-4">"token": "a7f3e9c2...",</span>
                   <br />
-                  <span className="ml-4">"purchasedAt": "2025-10-09T12:34:56Z",</span>
+                  <span className="ml-4">"purchasedAt": "2025-10-13T12:34:56Z",</span>
                   <br />
                   <span className="ml-4">"isActive": true,</span>
                   <br />
@@ -651,6 +696,7 @@ export default function FAQPage() {
             <p className="text-gray-400 text-lg">
               Everything you need to know about our privacy-first approach
             </p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 13, 2025</p>
           </div>
 
           {/* Category Filter */}

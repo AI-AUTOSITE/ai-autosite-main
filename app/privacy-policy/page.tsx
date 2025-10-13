@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-xl text-gray-400">
               We protect your privacy with minimal data collection and maximum transparency.
             </p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: October 9, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 13, 2025</p>
           </div>
 
           {/* Quick Summary */}
@@ -99,10 +99,18 @@ export default function PrivacyPolicyPage() {
                       <li className="flex items-start">
                         <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
                         <span>
-                          <strong>Premium users:</strong> License token only (no personal info)
+                          <strong>Premium users:</strong> Only your license token (64-character key, purchase date, active status)
                         </span>
                       </li>
                     </ul>
+                    <div className="bg-black/30 rounded p-3 mt-3 text-xs font-mono">
+                      <p className="text-gray-400 mb-1">// Example of localStorage content:</p>
+                      <p className="text-cyan-300">pdf_tools_premium_license: {'{'}</p>
+                      <p className="text-gray-300 ml-4">"token": "a7f3e9c2..."</p>
+                      <p className="text-gray-300 ml-4">"purchasedAt": "2025-10-13T..."</p>
+                      <p className="text-gray-300 ml-4">"isActive": true</p>
+                      <p className="text-cyan-300">{'}'}</p>
+                    </div>
                     <p className="text-xs text-gray-400 mt-2 italic">
                       You control this data - clear browser data and it's gone forever.
                     </p>
@@ -114,18 +122,18 @@ export default function PrivacyPolicyPage() {
                       <li className="flex items-start">
                         <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3"></span>
                         <span>
-                          Email address (for purchase verification)
+                          Email address (only used for purchase verification and license recovery)
                         </span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3"></span>
                         <span>
-                          Payment details (handled by Stripe, not us)
+                          Payment details (handled entirely by Stripe, we never see your card information)
                         </span>
                       </li>
                     </ul>
                     <p className="text-xs text-gray-400 mt-2 italic">
-                      This is standard for any e-commerce site. We never see your card details.
+                      This is standard for any e-commerce site. Stripe complies with PCI-DSS standards for payment security.
                     </p>
                   </div>
                 </div>
@@ -158,13 +166,13 @@ export default function PrivacyPolicyPage() {
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3"></span>
                       <span>
-                        <strong>License verification:</strong> Check if you have premium access (locally)
+                        <strong>License verification:</strong> Check if you have premium access (processed entirely in your browser)
                       </span>
                     </li>
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-green-400 rounded-full mt-2 mr-3"></span>
                       <span>
-                        <strong>Settings persistence:</strong> Remember your preferences (locally)
+                        <strong>Settings persistence:</strong> Remember your preferences across sessions (stored locally only)
                       </span>
                     </li>
                   </ul>
@@ -176,18 +184,18 @@ export default function PrivacyPolicyPage() {
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3"></span>
                       <span>
-                        <strong>License recovery:</strong> Let you recover your license if you lose it
+                        <strong>License recovery:</strong> Search your purchase history if you lose your license key
                       </span>
                     </li>
                     <li className="flex items-start">
                       <span className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3"></span>
                       <span>
-                        <strong>Payment verification:</strong> Confirm your purchase was successful
+                        <strong>Payment verification:</strong> Confirm your purchase was successful before issuing license
                       </span>
                     </li>
                   </ul>
                   <p className="text-xs text-gray-400 mt-2 italic">
-                    Managed entirely by Stripe. We query it, but never store the results.
+                    Managed entirely by Stripe. We query it temporarily for license recovery, but never store the results.
                   </p>
                 </div>
               </div>
@@ -257,10 +265,10 @@ export default function PrivacyPolicyPage() {
                 </p>
 
                 <div className="bg-gray-800/50 rounded-lg p-4">
-                  <p className="font-semibold mb-2">🔄 Processing Flow:</p>
+                  <p className="font-semibold mb-2">📄 Processing Flow (Most Tools):</p>
                   <ol className="space-y-2 list-decimal list-inside text-sm">
                     <li>You upload a file → It stays in your browser's RAM</li>
-                    <li>JavaScript processes it locally</li>
+                    <li>JavaScript processes it locally in your browser</li>
                     <li>You download the result</li>
                     <li>Close tab → Everything deleted automatically</li>
                   </ol>
@@ -277,10 +285,25 @@ export default function PrivacyPolicyPage() {
                 </div>
 
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4">
-                  <p className="text-yellow-300">
-                    <strong>⚠️ AI Tools Exception:</strong> Tools that use AI APIs (Claude, GPT-4) 
-                    temporarily send your text to those services for processing. 
-                    We show a warning before this happens. Your files still don't touch our servers.
+                  <p className="text-yellow-300 mb-3">
+                    <strong>⚠️ AI Tools Exception (Require Internet):</strong>
+                  </p>
+                  <p className="text-sm mb-3">
+                    Tools marked with an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                    temporarily send your input text to Claude's API for processing.
+                  </p>
+                  <div className="bg-gray-800/50 rounded p-3 text-sm">
+                    <p className="font-semibold mb-2">🔒 Privacy Protection for AI Tools:</p>
+                    <ul className="space-y-1 text-xs">
+                      <li>• Your data is processed in real-time and NOT stored on our servers</li>
+                      <li>• Claude API processes your text temporarily and does not retain it after processing</li>
+                      <li>• We never log or save your input content</li>
+                      <li>• Each AI request is independent with no history tracking</li>
+                      <li>• You'll see a warning before any data is sent to AI services</li>
+                    </ul>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    💡 Tip: Look for the AI badge on tool cards to identify which tools require internet access.
                   </p>
                 </div>
               </div>
@@ -445,7 +468,7 @@ export default function PrivacyPolicyPage() {
             {/* Legal Notice */}
             <section className="pt-6 border-t border-white/10">
               <p className="text-sm text-gray-500">
-                This privacy policy is effective as of October 9, 2025. We will notify you of any 
+                This privacy policy is effective as of October 13, 2025. We will notify you of any 
                 changes by posting the new policy on this page. Changes are effective immediately 
                 upon posting.
               </p>
