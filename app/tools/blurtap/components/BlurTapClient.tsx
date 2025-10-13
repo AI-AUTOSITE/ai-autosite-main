@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { AlertCircle, CheckCircle, Upload, Download, RotateCcw, Undo2 } from 'lucide-react'
+import { Upload, Download, RotateCcw, Undo2 } from 'lucide-react'
 import { MaskRegion, GuideBox, MaskMode, MaskSize, ImageFormat } from '../types'
 import { MASK_SIZE_MAP } from '../constants'
 import { useFileHandler } from '../hooks/useFileHandler'
@@ -36,14 +36,12 @@ export default function BlurTapClient() {
     masks,
     history,
     settings,
-    successMessage,
     setMode,
     setMaskSize,
     setFormat,
     addMask,
     undoMask,
     resetMasks,
-    setSuccessMessage,
   } = useImageEditor()
 
   const [isDragging, setIsDragging] = useState(false)
@@ -67,15 +65,29 @@ export default function BlurTapClient() {
     }
   }, [displayScale, originalImage, masks])
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (!originalImage || !canvasRef.current) return
+  // Get position from mouse or touch event
+  const getPosition = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+      if (!canvasRef.current) return null
 
       const rect = canvasRef.current.getBoundingClientRect()
-      const cssX = e.clientX - rect.left
-      const cssY = e.clientY - rect.top
+      let clientX: number, clientY: number
+
+      if ('touches' in e && e.touches.length > 0) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+      } else if ('clientX' in e) {
+        clientX = e.clientX
+        clientY = e.clientY
+      } else {
+        return null
+      }
+
+      const cssX = clientX - rect.left
+      const cssY = clientY - rect.top
+
       const wrapperElement = canvasRef.current.parentElement
-      if (!wrapperElement) return
+      if (!wrapperElement) return null
 
       const wrapperRect = wrapperElement.getBoundingClientRect()
       const canvasRect = canvasRef.current.getBoundingClientRect()
@@ -84,11 +96,26 @@ export default function BlurTapClient() {
       const wrapperX = canvasOffsetX + cssX
       const wrapperY = canvasOffsetY + cssY
 
+      const canvasX = (cssX / rect.width) * canvasRef.current.width
+      const canvasY = (cssY / rect.height) * canvasRef.current.height
+
+      return { cssX, cssY, wrapperX, wrapperY, canvasX, canvasY }
+    },
+    []
+  )
+
+  const handleMove = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+      if (!originalImage || !canvasRef.current) return
+
+      const pos = getPosition(e)
+      if (!pos) return
+
       if (settings.mode === 'click') {
         const size = MASK_SIZE_MAP[settings.maskSize]
         setCurrentGuide({
-          x: wrapperX - (size.w * displayScale) / 2,
-          y: wrapperY - (size.h * displayScale) / 2,
+          x: pos.wrapperX - (size.w * displayScale) / 2,
+          y: pos.wrapperY - (size.h * displayScale) / 2,
           w: size.w * displayScale,
           h: size.h * displayScale,
         })
@@ -97,22 +124,23 @@ export default function BlurTapClient() {
         const startX = dragStart.x
         const startY = dragStart.y
         setCurrentGuide({
-          x: Math.min(startX, wrapperX),
-          y: Math.min(startY, wrapperY),
-          w: Math.abs(wrapperX - startX),
-          h: Math.abs(wrapperY - startY),
+          x: Math.min(startX, pos.wrapperX),
+          y: Math.min(startY, pos.wrapperY),
+          w: Math.abs(pos.wrapperX - startX),
+          h: Math.abs(pos.wrapperY - startY),
         })
         setShowGuide(true)
       }
     },
-    [originalImage, settings.mode, settings.maskSize, displayScale, isDragging, dragStart]
+    [originalImage, settings.mode, settings.maskSize, displayScale, isDragging, dragStart, getPosition]
   )
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleStart = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
       if (!originalImage || !canvasRef.current) return
 
-      const pos = getCanvasPosition(e, canvasRef.current)
+      const pos = getPosition(e)
+      if (!pos) return
 
       if (settings.mode === 'click') {
         const size = MASK_SIZE_MAP[settings.maskSize]
@@ -126,26 +154,22 @@ export default function BlurTapClient() {
         addMask(newMask)
       } else if (settings.mode === 'drag') {
         setIsDragging(true)
-        const wrapperElement = canvasRef.current.parentElement
-        if (!wrapperElement) return
-        const wrapperRect = wrapperElement.getBoundingClientRect()
-        const canvasRect = canvasRef.current.getBoundingClientRect()
-        const canvasOffsetX = canvasRect.left - wrapperRect.left
-        const canvasOffsetY = canvasRect.top - wrapperRect.top
         setDragStart({
-          x: canvasOffsetX + pos.x,
-          y: canvasOffsetY + pos.y,
+          x: pos.wrapperX,
+          y: pos.wrapperY,
         })
       }
     },
-    [originalImage, settings.mode, settings.maskSize, addMask]
+    [originalImage, settings.mode, settings.maskSize, addMask, getPosition]
   )
 
-  const handleMouseUp = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleEnd = useCallback(
+    (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
       if (!originalImage || settings.mode !== 'drag' || !isDragging || !canvasRef.current) return
 
-      const pos = getCanvasPosition(e, canvasRef.current)
+      const pos = getPosition(e)
+      if (!pos) return
+
       const wrapperElement = canvasRef.current.parentElement
       if (!wrapperElement) return
 
@@ -183,10 +207,10 @@ export default function BlurTapClient() {
       setIsDragging(false)
       setShowGuide(false)
     },
-    [originalImage, settings.mode, isDragging, dragStart, addMask]
+    [originalImage, settings.mode, isDragging, dragStart, addMask, getPosition]
   )
 
-  const handleMouseLeave = useCallback(() => {
+  const handleLeave = useCallback(() => {
     setShowGuide(false)
     if (isDragging) {
       setIsDragging(false)
@@ -196,8 +220,7 @@ export default function BlurTapClient() {
   const handleDownload = useCallback(() => {
     if (!canvasRef.current) return
     downloadCanvas(canvasRef.current, settings.format)
-    setSuccessMessage('Image downloaded!')
-  }, [settings.format, setSuccessMessage])
+  }, [settings.format])
 
   const handleNewImage = useCallback(() => {
     resetFile()
@@ -207,7 +230,7 @@ export default function BlurTapClient() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Main Content - No top padding */}
+      {/* Main Content */}
       {!imageUrl ? (
         <ImageUploader
           isDraggingFile={isDraggingFile}
@@ -219,15 +242,12 @@ export default function BlurTapClient() {
         />
       ) : (
         <div className="space-y-4">
-          {/* Messages */}
-          <MessageArea error={error} successMessage={successMessage} />
-
           {/* Canvas and Actions */}
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Canvas Area */}
             <div className="flex-1 order-2 lg:order-1">
               {/* Zoom Control */}
-              <div className="mb-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 flex items-center gap-4">
+              <div className="mb-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <span className="text-sm text-gray-300">Zoom:</span>
                 <input
                   type="range"
@@ -241,7 +261,7 @@ export default function BlurTapClient() {
                   }}
                   className="flex-1 accent-cyan-400"
                 />
-                <span className="text-sm text-white font-medium min-w-[50px]">
+                <span className="text-sm text-white font-medium min-w-[50px] text-center sm:text-left">
                   {Math.round(displayScale * 100)}%
                 </span>
                 <button
@@ -256,7 +276,7 @@ export default function BlurTapClient() {
                       setDisplayScale(autoScale)
                     }
                   }}
-                  className="px-3 py-1 text-xs bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
                 >
                   Auto
                 </button>
@@ -266,14 +286,14 @@ export default function BlurTapClient() {
                 canvasRef={canvasRef}
                 showGuide={showGuide}
                 currentGuide={currentGuide}
-                onMouseMove={handleMouseMove}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
+                onMove={handleMove}
+                onStart={handleStart}
+                onEnd={handleEnd}
+                onLeave={handleLeave}
               />
             </div>
 
-            {/* Action Panel - All controls integrated */}
+            {/* Action Panel */}
             <ActionPanel
               historyLength={history.length}
               maskCount={masks.length}
@@ -296,60 +316,55 @@ export default function BlurTapClient() {
   )
 }
 
-const MessageArea: React.FC<{ error: string; successMessage: string }> = ({
-  error,
-  successMessage,
-}) => (
-  <>
-    {error && (
-      <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-xl p-4 flex items-start space-x-3 animate-fade-in mb-4">
-        <AlertCircle className="w-5 h-5 text-red-400 mt-0.5" />
-        <p className="text-red-400">{error}</p>
-      </div>
-    )}
-    {successMessage && (
-      <div className="bg-green-500/10 backdrop-blur-xl border border-green-500/20 rounded-xl p-4 flex items-start space-x-3 animate-fade-in mb-4">
-        <CheckCircle className="w-5 h-5 text-green-400 mt-0.5" />
-        <p className="text-green-400">{successMessage}</p>
-      </div>
-    )}
-  </>
-)
-
 interface CanvasAreaProps {
   canvasRef: React.RefObject<HTMLCanvasElement>
   showGuide: boolean
   currentGuide: GuideBox
-  onMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void
-  onMouseDown: (e: React.MouseEvent<HTMLCanvasElement>) => void
-  onMouseUp: (e: React.MouseEvent<HTMLCanvasElement>) => void
-  onMouseLeave: () => void
+  onMove: (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => void
+  onStart: (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => void
+  onEnd: (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => void
+  onLeave: () => void
 }
 
 const CanvasArea: React.FC<CanvasAreaProps> = ({
   canvasRef,
   showGuide,
   currentGuide,
-  onMouseMove,
-  onMouseDown,
-  onMouseUp,
-  onMouseLeave,
+  onMove,
+  onStart,
+  onEnd,
+  onLeave,
 }) => (
   <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
-    <div className="overflow-auto" style={{ maxHeight: '75vh', minHeight: '500px' }}>
+    <div className="overflow-auto" style={{ maxHeight: '75vh', minHeight: '400px' }}>
       <div className="inline-block relative min-w-full">
         <canvas
           ref={canvasRef}
-          onMouseMove={onMouseMove}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseLeave}
+          // Mouse events
+          onMouseMove={onMove}
+          onMouseDown={onStart}
+          onMouseUp={onEnd}
+          onMouseLeave={onLeave}
+          // Touch events for mobile/tablet
+          onTouchStart={(e) => {
+            e.preventDefault()
+            onStart(e)
+          }}
+          onTouchMove={(e) => {
+            e.preventDefault()
+            onMove(e)
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault()
+            onEnd(e)
+          }}
           style={{
             maxWidth: '100%',
             cursor: 'crosshair',
             border: '2px solid #444',
             borderRadius: '8px',
             display: 'block',
+            touchAction: 'none', // Prevent default touch behaviors
           }}
           className="bg-white mx-auto"
         />
@@ -404,32 +419,32 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
   onNewImage,
 }) => (
   <div className="w-full lg:w-80 order-1 lg:order-2">
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4">
-      <h4 className="text-sm font-semibold text-white mb-4">Actions</h4>
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
+      <h4 className="text-sm font-semibold text-white mb-4">Controls</h4>
 
       {/* Controls Section */}
       <div className="space-y-3 mb-4 pb-4 border-b border-white/10">
         {/* Mode */}
         <div>
-          <label className="text-xs text-gray-300 block mb-1">Mode</label>
+          <label className="text-xs text-gray-300 block mb-2">Mode</label>
           <select
             value={mode}
             onChange={(e) => onModeChange(e.target.value as MaskMode)}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
+            className="w-full min-h-[48px] px-3 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
           >
-            <option value="click">Click (fixed)</option>
-            <option value="drag">Drag (free)</option>
+            <option value="click">Click</option>
+            <option value="drag">Drag</option>
           </select>
         </div>
 
         {/* Size */}
         <div className={mode === 'drag' ? 'opacity-50' : ''}>
-          <label className="text-xs text-gray-300 block mb-1">Size</label>
+          <label className="text-xs text-gray-300 block mb-2">Size</label>
           <select
             value={maskSize}
             onChange={(e) => onMaskSizeChange(e.target.value as MaskSize)}
             disabled={mode === 'drag'}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm disabled:opacity-50 focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
+            className="w-full min-h-[48px] px-3 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm disabled:opacity-50 focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
           >
             <option value="xs">XS (80x22)</option>
             <option value="small">Small (100x30)</option>
@@ -440,11 +455,11 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
 
         {/* Format */}
         <div>
-          <label className="text-xs text-gray-300 block mb-1">Save as</label>
+          <label className="text-xs text-gray-300 block mb-2">Format</label>
           <select
             value={format}
             onChange={(e) => onFormatChange(e.target.value as ImageFormat)}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
+            className="w-full min-h-[48px] px-3 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-400 [&>option]:bg-slate-800"
           >
             <option value="png">PNG</option>
             <option value="jpeg">JPEG</option>
@@ -463,7 +478,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
           <div>
             <label className="text-xs text-gray-300 block mb-1">File</label>
             <div className="px-3 py-2 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm font-medium truncate text-center">
-              {fileName ? fileName.split('.')[0] : 'None'}
+              {fileName ? fileName.split('.')[0].substring(0, 8) : 'None'}
             </div>
           </div>
         </div>
@@ -474,7 +489,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         <button
           onClick={onUndo}
           disabled={historyLength === 0}
-          className="w-full px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
+          className="w-full min-h-[48px] px-4 py-3 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
         >
           <Undo2 className="w-4 h-4" />
           <span>Undo</span>
@@ -482,21 +497,21 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
         <button
           onClick={onReset}
           disabled={maskCount === 0}
-          className="w-full px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
+          className="w-full min-h-[48px] px-4 py-3 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center space-x-2"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>Reset All</span>
+          <span>Reset</span>
         </button>
         <button
           onClick={onDownload}
-          className="w-full px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 flex items-center justify-center space-x-2"
+          className="w-full min-h-[48px] px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-200 flex items-center justify-center space-x-2"
         >
           <Download className="w-4 h-4" />
           <span>Download</span>
         </button>
         <button
           onClick={onNewImage}
-          className="w-full px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all duration-200 flex items-center justify-center space-x-2"
+          className="w-full min-h-[48px] px-4 py-3 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all duration-200 flex items-center justify-center space-x-2"
         >
           <Upload className="w-4 h-4" />
           <span>New Image</span>

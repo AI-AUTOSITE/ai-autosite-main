@@ -140,7 +140,7 @@ export default function DebateTrainer() {
     }
 
     try {
-      const response = await fetch('/api/debate', {
+      const response = await fetch('/api/debate-trainer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

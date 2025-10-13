@@ -177,7 +177,7 @@ export default function AIProjectVisualizerClient() {
     try {
       const structureText = toTree(projectData.structure)
 
-      const response = await fetch('/api/ai-analysis', {
+      const response = await fetch('/api/ai-project-visualizer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

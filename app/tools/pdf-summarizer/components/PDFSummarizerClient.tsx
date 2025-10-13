@@ -103,7 +103,7 @@ export default function PDFSummarizerClient() {
       // Start API processing
       setStage('processing')
 
-      const response = await fetch('/api/summarize', {
+      const response = await fetch('/api/pdf-summarizer', {
         method: 'POST',
         body: formData,
       })

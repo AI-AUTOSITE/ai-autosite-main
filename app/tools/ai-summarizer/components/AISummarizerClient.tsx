@@ -20,12 +20,12 @@ export default function AISummarizerClient() {
 
   const handleSummarize = async () => {
     if (!inputText.trim()) {
-      setError('Enter text to summarize')
+      setError('Enter text')
       return
     }
 
     if (inputText.length < 100) {
-      setError('Text too short (min 100 characters)')
+      setError('Too short (min 100 chars)')
       return
     }
 
@@ -34,7 +34,7 @@ export default function AISummarizerClient() {
     setSummary('')
 
     try {
-      const response = await fetch('/api/summarize', {
+      const response = await fetch('/api/ai-summarizer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export default function AISummarizerClient() {
         body: JSON.stringify({
           text: inputText,
           length: summaryLength,
-          tone: 'professional', // Default to professional
+          tone: 'professional',
         }),
       })
 
@@ -76,28 +76,33 @@ export default function AISummarizerClient() {
   }
 
   // Quick example texts
-  const exampleTexts = [
-    { label: 'News Article', chars: 1500 },
-    { label: 'Research Paper', chars: 3000 },
-    { label: 'Blog Post', chars: 800 },
-  ]
+const exampleTexts = [
+  { 
+    label: 'News', 
+    text: `Artificial intelligence has made remarkable progress in recent years, transforming industries from healthcare to finance. Major tech companies are investing billions in AI research, with breakthroughs in natural language processing and computer vision leading the charge. Experts predict that AI will revolutionize how we work, learn, and interact with technology. The global AI market is expected to reach $500 billion by 2030, driven by enterprise adoption and consumer applications. However, concerns about job displacement and ethical implications remain important topics for discussion. Governments worldwide are working to establish regulations that balance innovation with public safety. Despite these challenges, the potential benefits of AI in solving complex problems and improving quality of life are immense. From personalized medicine to climate change solutions, AI is becoming an indispensable tool for addressing global challenges.`
+  },
+  { 
+    label: 'Research', 
+    text: `Recent studies in cognitive psychology have revealed fascinating insights into human memory formation and retention. Researchers at leading universities have discovered that sleep plays a crucial role in consolidating short-term memories into long-term storage. The process, known as memory consolidation, occurs during specific stages of sleep when the brain replays and strengthens neural connections formed during waking hours. This finding has significant implications for educational practices and learning strategies. Students who maintain regular sleep schedules demonstrate better academic performance and information retention compared to those with irregular sleep patterns. The research also suggests that brief naps can enhance memory consolidation, particularly for procedural and declarative memories. Furthermore, the timing of sleep relative to learning appears to be critical, with sleep within 24 hours of learning showing the most beneficial effects. These discoveries are reshaping our understanding of optimal learning environments and study habits. The integration of sleep science into educational curricula could lead to more effective teaching methods and improved student outcomes. As research continues, scientists are exploring how different sleep stages contribute to various types of memory formation, opening new avenues for cognitive enhancement and therapeutic interventions for memory-related disorders.`
+  },
+  { 
+    label: 'Blog', 
+    text: `Starting a successful blog in today's digital landscape requires more than just good writing skills. Understanding your target audience and creating content that resonates with their interests is fundamental to building a loyal readership. Consistency in posting schedules helps establish trust and keeps readers engaged over time. Search engine optimization techniques can significantly increase your blog's visibility, but authentic, valuable content remains the cornerstone of success. Social media integration allows you to reach broader audiences and engage with readers across multiple platforms. Many successful bloggers emphasize the importance of finding your unique voice and perspective rather than simply following trends. Monetization strategies vary widely, from advertising and affiliate marketing to sponsored content and digital products. Building an email list provides direct communication with your most engaged readers and creates opportunities for deeper connections.`
+  },
+]
 
-  const loadExample = (chars: number) => {
-    const exampleText =
-      `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. `.repeat(
-        Math.ceil(chars / 450)
-      )
-    setInputText(exampleText.substring(0, chars))
-  }
+const loadExample = (index: number) => {
+  setInputText(exampleTexts[index].text)
+}
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-3xl">
       {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        {/* Text Input - Large and Prominent */}
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
+        {/* Text Input */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <label className="text-white font-medium">Your Text</label>
+            <label className="text-white font-medium text-sm sm:text-base">Your Text</label>
             <span className={`text-xs ${charCount < 100 ? 'text-red-400' : 'text-gray-400'}`}>
               {charCount.toLocaleString()} {charCount < 100 && '(min 100)'}
             </span>
@@ -106,35 +111,34 @@ export default function AISummarizerClient() {
           <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value.slice(0, 50000))}
-            placeholder="Paste or type your text here... (minimum 100 characters)"
-            className="w-full h-48 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white 
+            placeholder="Paste or type text here (min 100 chars)"
+            className="w-full h-40 sm:h-48 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm sm:text-base
                        placeholder-gray-400 resize-none focus:outline-none focus:border-purple-400 
                        transition-colors hover:bg-white/15"
-            autoFocus
           />
 
           {/* Quick Examples */}
-          {charCount === 0 && (
-            <div className="flex gap-2 mt-2">
-              <span className="text-xs text-gray-500">Try example:</span>
-              {exampleTexts.map((example) => (
-                <button
-                  key={example.label}
-                  onClick={() => loadExample(example.chars)}
-                  className="text-xs px-2 py-1 bg-white/5 text-gray-400 rounded-full 
-                           hover:bg-white/10 hover:text-white transition-all"
-                >
-                  {example.label}
-                </button>
-              ))}
-            </div>
-          )}
+{charCount === 0 && (
+  <div className="flex flex-wrap gap-2 mt-2 items-center">
+    <span className="text-xs text-gray-500">Examples:</span>
+    {exampleTexts.map((example, index) => (
+      <button
+        key={example.label}
+        onClick={() => loadExample(index)}
+        className="text-xs px-2 py-1 bg-white/5 text-gray-400 rounded-full 
+                 hover:bg-white/10 hover:text-white transition-all"
+      >
+        {example.label}
+      </button>
+    ))}
+  </div>
+)}
         </div>
 
-        {/* Summary Length Selection - Simplified */}
+        {/* Summary Length Selection */}
         <div className="mb-6">
-          <label className="text-sm text-gray-400 mb-2 block">Summary Length</label>
-          <div className="flex gap-2">
+          <label className="text-sm text-gray-400 mb-2 block">Length</label>
+          <div className="grid grid-cols-3 gap-2">
             {[
               { value: 'brief', label: 'Brief', desc: '2-3 lines' },
               { value: 'standard', label: 'Standard', desc: '4-5 lines' },
@@ -143,37 +147,37 @@ export default function AISummarizerClient() {
               <button
                 key={option.value}
                 onClick={() => setSummaryLength(option.value as SummaryLength)}
-                className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${
+                className={`min-h-[56px] py-3 px-3 rounded-lg text-sm transition-all ${
                   summaryLength === option.value
                     ? 'bg-purple-500/30 text-purple-300 border border-purple-400'
-                    : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
+                    : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-transparent'
                 }`}
               >
                 <div className="font-medium">{option.label}</div>
-                <div className="text-xs opacity-70">{option.desc}</div>
+                <div className="text-xs opacity-70 hidden sm:block">{option.desc}</div>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Action Button - Large and Prominent */}
+        {/* Action Button */}
         <div className="flex gap-3">
           <button
             onClick={handleSummarize}
             disabled={isLoading || !inputText.trim() || charCount < 100}
-            className="flex-1 px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white 
-                     font-medium text-lg rounded-xl hover:opacity-90 disabled:opacity-50 
+            className="flex-1 min-h-[56px] px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white 
+                     font-medium text-base sm:text-lg rounded-xl hover:opacity-90 disabled:opacity-50 
                      disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
                 <Loader className="w-5 h-5 animate-spin" />
-                Summarizing...
+                Working...
               </>
             ) : (
               <>
                 <Sparkles className="w-5 h-5" />
-                Summarize Text
+                Summarize
               </>
             )}
           </button>
@@ -181,7 +185,7 @@ export default function AISummarizerClient() {
           {(inputText || summary) && (
             <button
               onClick={handleClear}
-              className="px-4 py-4 bg-white/5 text-gray-400 rounded-xl hover:bg-white/10 
+              className="min-h-[56px] px-4 py-4 bg-white/5 text-gray-400 rounded-xl hover:bg-white/10 
                        hover:text-white transition-all border border-white/10"
               title="Clear all"
             >
@@ -197,21 +201,21 @@ export default function AISummarizerClient() {
           </div>
         )}
 
-        {/* Summary Output - Clean Display */}
+        {/* Summary Output */}
         {summary && (
           <div className="mt-6 pt-6 border-t border-white/10 animate-fadeIn">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-white font-medium">Summary</label>
+              <label className="text-white font-medium text-sm sm:text-base">Summary</label>
               <button
                 onClick={handleCopy}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-all flex items-center gap-2 ${
+                className={`min-h-[40px] px-3 py-2 text-sm rounded-lg transition-all flex items-center gap-2 ${
                   copied ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
                 {copied ? (
                   <>
                     <Check className="w-3 h-3" />
-                    Copied!
+                    Copied
                   </>
                 ) : (
                   <>
@@ -223,25 +227,29 @@ export default function AISummarizerClient() {
             </div>
 
             <div className="p-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl mb-4">
-              <p className="text-white leading-relaxed whitespace-pre-wrap">{summary}</p>
+              <p className="text-white leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
+                {summary}
+              </p>
             </div>
 
-            {/* Simple Stats Bar */}
-            <div className="flex justify-center gap-6 text-center">
+            {/* Stats Bar */}
+            <div className="flex justify-center gap-4 sm:gap-6 text-center text-sm">
               <div>
-                <span className="text-lg font-bold text-purple-400">
+                <span className="text-base sm:text-lg font-bold text-purple-400">
                   {Math.round(((charCount - summary.length) / charCount) * 100)}%
                 </span>
                 <span className="text-xs text-gray-400 ml-1">shorter</span>
               </div>
-              <div className="text-gray-600">•</div>
+              <div className="text-gray-600">-</div>
               <div>
-                <span className="text-lg font-bold text-pink-400">{summary.split(' ').length}</span>
+                <span className="text-base sm:text-lg font-bold text-pink-400">
+                  {summary.split(' ').length}
+                </span>
                 <span className="text-xs text-gray-400 ml-1">words</span>
               </div>
-              <div className="text-gray-600">•</div>
+              <div className="text-gray-600">-</div>
               <div>
-                <span className="text-lg font-bold text-cyan-400">
+                <span className="text-base sm:text-lg font-bold text-cyan-400">
                   {Math.ceil(summary.split(' ').length / 200)}m
                 </span>
                 <span className="text-xs text-gray-400 ml-1">read</span>

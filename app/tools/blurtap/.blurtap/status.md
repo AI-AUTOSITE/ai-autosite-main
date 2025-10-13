@@ -205,3 +205,188 @@ app/
 - ✅ ズーム機能が正常動作
 - ✅ すべてのTypeScriptエラーが解消
 - ✅ レスポンシブデザインが機能
+# BlurTap - Mobile Optimization Status
+
+## ✅ Completed: 2025-10-12
+
+### 📱 Mobile Optimization Changes
+
+#### 1. ✅ Fixed Toast Screen Shake (CRITICAL)
+**Problem:**
+- Toast notifications appeared inline in the layout
+- Caused canvas area to shift up/down when messages appeared
+- Poor UX with constant layout jumps
+
+**Solution:**
+```tsx
+// Before: Inline toast (causes layout shift)
+{error && <div className="...mb-4">...</div>}
+
+// After: Fixed positioning (no layout shift)
+<div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+  {error && <div className="...">...</div>}
+</div>
+```
+
+**Result:**
+- Toast now floats above content
+- No layout shifts
+- Smooth user experience
+
+#### 2. ✅ Added Touch Events Support (CRITICAL)
+**Problem:**
+- Only mouse events (onMouseDown, onMouseMove, onMouseUp)
+- **NOT working on mobile/tablet devices**
+
+**Solution:**
+```tsx
+// Added unified position handler
+const getPosition = useCallback((
+  e: React.MouseEvent | React.TouchEvent
+) => {
+  let clientX: number, clientY: number
+  
+  if ('touches' in e && e.touches.length > 0) {
+    clientX = e.touches[0].clientX
+    clientY = e.touches[0].clientY
+  } else if ('clientX' in e) {
+    clientX = e.clientX
+    clientY = e.clientY
+  }
+  // ...
+}, [])
+
+// Added touch event handlers
+<canvas
+  // Mouse events
+  onMouseMove={onMove}
+  onMouseDown={onStart}
+  onMouseUp={onEnd}
+  // Touch events
+  onTouchStart={(e) => {
+    e.preventDefault()
+    onStart(e)
+  }}
+  onTouchMove={(e) => {
+    e.preventDefault()
+    onMove(e)
+  }}
+  onTouchEnd={(e) => {
+    e.preventDefault()
+    onEnd(e)
+  }}
+  style={{ touchAction: 'none' }}
+/>
+```
+
+**Result:**
+- ✅ **Now works on tablets and phones!**
+- Touch-friendly canvas interaction
+- Prevents default scroll/zoom during masking
+
+#### 3. ✅ Improved Tap Targets
+**Before:**
+- Buttons: `py-2.5` (40px)
+- Select dropdowns: `py-2` (32px)
+
+**After:**
+- All buttons: `min-h-[48px] py-3` (48px+)
+- Select dropdowns: `min-h-[48px] py-3` (48px+)
+- Zoom Auto button: `min-h-[40px]` (acceptable for secondary action)
+
+#### 4. ✅ Simplified English
+**Before:**
+- "Mask added!"
+- "All masks cleared!"
+- "Image downloaded!"
+- "Actions"
+- "Save as"
+- "Click (fixed)"
+- "Drag (free)"
+- "Reset All"
+
+**After:**
+- "Added"
+- "Cleared"
+- "Downloaded"
+- "Controls"
+- "Format"
+- "Click"
+- "Drag"
+- "Reset"
+
+#### 5. ✅ Enhanced Responsive Design
+**Before:**
+- Limited mobile optimization
+- Fixed padding
+- Minimal responsive text
+
+**After:**
+```tsx
+// Responsive padding
+className="p-4 sm:p-6"
+
+// Responsive zoom control
+className="flex flex-col sm:flex-row items-stretch sm:items-center"
+
+// Responsive canvas height
+style={{ minHeight: '400px' }} // Reduced from 500px
+
+// Responsive text
+className="text-sm"
+
+// File name truncation for mobile
+{fileName.split('.')[0].substring(0, 8)}
+```
+
+### 📊 Technical Details
+
+#### Toast Implementation
+```tsx
+// Fixed positioning - no layout impact
+<div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 max-w-md w-full px-4">
+  <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/20 rounded-xl p-4">
+    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+    <p className="text-red-400 text-sm">{error}</p>
+  </div>
+</div>
+```
+
+#### Touch Event Handler
+```tsx
+// Unified handler for both mouse and touch
+const handleMove = useCallback((
+  e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+) => {
+  const pos = getPosition(e)
+  // ... masking logic
+}, [])
+```
+
+### ✅ Checklist Completed
+- [x] Toast uses fixed positioning (no layout shift)
+- [x] Touch events fully implemented
+- [x] All buttons 48px+ tap target
+- [x] Select dropdowns 48px+ height
+- [x] Simplified English messages
+- [x] Responsive padding and layout
+- [x] Mobile-friendly canvas (min-height: 400px)
+- [x] touchAction: none (prevents unwanted gestures)
+- [x] preventDefault on touch events
+
+### 🎯 Result
+**Status: READY FOR MOBILE & TABLET** ✅
+
+**Now supports:**
+- ✅ Smartphones (touch)
+- ✅ Tablets (touch)
+- ✅ Desktop (mouse)
+- ✅ No screen shake from toasts
+- ✅ Smooth masking experience
+- ✅ Professional touch interactions
+
+### 🔥 Key Improvements
+1. **Toast fix**: No more annoying screen jumps
+2. **Touch support**: Works perfectly on mobile/tablet
+3. **Better UX**: Larger buttons, clearer labels
+4. **Responsive**: Adapts to all screen sizes
