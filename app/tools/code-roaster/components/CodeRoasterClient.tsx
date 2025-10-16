@@ -12,7 +12,6 @@ import {
   AlertCircle,
   Download,
   FileCode,
-  RefreshCw,
 } from 'lucide-react'
 import {
   validateInput,
@@ -22,7 +21,6 @@ import {
 } from '../lib/submission-guard'
 import { showToast } from '../lib/toast'
 
-// サンプルコード
 const SAMPLE_CODES = {
   javascript: `function calculateTotal(items) {
   var total = 0
@@ -54,7 +52,6 @@ export default function CodeRoasterClient() {
   const [attemptsLeft, setAttemptsLeft] = useState(3)
   const [detectedLanguage, setDetectedLanguage] = useState<string>('')
 
-  // 残り試行回数をチェック
   useEffect(() => {
     const checkAttempts = () => {
       const data = JSON.parse(localStorage.getItem('code_roaster_daily_count') || '{}')
@@ -68,7 +65,6 @@ export default function CodeRoasterClient() {
     return () => clearInterval(interval)
   }, [])
 
-  // コードが変更されたら言語を自動検出
   useEffect(() => {
     if (code.trim().length > 10) {
       const lang = detectLanguage(code)
@@ -156,16 +152,17 @@ export default function CodeRoasterClient() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="container mx-auto px-4 py-6 sm:py-8">
+      {/* Main Content */}
+      <div className="space-y-6">
         {/* Input Panel */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <Code2 className="w-6 h-6 text-purple-400" />
-                Input Code
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+                <span className="hidden sm:inline">Input Code</span>
+                <span className="sm:hidden">Code</span>
               </h3>
               {detectedLanguage && (
                 <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-400/50">
@@ -175,32 +172,35 @@ export default function CodeRoasterClient() {
               )}
             </div>
             <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500" />
-              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500" />
             </div>
           </div>
 
           {/* Sample Code Buttons */}
-          <div className="mb-3 flex gap-2">
+          <div className="mb-3 flex flex-wrap gap-2">
             <button
               onClick={() => loadSample('javascript')}
               disabled={isLoading}
-              className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50 disabled:opacity-50"
+              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+                         rounded-lg transition-all border border-blue-400/50 disabled:opacity-50 active:scale-95"
             >
               Sample JS
             </button>
             <button
               onClick={() => loadSample('python')}
               disabled={isLoading}
-              className="px-3 py-1.5 text-xs bg-green-500/20 text-green-300 hover:bg-green-500/30 rounded-lg transition-all border border-green-400/50 disabled:opacity-50"
+              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-green-500/20 text-green-300 hover:bg-green-500/30 
+                         rounded-lg transition-all border border-green-400/50 disabled:opacity-50 active:scale-95"
             >
               Sample Python
             </button>
             <button
               onClick={() => loadSample('buggy')}
               disabled={isLoading}
-              className="px-3 py-1.5 text-xs bg-red-500/20 text-red-300 hover:bg-red-500/30 rounded-lg transition-all border border-red-400/50 disabled:opacity-50"
+              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-red-500/20 text-red-300 hover:bg-red-500/30 
+                         rounded-lg transition-all border border-red-400/50 disabled:opacity-50 active:scale-95"
             >
               Buggy Code
             </button>
@@ -212,13 +212,13 @@ export default function CodeRoasterClient() {
               onChange={(e) => setCode(e.target.value)}
               disabled={isLoading}
               placeholder="// Paste your code here..."
-              className="w-full h-[400px] p-4 rounded-xl bg-black/40 backdrop-blur-sm 
-                       border-2 border-purple-500/30 text-white font-mono text-sm 
+              className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+                       border-2 border-purple-500/30 text-white font-mono text-xs sm:text-sm 
                        resize-none placeholder:text-gray-400 focus:outline-none 
                        focus:border-purple-400/60 transition-all duration-300 
                        disabled:opacity-50"
             />
-            <div className="absolute bottom-3 right-3 flex items-center gap-3">
+            <div className="absolute bottom-3 right-3 flex items-center gap-2 sm:gap-3">
               <div className="text-xs text-purple-400 bg-black/50 px-2 py-1 rounded-full">
                 {code.length}/10000
               </div>
@@ -226,7 +226,7 @@ export default function CodeRoasterClient() {
                 <button
                   onClick={() => setCode('')}
                   className="text-xs text-red-400 hover:text-red-300 bg-black/50 
-                           px-2 py-1 rounded-full transition-colors"
+                           px-2 py-1 rounded-full transition-colors active:scale-95"
                 >
                   Clear
                 </button>
@@ -235,24 +235,23 @@ export default function CodeRoasterClient() {
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <button
               onClick={() => handleAction('roast')}
               disabled={isLoading || attemptsLeft === 0}
-              className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
-                        disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+                        transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                        active:scale-95 ${
                           activeMode === 'roast'
-                            ? 'bg-gradient-to-r from-orange-600 to-red-600 scale-95 ring-4 ring-orange-400/50'
-                            : 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 hover:scale-105'
+                            ? 'bg-gradient-to-r from-orange-600 to-red-600 scale-95 ring-2 sm:ring-4 ring-orange-400/50'
+                            : 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600'
                         }`}
             >
               <div className="flex flex-col items-center gap-1">
-                <div className="flex items-center gap-2">
-                  <Flame className="w-5 h-5" />
-                  <span className="hidden sm:inline">Roast</span>
-                </div>
+                <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Roast</span>
                 <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'No attempts'}
+                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
                 </span>
               </div>
             </button>
@@ -260,20 +259,19 @@ export default function CodeRoasterClient() {
             <button
               onClick={() => handleAction('explain')}
               disabled={isLoading || attemptsLeft === 0}
-              className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
-                        disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+                        transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                        active:scale-95 ${
                           activeMode === 'explain'
-                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-95 ring-4 ring-blue-400/50'
-                            : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105'
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-95 ring-2 sm:ring-4 ring-blue-400/50'
+                            : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
                         }`}
             >
               <div className="flex flex-col items-center gap-1">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" />
-                  <span className="hidden sm:inline">Explain</span>
-                </div>
+                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Explain</span>
                 <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'No attempts'}
+                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
                 </span>
               </div>
             </button>
@@ -281,20 +279,19 @@ export default function CodeRoasterClient() {
             <button
               onClick={() => handleAction('fix')}
               disabled={isLoading || attemptsLeft === 0}
-              className={`py-3 px-3 rounded-xl font-bold text-white transition-all duration-300 
-                        disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+                        transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
+                        active:scale-95 ${
                           activeMode === 'fix'
-                            ? 'bg-gradient-to-r from-green-600 to-teal-600 scale-95 ring-4 ring-green-400/50'
-                            : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 hover:scale-105'
+                            ? 'bg-gradient-to-r from-green-600 to-teal-600 scale-95 ring-2 sm:ring-4 ring-green-400/50'
+                            : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600'
                         }`}
             >
               <div className="flex flex-col items-center gap-1">
-                <div className="flex items-center gap-2">
-                  <Wrench className="w-5 h-5" />
-                  <span className="hidden sm:inline">Fix</span>
-                </div>
+                <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Fix</span>
                 <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'No attempts'}
+                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
                 </span>
               </div>
             </button>
@@ -313,39 +310,39 @@ export default function CodeRoasterClient() {
         </div>
 
         {/* Output Panel */}
-        {/* Output Panel */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-2xl">🤖</span>
-              AI Response
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-xl sm:text-2xl">🤖</span>
+              <span>AI Response</span>
             </h3>
             <div className="flex gap-2">
-              <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
+              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" />
               <div
-                className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"
+                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse"
                 style={{ animationDelay: '0.3s' }}
               />
               <div
-                className="w-3 h-3 rounded-full bg-green-500 animate-pulse"
+                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse"
                 style={{ animationDelay: '0.6s' }}
               />
             </div>
           </div>
 
-          {/* アクションボタン（テキストエリアの上） */}
+          {/* Action Buttons */}
           {output && !isLoading && (
-            <div className="mb-3 flex gap-2">
+            <div className="mb-3 flex flex-wrap gap-2">
               <button
                 onClick={handleDownload}
-                className="px-3 py-1.5 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all border border-blue-400/50"
+                className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+                           rounded-lg transition-all border border-blue-400/50 active:scale-95"
               >
                 <Download className="w-3 h-3 inline mr-1" />
                 Download
               </button>
               <button
                 onClick={handleCopy}
-                className={`px-3 py-1.5 text-xs rounded-lg transition-all border ${
+                className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all border active:scale-95 ${
                   copied
                     ? 'bg-green-500/20 text-green-300 border-green-400/50'
                     : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
@@ -366,20 +363,20 @@ export default function CodeRoasterClient() {
             </div>
           )}
 
-          {/* テキストエリア */}
+          {/* Output Area */}
           <div className="relative">
             <div
-              className="w-full h-[400px] p-4 rounded-xl bg-black/40 backdrop-blur-sm 
-                  border-2 border-orange-500/30 text-white font-mono text-sm overflow-auto whitespace-pre-wrap"
+              className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+                       border-2 border-orange-500/30 text-white font-mono text-xs sm:text-sm overflow-auto whitespace-pre-wrap"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 text-orange-400">
-                  <Sparkles className="w-5 h-5 animate-spin" />
-                  <span className="animate-pulse">AI is thinking...</span>
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                  <span className="animate-pulse text-xs sm:text-sm">AI is thinking...</span>
                 </div>
               ) : (
                 output || (
-                  <span className="text-gray-400">Your AI feedback will appear here...</span>
+                  <span className="text-gray-400 text-xs sm:text-sm">Your AI feedback will appear here...</span>
                 )
               )}
             </div>

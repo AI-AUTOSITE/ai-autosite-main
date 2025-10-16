@@ -18,6 +18,9 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
   const [preserveFormatting, setPreserveFormatting] = useState(true)
   const [mergePages, setMergePages] = useState(false)
 
+  // Detect mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
   const handleConvert = () => {
     onConvert(selectedFormat, {
       format: selectedFormat,
@@ -59,16 +62,17 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-white text-lg font-medium">Convert PDF</h3>
           <button
             onClick={onCancel}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-white p-2 rounded hover:bg-gray-700 min-h-[44px] min-w-[44px] flex items-center justify-center"
             disabled={isProcessing}
+            aria-label="Close"
           >
-            ✕
+            <span className="text-xl">×</span>
           </button>
         </div>
 
@@ -94,7 +98,10 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
                 return (
                   <button
                     key={format}
-                    onClick={() => setSelectedFormat(format)}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      setSelectedFormat(format)
+                    }}
                     className={`w-full p-3 rounded-lg border-2 transition-all ${
                       selectedFormat === format
                         ? colorClasses[info.color as keyof typeof colorClasses]
@@ -144,7 +151,7 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
               <h4 className="text-sm text-gray-300 font-medium">Options</h4>
 
               {(selectedFormat === 'word' || selectedFormat === 'html') && (
-                <label className="flex items-center gap-2 text-sm text-gray-400">
+                <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={preserveFormatting}
@@ -156,7 +163,7 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
               )}
 
               {selectedFormat === 'word' && (
-                <label className="flex items-center gap-2 text-sm text-gray-400">
+                <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={extractImages}
@@ -168,7 +175,7 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
               )}
 
               {selectedFormat === 'excel' && (
-                <label className="flex items-center gap-2 text-sm text-gray-400">
+                <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={mergePages}
@@ -187,9 +194,9 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
             </div>
 
             {/* Conversion Info */}
-            <div className="bg-gray-700/50 rounded-lg p-3 mb-6">
+            <div className="bg-gray-700/50 rounded-lg p-3 mb-4">
               <div className="flex items-start gap-2">
-                <Download className="w-4 h-4 text-cyan-400 mt-0.5" />
+                <Download className="w-4 h-4 text-cyan-400 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
                   <p className="text-xs text-gray-300">
                     Your converted file will be downloaded automatically
@@ -199,17 +206,38 @@ export const ConvertUI: React.FC<ConvertUIProps> = ({
               </div>
             </div>
 
+            {/* Mobile Warning */}
+            {isMobile && (
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-6">
+                <div className="flex items-start gap-2">
+                  <span className="text-yellow-400 text-base flex-shrink-0">⚠️</span>
+                  <div className="flex-1">
+                    <p className="text-xs text-yellow-400 font-medium">Mobile Device Notice</p>
+                    <p className="text-xs text-yellow-300/80 mt-1">
+                      Conversion may take longer on mobile. For best results, use 10 pages or less.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex gap-3">
               <button
-                onClick={onCancel}
-                className="flex-1 px-4 py-2 bg-gray-700 text-gray-300 rounded hover:bg-gray-600"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  onCancel()
+                }}
+                className="flex-1 px-4 py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 active:bg-gray-500 transition min-h-[48px]"
               >
                 Cancel
               </button>
               <button
-                onClick={handleConvert}
-                className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-500 flex items-center justify-center gap-2"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handleConvert()
+                }}
+                className="flex-1 px-4 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 active:bg-cyan-700 transition flex items-center justify-center gap-2 min-h-[48px]"
               >
                 <Download className="w-4 h-4" />
                 Convert

@@ -211,7 +211,6 @@ export default function AIProjectVisualizerClient() {
 
     try {
       await navigator.clipboard.writeText(aiAnalysis)
-      // Show brief success feedback
       const originalText = aiAnalysis
       setAiAnalysis('✓ Copied to clipboard!')
       setTimeout(() => setAiAnalysis(originalText), 1500)
@@ -446,26 +445,27 @@ export default function AIProjectVisualizerClient() {
       <div key={node.id}>
         <div
           className={`
-            flex items-center gap-2 px-2 py-1 rounded hover:bg-white/10 cursor-pointer
+            flex items-center gap-2 px-3 py-3 rounded-lg hover:bg-white/10 cursor-pointer
+            transition-colors active:bg-white/20
             ${node.type === 'folder' ? 'text-cyan-400' : 'text-gray-300'}
           `}
-          style={{ paddingLeft: `${depth * 20 + 8}px` }}
+          style={{ paddingLeft: `${depth * 20 + 12}px` }}
           onClick={() => hasChildren && toggleNode(node.id)}
         >
           {hasChildren && (
-            <span className="text-gray-500">
-              {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            <span className="text-gray-500 flex-shrink-0">
+              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </span>
           )}
-          {!hasChildren && <span className="w-3.5" />}
+          {!hasChildren && <span className="w-4" />}
 
           {node.type === 'folder' ? (
-            <FolderOpen size={14} className="text-yellow-400" />
+            <FolderOpen size={16} className="text-yellow-400 flex-shrink-0" />
           ) : (
-            <FileText size={14} className="text-blue-400" />
+            <FileText size={16} className="text-blue-400 flex-shrink-0" />
           )}
 
-          <span className="text-sm">{node.name}</span>
+          <span className="text-xs sm:text-sm truncate">{node.name}</span>
         </div>
 
         {hasChildren && isExpanded && (
@@ -476,7 +476,7 @@ export default function AIProjectVisualizerClient() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
       {/* Hidden inputs */}
       <input
         ref={fileInputRef}
@@ -496,34 +496,39 @@ export default function AIProjectVisualizerClient() {
       />
 
       {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-        {/* Input/Output Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-4">
+      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
+        {/* ✅ 2カラム対応：モバイル/タブレット=1列、デスクトップ=2列 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Input Section */}
-          <div className="p-4 bg-white/5 rounded-xl border border-cyan-500/20">
-            <div className="mb-3">
-              <label className="text-white font-semibold text-sm flex items-center gap-2 mb-3">
-                <Upload className="w-4 h-4 text-cyan-400" />
+          <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-cyan-500/20">
+            <div className="mb-4">
+              <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
+                <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
                 Import Project
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-1.5 text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-all font-medium border border-cyan-400/50"
+                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
+                             hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
+                             border border-white/10 hover:border-cyan-400/50 active:scale-95"
                 >
-                  <FileUp className="w-3 h-3 inline mr-1" />
+                  <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
                   Files
                 </button>
                 <button
                   onClick={() => folderInputRef.current?.click()}
-                  className="px-3 py-1.5 text-xs bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 rounded-lg transition-all font-medium border border-cyan-400/50"
+                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
+                             hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
+                             border border-white/10 hover:border-cyan-400/50 active:scale-95"
                 >
-                  <FolderPlus className="w-3 h-3 inline mr-1" />
+                  <FolderPlus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
                   Folder
                 </button>
                 <button
                   onClick={loadSample}
-                  className="px-3 py-1.5 text-xs bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg transition-all font-medium border border-white/10"
+                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
+                             rounded-lg transition-all font-medium border border-white/10 active:scale-95"
                 >
                   Sample
                 </button>
@@ -532,17 +537,18 @@ export default function AIProjectVisualizerClient() {
 
             <div>
               <div className="flex justify-between items-center mb-3">
-                <label className="text-xs text-gray-400">
+                <label className="text-xs sm:text-sm text-gray-400">
                   {projectData ? 'Project Structure' : 'Drop Zone'}
                 </label>
                 {projectData && (
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-400">
-                      {projectData.totalFiles} files, {projectData.totalFolders} folders
+                      {projectData.totalFiles}f, {projectData.totalFolders}d
                     </span>
                     <button
                       onClick={handleClear}
-                      className="px-2 py-1 text-xs bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded transition-all"
+                      className="min-h-[40px] min-w-[40px] flex items-center justify-center text-xs bg-red-500/20 text-red-400 
+                                 hover:bg-red-500/30 rounded-lg transition-all active:scale-95"
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>
@@ -553,7 +559,7 @@ export default function AIProjectVisualizerClient() {
               {!projectData ? (
                 <div
                   className={`
-                    h-56 p-3 bg-black/20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center
+                    h-48 sm:h-60 p-4 bg-black/20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center
                     transition-all cursor-pointer hover:bg-black/30
                     ${isDragging ? 'border-cyan-400 bg-cyan-400/10' : 'border-white/20'}
                   `}
@@ -562,57 +568,105 @@ export default function AIProjectVisualizerClient() {
                   onDrop={handleDrop}
                   onClick={() => folderInputRef.current?.click()}
                 >
-                  <Upload className="w-8 h-8 text-cyan-400 mb-2" />
-                  <p className="text-gray-300 text-sm font-medium">Drop files/folders here</p>
-                  <p className="text-gray-500 text-xs mt-1">or click to browse</p>
-                  <p className="text-gray-500 text-xs mt-3">
-                    Auto-excludes: node_modules, .git, .env files
+                  <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 mb-3" />
+                  <p className="text-gray-300 text-sm sm:text-base font-medium">Drop files/folders here</p>
+                  <p className="text-gray-500 text-xs sm:text-sm mt-2">or click to browse</p>
+                  <p className="text-gray-600 text-xs mt-3">
+                    Auto-excludes: node_modules, .git, .env
                   </p>
                 </div>
               ) : (
-                <div className="h-56 p-3 bg-black/20 border border-white/10 rounded-xl overflow-y-auto">
+                <div className="h-48 sm:h-60 p-3 bg-black/20 border border-white/10 rounded-xl overflow-y-auto">
                   {renderNode(projectData.structure)}
                 </div>
               )}
             </div>
 
-            {/* ✅ AI Analysis Buttons - 目立つように変更 */}
+            {/* AI Analysis Section */}
             {projectData && (
-              <div className="mt-4 space-y-2">
-                {/* 大きなプライマリボタン */}
+              <div className="mt-4 space-y-3">
+                {/* AI Analyze Button */}
                 <button
                   onClick={() => handleAIAnalysis('analyze')}
                   disabled={isAnalyzing}
-                  className="w-full px-4 py-3 text-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all font-bold shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full min-h-[56px] px-4 py-4 text-sm sm:text-base bg-gradient-to-r from-purple-500 to-pink-500 
+                             text-white hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all font-bold 
+                             shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed 
+                             flex items-center justify-center gap-2 active:scale-95"
                 >
                   {isAnalyzing ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Analyzing with AI...
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <span>Analyzing with AI...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4" />
-                      Analyze with AI
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Analyze with AI</span>
                     </>
                   )}
                 </button>
 
-                {/* セカンダリアクション */}
+                {/* AI Analysis Panel - AIボタンの直下 */}
+                {showAiPanel && (
+                  <div className="p-4 sm:p-5 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
+                    <div className="flex justify-between items-center mb-3">
+                      <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                        AI Analysis
+                      </label>
+                      {aiAnalysis && !isAnalyzing && (
+                        <button
+                          onClick={handleCopyAI}
+                          className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
+                                     rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
+                        >
+                          <Copy className="w-3 h-3" />
+                          <span>Copy</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {isAnalyzing ? (
+                      <div className="flex items-center justify-center py-12">
+                        <div className="text-center">
+                          <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
+                          <p className="text-gray-400 text-sm">Analyzing your project structure...</p>
+                          <p className="text-gray-500 text-xs mt-1">This may take a few seconds</p>
+                        </div>
+                      </div>
+                    ) : aiError ? (
+                      <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                        <p className="text-red-400 text-sm">{aiError}</p>
+                      </div>
+                    ) : aiAnalysis ? (
+                      <div className="prose prose-invert prose-sm max-w-none">
+                        <div className="text-gray-300 text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
+                          {aiAnalysis}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                )}
+
+                {/* Secondary Buttons */}
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleAIAnalysis('readme')}
                     disabled={isAnalyzing}
-                    className="px-3 py-2 text-xs bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 rounded-lg transition-all font-medium border border-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                    className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+                               rounded-lg transition-all font-medium border border-blue-400/50 disabled:opacity-50 
+                               disabled:cursor-not-allowed flex items-center justify-center gap-1 active:scale-95"
                   >
                     <FileDown className="w-3 h-3" />
-                    Generate README
+                    <span>Generate README</span>
                   </button>
                   <button
-                    onClick={loadSample}
-                    className="px-3 py-2 text-xs bg-white/5 text-gray-400 hover:bg-white/10 rounded-lg transition-all font-medium border border-white/10"
+                    onClick={handleClear}
+                    className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
+                               rounded-lg transition-all font-medium border border-white/10 active:scale-95"
                   >
-                    Load Sample
+                    Clear All
                   </button>
                 </div>
               </div>
@@ -620,64 +674,43 @@ export default function AIProjectVisualizerClient() {
           </div>
 
           {/* Output Section */}
-          <div className="p-4 bg-white/5 rounded-xl border border-purple-500/20">
-            <div className="mb-3">
-              <label className="text-white font-semibold text-sm flex items-center gap-2 mb-3">
-                <Download className="w-4 h-4 text-purple-400" />
+          <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-purple-500/20">
+            <div className="mb-4">
+              <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
+                <Download className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                 Export Format
               </label>
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => setFormat('tree')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
-                    format === 'tree'
-                      ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                  }`}
-                >
-                  Tree
-                </button>
-                <button
-                  onClick={() => setFormat('mermaid')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
-                    format === 'mermaid'
-                      ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                  }`}
-                >
-                  Mermaid
-                </button>
-                <button
-                  onClick={() => setFormat('json')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
-                    format === 'json'
-                      ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                  }`}
-                >
-                  JSON
-                </button>
-                <button
-                  onClick={() => setFormat('markdown')}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
-                    format === 'markdown'
-                      ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                  }`}
-                >
-                  Markdown
-                </button>
+                {[
+                  { id: 'tree', label: 'Tree' },
+                  { id: 'mermaid', label: 'Mermaid' },
+                  { id: 'json', label: 'JSON' },
+                  { id: 'markdown', label: 'Markdown' },
+                ].map((fmt) => (
+                  <button
+                    key={fmt.id}
+                    onClick={() => setFormat(fmt.id as FormatType)}
+                    className={`min-h-[48px] px-3 py-3 text-xs sm:text-sm rounded-lg font-medium transition-all active:scale-95 ${
+                      format === fmt.id
+                        ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                    }`}
+                  >
+                    {fmt.label}
+                  </button>
+                ))}
               </div>
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-3">
-                <label className="text-xs text-gray-400">Output Preview</label>
+                <label className="text-xs sm:text-sm text-gray-400">Output Preview</label>
                 {output && (
                   <div className="flex gap-2">
                     <button
                       onClick={handleCopy}
-                      className={`px-3 py-1.5 text-xs rounded-lg transition-all flex items-center gap-1 font-medium ${
+                      className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all flex items-center gap-1 
+                                  font-medium active:scale-95 ${
                         copied
                           ? 'bg-green-500 text-white'
                           : 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-400/50'
@@ -686,21 +719,22 @@ export default function AIProjectVisualizerClient() {
                       {copied ? (
                         <>
                           <Check className="w-3 h-3" />
-                          Copied!
+                          <span className="hidden sm:inline">Copied!</span>
                         </>
                       ) : (
                         <>
                           <Copy className="w-3 h-3" />
-                          Copy
+                          <span className="hidden sm:inline">Copy</span>
                         </>
                       )}
                     </button>
                     <button
                       onClick={handleDownload}
-                      className="px-3 py-1.5 text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50"
+                      className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
+                                 rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
                     >
                       <Download className="w-3 h-3" />
-                      Download
+                      <span className="hidden sm:inline">Download</span>
                     </button>
                   </div>
                 )}
@@ -710,64 +744,25 @@ export default function AIProjectVisualizerClient() {
                 value={output}
                 readOnly
                 placeholder={`${format} output will appear here...\n\nUpload your project to get started`}
-                className="w-full h-56 p-3 bg-black/20 border border-white/10 rounded-xl text-white 
-                           placeholder-gray-500 resize-none font-mono text-xs cursor-text"
+                className="w-full h-[200px] sm:h-[280px] p-3 sm:p-4 bg-black/20 border border-white/10 rounded-xl text-white 
+                           placeholder-gray-500 resize-none font-mono text-xs sm:text-sm cursor-text"
                 spellCheck={false}
               />
             </div>
           </div>
         </div>
 
-        {/* AI Analysis Panel */}
-        {showAiPanel && (
-          <div className="mt-6 p-4 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
-            <div className="flex justify-between items-center mb-3">
-              <label className="text-white font-semibold text-sm flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-                AI Analysis
-              </label>
-              {aiAnalysis && !isAnalyzing && (
-                <button
-                  onClick={handleCopyAI}
-                  className="px-3 py-1.5 text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50"
-                >
-                  <Copy className="w-3 h-3" />
-                  Copy
-                </button>
-              )}
-            </div>
-
-            {isAnalyzing ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
-                  <p className="text-gray-400 text-sm">Analyzing your project structure...</p>
-                  <p className="text-gray-500 text-xs mt-1">This may take a few seconds</p>
-                </div>
-              </div>
-            ) : aiError ? (
-              <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                <p className="text-red-400 text-sm">{aiError}</p>
-              </div>
-            ) : aiAnalysis ? (
-              <div className="prose prose-invert prose-sm max-w-none">
-                <div className="text-gray-300 text-sm whitespace-pre-wrap">{aiAnalysis}</div>
-              </div>
-            ) : null}
-          </div>
-        )}
-
         {/* Error */}
         {error && (
           <div
-            className={`mt-4 p-3 rounded-lg animate-fadeIn ${
+            className={`mt-6 p-3 sm:p-4 rounded-lg animate-fadeIn ${
               error.includes('Processed')
                 ? 'bg-yellow-500/10 border border-yellow-500/20'
                 : 'bg-red-500/10 border border-red-500/20'
             }`}
           >
             <p
-              className={`text-sm ${
+              className={`text-xs sm:text-sm ${
                 error.includes('Processed') ? 'text-yellow-400' : 'text-red-400'
               }`}
             >
@@ -777,9 +772,9 @@ export default function AIProjectVisualizerClient() {
         )}
 
         {/* Security Badge */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
+        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500">
           <Shield className="w-3 h-3 text-green-400" />
-          <span>Sensitive files auto-excluded • Processing happens locally</span>
+          <span className="text-center">Sensitive files auto-excluded • Processing happens locally</span>
         </div>
       </div>
 

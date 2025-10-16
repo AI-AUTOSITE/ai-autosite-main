@@ -51,7 +51,7 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
       onFileUpload(content)
     }
     reader.onerror = () => {
-      setError('Failed to read file')
+      setError('Cannot read file')
     }
     reader.readAsText(file, 'UTF-8')
   }
@@ -81,7 +81,7 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={`
-        relative border-2 border-dashed rounded-xl p-16 text-center transition-all cursor-pointer
+        relative border-2 sm:border-4 border-dashed rounded-2xl p-8 sm:p-16 text-center transition-all cursor-pointer
         ${
           isDragging
             ? 'border-cyan-500 bg-cyan-500/10'
@@ -101,29 +101,29 @@ export default function FileUploader({ onFileUpload, isAnalyzing }: FileUploader
       <div className="space-y-4">
         {isAnalyzing ? (
           <>
-            <div className="mx-auto w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-lg font-medium text-gray-300">Analyzing...</p>
+            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-base sm:text-lg font-medium text-gray-300">Analyzing...</p>
           </>
         ) : (
           <>
-            <Upload className="mx-auto w-16 h-16 text-gray-500" />
+            <Upload className="mx-auto w-12 h-12 sm:w-16 sm:h-16 text-gray-500" />
             <div>
-              <p className="text-2xl font-medium text-gray-300">Drop CSV file here</p>
-              <p className="text-sm text-gray-500 mt-2">or click to select</p>
-              <p className="text-xs text-gray-600 mt-4">Get CSV from PowerShell script</p>
+              <p className="text-lg sm:text-2xl font-medium text-gray-300">Drop CSV here</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-2">or tap to select</p>
+              <p className="text-xs text-gray-600 mt-4">Get CSV from PowerShell</p>
             </div>
           </>
         )}
 
         {fileName && !isAnalyzing && (
-          <div className="flex items-center justify-center space-x-2 text-sm text-green-400">
+          <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm text-green-400">
             <FileText className="w-4 h-4" />
             <span>{fileName}</span>
           </div>
         )}
 
         {error && (
-          <div className="flex items-center justify-center space-x-2 text-sm text-red-400">
+          <div className="flex items-center justify-center space-x-2 text-xs sm:text-sm text-red-400">
             <AlertCircle className="w-4 h-4" />
             <span>{error}</span>
           </div>

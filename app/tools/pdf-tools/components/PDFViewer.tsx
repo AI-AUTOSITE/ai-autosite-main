@@ -11,8 +11,6 @@ interface PDFViewerProps {
   isMobile: boolean
   showThumbnails: boolean
   fileInputRef: RefObject<HTMLInputElement>
-  isPremium: boolean
-  setShowUpgradeModal: (show: boolean) => void
   isProcessing: boolean
   handleTouchStart: (pageId: string) => void
   handleTouchEnd: (e: React.TouchEvent, targetPageId: string) => void
@@ -27,8 +25,6 @@ export function PDFViewer({
   isMobile,
   showThumbnails,
   fileInputRef,
-  isPremium,
-  setShowUpgradeModal,
   isProcessing,
   handleTouchStart,
   handleTouchEnd,
@@ -100,7 +96,7 @@ export function PDFViewer({
         <div
           className={`${isMobile ? (showThumbnails ? 'w-24' : 'hidden') : 'w-48'} bg-gray-800 border-r border-gray-700 overflow-y-auto p-2`}
         >
-          <div className="space-y-2">
+          <div className="space-y-3">
             {pages.map((page) => (
               <div
                 key={page.id}
@@ -127,16 +123,36 @@ export function PDFViewer({
                     : ''
                 } ${draggedPageId === page.id ? 'opacity-50' : ''}`}
               >
-                <div className="flex items-center gap-2">
-                  {!isMobile && <GripVertical className="w-3 h-3 text-gray-500 cursor-move" />}
-                  <img
-                    src={page.thumbnail}
-                    alt={`Page ${page.pageNumber}`}
-                    className={`${isMobile ? 'w-12 h-16' : 'w-16 h-20'} object-cover rounded bg-white pointer-events-none`}
-                    style={{ transform: `rotate(${page.rotation}deg)` }}
-                  />
-                  <span className="text-xs text-gray-300">Page {page.pageNumber}</span>
-                </div>
+                {/* Desktop: horizontal with grip */}
+                {!isMobile ? (
+                  <div className="flex items-center gap-2">
+                    <GripVertical className="w-3 h-3 text-gray-500 cursor-move flex-shrink-0" />
+                    <div className="flex flex-col items-center gap-1 flex-1">
+                      <img
+                        src={page.thumbnail}
+                        alt={`Page ${page.pageNumber}`}
+                        className="w-16 h-20 object-cover rounded bg-white pointer-events-none"
+                        style={{ transform: `rotate(${page.rotation}deg)` }}
+                      />
+                      <span className="text-xs text-gray-300 text-center leading-tight">
+                        Page {page.pageNumber}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  /* Mobile: vertical stack, centered */
+                  <div className="flex flex-col items-center gap-1.5">
+                    <img
+                      src={page.thumbnail}
+                      alt={`Page ${page.pageNumber}`}
+                      className="w-16 h-20 object-cover rounded bg-white pointer-events-none"
+                      style={{ transform: `rotate(${page.rotation}deg)` }}
+                    />
+                    <span className="text-xs text-gray-300 text-center leading-tight">
+                      Page {page.pageNumber}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -150,7 +166,7 @@ export function PDFViewer({
             <div className="text-center">
               <Upload className="w-16 h-16 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400 mb-2">Upload a PDF to start editing</p>
-              <p className="text-xs text-gray-500 mb-4">Max file size: 20MB • Max pages: 100</p>
+              <p className="text-xs text-gray-500 mb-4">Max file size: 20MB - Max pages: 100</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:from-cyan-600 hover:to-blue-600 transition"

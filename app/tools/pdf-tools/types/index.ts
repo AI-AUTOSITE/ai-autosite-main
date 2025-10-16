@@ -8,6 +8,8 @@ export interface Tool {
   action: () => void // 追加（ツールの実行関数）
   description?: string // オプショナルに変更
   color?: string // オプショナルに変更
+  mobileDisabled?: boolean // モバイルで無効化（重い処理用）
+  pageLimit?: number // モバイルでのページ数制限
 }
 
 export interface PageData {

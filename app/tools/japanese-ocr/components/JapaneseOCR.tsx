@@ -335,41 +335,44 @@ export default function JapaneseOCR() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-6xl">
       {/* Mode Selector */}
-      <div className="flex justify-center mb-6">
-        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1 inline-flex">
+      <div className="flex justify-center mb-4 sm:mb-6">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1 inline-flex w-full sm:w-auto">
           <button
             onClick={() => setMode('ocr')}
-            className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
+            className={`flex-1 sm:flex-initial px-4 sm:px-6 py-3 min-h-[48px] rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
               mode === 'ocr'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'text-gray-300 hover:text-white'
             }`}
           >
             <Scan className="w-5 h-5" />
-            Image OCR
+            <span className="text-sm sm:text-base">Image OCR</span>
           </button>
           <button
             onClick={() => setMode('text')}
-            className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
+            className={`flex-1 sm:flex-initial px-4 sm:px-6 py-3 min-h-[48px] rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${
               mode === 'text'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'text-gray-300 hover:text-white'
             }`}
           >
             <Type className="w-5 h-5" />
-            Text Translation
+            <span className="text-sm sm:text-base">Text</span>
           </button>
         </div>
       </div>
+
       {/* Translation Mode Selector */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 mb-6">
-        <label className="text-white font-medium mb-3 block">Translation Mode</label>
-        <div className="grid grid-cols-3 gap-3">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 mb-4 sm:mb-6">
+        <label className="text-white font-medium mb-3 block text-sm sm:text-base">
+          Translation Mode
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
             onClick={() => setTranslationDirection('auto')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 min-h-[48px] rounded-lg font-medium transition-all text-sm sm:text-base ${
               translationDirection === 'auto'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'bg-white/10 text-gray-300 hover:bg-white/20'
@@ -379,23 +382,25 @@ export default function JapaneseOCR() {
           </button>
           <button
             onClick={() => setTranslationDirection('ja-en')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 min-h-[48px] rounded-lg font-medium transition-all text-sm sm:text-base ${
               translationDirection === 'ja-en'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'bg-white/10 text-gray-300 hover:bg-white/20'
             }`}
           >
-            Japanese → English
+            <span className="hidden sm:inline">Japanese → English</span>
+            <span className="sm:hidden">JA → EN</span>
           </button>
           <button
             onClick={() => setTranslationDirection('en-ja')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`px-4 py-3 min-h-[48px] rounded-lg font-medium transition-all text-sm sm:text-base ${
               translationDirection === 'en-ja'
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
                 : 'bg-white/10 text-gray-300 hover:bg-white/20'
             }`}
           >
-            English → Japanese
+            <span className="hidden sm:inline">English → Japanese</span>
+            <span className="sm:hidden">EN → JA</span>
           </button>
         </div>
 
@@ -403,21 +408,30 @@ export default function JapaneseOCR() {
         {mode === 'ocr' && ocrResult && !isTranslating && (
           <button
             onClick={retranslateOCR}
-            className="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 flex items-center gap-2 mx-auto"
+            className="mt-3 w-full sm:w-auto px-4 py-3 min-h-[48px] bg-purple-500 text-white rounded-lg hover:bg-purple-600 flex items-center justify-center gap-2 mx-auto text-sm sm:text-base"
           >
             <ArrowLeftRight className="w-4 h-4" />
-            Retranslate with Selected Mode
+            Retranslate
           </button>
         )}
       </div>
 
+      {/* Mobile Warning for OCR mode */}
+      {mode === 'ocr' && !imageData && (
+        <div className="sm:hidden bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-4">
+          <p className="text-yellow-300 text-xs text-center">
+            Recommended: Images under 3MB for faster processing on mobile
+          </p>
+        </div>
+      )}
+
       {/* Main Content Area */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/20">
         {mode === 'ocr' ? (
           // OCR Mode
           !imageData ? (
             <div
-              className={`border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer
+              className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center transition-all cursor-pointer
                 ${isDragging ? 'border-cyan-400 bg-cyan-400/10' : 'border-gray-400 hover:border-gray-300'}`}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -431,25 +445,27 @@ export default function JapaneseOCR() {
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Drop image here or click to upload
+              <Upload className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
+                Drop image or tap to upload
               </h3>
-              <p className="text-gray-400">Supports JPG, PNG, WEBP • Max 10MB</p>
+              <p className="text-gray-400 text-sm sm:text-base">
+                JPG, PNG, WEBP • Max 10MB
+              </p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div className="relative">
                 <img
                   src={imageData}
                   alt="Uploaded"
-                  className="w-full max-h-96 object-contain rounded-lg"
+                  className="w-full max-h-64 sm:max-h-96 object-contain rounded-lg"
                 />
                 {isProcessing && (
                   <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
                     <div className="text-center">
-                      <Loader2 className="w-12 h-12 animate-spin text-white mb-2" />
-                      <p className="text-white">Processing OCR...</p>
+                      <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-white mb-2" />
+                      <p className="text-white text-sm sm:text-base">Processing OCR...</p>
                     </div>
                   </div>
                 )}
@@ -467,14 +483,14 @@ export default function JapaneseOCR() {
               )}
 
               {error && (
-                <div className="bg-red-500/20 border border-red-500 rounded-lg p-4">
-                  <p className="text-red-400">{error}</p>
+                <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 sm:p-4">
+                  <p className="text-red-400 text-sm sm:text-base">{error}</p>
                 </div>
               )}
 
               <button
                 onClick={resetOCR}
-                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 min-h-[48px] bg-gray-700 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <RefreshCw className="w-4 h-4" />
                 Process New Image
@@ -483,21 +499,21 @@ export default function JapaneseOCR() {
           )
         ) : (
           // Text Translation Mode
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Input Text Area */}
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="text-white font-medium">Input Text</label>
+                <label className="text-white font-medium text-sm sm:text-base">Input Text</label>
                 <button
                   onClick={() => copyToClipboard(inputText, 'input')}
-                  className="p-2 hover:bg-white/10 rounded transition-colors"
+                  className="p-2 min-w-[44px] min-h-[44px] hover:bg-white/10 rounded transition-colors flex items-center justify-center"
                   title="Copy input text"
                   disabled={!inputText}
                 >
                   {copiedInput ? (
-                    <CheckCircle className="w-4 h-4 text-green-400" />
+                    <CheckCircle className="w-5 h-5 text-green-400" />
                   ) : (
-                    <Copy className="w-4 h-4 text-gray-400" />
+                    <Copy className="w-5 h-5 text-gray-400" />
                   )}
                 </button>
               </div>
@@ -505,12 +521,14 @@ export default function JapaneseOCR() {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Paste or type your text here... (Japanese or English)"
-                className="w-full h-40 p-4 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 resize-none"
+                className="w-full h-32 sm:h-40 p-3 sm:p-4 bg-black/30 border border-white/20 rounded-lg text-white placeholder-gray-400 resize-none text-sm sm:text-base"
               />
               <div className="flex justify-between items-center mt-2">
-                <span className="text-sm text-gray-400">{inputText.length} characters</span>
+                <span className="text-xs sm:text-sm text-gray-400">
+                  {inputText.length} characters
+                </span>
                 {detectedLang !== 'unknown' && (
-                  <span className="text-sm text-purple-400">
+                  <span className="text-xs sm:text-sm text-purple-400">
                     Detected: {detectedLang === 'japanese' ? 'Japanese' : 'English'}
                   </span>
                 )}
@@ -522,11 +540,12 @@ export default function JapaneseOCR() {
               <div className="flex justify-center -my-2">
                 <button
                   onClick={swapAndRetranslate}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 flex items-center gap-2 shadow-lg transform hover:scale-105 transition-all"
+                  className="px-4 sm:px-6 py-3 min-h-[48px] bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 flex items-center gap-2 shadow-lg transform hover:scale-105 transition-all text-sm sm:text-base"
                   title="Swap input/output and retranslate"
                 >
                   <ArrowLeftRight className="w-5 h-5" />
-                  Swap & Retranslate
+                  <span className="hidden sm:inline">Swap & Retranslate</span>
+                  <span className="sm:hidden">Swap</span>
                 </button>
               </div>
             )}
@@ -535,14 +554,14 @@ export default function JapaneseOCR() {
             <button
               onClick={handleTextTranslation}
               disabled={!inputText.trim() || isTranslating}
-              className="w-full px-4 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 min-h-[48px] bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
             >
               {isTranslating ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Translating...
+                  <span>Translating...</span>
                   {translationProgress && (
-                    <span className="text-sm">
+                    <span className="text-xs sm:text-sm">
                       ({translationProgress.current}/{translationProgress.total})
                     </span>
                   )}
@@ -559,33 +578,34 @@ export default function JapaneseOCR() {
             {translatedText && (
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-white font-medium">Translation</label>
+                  <label className="text-white font-medium text-sm sm:text-base">
+                    Translation
+                  </label>
                   <div className="flex gap-2">
                     <button
                       onClick={() => swapAndRetranslate()}
-                      className="p-2 hover:bg-white/10 rounded transition-colors group relative"
+                      className="p-2 min-w-[44px] min-h-[44px] hover:bg-white/10 rounded transition-colors group relative flex items-center justify-center"
                       title="Swap and retranslate"
                     >
-                      <ArrowLeftRight className="w-4 h-4 text-purple-400 group-hover:text-purple-300" />
-                      <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs bg-black/80 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        Swap & Retranslate
-                      </span>
+                      <ArrowLeftRight className="w-5 h-5 text-purple-400 group-hover:text-purple-300" />
                     </button>
                     <button
                       onClick={() => copyToClipboard(translatedText, 'translation')}
-                      className="p-2 hover:bg-white/10 rounded transition-colors"
+                      className="p-2 min-w-[44px] min-h-[44px] hover:bg-white/10 rounded transition-colors flex items-center justify-center"
                       title="Copy translation"
                     >
                       {copiedTranslation ? (
-                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <CheckCircle className="w-5 h-5 text-green-400" />
                       ) : (
-                        <Copy className="w-4 h-4 text-gray-400" />
+                        <Copy className="w-5 h-5 text-gray-400" />
                       )}
                     </button>
                   </div>
                 </div>
-                <div className="p-4 bg-black/30 border border-white/20 rounded-lg">
-                  <p className="text-white whitespace-pre-wrap">{translatedText}</p>
+                <div className="p-3 sm:p-4 bg-black/30 border border-white/20 rounded-lg">
+                  <p className="text-white whitespace-pre-wrap text-sm sm:text-base">
+                    {translatedText}
+                  </p>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">Powered by Translation API</p>
               </div>
@@ -593,8 +613,8 @@ export default function JapaneseOCR() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-500/20 border border-red-500 rounded-lg p-4">
-                <p className="text-red-400">{error}</p>
+              <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 sm:p-4">
+                <p className="text-red-400 text-sm sm:text-base">{error}</p>
               </div>
             )}
 
@@ -602,7 +622,7 @@ export default function JapaneseOCR() {
             {(inputText || translatedText) && (
               <button
                 onClick={clearTextTranslation}
-                className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 min-h-[48px] bg-gray-700 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <RefreshCw className="w-4 h-4" />
                 Clear

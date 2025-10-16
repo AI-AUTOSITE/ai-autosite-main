@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import {
   MAX_FILE_SIZE,
   ERROR_MESSAGES,
@@ -8,16 +8,7 @@ import {
   LONG_ERROR_DISPLAY_DURATION,
   ACCEPTED_FILE_TYPE,
   API_ENDPOINT,
-  HISTORY_CONFIG,
 } from '../constants'
-
-interface HistoryEntry {
-  id: string
-  fileName: string
-  date: string
-  customFields?: string
-  success: boolean
-}
 
 interface UsePdfProcessorReturn {
   file: File | null
@@ -29,14 +20,11 @@ interface UsePdfProcessorReturn {
   isProcessing: boolean
   showPreview: boolean
   showCustomFields: boolean
-  showHistory: boolean
   customFields: string
-  history: HistoryEntry[]
   fileInputRef: React.RefObject<HTMLInputElement>
   setIsDragging: (value: boolean) => void
   setShowPreview: (value: boolean) => void
   setShowCustomFields: (value: boolean) => void
-  setShowHistory: (value: boolean) => void
   setCustomFields: (value: string) => void
   handleDrop: (e: React.DragEvent) => Promise<void>
   handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>
@@ -55,37 +43,8 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   const [isProcessing, setIsProcessing] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const [showCustomFields, setShowCustomFields] = useState(false)
-  const [showHistory, setShowHistory] = useState(false)
   const [customFields, setCustomFields] = useState<string>('')
-  const [history, setHistory] = useState<HistoryEntry[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  // Load history from localStorage
-  useEffect(() => {
-    const savedHistory = localStorage.getItem(HISTORY_CONFIG.STORAGE_KEY)
-    if (savedHistory) {
-      try {
-        setHistory(JSON.parse(savedHistory))
-      } catch (error) {
-        console.error('Failed to load history:', error)
-      }
-    }
-  }, [])
-
-  // Save to history
-  const saveToHistory = (fileName: string, success: boolean) => {
-    const newEntry: HistoryEntry = {
-      id: Date.now().toString(),
-      fileName,
-      date: new Date().toISOString(),
-      customFields: customFields || undefined,
-      success,
-    }
-
-    const updatedHistory = [newEntry, ...history].slice(0, HISTORY_CONFIG.MAX_ENTRIES)
-    setHistory(updatedHistory)
-    localStorage.setItem(HISTORY_CONFIG.STORAGE_KEY, JSON.stringify(updatedHistory))
-  }
 
   const processFile = async (pdfFile: File) => {
     if (pdfFile.size > MAX_FILE_SIZE) {
@@ -119,9 +78,6 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
         const previewText = await csvBlob.text()
         setCsvPreview(previewText)
         setShowPreview(true) // Auto-show preview
-
-        // Save to history as success
-        saveToHistory(pdfFile.name, true)
       }
 
       if (excelBlob) {
@@ -132,9 +88,6 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
       if (!csvBlob && !excelBlob) {
         setError(ERROR_MESSAGES.EXTRACTION_FAILED)
         setTimeout(() => setError(''), LONG_ERROR_DISPLAY_DURATION)
-
-        // Save to history as failure
-        saveToHistory(pdfFile.name, false)
       }
     } catch (err) {
       setError(ERROR_MESSAGES.GENERAL_ERROR)
@@ -234,14 +187,11 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
     isProcessing,
     showPreview,
     showCustomFields,
-    showHistory,
     customFields,
-    history,
     fileInputRef,
     setIsDragging,
     setShowPreview,
     setShowCustomFields,
-    setShowHistory,
     setCustomFields,
     handleDrop,
     handleFileSelect,

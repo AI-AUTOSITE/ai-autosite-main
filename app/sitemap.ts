@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'password-generator',
     'pc-optimizer',
     'pdf-summarizer',
+    'pdf-test-generator', 
     'pdf-to-data',
     'pdf-tools',
     'percentage-calculator',
@@ -42,8 +43,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'stack-recommender',
     'tech-stack-analyzer',
     'test-file-generator',
-    'test-image-generator',  // ← 新規追加
-    'test-text-generator',   // ← 新規追加
+    'test-image-generator',
+    'test-text-generator',
     'text-case',
     'text-counter',
     'token-compressor',
@@ -88,13 +89,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'password-security-guide',
     'pc-optimizer-guide',
     'pdf-summarizer-guide',
+    "pdf-test-generator-guide",
     'pdf-tools-guide',
     'percentage-calculator-guide',
     'privacy-in-development',
     'qr-code-guide',
     'test-file-generator-guide',
-    'test-image-generator-guide',  // ← 新規追加
-    'test-text-generator-guide',   // ← 新規追加
+    'test-image-generator-guide',
+    'test-text-generator-guide',
     'text-case-converter',
     'text-counter-guide',
     'token-compressor-guide',
@@ -105,7 +107,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'youtube-thumbnail-guide'
   ]
 
-  // 高優先度ツール
   const highPriorityTools = [
     'ai-dev-dictionary',
     'ai-project-visualizer',

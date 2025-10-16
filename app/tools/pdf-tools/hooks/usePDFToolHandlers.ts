@@ -8,10 +8,11 @@ import { PageNumberHandler } from '../features/pageNumber/PageNumberHandler'
 import { BlankPageHandler } from '../features/blankPage/BlankPageHandler'
 import { DuplicateHandler } from '../features/duplicate/DuplicateHandler'
 import { OCRHandler } from '../features/ocr/OCRHandler'
-import { PasswordHandler } from '../features/password/PasswordHandler'
 import { WatermarkHandler } from '../features/watermark/WatermarkHandler'
 import { SignatureHandler } from '../features/signature/SignatureHandler'
 import { ConvertHandler } from '../features/convert/ConvertHandler'
+import { AnnotateHandler } from '../features/annotate/AnnotateHandler'
+import type { AnnotationOptions } from '../features/annotate/AnnotateHandler'
 
 interface UsePDFToolHandlersProps {
   file: File | null
@@ -27,11 +28,32 @@ interface UsePDFToolHandlersProps {
 
 // Helper function to convert Uint8Array to Blob safely
 function uint8ArrayToBlob(uint8Array: Uint8Array, mimeType: string = 'application/pdf'): Blob {
-  // Method 1: Create a new ArrayBuffer and copy data to ensure compatibility
   const newBuffer = new ArrayBuffer(uint8Array.length)
   const view = new Uint8Array(newBuffer)
   view.set(uint8Array)
   return new Blob([newBuffer], { type: mimeType })
+}
+
+// Mobile detection helper
+const isMobileDevice = () => {
+  return typeof window !== 'undefined' && window.innerWidth < 768
+}
+
+// Tool names mapping (English)
+const TOOL_NAMES: { [key: string]: string } = {
+  annotate: 'Annotate',
+  watermark: 'Watermark',
+  signature: 'Signature',
+  convert: 'Convert',
+}
+
+// Confirm dialog state
+interface ConfirmDialogState {
+  isOpen: boolean
+  title: string
+  message: string
+  onConfirm: () => void
+  pendingTool: string | null
 }
 
 export function usePDFToolHandlers({
@@ -45,13 +67,111 @@ export function usePDFToolHandlers({
   handleProcessComplete,
   keepSelection = false,
 }: UsePDFToolHandlersProps) {
-  const [showPasswordUI, setShowPasswordUI] = useState(false)
   const [showWatermarkUI, setShowWatermarkUI] = useState(false)
   const [showSignatureUI, setShowSignatureUI] = useState(false)
   const [showConvertUI, setShowConvertUI] = useState(false)
-  const [isPasswordProtected, setIsPasswordProtected] = useState(false)
+  const [showAnnotateUI, setShowAnnotateUI] = useState(false)
+  
+  // Track currently active tool UI
+  const [activeToolUI, setActiveToolUI] = useState<string | null>(null)
+  
+  // Custom confirm dialog state
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    pendingTool: null,
+  })
+  
   const KEEP_SELECTION_ACTIONS = new Set(['rotate', 'duplicate'])
   const CLEAR_SELECTION_ACTIONS = new Set(['delete', 'split', 'extract'])
+
+  // Page limit for mobile conversion
+  const MOBILE_CONVERT_PAGE_LIMIT = 10
+
+  // Close all tool UIs
+  const closeAllToolUIs = () => {
+    setShowAnnotateUI(false)
+    setShowWatermarkUI(false)
+    setShowSignatureUI(false)
+    setShowConvertUI(false)
+    setActiveToolUI(null)
+  }
+
+  // Show custom confirm dialog
+  const showConfirmDialog = (
+    title: string,
+    message: string,
+    onConfirm: () => void
+  ): Promise<boolean> => {
+    return new Promise((resolve) => {
+      setConfirmDialog({
+        isOpen: true,
+        title,
+        message,
+        onConfirm: () => {
+          onConfirm()
+          setConfirmDialog((prev) => ({ ...prev, isOpen: false }))
+          resolve(true)
+        },
+        pendingTool: null,
+      })
+    })
+  }
+
+  // Cancel confirm dialog
+  const handleConfirmCancel = () => {
+    setConfirmDialog((prev) => ({ ...prev, isOpen: false, pendingTool: null }))
+  }
+
+  // Check and open tool with custom dialog
+  const checkAndOpenTool = (newTool: string): boolean => {
+    // If the same tool is already open, continue
+    if (activeToolUI === newTool) {
+      return true
+    }
+
+    // If another tool is open, show warning
+    if (activeToolUI && activeToolUI !== newTool) {
+      const currentToolName = TOOL_NAMES[activeToolUI] || activeToolUI
+      const newToolName = TOOL_NAMES[newTool] || newTool
+      
+      setConfirmDialog({
+        isOpen: true,
+        title: 'Unsaved Changes',
+        message: `You are currently editing with "${currentToolName}".\n\nOpening "${newToolName}" will discard your current changes.\n\nDo you want to continue?`,
+        onConfirm: () => {
+          closeAllToolUIs()
+          setActiveToolUI(newTool)
+          setConfirmDialog((prev) => ({ ...prev, isOpen: false }))
+          
+          // Open tool UI
+          switch (newTool) {
+            case 'annotate':
+              setShowAnnotateUI(true)
+              break
+            case 'watermark':
+              setShowWatermarkUI(true)
+              break
+            case 'signature':
+              setShowSignatureUI(true)
+              break
+            case 'convert':
+              setShowConvertUI(true)
+              break
+          }
+        },
+        pendingTool: newTool,
+      })
+      
+      return false
+    }
+    
+    // Set new tool as active
+    setActiveToolUI(newTool)
+    return true
+  }
 
   // Rotate Handler
   const handleRotateSelected = async () => {
@@ -101,7 +221,6 @@ export function usePDFToolHandlers({
       downloadPDF(extractedPdf, `extracted_${file.name}`)
       handleProcessComplete(uint8ArrayToBlob(extractedPdf))
 
-      // 抽出後は設定に応じて選択をクリア
       if (!keepSelection) {
         clearSelection()
       }
@@ -135,7 +254,6 @@ export function usePDFToolHandlers({
             downloadPDF(mergedPdf, `merged_${file.name}`)
             handleProcessComplete(uint8ArrayToBlob(mergedPdf))
 
-            // マージ後は設定に応じて選択をクリア
             if (!keepSelection) {
               clearSelection()
             }
@@ -168,7 +286,6 @@ export function usePDFToolHandlers({
       downloadPDF(compressedPdf, `compressed_${file.name}`)
       handleProcessComplete(uint8ArrayToBlob(compressedPdf))
 
-      // 圧縮後は設定に応じて選択をクリア
       if (!keepSelection) {
         clearSelection()
       }
@@ -198,7 +315,6 @@ export function usePDFToolHandlers({
       downloadPDF(pdfWithNumbers, `numbered_${file.name}`)
       handleProcessComplete(uint8ArrayToBlob(pdfWithNumbers))
 
-      // ページ番号追加後は設定に応じて選択をクリア
       if (!keepSelection) {
         clearSelection()
       }
@@ -228,7 +344,6 @@ export function usePDFToolHandlers({
       const newPages = BlankPageHandler.insertBlankPagesInMemory(pages, [insertAfter])
       updatePages(newPages)
 
-      // 挿入後は設定に応じて選択をクリア
       if (!keepSelection) {
         clearSelection()
       }
@@ -245,55 +360,55 @@ export function usePDFToolHandlers({
     const newPages = DuplicateHandler.duplicatePagesInMemory(pages, selectedPages, true)
     updatePages(newPages)
 
-    // 複製後は選択を維持（設定に応じて）
     if (!keepSelection && !KEEP_SELECTION_ACTIONS.has('duplicate')) {
       clearSelection()
     }
   }
 
-  // Password Handler
-  const handlePassword = async () => {
+  // Annotate Handler
+  const handleAnnotate = async () => {
     if (!file) {
       alert('Please upload a PDF file first')
       return
     }
-    setShowPasswordUI(true)
-  }
-
-  const handleAddPassword = async (options: any) => {
-    if (!file) return
-
-    setIsProcessing(true)
-    try {
-      const protectedPdf = await PasswordHandler.addPassword(file, options)
-      downloadPDF(protectedPdf, `protected_${file.name}`)
-      // Convert Uint8Array to Blob properly
-      handleProcessComplete(uint8ArrayToBlob(protectedPdf))
-      alert('Password protection added successfully!')
-      setShowPasswordUI(false)
-    } catch (error) {
-      console.error('Password protection error:', error)
-      alert('Failed to add password protection')
-    } finally {
-      setIsProcessing(false)
+    
+    if (!checkAndOpenTool('annotate')) {
+      return
     }
+    
+    setShowAnnotateUI(true)
   }
 
-  const handleRemovePassword = async (password: string) => {
+  const handleApplyAnnotation = async (options: AnnotationOptions) => {
     if (!file) return
+
+    // Validate options
+    const validationError = AnnotateHandler.validateOptions(options)
+    if (validationError) {
+      alert(validationError)
+      return
+    }
 
     setIsProcessing(true)
     try {
-      const unprotectedPdf = await PasswordHandler.removePassword(file, password)
-      downloadPDF(unprotectedPdf, `unlocked_${file.name}`)
-      // Convert Uint8Array to Blob properly
-      handleProcessComplete(uint8ArrayToBlob(unprotectedPdf))
-      alert('Password protection removed successfully!')
-      setShowPasswordUI(false)
-      setIsPasswordProtected(false)
+      const fileBuffer = await file.arrayBuffer()
+      
+      // Call AnnotateHandler with proper options
+      const annotatedPdf = await AnnotateHandler.addAnnotations(fileBuffer, options)
+      
+      downloadPDF(annotatedPdf, `annotated_${file.name}`)
+      handleProcessComplete(uint8ArrayToBlob(annotatedPdf))
+      alert('Annotation added successfully!')
+      
+      setShowAnnotateUI(false)
+      setActiveToolUI(null)
+      
+      if (!keepSelection) {
+        clearSelection()
+      }
     } catch (error) {
-      console.error('Password removal error:', error)
-      alert('Failed to remove password. Please check the password and try again.')
+      console.error('Annotate error:', error)
+      alert(`Failed to add annotation: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsProcessing(false)
     }
@@ -305,6 +420,11 @@ export function usePDFToolHandlers({
       alert('Please upload a PDF file first')
       return
     }
+    
+    if (!checkAndOpenTool('watermark')) {
+      return
+    }
+    
     setShowWatermarkUI(true)
   }
 
@@ -316,8 +436,9 @@ export function usePDFToolHandlers({
       const watermarkedPdf = await WatermarkHandler.addWatermark(file, options)
       downloadPDF(watermarkedPdf, `watermarked_${file.name}`)
       alert('Watermark added successfully!')
+      
       setShowWatermarkUI(false)
-      // Convert Uint8Array to Blob properly
+      setActiveToolUI(null)
       handleProcessComplete(uint8ArrayToBlob(watermarkedPdf))
     } catch (error) {
       console.error('Watermark error:', error)
@@ -333,6 +454,11 @@ export function usePDFToolHandlers({
       alert('Please upload a PDF file first')
       return
     }
+    
+    if (!checkAndOpenTool('signature')) {
+      return
+    }
+    
     setShowSignatureUI(true)
   }
 
@@ -353,9 +479,10 @@ export function usePDFToolHandlers({
         alert('Stamp added successfully!')
       }
 
-      // Convert Uint8Array to Blob properly
       handleProcessComplete(uint8ArrayToBlob(result!))
+      
       setShowSignatureUI(false)
+      setActiveToolUI(null)
     } catch (error) {
       console.error('Signature/Stamp error:', error)
       alert('Failed to add signature or stamp')
@@ -370,6 +497,21 @@ export function usePDFToolHandlers({
       alert('Please upload a PDF file first')
       return
     }
+
+    // Check page limit on mobile
+    if (isMobileDevice() && pages.length > MOBILE_CONVERT_PAGE_LIMIT) {
+      alert(
+        `Mobile devices can convert up to ${MOBILE_CONVERT_PAGE_LIMIT} pages.\n\n` +
+        `Your PDF has ${pages.length} pages. Please use a desktop for larger files, ` +
+        `or split your PDF into smaller parts.`
+      )
+      return
+    }
+
+    if (!checkAndOpenTool('convert')) {
+      return
+    }
+
     setShowConvertUI(true)
   }
 
@@ -378,11 +520,34 @@ export function usePDFToolHandlers({
       alert('Please upload a PDF file first')
       return
     }
+
+    // Check page limit on mobile
+    if (isMobileDevice() && pages.length > MOBILE_CONVERT_PAGE_LIMIT) {
+      alert(
+        `Mobile devices can convert up to ${MOBILE_CONVERT_PAGE_LIMIT} pages.\n\n` +
+        `Your PDF has ${pages.length} pages. Please use a desktop for larger files, ` +
+        `or split your PDF into smaller parts.`
+      )
+      return
+    }
+
+    if (!checkAndOpenTool('convert')) {
+      return
+    }
+
     setShowConvertUI(true)
   }
 
   const handleConvert = async (format: string, options: any) => {
     if (!file) return
+
+    // Double-check page limit before processing
+    if (isMobileDevice() && pages.length > MOBILE_CONVERT_PAGE_LIMIT) {
+      alert(`Mobile conversion limited to ${MOBILE_CONVERT_PAGE_LIMIT} pages`)
+      setShowConvertUI(false)
+      setActiveToolUI(null)
+      return
+    }
 
     setIsProcessing(true)
     try {
@@ -421,7 +586,9 @@ export function usePDFToolHandlers({
 
       handleProcessComplete(result)
       alert(`Successfully converted to ${format.toUpperCase()}!`)
+      
       setShowConvertUI(false)
+      setActiveToolUI(null)
     } catch (error) {
       console.error('Conversion error:', error)
       alert(`Failed to convert to ${format}. Please try again.`)
@@ -434,6 +601,15 @@ export function usePDFToolHandlers({
   const handleOCR = async () => {
     if (!file) {
       alert('Please upload a PDF file first')
+      return
+    }
+
+    // Disable OCR on mobile devices
+    if (isMobileDevice()) {
+      alert(
+        'OCR is not available on mobile devices due to high memory requirements.\n\n' +
+        'Please use a desktop computer for OCR functionality.'
+      )
       return
     }
 
@@ -483,7 +659,6 @@ export function usePDFToolHandlers({
         )
 
         downloadPDF(searchablePdf, `searchable_${file.name}`)
-        // Convert Uint8Array to Blob properly
         handleProcessComplete(uint8ArrayToBlob(searchablePdf))
         alert('Searchable PDF created successfully!')
       } else {
@@ -522,16 +697,22 @@ export function usePDFToolHandlers({
 
   return {
     // UI States
-    showPasswordUI,
-    setShowPasswordUI,
     showWatermarkUI,
     setShowWatermarkUI,
     showSignatureUI,
     setShowSignatureUI,
     showConvertUI,
     setShowConvertUI,
-    isPasswordProtected,
-    setIsPasswordProtected,
+    showAnnotateUI,
+    setShowAnnotateUI,
+    
+    // Helper functions
+    closeAllToolUIs,
+    activeToolUI,
+    
+    // Confirm dialog
+    confirmDialog,
+    handleConfirmCancel,
 
     // Tool Handlers
     handleRotateSelected,
@@ -542,9 +723,6 @@ export function usePDFToolHandlers({
     handleAddPageNumbers,
     handleInsertBlankPage,
     handleDuplicatePages,
-    handlePassword,
-    handleAddPassword,
-    handleRemovePassword,
     handleWatermark,
     handleApplyWatermark,
     handleSignature,
@@ -553,5 +731,7 @@ export function usePDFToolHandlers({
     handleToExcel,
     handleConvert,
     handleOCR,
+    handleAnnotate,
+    handleApplyAnnotation,
   }
 }

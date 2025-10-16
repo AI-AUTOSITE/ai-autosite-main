@@ -16,6 +16,7 @@ export const studyTools: Tool[] = [
     timeToUse: '2 minutes',
     featured: true,
     new: true,
+    badge: 'AI',
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'hybrid',

@@ -17,44 +17,44 @@ export const TIME_UNITS = {
 } as const
 
 export const ERROR_MESSAGES = {
-  PARSE_ERROR: 'Failed to parse CSV file. Please check the file format.',
-  ANALYSIS_ERROR: 'An error occurred during analysis. Please try again.',
-  INVALID_DATA: 'Invalid data format detected in the CSV file.',
-  NO_DATA_FOUND: 'No software data found in the uploaded file',
-  FILE_TOO_LARGE: 'File size must be under 10MB',
-  INVALID_FILE_TYPE: 'Only CSV files are supported',
-  FILE_READ_ERROR: 'Failed to read file',
-  UNEXPECTED_ERROR: 'An unexpected error occurred while analyzing the file',
+  PARSE_ERROR: 'Cannot read CSV file. Check format.',
+  ANALYSIS_ERROR: 'Analysis failed. Try again.',
+  INVALID_DATA: 'Invalid CSV format.',
+  NO_DATA_FOUND: 'No data found in file',
+  FILE_TOO_LARGE: 'File too large (max 10MB)',
+  INVALID_FILE_TYPE: 'CSV files only',
+  FILE_READ_ERROR: 'Cannot read file',
+  UNEXPECTED_ERROR: 'Error occurred. Try again.',
 } as const
 
 export const UI_MESSAGES = {
   UPLOAD: {
     TITLE: 'Upload File',
-    DROP_TEXT: 'Drop CSV file here',
-    CLICK_TEXT: 'or click to select file',
-    ANALYZING: 'Analyzing file...',
-    PRIVACY_NOTE: 'Uploaded files are automatically deleted after analysis',
-    NO_PERSONAL_INFO: 'No personal information or file contents are saved',
+    DROP_TEXT: 'Drop CSV here',
+    CLICK_TEXT: 'or tap to select',
+    ANALYZING: 'Analyzing...',
+    PRIVACY_NOTE: 'Files deleted after analysis',
+    NO_PERSONAL_INFO: 'No data saved',
   },
   ANALYSIS: {
-    SUMMARY_TITLE: 'Analysis Summary',
+    SUMMARY_TITLE: 'Summary',
     TOTAL_SIZE: 'Total Size',
-    CACHE_EST: 'Cache (Est.)',
+    CACHE_EST: 'Cache',
     REMOVABLE: 'Removable',
-    TOTAL_APPS: 'Total Apps',
-    OPTIMIZATION_TITLE: 'Optimization Recommendations',
+    TOTAL_APPS: 'Apps',
+    OPTIMIZATION_TITLE: 'Save Space',
     DETAILS_TITLE: 'Details',
-    OPTIMIZATION_TIPS: 'Optimization Tips',
+    OPTIMIZATION_TIPS: 'Tips',
   },
   GUIDE: {
-    TITLE: 'How to Collect File Data',
-    SECURITY_TITLE: 'About Security',
-    SECURITY_DESC: 'This script only collects file metadata (name, size, date).',
-    SECURITY_NOTE: 'No executable content or personal information is included.',
-    STEPS_TITLE: 'Steps to Run',
-    PROCESSING_TIME: 'Processing Time:',
+    TITLE: 'How to Get Data',
+    SECURITY_TITLE: 'Security',
+    SECURITY_DESC: 'Only file info collected (name, size, date).',
+    SECURITY_NOTE: 'No personal data included.',
+    STEPS_TITLE: 'Steps',
+    PROCESSING_TIME: 'Time:',
     PROCESSING_NOTE:
-      'May take 1-5 minutes depending on the number of files. Wait for "File created" message to appear.',
+      '1-5 minutes. Wait for completion.',
   },
 } as const
 
@@ -62,15 +62,15 @@ export const PRIORITY_CONFIG = {
   critical: {
     color: 'bg-red-500/20 text-red-400 border-red-500/30',
     label: 'System Critical',
-    warning: 'This software is required for system operation. Do not remove.',
+    warning: 'Required for Windows. Do not remove.',
   },
   high: {
     color: 'bg-green-500/20 text-green-400 border-green-500/30',
-    label: 'Frequently Used',
+    label: 'Used Often',
   },
   medium: {
     color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    label: 'Occasionally Used',
+    label: 'Sometimes Used',
   },
   low: {
     color: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
@@ -78,10 +78,10 @@ export const PRIORITY_CONFIG = {
   },
   removable: {
     color: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-    label: 'Safe to Remove',
+    label: 'Can Remove',
     warning:
-      "This software hasn't been used for over 3 months. Consider uninstalling to free up space.",
-    uninstallGuide: 'To uninstall: Settings → Apps → Apps & features → {name} → Uninstall',
+      'Not used for 3+ months. Safe to uninstall.',
+    uninstallGuide: 'Uninstall: Settings - Apps - {name} - Uninstall',
   },
 } as const
 
@@ -90,8 +90,8 @@ export const CATEGORY_CONFIG = {
   gaming: { name: 'Gaming', iconClass: 'Gamepad2' },
   productivity: { name: 'Productivity', iconClass: 'Wrench' },
   development: { name: 'Development', iconClass: 'Code' },
-  media: { name: 'Media & Creative', iconClass: 'Image' },
-  communication: { name: 'Communication', iconClass: 'MessageSquare' },
+  media: { name: 'Media', iconClass: 'Image' },
+  communication: { name: 'Chat', iconClass: 'MessageSquare' },
   security: { name: 'Security', iconClass: 'Shield' },
   utility: { name: 'Utility', iconClass: 'Wrench' },
   system: { name: 'System', iconClass: 'Shield' },

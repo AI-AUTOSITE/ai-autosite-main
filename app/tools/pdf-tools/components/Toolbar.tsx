@@ -1,18 +1,17 @@
 import { RefObject } from 'react'
-import { Upload, Download, Printer, Maximize2, Info, HelpCircle, Undo, Redo, X } from 'lucide-react'
-import Link from 'next/link'
+import { Upload, Download, Printer, Maximize2, Undo, Redo, X } from 'lucide-react'
+import { PageData } from '../types'
 
 interface ToolbarProps {
   file: File | null
-  pages: any[]
+  pages: PageData[]
   selectedPages: Set<string>
   isMobile: boolean
-  fileInputRef: RefObject<HTMLInputElement>
+  fileInputRef: React.RefObject<HTMLInputElement>
   handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
   handlePrint: () => void
   handleDownload: () => void
   toggleFullscreen: () => void
-  showLicenseStatus: () => void
   isProcessing: boolean
   handleUndo: () => void
   handleRedo: () => void
@@ -31,7 +30,6 @@ export function Toolbar({
   handlePrint,
   handleDownload,
   toggleFullscreen,
-  showLicenseStatus,
   isProcessing,
   handleUndo,
   handleRedo,
@@ -132,17 +130,8 @@ export function Toolbar({
           )}
         </div>
 
-        {/* Right side - Info and actions */}
+        {/* Right side - Download only */}
         <div className="flex items-center gap-2">
-          {/* Help Link */}
-          <Link
-            href="/tools/pdf-tools/help"
-            className="p-2 text-gray-400 hover:text-gray-300 transition"
-            title="Help"
-          >
-            <HelpCircle className="w-4 h-4" />
-          </Link>
-
           {/* Download Button */}
           {file && (
             <button

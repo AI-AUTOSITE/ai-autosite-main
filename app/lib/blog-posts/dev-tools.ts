@@ -77,6 +77,23 @@ export const devToolsPosts: BlogPost[] = [
     tags: ['testing', 'images', 'compression', 'development'],
     author: 'AI AutoSite Team',
   },
+  {
+  id: 'pdf-test-generator-guide',
+  title: 'PDF Test Generator: Create Test Files Instantly',
+  description: 'Generate test PDFs for validation and testing. Perfect for developers building PDF processing tools.',
+  readTime: '3 min',
+  publishDate: 'October 2025',
+  icon: FileText,
+  featured: false,
+  status: 'published',
+  relatedTool: {
+    name: 'PDF Test Generator',
+    url: '/tools/pdf-test-generator'
+  },
+  lastUpdated: '2025-10',
+  tags: ['testing', 'pdf', 'validation', 'development'],
+  author: 'AI AutoSite Team',
+},
 {
   id: 'test-text-generator-guide',
   title: 'Test Text Generator Guide',

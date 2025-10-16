@@ -19,7 +19,7 @@ export const SUMMARY_CONFIGS: Record<string, SummaryConfig> = {
       'Create a concise bullet-point summary (100-200 words) of the following document. Focus only on the most critical points and main findings.',
     maxTokens: 500,
     maxChars: 10000,
-    description: 'Quick overview of key points',
+    description: 'Key points only',
     estimatedTime: '10-15 sec',
   },
   medium: {
@@ -27,7 +27,7 @@ export const SUMMARY_CONFIGS: Record<string, SummaryConfig> = {
       'Create an executive summary (300-500 words) of the following document. Include main sections, key findings, methodology, and recommendations.',
     maxTokens: 1000,
     maxChars: 15000,
-    description: 'Balanced summary with main details',
+    description: 'Balanced overview',
     estimatedTime: '20-30 sec',
   },
   long: {
@@ -35,7 +35,7 @@ export const SUMMARY_CONFIGS: Record<string, SummaryConfig> = {
       'Create a comprehensive summary (800+ words) of the following document. Include detailed analysis of all sections, findings, methodology, implications, and recommendations.',
     maxTokens: 2000,
     maxChars: 20000,
-    description: 'In-depth analysis and insights',
+    description: 'Detailed analysis',
     estimatedTime: '30-45 sec',
   },
 } as const
@@ -46,72 +46,72 @@ export const ERROR_MESSAGES: Record<
   { title: string; message: string; suggestion?: string }
 > = {
   NO_FILE: {
-    title: 'No file selected',
-    message: 'Please select a PDF file to summarize',
-    suggestion: 'Drag and drop a PDF or click to browse',
+    title: 'No file',
+    message: 'Select a PDF file',
+    suggestion: 'Tap to browse files',
   },
   FILE_TOO_LARGE: {
     title: 'File too large',
-    message: 'File size exceeds 10MB limit',
-    suggestion: 'Try compressing your PDF or use a smaller file',
+    message: 'Max size is 10MB',
+    suggestion: 'Try a smaller file',
   },
   INVALID_FILE_TYPE: {
-    title: 'Invalid file type',
-    message: 'Please upload a valid PDF file',
-    suggestion: 'Only .pdf files are supported',
+    title: 'Wrong file type',
+    message: 'PDF files only',
+    suggestion: 'Choose a .pdf file',
   },
   EMPTY_PDF: {
-    title: 'Empty document',
-    message: 'PDF appears to be empty or contains no readable text',
-    suggestion: 'Make sure your PDF contains text content',
+    title: 'Empty PDF',
+    message: 'No text found',
+    suggestion: 'Use a PDF with text',
   },
   CORRUPTED_PDF: {
-    title: 'Cannot read PDF',
-    message: 'Failed to read PDF file',
-    suggestion: 'File may be corrupted or password-protected. Try another file.',
+    title: 'Cannot read',
+    message: 'PDF is corrupted',
+    suggestion: 'Try another file',
   },
   EXTRACTION_FAILED: {
-    title: 'Extraction failed',
-    message: 'Failed to extract text from PDF',
-    suggestion: 'Please try again or use a different PDF',
+    title: 'Failed',
+    message: 'Cannot extract text',
+    suggestion: 'Try again',
   },
   API_ERROR: {
     title: 'Service error',
-    message: 'Service temporarily unavailable',
-    suggestion: 'Please try again in a few moments',
+    message: 'Try again later',
+    suggestion: 'Wait a moment',
   },
   RATE_LIMIT_EXCEEDED: {
-    title: 'Too many requests',
-    message: 'You have exceeded the request limit',
-    suggestion: 'Please wait before trying again',
+    title: 'Too many',
+    message: 'Limit reached',
+    suggestion: 'Wait before retry',
   },
 } as const
 
 // UI text constants
 export const UI_TEXT = {
   uploadZone: {
-    empty: 'Drop PDF here or click to upload',
-    maxSize: 'Maximum file size: 10MB',
-    dragActive: 'Drop your PDF here...',
+    empty: 'Drop PDF or click',
+    maxSize: 'Max 10MB',
+    dragActive: 'Drop here',
   },
   buttons: {
     summarize: 'Summarize',
-    processing: 'Processing...',
+    processing: 'Processing',
     clear: 'Clear',
     copy: 'Copy',
     copied: 'Copied!',
-    download: 'Download',
+    download: 'Save',
   },
   summary: {
-    placeholder: 'Your summary will appear here',
-    processing: 'Analyzing your document...',
+    placeholder: 'Summary will appear here',
+    processing: 'Analyzing PDF...',
   },
 } as const
 
 // Processing stage messages for better UX
 export const STAGE_MESSAGES = {
-  uploading: 'Uploading your PDF...',
-  processing: 'AI is analyzing your document...',
-  done: 'Summary complete!',
-  error: 'Something went wrong',
+  uploading: 'Uploading...',
+  processing: 'Analyzing...',
+  done: 'Complete!',
+  error: 'Error occurred',
 } as const

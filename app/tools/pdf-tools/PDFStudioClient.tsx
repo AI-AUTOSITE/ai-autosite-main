@@ -4,32 +4,34 @@ import './styles/pdf-tools.css'
 
 import { useState, useEffect, useRef } from 'react'
 import { PDFDocument, degrees } from 'pdf-lib'
-import { Menu, ChevronLeft } from 'lucide-react'
+import { Menu, ChevronLeft, HelpCircle } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+// Dynamic import of Guide component
+const Guide = dynamic(() => import('./guide'), {
+  ssr: false,
+})
 
 // Hooks
 import { usePDFLoader } from './hooks/usePDFLoader'
 import { usePageSelection } from './hooks/usePageSelection'
-import { useLicenseManager } from './hooks/useLicenseManager'
 import { usePDFEditor } from './hooks/usePDFEditor'
 import { usePDFToolHandlers } from './hooks/usePDFToolHandlers'
 
 // Components
-import PWAInstaller from './components/PWAInstaller'
 import { ToolPanel } from './components/ToolPanel'
 import { Toolbar } from './components/Toolbar'
 import { PDFViewer } from './components/PDFViewer'
-import { UpgradeModal } from './components/UpgradeModal'
-import { LicenseStatusModal } from './components/LicenseStatusModal'
+import { ConfirmDialog } from './components/ConfirmDialog'
 
 // Features
-import { PasswordHandler } from './features/password/PasswordHandler'
-import { PasswordUI } from './features/password/PasswordUI'
 import { WatermarkUI } from './features/watermark/WatermarkUI'
 import { SignatureUI } from './features/signature/SignatureUI'
 import { ConvertUI } from './features/convert/ConvertUI'
+import { AnnotateUI } from './features/annotate/AnnotateUI'
 
 // Constants
-import { availableTools, MAX_FREE_SLOTS } from './constants/tools'
+import { availableTools } from './constants/tools'
 import { Tool } from './types'
 
 // Helpers
@@ -52,15 +54,6 @@ export default function PDFStudioClient() {
 
   const { selectedPages, handlePageSelect, clearSelection } = usePageSelection()
 
-  const {
-    isPremium,
-    isLoadingPayment,
-    showUpgradeModal,
-    setShowUpgradeModal,
-    handleUpgradeToPremium,
-    showLicenseStatus,
-  } = useLicenseManager()
-
   const { pages, updatePages, undo, redo, canUndo, canRedo, clearHistory } =
     usePDFEditor(initialPages)
 
@@ -72,11 +65,11 @@ export default function PDFStudioClient() {
   const [draggedPage, setDraggedPage] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [convertFormat, setConvertFormat] = useState<'word' | 'excel'>('word')
-  const [showLicenseModal, setShowLicenseModal] = useState(false)
   const [isSelectingTool, setIsSelectingTool] = useState<number | null>(null)
   const [keepSelection, setKeepSelection] = useState(true)
+  const [showGuide, setShowGuide] = useState(false)
 
-  // Tool slots initialization
+  // Tool slots initialization - All 6 slots available
   const [activeToolSlots, setActiveToolSlots] = useState<(Tool | null)[]>(() => {
     const defaultSlots = Array(6).fill(null)
     defaultSlots[0] = availableTools.find((t) => t.id === 'rotate') || null
@@ -101,18 +94,19 @@ export default function PDFStudioClient() {
     // Process completion handler (for future use)
   }
 
-  // Tool handlers hook
   const {
-    showPasswordUI,
-    setShowPasswordUI,
     showWatermarkUI,
     setShowWatermarkUI,
     showSignatureUI,
     setShowSignatureUI,
     showConvertUI,
     setShowConvertUI,
-    isPasswordProtected,
-    setIsPasswordProtected,
+    showAnnotateUI,
+    setShowAnnotateUI,
+    closeAllToolUIs,
+    activeToolUI,
+    confirmDialog,
+    handleConfirmCancel,
     handleRotateSelected,
     handleDeleteSelected,
     handleSplit,
@@ -121,9 +115,6 @@ export default function PDFStudioClient() {
     handleAddPageNumbers,
     handleInsertBlankPage,
     handleDuplicatePages,
-    handlePassword,
-    handleAddPassword,
-    handleRemovePassword,
     handleWatermark,
     handleApplyWatermark,
     handleSignature,
@@ -132,6 +123,8 @@ export default function PDFStudioClient() {
     handleToExcel,
     handleConvert,
     handleOCR,
+    handleAnnotate,
+    handleApplyAnnotation,
   } = usePDFToolHandlers({
     file,
     pages,
@@ -175,10 +168,6 @@ export default function PDFStudioClient() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [file, pages])
 
-  const handleShowLicenseStatus = () => {
-    setShowLicenseModal(true)
-  }
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0]
     if (!uploadedFile) return
@@ -198,13 +187,6 @@ export default function PDFStudioClient() {
     }
 
     setFile(uploadedFile)
-    const isProtected = await PasswordHandler.isPasswordProtected(uploadedFile)
-    setIsPasswordProtected(isProtected)
-
-    if (isProtected) {
-      alert('This PDF is password protected. Use the Password tool to unlock it.')
-    }
-
     clearSelection()
     clearHistory()
 
@@ -286,12 +268,6 @@ export default function PDFStudioClient() {
 
   const handleSlotClick = (index: number) => {
     const tool = activeToolSlots[index]
-    const isLocked = index >= MAX_FREE_SLOTS && !isPremium
-
-    if (isLocked) {
-      setShowUpgradeModal(true)
-      return
-    }
 
     if (tool) {
       if (!file) {
@@ -328,16 +304,7 @@ export default function PDFStudioClient() {
           handleOCR()
           break
         case 'annotate':
-          alert('Annotation coming soon!')
-          break
-        case 'highlight':
-          alert('Highlight coming soon!')
-          break
-        case 'crop':
-          alert('Crop coming soon!')
-          break
-        case 'password':
-          handlePassword()
+          handleAnnotate()
           break
         case 'watermark':
           handleWatermark()
@@ -456,112 +423,97 @@ export default function PDFStudioClient() {
     }
   }
 
+  // Helper to convert selectedPages to page numbers array
+  const getSelectedPageNumbers = (): number[] => {
+    return Array.from(selectedPages)
+      .map(pageId => {
+        const page = pages.find(p => p.id === pageId)
+        return page ? page.pageNumber : null
+      })
+      .filter((num): num is number => num !== null)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col md:flex-row">
-      {/* Mobile Header */}
-      {isMobile && (
-        <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between">
-          <button
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 rounded hover:bg-gray-700"
-          >
-            <Menu className="w-5 h-5 text-gray-300" />
-          </button>
-          <span className="text-sm text-gray-300">{file ? file.name : 'PDF Editor'}</span>
-          <button
-            onClick={() => setShowThumbnails(!showThumbnails)}
-            className="p-2 rounded hover:bg-gray-700"
-          >
-            <ChevronLeft
-              className={`w-5 h-5 text-gray-300 transform transition ${!showThumbnails ? 'rotate-180' : ''}`}
-            />
-          </button>
+    <div className="min-h-screen bg-gray-900 flex flex-col">
+      {/* Main Content Area */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel - Tool Panel */}
+        <ToolPanel
+          isMobile={isMobile}
+          showMobileMenu={showMobileMenu}
+          setShowMobileMenu={setShowMobileMenu}
+          activeToolSlots={activeToolSlots}
+          handleSlotClick={handleSlotClick}
+          isSelectingTool={isSelectingTool}
+          setIsSelectingTool={setIsSelectingTool}
+          availableTools={availableTools}
+          handleToolSelect={handleToolSelect}
+        />
+
+        {/* Right Panel - Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Toolbar
+            file={file}
+            pages={pages}
+            selectedPages={selectedPages}
+            isMobile={isMobile}
+            fileInputRef={fileInputRef}
+            handleFileUpload={handleFileUpload}
+            handlePrint={handlePrint}
+            handleDownload={handleDownload}
+            toggleFullscreen={toggleFullscreen}
+            isProcessing={isProcessing}
+            handleUndo={handleUndo}
+            handleRedo={handleRedo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            handleClearFile={handleClearFile}
+          />
+
+          {/* Keep Selection Toggle */}
+          {file && pages.length > 0 && (
+            <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center gap-4">
+              <button
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  setKeepSelection(!keepSelection)
+                }}
+                className={`text-sm px-3 py-2 rounded-lg transition min-h-[44px] ${
+                  keepSelection 
+                    ? 'text-cyan-400 bg-cyan-500/10' 
+                    : 'text-gray-400 bg-gray-700/50'
+                }`}
+              >
+                {keepSelection ? 'Keep Selection' : 'Auto Clear'}
+              </button>
+            </div>
+          )}
+
+          <PDFViewer
+            file={file}
+            pages={pages}
+            selectedPages={selectedPages}
+            handlePageSelect={handlePageSelect}
+            isMobile={isMobile}
+            showThumbnails={showThumbnails}
+            fileInputRef={fileInputRef}
+            isProcessing={isProcessing}
+            handleTouchStart={handleTouchStart}
+            handleTouchEnd={handleTouchEnd}
+            onPagesReorder={updatePages}
+          />
         </div>
-      )}
-
-      <ToolPanel
-        isMobile={isMobile}
-        showMobileMenu={showMobileMenu}
-        setShowMobileMenu={setShowMobileMenu}
-        activeToolSlots={activeToolSlots}
-        handleSlotClick={handleSlotClick}
-        isPremium={isPremium}
-        isLoadingPayment={isLoadingPayment}
-        showLicenseStatus={handleShowLicenseStatus}
-        setShowUpgradeModal={setShowUpgradeModal}
-        isSelectingTool={isSelectingTool}
-        setIsSelectingTool={setIsSelectingTool}
-        availableTools={availableTools}
-        handleToolSelect={handleToolSelect}
-      />
-
-      <div className="flex-1 flex flex-col">
-        <Toolbar
-          file={file}
-          pages={pages}
-          selectedPages={selectedPages}
-          isMobile={isMobile}
-          fileInputRef={fileInputRef}
-          handleFileUpload={handleFileUpload}
-          handlePrint={handlePrint}
-          handleDownload={handleDownload}
-          toggleFullscreen={toggleFullscreen}
-          showLicenseStatus={handleShowLicenseStatus}
-          isProcessing={isProcessing}
-          handleUndo={handleUndo}
-          handleRedo={handleRedo}
-          canUndo={canUndo}
-          canRedo={canRedo}
-          handleClearFile={handleClearFile}
-        />
-
-        {/* Keep Selection Toggle */}
-        {file && pages.length > 0 && (
-          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center gap-4">
-            <button
-              onClick={() => setKeepSelection(!keepSelection)}
-              className={`text-sm ${keepSelection ? 'text-cyan-400' : 'text-gray-400'}`}
-            >
-              {keepSelection ? '🔒 Keep Selection' : '🔓 Auto Clear'}
-            </button>
-          </div>
-        )}
-
-        <PDFViewer
-          file={file}
-          pages={pages}
-          selectedPages={selectedPages}
-          handlePageSelect={handlePageSelect}
-          isMobile={isMobile}
-          showThumbnails={showThumbnails}
-          fileInputRef={fileInputRef}
-          isPremium={isPremium}
-          setShowUpgradeModal={setShowUpgradeModal}
-          isProcessing={isProcessing}
-          handleTouchStart={handleTouchStart}
-          handleTouchEnd={handleTouchEnd}
-          onPagesReorder={updatePages}
-        />
       </div>
 
-      {/* Modals */}
-      {showPasswordUI && (
-        <PasswordUI
-          onAddPassword={handleAddPassword}
-          onRemovePassword={handleRemovePassword}
-          onCancel={() => setShowPasswordUI(false)}
-          isProtected={isPasswordProtected}
-        />
-      )}
-
+      {/* Feature Modals */}
       {showWatermarkUI && (
-        <WatermarkUI onApply={handleApplyWatermark} onCancel={() => setShowWatermarkUI(false)} />
+        <WatermarkUI onApply={handleApplyWatermark} onCancel={() => closeAllToolUIs()} />
       )}
 
       {showSignatureUI && (
         <SignatureUI
           onApply={handleApplySignature}
-          onCancel={() => setShowSignatureUI(false)}
+          onCancel={() => closeAllToolUIs()}
           totalPages={pages.length}
         />
       )}
@@ -571,28 +523,33 @@ export default function PDFStudioClient() {
           onConvert={(format, options) =>
             handleConvert(format, { ...options, format: convertFormat })
           }
-          onCancel={() => setShowConvertUI(false)}
+          onCancel={() => closeAllToolUIs()}
           isProcessing={isProcessing}
         />
       )}
 
-      {showLicenseModal && (
-        <LicenseStatusModal
-          isOpen={showLicenseModal}
-          onClose={() => setShowLicenseModal(false)}
-          onUpgrade={handleUpgradeToPremium}
-          isPremium={isPremium}
+      {showAnnotateUI && (
+        <AnnotateUI
+          totalPages={pages.length}
+          selectedPages={getSelectedPageNumbers()}
+          onApply={handleApplyAnnotation}
+          onCancel={() => closeAllToolUIs()}
         />
       )}
 
-      <UpgradeModal
-        showUpgradeModal={showUpgradeModal}
-        setShowUpgradeModal={setShowUpgradeModal}
-        handleUpgradeToPremium={handleUpgradeToPremium}
-        isLoadingPayment={isLoadingPayment}
-      />
+      {/* Guide Modal */}
+      {showGuide && <Guide onClose={() => setShowGuide(false)} />}
 
-      <PWAInstaller />
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText="Continue"
+        cancelText="Cancel"
+        onConfirm={confirmDialog.onConfirm}
+        onCancel={handleConfirmCancel}
+      />
     </div>
   )
 }

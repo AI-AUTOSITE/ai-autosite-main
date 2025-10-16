@@ -116,10 +116,10 @@ export default function CategoryGrid({ categories, onSelectCategory }: CategoryG
             <button
               key={category.id}
               onClick={() => onSelectCategory(category.id)}
-              className={`group relative bg-slate-800/50 backdrop-blur-sm rounded-2xl 
-                     border-2 ${style.border} transition-all duration-300 
-                     hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/50
-                     overflow-hidden`}
+className={`group relative bg-slate-800/50 backdrop-blur-sm rounded-2xl 
+           border-2 ${style.border} transition-all duration-300 
+           hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/50
+           active:scale-[0.98] overflow-hidden min-h-[180px]`}
             >
               {/* 背景グラデーション */}
               <div

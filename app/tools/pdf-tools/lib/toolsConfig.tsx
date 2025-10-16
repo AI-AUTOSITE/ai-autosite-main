@@ -15,13 +15,17 @@ import {
 import { Tool } from '../types'
 
 // ツールのアクション関数を定義
+// 注意: これらは実際のツールパネルを開くためのトリガーです
 const toolActions = {
   rotate: () => console.log('Rotate action'),
   merge: () => console.log('Merge action'),
   split: () => console.log('Split action'),
-  annotate: () => alert('Annotation feature coming soon!'),
-  highlight: () => alert('Highlight feature coming soon!'),
-  crop: () => alert('Crop feature coming soon!'),
+  
+  // ✅ 修正: アラートを削除してログに変更
+  annotate: () => console.log('Annotate action'),
+  highlight: () => console.log('Highlight action'),
+  crop: () => console.log('Crop action'),
+  
   compress: () => console.log('Compress action'),
   password: () => alert('Password protection coming soon!'),
   toword: () => alert('Word conversion coming soon!'),

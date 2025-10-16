@@ -15,7 +15,8 @@ import {
 } from 'lucide-react'
 import { SummaryLength, ProcessingStage, ErrorDetail } from '../types'
 import { SUMMARY_CONFIGS, UI_TEXT, STAGE_MESSAGES } from '../constants'
-import { validateFile, formatFileSize, parseApiError } from '../../../lib/utils/errorHandler'
+// インポートパスを変更！
+import { validateFile, formatFileSize, parseApiError } from '../utils/errorHandler'
 
 export default function PDFSummarizerClient() {
   const [file, setFile] = useState<File | null>(null)
@@ -180,15 +181,17 @@ export default function PDFSummarizerClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-6xl">
-      <div className="grid lg:grid-cols-2 gap-6">
+      {/* Mobile: Single column / Desktop: Two columns */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        
         {/* Upload Section */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Upload PDF</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-white">Upload PDF</h2>
             {file && (
               <button
                 onClick={handleClear}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="p-2 text-gray-400 hover:text-white transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center"
                 title="Clear file"
               >
                 <X className="w-5 h-5" />
@@ -196,111 +199,139 @@ export default function PDFSummarizerClient() {
             )}
           </div>
 
-          {/* Drop Zone */}
-          <div
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
-              isDragging
-                ? 'border-green-400 bg-green-500/10 scale-105'
-                : file
-                  ? 'border-green-500/50 bg-green-500/5'
-                  : 'border-gray-600 hover:border-gray-500'
-            }`}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf"
-              onChange={handleFileChange}
-              className="hidden"
-              id="pdf-upload"
-              disabled={isProcessing}
-            />
-            <label
-              htmlFor="pdf-upload"
-              className={`cursor-pointer ${isProcessing ? 'pointer-events-none' : ''}`}
-            >
-              {!file ? (
-                <>
-                  <Upload
-                    className={`w-12 h-12 mx-auto mb-4 transition-colors ${
-                      isDragging ? 'text-green-400' : 'text-gray-400'
-                    }`}
-                  />
-                  <p className="text-white font-medium mb-1">
-                    {isDragging ? UI_TEXT.uploadZone.dragActive : UI_TEXT.uploadZone.empty}
-                  </p>
-                  <p className="text-sm text-gray-400">{UI_TEXT.uploadZone.maxSize}</p>
-                </>
-              ) : (
-                <>
-                  <FileText className="w-12 h-12 text-green-400 mx-auto mb-4" />
-                  <p
-                    className="text-green-400 font-medium truncate max-w-full px-4"
-                    title={file.name}
-                  >
-                    {file.name}
-                  </p>
-                  <p className="text-sm text-gray-400 mt-1">{formatFileSize(file.size)}</p>
-                </>
-              )}
-            </label>
+          {/* Drop Zone - Mobile optimized */}
+          <div className="space-y-4">
+            {/* Desktop: Drag & Drop */}
+            <div className="hidden sm:block">
+              <div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
+                  isDragging
+                    ? 'border-green-400 bg-green-500/10 scale-105'
+                    : file
+                      ? 'border-green-500/50 bg-green-500/5'
+                      : 'border-gray-600 hover:border-gray-500'
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="pdf-upload"
+                  disabled={isProcessing}
+                />
+                <label
+                  htmlFor="pdf-upload"
+                  className={`cursor-pointer ${isProcessing ? 'pointer-events-none' : ''}`}
+                >
+                  {!file ? (
+                    <>
+                      <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                      <p className="text-white font-medium mb-1">Drop PDF or click</p>
+                      <p className="text-sm text-gray-400">Max 10MB</p>
+                    </>
+                  ) : (
+                    <>
+                      <FileText className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                      <p className="text-green-400 font-medium truncate max-w-full px-4" title={file.name}>
+                        {file.name}
+                      </p>
+                      <p className="text-sm text-gray-400 mt-1">{formatFileSize(file.size)}</p>
+                    </>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            {/* Mobile: Simple button */}
+            <div className="sm:hidden">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf"
+                onChange={handleFileChange}
+                className="hidden"
+                id="pdf-upload-mobile"
+                disabled={isProcessing}
+              />
+              <label
+                htmlFor="pdf-upload-mobile"
+                className={`block ${isProcessing ? 'pointer-events-none opacity-50' : ''}`}
+              >
+                {!file ? (
+                  <div className="bg-gradient-to-br from-green-500/20 to-teal-500/20 rounded-xl p-6 border-2 border-green-500/30 text-center">
+                    <Upload className="w-12 h-12 mx-auto mb-3 text-green-400" />
+                    <p className="text-lg font-semibold text-white mb-1">Select PDF</p>
+                    <p className="text-xs text-gray-400">Tap to choose (max 10MB)</p>
+                  </div>
+                ) : (
+                  <div className="bg-green-500/10 rounded-xl p-4 border-2 border-green-500/30">
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-8 h-8 text-green-400 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-green-400 font-medium truncate">{file.name}</p>
+                        <p className="text-xs text-gray-400">{formatFileSize(file.size)}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </label>
+            </div>
           </div>
 
-          {/* Error Message */}
+          {/* Error Message - Mobile optimized */}
           {error && (
-            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-              <div className="flex items-start gap-3">
+            <div className="mt-4 p-3 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+              <div className="flex items-start gap-2 sm:gap-3">
                 <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-red-400 font-medium mb-1">{error.userMessage}</p>
+                  <p className="text-red-400 font-medium text-sm sm:text-base mb-1">
+                    {error.userMessage}
+                  </p>
                   {error.technicalMessage && (
-                    <p className="text-red-400/70 text-sm">{error.technicalMessage}</p>
+                    <p className="text-red-400/70 text-xs sm:text-sm">{error.technicalMessage}</p>
                   )}
                 </div>
               </div>
             </div>
           )}
 
-          {/* Summary Length */}
+          {/* Summary Length - Mobile optimized */}
           <div className="mt-6">
-            <label className="text-white font-medium mb-3 block">Summary Length</label>
+            <label className="text-white font-medium mb-3 block text-sm sm:text-base">
+              Summary Length
+            </label>
             <div className="grid grid-cols-3 gap-2">
               {(['short', 'medium', 'long'] as const).map((length) => (
                 <button
                   key={length}
                   onClick={() => setSummaryLength(length)}
                   disabled={isProcessing}
-                  className={`py-3 rounded-lg capitalize transition-all relative group ${
+                  className={`py-3 rounded-lg capitalize transition-all text-sm sm:text-base min-h-[48px] ${
                     summaryLength === length
                       ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/20'
                       : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                   } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  title={SUMMARY_CONFIGS[length].description}
                 >
                   {length}
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                    <div className="font-medium mb-1">{SUMMARY_CONFIGS[length].description}</div>
-                    <div className="text-gray-400">~{SUMMARY_CONFIGS[length].estimatedTime}</div>
-                  </div>
                 </button>
               ))}
             </div>
+            {/* Mobile: Simple text instead of tooltip */}
             <div className="mt-2 flex items-start gap-2 text-xs text-gray-400">
               <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              <p>
-                {config.description} • Est. {config.estimatedTime}
-              </p>
+              <p>{config.description} - {config.estimatedTime}</p>
             </div>
           </div>
 
-          {/* Progress Bar */}
+          {/* Progress Bar - Mobile optimized */}
           {isProcessing && (
             <div className="mt-6">
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-xs sm:text-sm mb-2">
                 <span className="text-gray-300 font-medium">{STAGE_MESSAGES[stage]}</span>
                 <span className="text-green-400 font-semibold">{progress}%</span>
               </div>
@@ -315,26 +346,26 @@ export default function PDFSummarizerClient() {
             </div>
           )}
 
-          {/* Action Buttons */}
+          {/* Action Buttons - Mobile optimized */}
           <div className="grid grid-cols-2 gap-3 mt-6">
             <button
               onClick={handleSummarize}
               disabled={!file || isProcessing}
-              className={`py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+              className={`py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 file && !isProcessing
-                  ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white hover:shadow-lg hover:shadow-green-500/30 hover:scale-105'
+                  ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white hover:shadow-lg hover:shadow-green-500/30'
                   : 'bg-gray-700 text-gray-500 cursor-not-allowed'
               }`}
             >
               {isProcessing ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  {UI_TEXT.buttons.processing}
+                  Processing
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  {UI_TEXT.buttons.summarize}
+                  Summarize
                 </>
               )}
             </button>
@@ -342,22 +373,22 @@ export default function PDFSummarizerClient() {
             <button
               onClick={handleClear}
               disabled={isProcessing}
-              className="py-3 bg-white/5 text-gray-400 rounded-xl hover:bg-white/10 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="py-3 bg-white/5 text-gray-400 rounded-xl hover:bg-white/10 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[48px]"
             >
-              {UI_TEXT.buttons.clear}
+              Clear
             </button>
           </div>
         </div>
 
-        {/* Summary Output */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+        {/* Summary Output - Mobile optimized */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-white">Summary</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-white">Summary</h2>
             {summary && (
               <div className="flex gap-2">
                 <button
                   onClick={handleCopy}
-                  className={`px-4 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5 ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-all flex items-center gap-1.5 min-h-[40px] ${
                     copied
                       ? 'bg-green-500 text-white'
                       : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
@@ -366,45 +397,45 @@ export default function PDFSummarizerClient() {
                   {copied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      {UI_TEXT.buttons.copied}
+                      <span className="hidden sm:inline">Copied!</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      {UI_TEXT.buttons.copy}
+                      <span className="hidden sm:inline">Copy</span>
                     </>
                   )}
                 </button>
                 <button
                   onClick={handleDownload}
-                  className="px-4 py-1.5 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 hover:text-white transition-all flex items-center gap-1.5 text-sm"
+                  className="px-3 sm:px-4 py-2 bg-white/5 text-gray-400 rounded-lg hover:bg-white/10 hover:text-white transition-all flex items-center gap-1.5 text-xs sm:text-sm min-h-[40px]"
                 >
                   <Download className="w-4 h-4" />
-                  {UI_TEXT.buttons.download}
+                  <span className="hidden sm:inline">Save</span>
                 </button>
               </div>
             )}
           </div>
 
           {!summary && !isProcessing ? (
-            <div className="h-[500px] flex items-center justify-center">
+            <div className="h-[300px] sm:h-[400px] lg:h-[500px] flex items-center justify-center">
               <div className="text-center">
-                <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">{UI_TEXT.summary.placeholder}</p>
+                <FileText className="w-12 h-12 sm:w-16 sm:h-16 text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-500 text-base sm:text-lg">Summary will appear here</p>
               </div>
             </div>
           ) : isProcessing ? (
-            <div className="h-[500px] flex items-center justify-center">
+            <div className="h-[300px] sm:h-[400px] lg:h-[500px] flex items-center justify-center">
               <div className="text-center">
-                <Loader2 className="w-16 h-16 text-green-400 mx-auto mb-4 animate-spin" />
-                <p className="text-gray-300 text-lg font-medium">{UI_TEXT.summary.processing}</p>
-                <p className="text-gray-500 text-sm mt-2">This may take {config.estimatedTime}</p>
+                <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-green-400 mx-auto mb-4 animate-spin" />
+                <p className="text-gray-300 text-base sm:text-lg font-medium">Analyzing PDF...</p>
+                <p className="text-gray-500 text-xs sm:text-sm mt-2">Takes {config.estimatedTime}</p>
               </div>
             </div>
           ) : (
-            <div className="bg-black/30 rounded-xl p-6 max-h-[500px] overflow-y-auto custom-scrollbar">
+            <div className="bg-black/30 rounded-xl p-4 sm:p-6 max-h-[300px] sm:max-h-[400px] lg:max-h-[500px] overflow-y-auto custom-scrollbar">
               <div className="prose prose-invert max-w-none">
-                <div className="whitespace-pre-wrap text-gray-300 text-sm leading-relaxed">
+                <div className="whitespace-pre-wrap text-gray-300 text-xs sm:text-sm leading-relaxed">
                   {summary}
                 </div>
               </div>

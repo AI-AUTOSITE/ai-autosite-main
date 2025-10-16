@@ -1,4 +1,5 @@
 // app/tools/code-dependency-visualizer/components/CodeDependencyVisualizerClient.tsx
+// Mobile optimized version
 
 'use client'
 
@@ -106,12 +107,12 @@ export default function CodeDependencyVisualizerClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         {/* Notification Banner */}
         {notification && (
-          <div className="max-w-4xl mx-auto mb-6">
+          <div className="max-w-4xl mx-auto mb-4 sm:mb-6">
             <div
-              className={`rounded-lg p-4 border animate-slide-down ${
+              className={`rounded-lg p-3 sm:p-4 border animate-slide-down ${
                 notification.type === 'warning'
                   ? 'bg-yellow-500/10 border-yellow-500/30'
                   : 'bg-cyan-500/10 border-cyan-500/30'
@@ -119,13 +120,13 @@ export default function CodeDependencyVisualizerClient() {
             >
               <div className="flex items-start gap-2">
                 {notification.type === 'warning' ? (
-                  <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
                 ) : (
-                  <Info className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <Info className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                 )}
                 <div className="flex-1">
                   <p
-                    className={`text-sm ${
+                    className={`text-xs sm:text-sm ${
                       notification.type === 'warning' ? 'text-yellow-400' : 'text-cyan-400'
                     }`}
                   >
@@ -134,7 +135,7 @@ export default function CodeDependencyVisualizerClient() {
                 </div>
                 <button
                   onClick={() => setNotification(null)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors min-w-[24px] min-h-[24px] flex items-center justify-center"
                 >
                   <span className="text-lg leading-none">×</span>
                 </button>

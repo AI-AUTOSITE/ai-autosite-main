@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { SummaryLength, ErrorCode } from '@/tools/pdf-summarizer/types'
-import {
-  MAX_FILE_SIZE,
-  ACCEPTED_FILE_TYPE,
-  ACCEPTED_FILE_EXTENSION,
-  SUMMARY_CONFIGS,
-  RATE_LIMIT,
-} from '@/lib/constants'
+import { SUMMARY_CONFIGS } from '@/tools/pdf-summarizer/constants'
+import { FILE_SIZE_LIMITS, RATE_LIMITS } from '@/lib/constants'
+
+// PDF specific constants
+const ACCEPTED_FILE_TYPE = 'application/pdf'
+const ACCEPTED_FILE_EXTENSION = '.pdf'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -39,15 +38,15 @@ function checkRateLimit(identifier: string): {
   if (!current) {
     requestCounts.set(identifier, {
       count: 1,
-      resetTime: now + RATE_LIMIT.WINDOW_MS,
+      resetTime: now + RATE_LIMITS.STRICT.WINDOW_MS,
     })
     return {
       allowed: true,
-      remaining: RATE_LIMIT.MAX_REQUESTS - 1,
+      remaining: RATE_LIMITS.STRICT.MAX_REQUESTS - 1,
     }
   }
 
-  if (current.count >= RATE_LIMIT.MAX_REQUESTS) {
+  if (current.count >= RATE_LIMITS.STRICT.MAX_REQUESTS) {
     const resetIn = Math.ceil((current.resetTime - now) / 1000 / 60)
     return {
       allowed: false,
@@ -59,7 +58,7 @@ function checkRateLimit(identifier: string): {
   current.count++
   return {
     allowed: true,
-    remaining: RATE_LIMIT.MAX_REQUESTS - current.count,
+    remaining: RATE_LIMITS.STRICT.MAX_REQUESTS - current.count,
   }
 }
 
@@ -138,7 +137,7 @@ export async function POST(request: NextRequest) {
       return createErrorResponse('NO_FILE', 'No file provided')
     }
 
-    if (file.size > MAX_FILE_SIZE) {
+    if (file.size > FILE_SIZE_LIMITS.MAX_PDF_SIZE) {
       const sizeMB = (file.size / 1024 / 1024).toFixed(1)
       return createErrorResponse('FILE_TOO_LARGE', `File size (${sizeMB}MB) exceeds 10MB limit`)
     }
@@ -225,7 +224,7 @@ Please provide a well-structured summary in Markdown format with:
       summary,
       meta: {
         remaining: rateLimitCheck.remaining,
-        warning: rateLimitCheck.remaining! <= RATE_LIMIT.WARNING_THRESHOLD,
+        warning: rateLimitCheck.remaining! <= 2,  // WARNING_THRESHOLDを直接設定
       },
     })
   } catch (error: any) {

@@ -9,17 +9,15 @@ import {
   FileText,
   Copy,
   ScanLine,
-  Lock,
   Droplets,
   Edit2,
   FileSpreadsheet,
   PenTool,
-  Highlighter,
-  Crop,
 } from 'lucide-react'
 import { Tool } from '../types'
 
-export const MAX_FREE_SLOTS = 3
+// All slots are now free - no premium required
+export const MAX_SLOTS = 6
 
 export const availableTools: Tool[] = [
   {
@@ -102,15 +100,7 @@ export const availableTools: Tool[] = [
     action: () => {},
     description: 'Extract text with OCR',
     color: 'purple',
-  },
-  {
-    id: 'password',
-    name: 'Password',
-    icon: <Lock className="w-4 h-4" />,
-    category: 'optimize',
-    action: () => {},
-    description: 'Add or remove password',
-    color: 'yellow',
+    mobileDisabled: true, // Heavy processing - disabled on mobile
   },
   {
     id: 'watermark',
@@ -138,6 +128,7 @@ export const availableTools: Tool[] = [
     action: () => {},
     description: 'Convert to Word document',
     color: 'blue',
+    pageLimit: 10, // Mobile: limit to 10 pages
   },
   {
     id: 'toExcel',
@@ -147,6 +138,7 @@ export const availableTools: Tool[] = [
     action: () => {},
     description: 'Convert to Excel spreadsheet',
     color: 'green',
+    pageLimit: 10, // Mobile: limit to 10 pages
   },
   {
     id: 'annotate',
@@ -156,23 +148,5 @@ export const availableTools: Tool[] = [
     action: () => {},
     description: 'Add notes and annotations',
     color: 'orange',
-  },
-  {
-    id: 'highlight',
-    name: 'Highlight',
-    icon: <Highlighter className="w-4 h-4" />,
-    category: 'edit',
-    action: () => {},
-    description: 'Highlight text',
-    color: 'yellow',
-  },
-  {
-    id: 'crop',
-    name: 'Crop',
-    icon: <Crop className="w-4 h-4" />,
-    category: 'edit',
-    action: () => {},
-    description: 'Crop page areas',
-    color: 'indigo',
   },
 ]

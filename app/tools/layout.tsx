@@ -52,10 +52,11 @@ const getToolTitle = (pathname: string) => {
     '/tools/competitive-analyzer': 'Competitive Tool Analyzer',
     '/tools/debate-trainer': 'Master Debate Skills with AI',
     '/tools/pdf-summarizer': 'PDF SUMMARIZER',
-    '/tools/pdf-tools': 'Adobe-Style PDF Editor',
+    '/tools/pdf-tools': 'PDF Editor',
     '/tools/stack-recommender': 'Stack Recommender',
-    '/tools/tech-stack-analyzer': 'Tech Stack Anarizer',
+    '/tools/tech-stack-analyzer': 'Tech Stack Analyzer',
     '/tools/token-compressor': 'AI Token Compressor',
+    '/tools/pdf-test-generator': 'PDF Test Generator',
   }
   return toolMap[pathname] || ''
 }
