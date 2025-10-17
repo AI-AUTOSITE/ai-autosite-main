@@ -3,7 +3,7 @@ markdown# AI AutoSite マスターガイド
 **Version: 7.0**  
 **理念: Zero Ads・Zero Tracking・Zero BS**  
 **ミッション: 真の無料ツールを世界に提供**  
-**最終更新: 2025-01-29**
+**最終更新: 2025-10-17**
 
 ---
 
@@ -120,16 +120,17 @@ markdown# AI AutoSite マスターガイド
 本ガイドは以下のドキュメントと連携しています：
 
 ### ツール開発関連
-
 - [tool-properties-guide.md](./tool-properties-guide.md) - ツール定義とプロパティ
 - [metadata-seo-guide.md](./metadata-seo-guide.md) - メタデータとSEO設定
 - [ux-performance-guide.md](./ux-performance-guide.md) - UXとパフォーマンス最適化
+- [mobile-optimization-guide.md](./mobile-optimization-guide.md) - **モバイル最適化（必読）**
+
 
 ### API・セキュリティ関連
-
 - [api-usage-guide.md](./api-usage-guide.md) - API実装の基本
 - [api-security-guide.md](./api-security-guide.md) - セキュリティ対策
 - [ai-tools-guide.md](./ai-tools-guide.md) - AIツール管理
+- [privacy-policy-guide.md](./privacy-policy-guide.md) - **プライバシー保護（必読）**
 
 ### コンテンツ関連
 
