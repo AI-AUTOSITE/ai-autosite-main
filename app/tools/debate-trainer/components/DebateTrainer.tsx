@@ -69,9 +69,11 @@ export default function DebateTrainer() {
 
   // AI Tool Warning Hook
   const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning()
-
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  
   // Custom disagree handler - redirect to home
   const handleCustomDisagree = () => {
+    setIsRedirecting(true) 
     handleDisagree()
     router.push('/')
   }
@@ -323,7 +325,7 @@ ${messages
   }
 
   // ✅ ローディング表示
-  if (isChecking) {
+  if (isChecking || isRedirecting) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
         <div className="flex flex-col items-center justify-center min-h-[400px]">

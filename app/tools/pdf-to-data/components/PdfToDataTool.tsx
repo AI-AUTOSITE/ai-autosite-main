@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Settings, AlertTriangle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { usePdfProcessor } from '../hooks/usePdfProcessor'
@@ -19,9 +20,11 @@ export default function PdfToDataTool() {
 
   // AI Tool Warning Hook
   const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   // Custom disagree handler - redirect to home
   const handleCustomDisagree = () => {
+    setIsRedirecting(true)
     handleDisagree()
     router.push('/')
   }
@@ -50,7 +53,7 @@ export default function PdfToDataTool() {
   } = usePdfProcessor(hasAgreed) // ✅ hasAgreed を渡す
 
   // ✅ ローディング表示
-  if (isChecking) {
+  if (isChecking || isRedirecting) {
     return (
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center justify-center min-h-[400px]">

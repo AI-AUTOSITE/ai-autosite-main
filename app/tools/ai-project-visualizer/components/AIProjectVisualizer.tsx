@@ -51,9 +51,11 @@ export default function AIProjectVisualizerClient() {
 
   // AI Tool Warning Hook
   const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning() // ✅ isChecking 追加
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   // Custom disagree handler - redirect to home
   const handleCustomDisagree = () => {
+    setIsRedirecting(true) 
     handleDisagree()
     router.push('/')
   }
@@ -504,7 +506,7 @@ export default function AIProjectVisualizerClient() {
     )
   }
 
-    if (isChecking) {
+  if (isChecking || isRedirecting) {
     return (
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center justify-center min-h-[400px]">

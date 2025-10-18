@@ -55,9 +55,11 @@ export default function CodeRoasterClient() {
 
   // AI Tool Warning Hook
   const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   // Custom disagree handler - redirect to home
   const handleCustomDisagree = () => {
+    setIsRedirecting(true)
     handleDisagree()
     router.push('/')
   }
@@ -174,7 +176,7 @@ export default function CodeRoasterClient() {
   }
 
   // ✅ ローディング表示
-  if (isChecking) {
+  if (isChecking || isRedirecting) {
     return (
       <div className="container mx-auto px-4 py-20">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
