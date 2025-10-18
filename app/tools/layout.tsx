@@ -53,6 +53,7 @@ const getToolTitle = (pathname: string) => {
     '/tools/debate-trainer': 'Master Debate Skills with AI',
     '/tools/pdf-summarizer': 'PDF SUMMARIZER',
     '/tools/pdf-tools': 'PDF Editor',
+    '/tools/spam-email-checker': 'Spam Email Checker',
     '/tools/stack-recommender': 'Stack Recommender',
     '/tools/tech-stack-analyzer': 'Tech Stack Analyzer',
     '/tools/token-compressor': 'AI Token Compressor',

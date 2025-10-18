@@ -45,6 +45,30 @@ export const quickToolsPosts: BlogPost[] = [
     ogImage: '/og/pdf-tools-guide.png',
   },
 
+{
+  id: 'spam-email-checker-guide',
+  title: 'Spam Email Checker - Protect Yourself from Phishing Attacks',
+  description:
+    'Complete guide to checking suspicious emails. Learn to detect phishing attempts, typosquatting, and email fraud before opening messages.',
+  readTime: '7 min',
+  publishDate: '2025-10-18',
+  icon: Shield,
+  featured: true,
+  status: 'published',
+  relatedTool: {
+    name: 'Spam Email Checker',
+    url: '/tools/spam-email-checker',
+  },
+  tags: ['email-security', 'phishing', 'spam', 'fraud-detection', 'online-safety', 'privacy'],
+  category: 'quick-tools',
+  author: 'AI AutoSite Team',
+  views: 0,
+  seoTitle: 'Spam Email Checker Guide - How to Detect Phishing Emails',
+  seoDescription:
+    'Learn to identify spam and phishing emails before opening them. Free email checker detects typosquatting, suspicious domains, and fraud attempts. Protect your privacy.',
+  ogImage: '/og/spam-email-checker-guide.png',
+},
+
   {
     id: 'age-calculator-guide',
     title: 'Age Calculator Online - Calculate Exact Age',
