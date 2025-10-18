@@ -35,7 +35,8 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="mt-auto bg-gradient-to-b from-gray-900/50 to-gray-900 border-t border-gray-800">
+    // ✅ mt-auto を削除
+    <footer className="bg-gradient-to-b from-gray-900/50 to-gray-900 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         {/* Desktop Footer - 4 Column Grid */}
         <div className="hidden md:grid md:grid-cols-4 gap-8 mb-8">

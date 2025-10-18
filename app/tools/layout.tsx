@@ -65,18 +65,18 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [toolTitle, setToolTitle] = useState('')
 
-  // Set tool title
   useEffect(() => {
     setToolTitle(getToolTitle(pathname))
   }, [pathname])
 
   return (
-    <>
+    // ✅ Flexbox構造を追加
+    <div className="flex flex-col min-h-screen">
       {/* Header */}
       <Header />
 
       {/* Main wrapper with background */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
+      <div className="flex-1 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900">
         {/* Tool-specific header (breadcrumb + title) */}
         {pathname !== '/tools' && toolTitle && (
           <nav className="container mx-auto px-4 pt-6 pb-4">
@@ -129,6 +129,6 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
 
       {/* Footer */}
       <Footer />
-    </>
+    </div>
   )
 }

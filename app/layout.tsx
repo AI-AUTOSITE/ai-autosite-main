@@ -5,7 +5,6 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-// ① 本番/ローカル共通で絶対URLを安定供給
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-autosite.com'
 
 export const metadata: Metadata = {
@@ -16,7 +15,6 @@ export const metadata: Metadata = {
     'free online tools, no signup tools, instant tools, privacy tools, browser tools, no registration, local processing',
   authors: [{ name: 'AI AutoSite' }],
 
-  // ② これが未設定だと OGP/Twitter 画像URL解決で Warning
   metadataBase: new URL(siteUrl),
 
   openGraph: {
@@ -57,7 +55,6 @@ export const metadata: Metadata = {
   },
 }
 
-// ③ 構造化データ（元コードの jsonLd）を <head> に実際に出力
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -93,12 +90,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <script
           type="application/ld+json"
-          // 注意: 直接オブジェクトを入れず JSON.stringify する
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      {/* ④ Inter フォントを body に適用 */}
-      <body className={`${inter.className} overflow-x-hidden`}>{children}</body>
+      {/* ✅ Flexbox構造を追加 */}
+      <body className={`${inter.className} overflow-x-hidden flex flex-col min-h-screen`}>
+        {children}
+      </body>
     </html>
   )
 }
