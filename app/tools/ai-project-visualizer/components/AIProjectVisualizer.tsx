@@ -3,6 +3,7 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Upload,
   FileText,
@@ -19,7 +20,12 @@ import {
   Sparkles,
   Loader2,
   FileDown,
+  AlertTriangle,
 } from 'lucide-react'
+
+// Import AI Tool Warning
+import { useAIToolWarning } from '@/hooks/useAIToolWarning'
+import AIToolWarningModal from '@/components/AIToolWarningModal'
 
 // Types
 interface TreeNode {
@@ -40,6 +46,18 @@ type FormatType = 'tree' | 'mermaid' | 'json' | 'markdown'
 type AIAction = 'analyze' | 'readme'
 
 export default function AIProjectVisualizerClient() {
+  // Router for redirect
+  const router = useRouter()
+
+  // AI Tool Warning Hook
+  const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning() // ✅ isChecking 追加
+
+  // Custom disagree handler - redirect to home
+  const handleCustomDisagree = () => {
+    handleDisagree()
+    router.push('/')
+  }
+
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
   const [format, setFormat] = useState<FormatType>('tree')
   const [output, setOutput] = useState('')
@@ -168,7 +186,7 @@ export default function AIProjectVisualizerClient() {
 
   // AI Analysis
   const handleAIAnalysis = async (action: AIAction) => {
-    if (!projectData) return
+    if (!projectData || !hasAgreed) return
 
     setIsAnalyzing(true)
     setAiError('')
@@ -220,85 +238,88 @@ export default function AIProjectVisualizerClient() {
   }
 
   // Process files
-  const processFiles = useCallback(async (files: FileList | null) => {
-    if (!files || files.length === 0) return
+  const processFiles = useCallback(
+    async (files: FileList | null) => {
+      if (!files || files.length === 0) return
 
-    setError('')
-    setAiAnalysis('')
-    setShowAiPanel(false)
+      setError('')
+      setAiAnalysis('')
+      setShowAiPanel(false)
 
-    const fileTree: { [key: string]: any } = {}
-    let fileCount = 0
-    let folderCount = 0
-    let skipped = 0
+      const fileTree: { [key: string]: any } = {}
+      let fileCount = 0
+      let folderCount = 0
+      let skipped = 0
 
-    for (const file of Array.from(files)) {
-      const pathParts = file.webkitRelativePath
-        ? file.webkitRelativePath.split('/')
-        : file.name.split('/')
+      for (const file of Array.from(files)) {
+        const pathParts = file.webkitRelativePath
+          ? file.webkitRelativePath.split('/')
+          : file.name.split('/')
 
-      // Security check
-      if (pathParts.some((part) => EXCLUDED.has(part.toLowerCase()))) {
-        skipped++
-        continue
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        skipped++
-        continue
-      }
-
-      // Build tree
-      let current = fileTree
-      pathParts.forEach((part, index) => {
-        if (index === pathParts.length - 1) {
-          current[part] = { type: 'file' }
-          fileCount++
-        } else {
-          if (!current[part]) {
-            current[part] = { type: 'folder', children: {} }
-            folderCount++
-          }
-          current = current[part].children
+        // Security check
+        if (pathParts.some((part) => EXCLUDED.has(part.toLowerCase()))) {
+          skipped++
+          continue
         }
+
+        if (file.size > 5 * 1024 * 1024) {
+          skipped++
+          continue
+        }
+
+        // Build tree
+        let current = fileTree
+        pathParts.forEach((part, index) => {
+          if (index === pathParts.length - 1) {
+            current[part] = { type: 'file' }
+            fileCount++
+          } else {
+            if (!current[part]) {
+              current[part] = { type: 'folder', children: {} }
+              folderCount++
+            }
+            current = current[part].children
+          }
+        })
+      }
+
+      if (fileCount === 0 && folderCount === 0) {
+        setError('No valid files found')
+        return
+      }
+
+      // Convert to TreeNode
+      const convertToNode = (obj: any, name: string, id = 'root'): TreeNode => {
+        if (obj.type === 'file') return { id, name, type: 'file' }
+
+        const children = Object.keys(obj.children || {})
+          .sort()
+          .map((key, i) => convertToNode(obj.children[key], key, `${id}-${i}`))
+
+        return { id, name, type: 'folder', children: children.length > 0 ? children : undefined }
+      }
+
+      const rootName = Object.keys(fileTree)[0] || 'project'
+      const structure = convertToNode(
+        fileTree[rootName] || { type: 'folder', children: fileTree },
+        rootName
+      )
+
+      setProjectData({
+        name: rootName,
+        totalFiles: fileCount,
+        totalFolders: folderCount,
+        structure,
       })
-    }
 
-    if (fileCount === 0 && folderCount === 0) {
-      setError('No valid files found')
-      return
-    }
+      setExpandedNodes(new Set(['root']))
 
-    // Convert to TreeNode
-    const convertToNode = (obj: any, name: string, id = 'root'): TreeNode => {
-      if (obj.type === 'file') return { id, name, type: 'file' }
-
-      const children = Object.keys(obj.children || {})
-        .sort()
-        .map((key, i) => convertToNode(obj.children[key], key, `${id}-${i}`))
-
-      return { id, name, type: 'folder', children: children.length > 0 ? children : undefined }
-    }
-
-    const rootName = Object.keys(fileTree)[0] || 'project'
-    const structure = convertToNode(
-      fileTree[rootName] || { type: 'folder', children: fileTree },
-      rootName
-    )
-
-    setProjectData({
-      name: rootName,
-      totalFiles: fileCount,
-      totalFolders: folderCount,
-      structure,
-    })
-
-    setExpandedNodes(new Set(['root']))
-
-    if (skipped > 0) {
-      setError(`Processed ${fileCount} files. ${skipped} files were excluded for security.`)
-    }
-  }, [])
+      if (skipped > 0) {
+        setError(`Processed ${fileCount} files. ${skipped} files were excluded for security.`)
+      }
+    },
+    [EXCLUDED]
+  )
 
   // Update output when data or format changes
   useEffect(() => {
@@ -309,13 +330,17 @@ export default function AIProjectVisualizerClient() {
 
   // Handle file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    processFiles(e.target.files)
+    if (hasAgreed) {
+      processFiles(e.target.files)
+    }
   }
 
   // Handle drag and drop
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
-    setIsDragging(true)
+    if (hasAgreed) {
+      setIsDragging(true)
+    }
   }
 
   const handleDragLeave = () => {
@@ -325,6 +350,8 @@ export default function AIProjectVisualizerClient() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
+
+    if (!hasAgreed) return
 
     const items = e.dataTransfer.items
     const files: File[] = []
@@ -389,6 +416,8 @@ export default function AIProjectVisualizerClient() {
 
   // Load sample
   const loadSample = () => {
+    if (!hasAgreed) return
+
     const sample: ProjectData = {
       name: 'my-project',
       totalFiles: 5,
@@ -475,313 +504,352 @@ export default function AIProjectVisualizerClient() {
     )
   }
 
+    if (isChecking) {
+    return (
+      <div className="container mx-auto px-4 py-20">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          {/* ドット表示（必須） */}
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+          <p className="mt-6 text-gray-400 text-sm">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
-      {/* Hidden inputs */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        onChange={handleFileSelect}
-        className="hidden"
-      />
-      <input
-        ref={folderInputRef}
-        type="file"
-        // @ts-ignore
-        webkitdirectory=""
-        multiple
-        onChange={handleFileSelect}
-        className="hidden"
+    <>
+      {/* AI Tool Warning Modal */}
+      <AIToolWarningModal
+        isOpen={showWarning}
+        onAgree={handleAgree}
+        onDisagree={handleCustomDisagree}
       />
 
-      {/* Main Card */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
-        {/* ✅ 2カラム対応：モバイル/タブレット=1列、デスクトップ=2列 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Input Section */}
-          <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-cyan-500/20">
-            <div className="mb-4">
-              <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
-                <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
-                Import Project
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
-                             hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
-                             border border-white/10 hover:border-cyan-400/50 active:scale-95"
-                >
-                  <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                  Files
-                </button>
-                <button
-                  onClick={() => folderInputRef.current?.click()}
-                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
-                             hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
-                             border border-white/10 hover:border-cyan-400/50 active:scale-95"
-                >
-                  <FolderPlus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                  Folder
-                </button>
-                <button
-                  onClick={loadSample}
-                  className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
-                             rounded-lg transition-all font-medium border border-white/10 active:scale-95"
-                >
-                  Sample
-                </button>
-              </div>
+      {/* Show warning message if not agreed */}
+      {!hasAgreed ? (
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-md mx-auto text-center">
+            <div className="bg-orange-500/10 border border-orange-500/30 rounded-2xl p-8">
+              <AlertTriangle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+              <h3 className="text-white font-bold text-xl mb-2">Agreement Required</h3>
+              <p className="text-gray-400 text-sm mb-6">
+                You must agree to the terms to use this AI-powered tool.
+              </p>
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all font-semibold shadow-lg"
+              >
+                Return to Home
+              </button>
             </div>
+          </div>
+        </div>
+      ) : (
+        /* Main Content - Only show if agreed */
+        <div className="container mx-auto px-4 py-6 sm:py-8 max-w-7xl">
+          {/* Hidden inputs */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <input
+            ref={folderInputRef}
+            type="file"
+            // @ts-ignore
+            webkitdirectory=""
+            multiple
+            onChange={handleFileSelect}
+            className="hidden"
+          />
 
-            <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-xs sm:text-sm text-gray-400">
-                  {projectData ? 'Project Structure' : 'Drop Zone'}
-                </label>
-                {projectData && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400">
-                      {projectData.totalFiles}f, {projectData.totalFolders}d
-                    </span>
+          {/* Main Card */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 sm:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Input Section */}
+              <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-cyan-500/20">
+                <div className="mb-4">
+                  <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
+                    <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
+                    Import Project
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
                     <button
-                      onClick={handleClear}
-                      className="min-h-[40px] min-w-[40px] flex items-center justify-center text-xs bg-red-500/20 text-red-400 
-                                 hover:bg-red-500/30 rounded-lg transition-all active:scale-95"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
+                                 hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
+                                 border border-white/10 hover:border-cyan-400/50 active:scale-95"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <FileUp className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
+                      Files
+                    </button>
+                    <button
+                      onClick={() => folderInputRef.current?.click()}
+                      className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 
+                                 hover:bg-cyan-500/20 hover:text-cyan-400 rounded-lg transition-all font-medium 
+                                 border border-white/10 hover:border-cyan-400/50 active:scale-95"
+                    >
+                      <FolderPlus className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
+                      Folder
+                    </button>
+                    <button
+                      onClick={loadSample}
+                      className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
+                                 rounded-lg transition-all font-medium border border-white/10 active:scale-95"
+                    >
+                      Sample
                     </button>
                   </div>
-                )}
-              </div>
-
-              {!projectData ? (
-                <div
-                  className={`
-                    h-48 sm:h-60 p-4 bg-black/20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center
-                    transition-all cursor-pointer hover:bg-black/30
-                    ${isDragging ? 'border-cyan-400 bg-cyan-400/10' : 'border-white/20'}
-                  `}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => folderInputRef.current?.click()}
-                >
-                  <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 mb-3" />
-                  <p className="text-gray-300 text-sm sm:text-base font-medium">Drop files/folders here</p>
-                  <p className="text-gray-500 text-xs sm:text-sm mt-2">or click to browse</p>
-                  <p className="text-gray-600 text-xs mt-3">
-                    Auto-excludes: node_modules, .git, .env
-                  </p>
                 </div>
-              ) : (
-                <div className="h-48 sm:h-60 p-3 bg-black/20 border border-white/10 rounded-xl overflow-y-auto">
-                  {renderNode(projectData.structure)}
-                </div>
-              )}
-            </div>
 
-            {/* AI Analysis Section */}
-            {projectData && (
-              <div className="mt-4 space-y-3">
-                {/* AI Analyze Button */}
-                <button
-                  onClick={() => handleAIAnalysis('analyze')}
-                  disabled={isAnalyzing}
-                  className="w-full min-h-[56px] px-4 py-4 text-sm sm:text-base bg-gradient-to-r from-purple-500 to-pink-500 
-                             text-white hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all font-bold 
-                             shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed 
-                             flex items-center justify-center gap-2 active:scale-95"
-                >
-                  {isAnalyzing ? (
-                    <>
-                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                      <span>Analyzing with AI...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span>Analyze with AI</span>
-                    </>
-                  )}
-                </button>
-
-                {/* AI Analysis Panel - AIボタンの直下 */}
-                {showAiPanel && (
-                  <div className="p-4 sm:p-5 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
-                    <div className="flex justify-between items-center mb-3">
-                      <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-                        AI Analysis
-                      </label>
-                      {aiAnalysis && !isAnalyzing && (
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="text-xs sm:text-sm text-gray-400">
+                      {projectData ? 'Project Structure' : 'Drop Zone'}
+                    </label>
+                    {projectData && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">
+                          {projectData.totalFiles}f, {projectData.totalFolders}d
+                        </span>
                         <button
-                          onClick={handleCopyAI}
-                          className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
-                                     rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
+                          onClick={handleClear}
+                          className="min-h-[40px] min-w-[40px] flex items-center justify-center text-xs bg-red-500/20 text-red-400 
+                                     hover:bg-red-500/30 rounded-lg transition-all active:scale-95"
                         >
-                          <Copy className="w-3 h-3" />
-                          <span>Copy</span>
+                          <Trash2 className="w-3 h-3" />
                         </button>
-                      )}
-                    </div>
-
-                    {isAnalyzing ? (
-                      <div className="flex items-center justify-center py-12">
-                        <div className="text-center">
-                          <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
-                          <p className="text-gray-400 text-sm">Analyzing your project structure...</p>
-                          <p className="text-gray-500 text-xs mt-1">This may take a few seconds</p>
-                        </div>
                       </div>
-                    ) : aiError ? (
-                      <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
-                        <p className="text-red-400 text-sm">{aiError}</p>
-                      </div>
-                    ) : aiAnalysis ? (
-                      <div className="prose prose-invert prose-sm max-w-none">
-                        <div className="text-gray-300 text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
-                          {aiAnalysis}
-                        </div>
-                      </div>
-                    ) : null}
+                    )}
                   </div>
-                )}
 
-                {/* Secondary Buttons */}
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => handleAIAnalysis('readme')}
-                    disabled={isAnalyzing}
-                    className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
-                               rounded-lg transition-all font-medium border border-blue-400/50 disabled:opacity-50 
-                               disabled:cursor-not-allowed flex items-center justify-center gap-1 active:scale-95"
-                  >
-                    <FileDown className="w-3 h-3" />
-                    <span>Generate README</span>
-                  </button>
-                  <button
-                    onClick={handleClear}
-                    className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
-                               rounded-lg transition-all font-medium border border-white/10 active:scale-95"
-                  >
-                    Clear All
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Output Section */}
-          <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-purple-500/20">
-            <div className="mb-4">
-              <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
-                <Download className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-                Export Format
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { id: 'tree', label: 'Tree' },
-                  { id: 'mermaid', label: 'Mermaid' },
-                  { id: 'json', label: 'JSON' },
-                  { id: 'markdown', label: 'Markdown' },
-                ].map((fmt) => (
-                  <button
-                    key={fmt.id}
-                    onClick={() => setFormat(fmt.id as FormatType)}
-                    className={`min-h-[48px] px-3 py-3 text-xs sm:text-sm rounded-lg font-medium transition-all active:scale-95 ${
-                      format === fmt.id
-                        ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                    }`}
-                  >
-                    {fmt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-xs sm:text-sm text-gray-400">Output Preview</label>
-                {output && (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleCopy}
-                      className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all flex items-center gap-1 
-                                  font-medium active:scale-95 ${
-                        copied
-                          ? 'bg-green-500 text-white'
-                          : 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-400/50'
-                      }`}
+                  {!projectData ? (
+                    <div
+                      className={`
+                        h-48 sm:h-60 p-4 bg-black/20 border-2 border-dashed rounded-xl flex flex-col items-center justify-center
+                        transition-all cursor-pointer hover:bg-black/30
+                        ${isDragging ? 'border-cyan-400 bg-cyan-400/10' : 'border-white/20'}
+                      `}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      onClick={() => folderInputRef.current?.click()}
                     >
-                      {copied ? (
+                      <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 mb-3" />
+                      <p className="text-gray-300 text-sm sm:text-base font-medium">
+                        Drop files/folders here
+                      </p>
+                      <p className="text-gray-500 text-xs sm:text-sm mt-2">or click to browse</p>
+                      <p className="text-gray-600 text-xs mt-3">
+                        Auto-excludes: node_modules, .git, .env
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="h-48 sm:h-60 p-3 bg-black/20 border border-white/10 rounded-xl overflow-y-auto">
+                      {renderNode(projectData.structure)}
+                    </div>
+                  )}
+                </div>
+
+                {/* AI Analysis Section */}
+                {projectData && (
+                  <div className="mt-4 space-y-3">
+                    {/* AI Analyze Button */}
+                    <button
+                      onClick={() => handleAIAnalysis('analyze')}
+                      disabled={isAnalyzing}
+                      className="w-full min-h-[56px] px-4 py-4 text-sm sm:text-base bg-gradient-to-r from-purple-500 to-pink-500 
+                                 text-white hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all font-bold 
+                                 shadow-lg shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed 
+                                 flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      {isAnalyzing ? (
                         <>
-                          <Check className="w-3 h-3" />
-                          <span className="hidden sm:inline">Copied!</span>
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                          <span>Analyzing with AI...</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="w-3 h-3" />
-                          <span className="hidden sm:inline">Copy</span>
+                          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Analyze with AI</span>
                         </>
                       )}
                     </button>
-                    <button
-                      onClick={handleDownload}
-                      className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
-                                 rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
-                    >
-                      <Download className="w-3 h-3" />
-                      <span className="hidden sm:inline">Download</span>
-                    </button>
+
+                    {/* AI Analysis Panel */}
+                    {showAiPanel && (
+                      <div className="p-4 sm:p-5 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
+                        <div className="flex justify-between items-center mb-3">
+                          <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                            AI Analysis
+                          </label>
+                          {aiAnalysis && !isAnalyzing && (
+                            <button
+                              onClick={handleCopyAI}
+                              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
+                                         rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
+                            >
+                              <Copy className="w-3 h-3" />
+                              <span>Copy</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {isAnalyzing ? (
+                          <div className="flex items-center justify-center py-12">
+                            <div className="text-center">
+                              <Loader2 className="w-8 h-8 text-purple-400 animate-spin mx-auto mb-3" />
+                              <p className="text-gray-400 text-sm">
+                                Analyzing your project structure...
+                              </p>
+                              <p className="text-gray-500 text-xs mt-1">This may take a few seconds</p>
+                            </div>
+                          </div>
+                        ) : aiError ? (
+                          <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                            <p className="text-red-400 text-sm">{aiError}</p>
+                          </div>
+                        ) : aiAnalysis ? (
+                          <div className="prose prose-invert prose-sm max-w-none">
+                            <div className="text-gray-300 text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
+                              {aiAnalysis}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
+
+                    {/* Secondary Buttons */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => handleAIAnalysis('readme')}
+                        disabled={isAnalyzing}
+                        className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+                                   rounded-lg transition-all font-medium border border-blue-400/50 disabled:opacity-50 
+                                   disabled:cursor-not-allowed flex items-center justify-center gap-1 active:scale-95"
+                      >
+                        <FileDown className="w-3 h-3" />
+                        <span>Generate README</span>
+                      </button>
+                      <button
+                        onClick={handleClear}
+                        className="min-h-[48px] px-3 py-3 text-xs sm:text-sm bg-white/5 text-gray-400 hover:bg-white/10 
+                                   rounded-lg transition-all font-medium border border-white/10 active:scale-95"
+                      >
+                        Clear All
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
-              <textarea
-                value={output}
-                readOnly
-                placeholder={`${format} output will appear here...\n\nUpload your project to get started`}
-                className="w-full h-[200px] sm:h-[280px] p-3 sm:p-4 bg-black/20 border border-white/10 rounded-xl text-white 
-                           placeholder-gray-500 resize-none font-mono text-xs sm:text-sm cursor-text"
-                spellCheck={false}
-              />
+              {/* Output Section */}
+              <div className="p-4 sm:p-5 bg-white/5 rounded-xl border border-purple-500/20">
+                <div className="mb-4">
+                  <label className="text-white font-semibold text-sm sm:text-base flex items-center gap-2 mb-3">
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                    Export Format
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'tree', label: 'Tree' },
+                      { id: 'mermaid', label: 'Mermaid' },
+                      { id: 'json', label: 'JSON' },
+                      { id: 'markdown', label: 'Markdown' },
+                    ].map((fmt) => (
+                      <button
+                        key={fmt.id}
+                        onClick={() => setFormat(fmt.id as FormatType)}
+                        className={`min-h-[48px] px-3 py-3 text-xs sm:text-sm rounded-lg font-medium transition-all active:scale-95 ${
+                          format === fmt.id
+                            ? 'bg-purple-500/30 text-purple-300 border border-purple-400/50'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                        }`}
+                      >
+                        {fmt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="text-xs sm:text-sm text-gray-400">Output Preview</label>
+                    {output && (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleCopy}
+                          className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all flex items-center gap-1 
+                                      font-medium active:scale-95 ${
+                            copied
+                              ? 'bg-green-500 text-white'
+                              : 'bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 border border-purple-400/50'
+                          }`}
+                        >
+                          {copied ? (
+                            <>
+                              <Check className="w-3 h-3" />
+                              <span className="hidden sm:inline">Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3 h-3" />
+                              <span className="hidden sm:inline">Copy</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={handleDownload}
+                          className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 
+                                     rounded-lg transition-all flex items-center gap-1 font-medium border border-purple-400/50 active:scale-95"
+                        >
+                          <Download className="w-3 h-3" />
+                          <span className="hidden sm:inline">Download</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <textarea
+                    value={output}
+                    readOnly
+                    placeholder={`${format} output will appear here...\n\nUpload your project to get started`}
+                    className="w-full h-[200px] sm:h-[280px] p-3 sm:p-4 bg-black/20 border border-white/10 rounded-xl text-white 
+                               placeholder-gray-500 resize-none font-mono text-xs sm:text-sm cursor-text"
+                    spellCheck={false}
+                  />
+                </div>
+              </div>
             </div>
+
+            {/* Error */}
+            {error && (
+              <div
+                className={`mt-6 p-3 sm:p-4 rounded-lg animate-fadeIn ${
+                  error.includes('Processed')
+                    ? 'bg-yellow-500/10 border border-yellow-500/20'
+                    : 'bg-red-500/10 border border-red-500/20'
+                }`}
+              >
+                <p
+                  className={`text-xs sm:text-sm ${
+                    error.includes('Processed') ? 'text-yellow-400' : 'text-red-400'
+                  }`}
+                >
+                  {error}
+                </p>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Error */}
-        {error && (
-          <div
-            className={`mt-6 p-3 sm:p-4 rounded-lg animate-fadeIn ${
-              error.includes('Processed')
-                ? 'bg-yellow-500/10 border border-yellow-500/20'
-                : 'bg-red-500/10 border border-red-500/20'
-            }`}
-          >
-            <p
-              className={`text-xs sm:text-sm ${
-                error.includes('Processed') ? 'text-yellow-400' : 'text-red-400'
-              }`}
-            >
-              {error}
-            </p>
-          </div>
-        )}
-
-        {/* Security Badge */}
-        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-500">
-          <Shield className="w-3 h-3 text-green-400" />
-          <span className="text-center">Sensitive files auto-excluded • Processing happens locally</span>
-        </div>
-      </div>
-
-      {/* Tips */}
-      <p className="text-center text-xs text-gray-500 mt-4">
-        Best for AI: Tree format for Claude/ChatGPT • Mermaid for GitHub/Notion
-      </p>
-    </div>
+      )}
+    </>
   )
 }

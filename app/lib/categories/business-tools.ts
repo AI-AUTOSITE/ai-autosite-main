@@ -17,7 +17,6 @@ export const businessTools: Tool[] = [
     timeToUse: '10 minutes',
     featured: true,
     new: true,
-    badge: 'AI',
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'server',

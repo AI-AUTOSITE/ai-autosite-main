@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Flame,
   BookOpen,
@@ -10,6 +11,7 @@ import {
   Check,
   Sparkles,
   AlertCircle,
+  AlertTriangle,
   Download,
   FileCode,
 } from 'lucide-react'
@@ -20,6 +22,10 @@ import {
   detectLanguage,
 } from '../lib/submission-guard'
 import { showToast } from '../lib/toast'
+
+// Import AI Tool Warning
+import { useAIToolWarning } from '@/hooks/useAIToolWarning'
+import AIToolWarningModal from '@/components/AIToolWarningModal'
 
 const SAMPLE_CODES = {
   javascript: `function calculateTotal(items) {
@@ -44,6 +50,18 @@ console.log(divide(10))`,
 }
 
 export default function CodeRoasterClient() {
+  // Router for redirect
+  const router = useRouter()
+
+  // AI Tool Warning Hook
+  const { showWarning, hasAgreed, isChecking, handleAgree, handleDisagree } = useAIToolWarning()
+
+  // Custom disagree handler - redirect to home
+  const handleCustomDisagree = () => {
+    handleDisagree()
+    router.push('/')
+  }
+
   const [code, setCode] = useState('')
   const [output, setOutput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -75,6 +93,8 @@ export default function CodeRoasterClient() {
   }, [code])
 
   const handleAction = async (mode: 'roast' | 'explain' | 'fix') => {
+    if (!hasAgreed) return
+
     const error = validateInput(code)
     if (error) {
       showToast(error)
@@ -146,250 +166,302 @@ export default function CodeRoasterClient() {
   }
 
   const loadSample = (type: keyof typeof SAMPLE_CODES) => {
+    if (!hasAgreed) return
+    
     setCode(SAMPLE_CODES[type])
     setOutput('')
     showToast(`Sample ${type} code loaded!`)
   }
 
+  // ✅ ローディング表示
+  if (isChecking) {
+    return (
+      <div className="container mx-auto px-4 py-20">
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          {/* ドット表示（必須） */}
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-3 h-3 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+          <p className="mt-6 text-gray-400 text-sm">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
-      {/* Main Content */}
-      <div className="space-y-6">
-        {/* Input Panel */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-                <span className="hidden sm:inline">Input Code</span>
-                <span className="sm:hidden">Code</span>
-              </h3>
-              {detectedLanguage && (
-                <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-400/50">
-                  <FileCode className="w-3 h-3 inline mr-1" />
-                  {detectedLanguage}
-                </span>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
-              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500" />
-              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500" />
+    <>
+      {/* AI Tool Warning Modal */}
+      <AIToolWarningModal
+        isOpen={showWarning}
+        onAgree={handleAgree}
+        onDisagree={handleCustomDisagree}
+      />
+
+      {/* Agreement Required Screen */}
+      {!hasAgreed ? (
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-md mx-auto text-center">
+            <div className="bg-orange-500/10 border border-orange-500/30 rounded-2xl p-8">
+              <AlertTriangle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+              <h3 className="text-white font-bold text-xl mb-2">Agreement Required</h3>
+              <p className="text-gray-400 text-sm mb-6">
+                You must agree to the terms to use this AI-powered tool.
+              </p>
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-all font-semibold shadow-lg"
+              >
+                Return to Home
+              </button>
             </div>
           </div>
+        </div>
+      ) : (
+        /* Main Content - Only shown after agreement */
+        <div className="container mx-auto px-4 py-6 sm:py-8">
+          {/* Main Content */}
+          <div className="space-y-6">
+            {/* Input Panel */}
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <Code2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+                    <span className="hidden sm:inline">Input Code</span>
+                    <span className="sm:hidden">Code</span>
+                  </h3>
+                  {detectedLanguage && (
+                    <span className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full border border-purple-400/50">
+                      <FileCode className="w-3 h-3 inline mr-1" />
+                      {detectedLanguage}
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500" />
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500" />
+                </div>
+              </div>
 
-          {/* Sample Code Buttons */}
-          <div className="mb-3 flex flex-wrap gap-2">
-            <button
-              onClick={() => loadSample('javascript')}
-              disabled={isLoading}
-              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+              {/* Sample Code Buttons */}
+              <div className="mb-3 flex flex-wrap gap-2">
+                <button
+                  onClick={() => loadSample('javascript')}
+                  disabled={isLoading}
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
                          rounded-lg transition-all border border-blue-400/50 disabled:opacity-50 active:scale-95"
-            >
-              Sample JS
-            </button>
-            <button
-              onClick={() => loadSample('python')}
-              disabled={isLoading}
-              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-green-500/20 text-green-300 hover:bg-green-500/30 
+                >
+                  Sample JS
+                </button>
+                <button
+                  onClick={() => loadSample('python')}
+                  disabled={isLoading}
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-green-500/20 text-green-300 hover:bg-green-500/30 
                          rounded-lg transition-all border border-green-400/50 disabled:opacity-50 active:scale-95"
-            >
-              Sample Python
-            </button>
-            <button
-              onClick={() => loadSample('buggy')}
-              disabled={isLoading}
-              className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-red-500/20 text-red-300 hover:bg-red-500/30 
+                >
+                  Sample Python
+                </button>
+                <button
+                  onClick={() => loadSample('buggy')}
+                  disabled={isLoading}
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-red-500/20 text-red-300 hover:bg-red-500/30 
                          rounded-lg transition-all border border-red-400/50 disabled:opacity-50 active:scale-95"
-            >
-              Buggy Code
-            </button>
-          </div>
+                >
+                  Buggy Code
+                </button>
+              </div>
 
-          <div className="relative mb-4">
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              disabled={isLoading}
-              placeholder="// Paste your code here..."
-              className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+              <div className="relative mb-4">
+                <textarea
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  disabled={isLoading}
+                  placeholder="// Paste your code here..."
+                  className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
                        border-2 border-purple-500/30 text-white font-mono text-xs sm:text-sm 
                        resize-none placeholder:text-gray-400 focus:outline-none 
                        focus:border-purple-400/60 transition-all duration-300 
                        disabled:opacity-50"
-            />
-            <div className="absolute bottom-3 right-3 flex items-center gap-2 sm:gap-3">
-              <div className="text-xs text-purple-400 bg-black/50 px-2 py-1 rounded-full">
-                {code.length}/10000
-              </div>
-              {code.length > 0 && (
-                <button
-                  onClick={() => setCode('')}
-                  className="text-xs text-red-400 hover:text-red-300 bg-black/50 
+                />
+                <div className="absolute bottom-3 right-3 flex items-center gap-2 sm:gap-3">
+                  <div className="text-xs text-purple-400 bg-black/50 px-2 py-1 rounded-full">
+                    {code.length}/10000
+                  </div>
+                  {code.length > 0 && (
+                    <button
+                      onClick={() => setCode('')}
+                      className="text-xs text-red-400 hover:text-red-300 bg-black/50 
                            px-2 py-1 rounded-full transition-colors active:scale-95"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
 
-          {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            <button
-              onClick={() => handleAction('roast')}
-              disabled={isLoading || attemptsLeft === 0}
-              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+              {/* Action Buttons */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <button
+                  onClick={() => handleAction('roast')}
+                  disabled={isLoading || attemptsLeft === 0}
+                  className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
                         transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
                         active:scale-95 ${
                           activeMode === 'roast'
                             ? 'bg-gradient-to-r from-orange-600 to-red-600 scale-95 ring-2 sm:ring-4 ring-orange-400/50'
                             : 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600'
                         }`}
-            >
-              <div className="flex flex-col items-center gap-1">
-                <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Roast</span>
-                <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
-                </span>
-              </div>
-            </button>
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Roast</span>
+                    <span className="text-[10px] opacity-70">
+                      {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
+                    </span>
+                  </div>
+                </button>
 
-            <button
-              onClick={() => handleAction('explain')}
-              disabled={isLoading || attemptsLeft === 0}
-              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+                <button
+                  onClick={() => handleAction('explain')}
+                  disabled={isLoading || attemptsLeft === 0}
+                  className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
                         transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
                         active:scale-95 ${
                           activeMode === 'explain'
                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 scale-95 ring-2 sm:ring-4 ring-blue-400/50'
                             : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
                         }`}
-            >
-              <div className="flex flex-col items-center gap-1">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Explain</span>
-                <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
-                </span>
-              </div>
-            </button>
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Explain</span>
+                    <span className="text-[10px] opacity-70">
+                      {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
+                    </span>
+                  </div>
+                </button>
 
-            <button
-              onClick={() => handleAction('fix')}
-              disabled={isLoading || attemptsLeft === 0}
-              className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
+                <button
+                  onClick={() => handleAction('fix')}
+                  disabled={isLoading || attemptsLeft === 0}
+                  className={`min-h-[56px] py-3 px-2 sm:px-3 rounded-xl font-bold text-white text-xs sm:text-sm 
                         transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed 
                         active:scale-95 ${
                           activeMode === 'fix'
                             ? 'bg-gradient-to-r from-green-600 to-teal-600 scale-95 ring-2 sm:ring-4 ring-green-400/50'
                             : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600'
                         }`}
-            >
-              <div className="flex flex-col items-center gap-1">
-                <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Fix</span>
-                <span className="text-[10px] opacity-70">
-                  {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
-                </span>
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Fix</span>
+                    <span className="text-[10px] opacity-70">
+                      {attemptsLeft > 0 ? `${attemptsLeft} left` : 'None'}
+                    </span>
+                  </div>
+                </button>
               </div>
-            </button>
-          </div>
 
-          {/* Daily Limit Warning */}
-          {attemptsLeft === 0 && (
-            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-2">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-red-300">
-                <p className="font-semibold">Daily limit reached!</p>
-                <p className="text-xs mt-1">Come back tomorrow for 3 more attempts.</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Output Panel */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-              <span className="text-xl sm:text-2xl">🤖</span>
-              <span>AI Response</span>
-            </h3>
-            <div className="flex gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" />
-              <div
-                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse"
-                style={{ animationDelay: '0.3s' }}
-              />
-              <div
-                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse"
-                style={{ animationDelay: '0.6s' }}
-              />
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          {output && !isLoading && (
-            <div className="mb-3 flex flex-wrap gap-2">
-              <button
-                onClick={handleDownload}
-                className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
-                           rounded-lg transition-all border border-blue-400/50 active:scale-95"
-              >
-                <Download className="w-3 h-3 inline mr-1" />
-                Download
-              </button>
-              <button
-                onClick={handleCopy}
-                className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all border active:scale-95 ${
-                  copied
-                    ? 'bg-green-500/20 text-green-300 border-green-400/50'
-                    : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
-                }`}
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-3 h-3 inline mr-1" />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3 inline mr-1" />
-                    Copy
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* Output Area */}
-          <div className="relative">
-            <div
-              className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
-                       border-2 border-orange-500/30 text-white font-mono text-xs sm:text-sm overflow-auto whitespace-pre-wrap"
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2 text-orange-400">
-                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                  <span className="animate-pulse text-xs sm:text-sm">AI is thinking...</span>
+              {/* Daily Limit Warning */}
+              {attemptsLeft === 0 && (
+                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-red-300">
+                    <p className="font-semibold">Daily limit reached!</p>
+                    <p className="text-xs mt-1">Come back tomorrow for 3 more attempts.</p>
+                  </div>
                 </div>
-              ) : (
-                output || (
-                  <span className="text-gray-400 text-xs sm:text-sm">Your AI feedback will appear here...</span>
-                )
               )}
             </div>
+
+            {/* Output Panel */}
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/10">
+              <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <span className="text-xl sm:text-2xl">🤖</span>
+                  <span>AI Response</span>
+                </h3>
+                <div className="flex gap-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-purple-500 animate-pulse" />
+                  <div
+                    className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse"
+                    style={{ animationDelay: '0.3s' }}
+                  />
+                  <div
+                    className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse"
+                    style={{ animationDelay: '0.6s' }}
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              {output && !isLoading && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    onClick={handleDownload}
+                    className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 
+                           rounded-lg transition-all border border-blue-400/50 active:scale-95"
+                  >
+                    <Download className="w-3 h-3 inline mr-1" />
+                    Download
+                  </button>
+                  <button
+                    onClick={handleCopy}
+                    className={`min-h-[40px] px-3 py-2 text-xs sm:text-sm rounded-lg transition-all border active:scale-95 ${
+                      copied
+                        ? 'bg-green-500/20 text-green-300 border-green-400/50'
+                        : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 border-purple-400/50'
+                    }`}
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3 h-3 inline mr-1" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 inline mr-1" />
+                        Copy
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {/* Output Area */}
+              <div className="relative">
+                <div
+                  className="w-full h-[200px] sm:h-[300px] p-3 sm:p-4 rounded-xl bg-black/40 backdrop-blur-sm 
+                       border-2 border-orange-500/30 text-white font-mono text-xs sm:text-sm overflow-auto whitespace-pre-wrap"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2 text-orange-400">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <span className="animate-pulse text-xs sm:text-sm">AI is thinking...</span>
+                    </div>
+                  ) : (
+                    output || (
+                      <span className="text-gray-400 text-xs sm:text-sm">
+                        Your AI feedback will appear here...
+                      </span>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Tip */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-gray-400">
+              💡 Try loading a sample code to see how Code Roaster works
+            </p>
           </div>
         </div>
-      </div>
-
-      {/* Quick Tip */}
-      <div className="mt-6 text-center">
-        <p className="text-xs text-gray-400">
-          💡 Try loading a sample code to see how Code Roaster works
-        </p>
-      </div>
-    </div>
+      )}
+    </>
   )
 }

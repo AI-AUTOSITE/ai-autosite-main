@@ -1,17 +1,7 @@
 // app/tools/ai-project-visualizer/page.tsx
 
 import { Metadata } from 'next'
-import dynamic from 'next/dynamic'
-
-// Dynamic import to avoid SSR issues with client components
-const AIProjectVisualizer = dynamic(() => import('./components/AIProjectVisualizer'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-white text-lg">Loading visualizer...</div>
-    </div>
-  ),
-})
+import AIProjectVisualizer from './components/AIProjectVisualizer'
 
 export const metadata: Metadata = {
   title: 'Free Project Visualizer - No Ads, No Sign Up | AI AutoSite',

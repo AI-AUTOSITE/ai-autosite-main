@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, Shield, Lock, Zap, DollarSign, Code, HelpCircle, Mail, Smartphone } from 'lucide-react'
+import { ChevronDown, Shield, Lock, Zap, DollarSign, Code, HelpCircle, Mail, Smartphone, AlertTriangle, Cloud } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -26,6 +26,226 @@ export default function FAQPage() {
   }
 
   const faqCategories: FAQCategory[] = [
+    {
+      id: 'ai-tools',
+      title: 'AI Tools & Data Safety',
+      icon: Cloud,
+      questions: [
+        {
+          q: 'What are AI-powered tools and how are they different?',
+          a: (
+            <div className="space-y-3">
+              <p>AI-powered tools use Claude API (by Anthropic) to provide advanced analysis and recommendations.</p>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                  <p className="text-green-400 font-semibold mb-2">🌐 Browser-Only Tools (Most Tools)</p>
+                  <ul className="text-sm space-y-1">
+                    <li>✓ Everything processes in your browser</li>
+                    <li>✓ No data sent to any server</li>
+                    <li>✓ Works offline after page load</li>
+                    <li>✓ Maximum privacy</li>
+                  </ul>
+                </div>
+                <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
+                  <p className="text-purple-400 font-semibold mb-2">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mr-1">AI</span>
+                    AI-Powered Tools
+                  </p>
+                  <ul className="text-sm space-y-1">
+                    <li>⚠ Requires internet connection</li>
+                    <li>⚠ Data sent to Claude API</li>
+                    <li>✓ Not stored after processing</li>
+                    <li>✓ Clearly labeled with badge</li>
+                  </ul>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-400">
+                Look for the <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                on tool cards to identify AI-powered tools!
+              </p>
+            </div>
+          ),
+        },
+        {
+          q: 'Is it safe to use AI tools with my data?',
+          a: (
+            <div className="space-y-3">
+              <p className="text-yellow-300 font-semibold">
+                ⚠️ It depends on what type of data you're uploading!
+              </p>
+
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                <p className="text-red-400 font-semibold mb-2">❌ NEVER Upload to AI Tools:</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Personal information (names, addresses, emails, phone numbers)</li>
+                  <li>• Confidential business data (trade secrets, strategic plans, financial records)</li>
+                  <li>• Medical or legal sensitive information</li>
+                  <li>• Proprietary source code or intellectual property</li>
+                  <li>• Passwords, API keys, or credentials</li>
+                  <li>• Customer data or PII (Personally Identifiable Information)</li>
+                </ul>
+              </div>
+
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                <p className="text-green-400 font-semibold mb-2">✅ Safe to Use AI Tools With:</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Sample or dummy data</li>
+                  <li>• Anonymized content (all identifying info removed)</li>
+                  <li>• Public information already available online</li>
+                  <li>• Generic questions or hypothetical scenarios</li>
+                  <li>• Test data without real information</li>
+                </ul>
+              </div>
+
+              <p className="text-cyan-400 text-sm font-semibold">
+                When in doubt, DON'T upload it to AI tools. Use our browser-only tools instead!
+              </p>
+            </div>
+          ),
+        },
+        {
+          q: 'Where does my data go when I use AI tools?',
+          a: (
+            <div className="space-y-3">
+              <p>Here's the complete journey of your data:</p>
+
+              <div className="bg-gray-800/50 rounded-lg p-4">
+                <p className="font-semibold mb-3">🔄 Data Flow:</p>
+                <ol className="space-y-2 list-decimal list-inside text-sm">
+                  <li>You submit data → Sent via HTTPS to our server</li>
+                  <li>Our server forwards it to Claude API (Anthropic)</li>
+                  <li>Claude processes and returns results</li>
+                  <li>Results displayed in your browser</li>
+                  <li><strong>Your input is discarded</strong> - not stored by us or Anthropic</li>
+                </ol>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                <p className="text-blue-300 mb-2">
+                  <strong>🛡️ Anthropic's Commitments:</strong>
+                </p>
+                <ul className="text-sm space-y-1">
+                  <li>✓ Does NOT use your data to train AI models</li>
+                  <li>✓ Does NOT store your data after processing</li>
+                  <li>✓ SOC 2 Type II certified for security</li>
+                  <li>✓ GDPR and CCPA compliant</li>
+                </ul>
+                <p className="text-xs text-gray-400 mt-2">
+                  Learn more: <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Anthropic Privacy Policy</a>
+                </p>
+              </div>
+
+              <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
+                <p className="text-orange-300 text-sm">
+                  <strong>⚠️ Important:</strong> While we trust Anthropic's security, we cannot guarantee 
+                  what happens to data sent through third-party APIs. Use AI tools with non-sensitive data only!
+                </p>
+              </div>
+            </div>
+          ),
+        },
+        {
+          q: 'How can I tell which tools are AI-powered?',
+          a: (
+            <div className="space-y-3">
+              <p>Very easy! AI-powered tools are clearly marked with an AI badge:</p>
+
+              <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                <p className="mb-3">Look for this badge on tool cards:</p>
+                <span className="inline-flex items-center px-3 py-1 rounded text-sm font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                  AI
+                </span>
+                <p className="text-xs text-gray-400 mt-3">
+                  If you see this badge, the tool requires internet and sends data to Claude API
+                </p>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                <p className="text-blue-300 font-semibold mb-2">Examples of AI Tools:</p>
+                <ul className="text-sm space-y-1">
+                  <li>• Tech Stack Analyzer (framework recommendations)</li>
+                  <li>• AI-powered code analysis tools</li>
+                  <li>• Content generators and summarizers</li>
+                </ul>
+              </div>
+
+              <p className="text-sm text-gray-400">
+                Most of our tools (40+) are browser-only and don't use AI or send any data!
+              </p>
+            </div>
+          ),
+        },
+        {
+          q: 'What happens if I accidentally upload sensitive data to an AI tool?',
+          a: (
+            <div className="space-y-3">
+              <p className="text-orange-300 font-semibold">
+                Don't panic, but act quickly:
+              </p>
+
+              <div className="bg-gray-800/50 rounded-lg p-4">
+                <p className="font-semibold mb-2">🚨 Immediate Actions:</p>
+                <ol className="space-y-2 list-decimal list-inside text-sm">
+                  <li><strong>Stop using the tool immediately</strong></li>
+                  <li><strong>Close the browser tab</strong></li>
+                  <li><strong>Change any exposed passwords or credentials</strong></li>
+                  <li><strong>Contact us</strong> at aiautosite@gmail.com with details</li>
+                </ol>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                <p className="text-blue-300 text-sm">
+                  <strong>Good news:</strong> According to Anthropic's policy, your data is not stored 
+                  after processing completes. However, it's still best practice to change any exposed credentials.
+                </p>
+              </div>
+
+              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                <p className="text-green-300 text-sm">
+                  <strong>Prevention:</strong> Always double-check what you're about to upload before clicking submit. 
+                  If you're unsure, use our browser-only tools instead!
+                </p>
+              </div>
+            </div>
+          ),
+        },
+        {
+          q: 'Can I use AI tools for work projects?',
+          a: (
+            <div className="space-y-3">
+              <p>Yes, but with important restrictions:</p>
+
+              <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                <p className="text-green-400 font-semibold mb-2">✅ Safe for Work:</p>
+                <ul className="text-sm space-y-1">
+                  <li>• Public documentation or open-source code</li>
+                  <li>• Generic technical questions</li>
+                  <li>• Anonymized sample data</li>
+                  <li>• General framework comparisons</li>
+                </ul>
+              </div>
+
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                <p className="text-red-400 font-semibold mb-2">❌ NOT Safe for Work:</p>
+                <ul className="text-sm space-y-1">
+                  <li>• Proprietary company code</li>
+                  <li>• Confidential business strategies</li>
+                  <li>• Customer data or internal documents</li>
+                  <li>• Unreleased product information</li>
+                </ul>
+              </div>
+
+              <p className="text-yellow-300 text-sm">
+                <strong>⚠️ Check with your employer:</strong> Some companies have policies against using 
+                third-party AI services with any work-related data. Always verify first!
+              </p>
+            </div>
+          ),
+        },
+      ],
+    },
     {
       id: 'privacy',
       title: 'Privacy & Data',
@@ -168,7 +388,7 @@ export default function FAQPage() {
                   <code className="text-xs bg-black/30 p-2 rounded block">
                     Look for: POST requests to our APIs
                     <br />
-                    You'll see: Only temporary processing data
+                    You'll see: Only temporary processing data (AI tools only)
                     <br />
                     You won't see: Your files or personal info being uploaded
                   </code>
@@ -696,7 +916,30 @@ export default function FAQPage() {
             <p className="text-gray-400 text-lg">
               Everything you need to know about our privacy-first approach
             </p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: October 13, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 17, 2025</p>
+          </div>
+
+          {/* AI Tools Warning Banner */}
+          <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500/50 rounded-xl p-6 mb-8">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-orange-300 mb-2">
+                  ⚠️ Important: AI Tools Safety
+                </h3>
+                <p className="text-gray-200 text-sm mb-3">
+                  Tools with an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                  send data to Claude API. <strong>Never upload personal information, confidential business data, or sensitive content!</strong>
+                </p>
+                <Link 
+                  href="#ai-tools" 
+                  className="text-cyan-400 hover:text-cyan-300 text-sm underline"
+                  onClick={() => setSelectedCategory('ai-tools')}
+                >
+                  → Read AI Tools Safety Guide
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* Category Filter */}
@@ -735,7 +978,7 @@ export default function FAQPage() {
             {filteredQuestions.map((category) => {
               const CategoryIcon = category.icon
               return (
-                <div key={category.id} className="space-y-4">
+                <div key={category.id} id={category.id} className="space-y-4">
                   <h2 className="flex items-center gap-3 text-xl font-semibold text-white mb-4">
                     <CategoryIcon className="w-6 h-6 text-cyan-400" />
                     <span>{category.title}</span>

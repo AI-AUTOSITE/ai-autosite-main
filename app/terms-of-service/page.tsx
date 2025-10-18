@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { FileText, Shield, Zap, Users, AlertTriangle, CheckCircle } from 'lucide-react'
+import { FileText, Shield, Zap, Users, AlertTriangle, CheckCircle, Cloud, Lock } from 'lucide-react'
 
 export default function TermsOfServicePage() {
   return (
@@ -23,7 +23,46 @@ export default function TermsOfServicePage() {
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Terms of Service</h1>
             <p className="text-xl text-gray-400">Simple, fair terms that put users first.</p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: October 13, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: October 17, 2025</p>
+          </div>
+
+          {/* Critical Safety Warning */}
+          <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border-2 border-red-500/50 rounded-2xl p-6 mb-8">
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="w-8 h-8 text-red-400 flex-shrink-0 mt-1" />
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold text-red-300">
+                  ⚠️ CRITICAL: AI Tools Data Safety
+                </h3>
+                <p className="text-gray-200">
+                  By using AI-powered tools (marked with <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge), 
+                  you acknowledge that:
+                </p>
+                <div className="bg-black/30 rounded-lg p-4">
+                  <ul className="space-y-2 text-gray-200 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-red-400 mr-2 font-bold">1.</span>
+                      <span>Your input data will be sent to Claude API (Anthropic) for processing</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-red-400 mr-2 font-bold">2.</span>
+                      <span>You are solely responsible for the data you upload</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-red-400 mr-2 font-bold">3.</span>
+                      <span>You must NOT upload personal information, confidential data, or sensitive content</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-red-400 mr-2 font-bold">4.</span>
+                      <span>We cannot guarantee what happens to data sent to third-party APIs</span>
+                    </li>
+                  </ul>
+                </div>
+                <p className="text-yellow-300 font-semibold">
+                  If you cannot comply with these restrictions, DO NOT use AI-powered tools!
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Key Points */}
@@ -59,14 +98,45 @@ export default function TermsOfServicePage() {
               <div className="space-y-4 text-gray-300">
                 <p>
                   AI-AutoSite provides free online tools for developers, creatives, and
-                  professionals. Most tools run entirely in your browser with minimal data collection and maximum privacy.
+                  professionals. We offer two types of tools:
                 </p>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Lock className="w-5 h-5 text-green-400" />
+                      <h3 className="font-semibold text-green-300">Browser-Only Tools</h3>
+                    </div>
+                    <p className="text-sm mb-2">40+ tools that process everything locally in your browser</p>
+                    <ul className="text-xs space-y-1">
+                      <li>✓ No data sent to servers</li>
+                      <li>✓ Works offline</li>
+                      <li>✓ Maximum privacy</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Cloud className="w-5 h-5 text-purple-400" />
+                      <h3 className="font-semibold text-purple-300">AI-Powered Tools</h3>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white">AI</span>
+                    </div>
+                    <p className="text-sm mb-2">Advanced features using Claude API</p>
+                    <ul className="text-xs space-y-1">
+                      <li>⚠ Data sent to Claude API</li>
+                      <li>⚠ Requires internet</li>
+                      <li>✓ Not stored after processing</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-4">
                   <p className="text-cyan-300 text-sm">
                     <strong>Privacy-First Design:</strong> Most tools process data directly in your browser. 
                     We don't store your files, content, or personal data on our servers.
                   </p>
                 </div>
+
                 <p>
                   By using our service, you agree to these terms and our{' '}
                   <Link
@@ -80,9 +150,118 @@ export default function TermsOfServicePage() {
               </div>
             </section>
 
+            {/* AI Tools Usage Terms */}
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+                <Cloud className="w-6 h-6 mr-3 text-purple-400" />
+                2. AI-Powered Tools: Special Terms
+              </h2>
+              <div className="space-y-4 text-gray-300">
+                <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-4">
+                  <p className="text-orange-300 font-semibold mb-3">
+                    ⚠️ By using AI-powered tools, you explicitly agree to:
+                  </p>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-orange-400 mr-2">•</span>
+                      <span>Your input data being transmitted to Claude API (operated by Anthropic)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-orange-400 mr-2">•</span>
+                      <span>Processing of your data according to Anthropic's privacy policy</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-orange-400 mr-2">•</span>
+                      <span>Taking full responsibility for the nature and content of data you upload</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                  <p className="text-red-300 font-semibold mb-3">
+                    ❌ You MUST NOT upload to AI tools:
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <ul className="text-sm space-y-2">
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Personal information (PII)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Confidential business data</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Trade secrets</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Medical records</span>
+                      </li>
+                    </ul>
+                    <ul className="text-sm space-y-2">
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Legal documents</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Proprietary source code</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Customer data</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">×</span>
+                        <span>Any sensitive information</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <p className="text-blue-300 font-semibold mb-3">
+                    ℹ️ What happens to your AI tool data:
+                  </p>
+                  <ol className="text-sm space-y-2 list-decimal list-inside">
+                    <li>Your input is sent via HTTPS to Claude API</li>
+                    <li>Claude processes your request and returns results</li>
+                    <li>According to Anthropic's policy, your data is NOT stored after processing</li>
+                    <li>Your data is NOT used to train AI models</li>
+                  </ol>
+                  <p className="text-xs text-gray-400 mt-3">
+                    Learn more:{' '}
+                    <a 
+                      href="https://www.anthropic.com/privacy" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-cyan-400 hover:underline"
+                    >
+                      Anthropic Privacy Policy
+                    </a>
+                  </p>
+                </div>
+
+                <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                  <p className="text-yellow-300 font-semibold mb-2">
+                    ⚠️ Your Responsibility & Our Liability Limitation:
+                  </p>
+                  <p className="text-sm">
+                    While we trust Anthropic's security practices, YOU are solely responsible for 
+                    ensuring that data you upload to AI tools is appropriate and non-sensitive. 
+                    We cannot guarantee what happens to data processed by third-party APIs. 
+                    <strong> We are NOT liable for any consequences of your decision to upload 
+                    sensitive, confidential, or inappropriate data to AI-powered tools.</strong>
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {/* User Rights */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">2. Your Rights</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">3. Your Rights</h2>
               <div className="space-y-4 text-gray-300">
                 <ul className="space-y-3 ml-6">
                   <li className="flex items-start">
@@ -130,7 +309,7 @@ export default function TermsOfServicePage() {
 
             {/* Acceptable Use */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">3. Acceptable Use</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">4. Acceptable Use</h2>
               <div className="space-y-4 text-gray-300">
                 <p>We ask that you use our tools responsibly:</p>
 
@@ -143,6 +322,8 @@ export default function TermsOfServicePage() {
                       <li>• Provide feedback to help us improve</li>
                       <li>• Report bugs or security issues</li>
                       <li>• Verify our privacy claims via DevTools</li>
+                      <li>• Use browser-only tools with any data</li>
+                      <li>• Use AI tools with non-sensitive data only</li>
                     </ul>
                   </div>
 
@@ -154,15 +335,28 @@ export default function TermsOfServicePage() {
                       <li>• Spam or abuse our services</li>
                       <li>• Violate others' intellectual property</li>
                       <li>• Reverse engineer paid features</li>
+                      <li>• Upload sensitive data to AI tools</li>
+                      <li>• Exceed reasonable fair usage limits</li>
                     </ul>
                   </div>
+                </div>
+
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mt-4">
+                  <p className="text-red-300 font-semibold mb-2">
+                    ⚠️ Violations & Account Termination:
+                  </p>
+                  <p className="text-sm">
+                    Violating these terms, especially uploading inappropriate data to AI tools or 
+                    abusing our services, may result in immediate termination of service access without 
+                    refund. We reserve the right to investigate suspicious activity.
+                  </p>
                 </div>
               </div>
             </section>
 
             {/* Service Availability */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">4. Service Availability</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">5. Service Availability</h2>
               <div className="space-y-4 text-gray-300">
                 <p>
                   We strive to keep our tools available 24/7, but we're a small team with limited
@@ -181,12 +375,16 @@ export default function TermsOfServicePage() {
                     <span className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3"></span>
                     <span>Tool updates may cause brief interruptions</span>
                   </li>
+                  <li className="flex items-start">
+                    <span className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3"></span>
+                    <span>AI tools depend on Claude API availability (we cannot control Anthropic's uptime)</span>
+                  </li>
                 </ul>
                 <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mt-4">
                   <p className="text-yellow-300 text-sm">
                     <strong>No Service Guarantees:</strong> While we work hard to maintain uptime,
-                    we cannot guarantee 100% availability for our free tools. Most tools work in your 
-                    browser, so even during outages, many features remain functional.
+                    we cannot guarantee 100% availability for our free tools. Most browser-only tools 
+                    work even during outages, but AI tools require our servers and Claude API to be operational.
                   </p>
                 </div>
               </div>
@@ -194,7 +392,7 @@ export default function TermsOfServicePage() {
 
             {/* Premium Services */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">5. Premium Services & Payments</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">6. Premium Services & Payments</h2>
               <div className="space-y-4 text-gray-300">
                 <p>Some advanced features may require a one-time payment or subscription:</p>
 
@@ -273,7 +471,7 @@ export default function TermsOfServicePage() {
 
             {/* Intellectual Property */}
             <section>
-              <h2 className="text-2xl font-bold text-white mb-4">6. Intellectual Property</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">7. Intellectual Property</h2>
               <div className="space-y-4 text-gray-300">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -302,56 +500,6 @@ export default function TermsOfServicePage() {
               </div>
             </section>
 
-            {/* AI Tools Disclaimer */}
-            <section>
-              <h2 className="text-2xl font-bold text-white mb-4">7. AI-Powered Tools</h2>
-              <div className="space-y-4 text-gray-300">
-                <p>
-                  Tools displaying an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
-                  use Claude API (by Anthropic) to provide advanced AI features and require an internet connection.
-                </p>
-
-                <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
-                  <p className="text-purple-300 font-semibold mb-3">
-                    🤖 How AI Tools Work:
-                  </p>
-                  <ol className="space-y-2 text-sm list-decimal list-inside">
-                    <li>You submit your text or file → Sent to Claude API for processing</li>
-                    <li>Claude analyzes your input and generates results in real-time</li>
-                    <li>Results are displayed immediately in your browser</li>
-                    <li>Your input is NOT stored on our servers or Claude's servers after processing</li>
-                  </ol>
-                </div>
-
-                <ul className="space-y-2 ml-6">
-                  <li className="flex items-start">
-                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>We clearly label which tools use AI processing with an AI badge</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>Your data is processed temporarily and immediately discarded</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>AI-generated content may not always be accurate - verify important results</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="w-2 h-2 bg-cyan-400 rounded-full mt-2 mr-3"></span>
-                    <span>These tools cannot function offline as they require real-time API access</span>
-                  </li>
-                </ul>
-
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-                  <p className="text-blue-300 text-sm">
-                    <strong>💡 Which tools use AI?</strong> Look for the <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
-                    on any tool card. If you see this badge, the tool requires internet access and temporarily 
-                    sends your input to Claude's API for processing.
-                  </p>
-                </div>
-              </div>
-            </section>
-
             {/* Limitations */}
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">8. Limitations & Disclaimers</h2>
@@ -366,15 +514,25 @@ export default function TermsOfServicePage() {
                       </p>
                       <p>
                         <strong>No Liability:</strong> We're not responsible for any damages, data loss, 
-                        or business impacts from using our service.
+                        or business impacts from using our service. This especially applies to AI tools 
+                        where data is processed by third-party APIs.
                       </p>
                       <p>
                         <strong>Results May Vary:</strong> Tool outputs depend on your input and may
-                        not always be perfect. Always verify critical results.
+                        not always be perfect. AI-generated content should always be verified for accuracy.
+                      </p>
+                      <p>
+                        <strong>Third-Party Services:</strong> AI tools rely on Claude API (Anthropic). 
+                        We are not responsible for Anthropic's service availability, data handling, 
+                        or any issues arising from their API usage.
                       </p>
                       <p>
                         <strong>Browser Compatibility:</strong> Tools work best on modern browsers. 
                         Some features may not work on older browsers.
+                      </p>
+                      <p>
+                        <strong>No Professional Advice:</strong> Our tools provide general information 
+                        and should not be considered professional advice (legal, medical, financial, etc.).
                       </p>
                     </div>
                   </div>
@@ -452,7 +610,7 @@ export default function TermsOfServicePage() {
               <p className="text-sm text-gray-500">
                 These terms are governed by the laws of the United States. By using our service, you
                 agree to resolve disputes through good faith communication first, and arbitration if
-                necessary. These terms are effective as of October 13, 2025 and supersede all 
+                necessary. These terms are effective as of October 17, 2025 and supersede all 
                 previous versions.
               </p>
             </section>

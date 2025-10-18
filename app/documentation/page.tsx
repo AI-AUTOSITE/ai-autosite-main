@@ -10,6 +10,9 @@ import {
   ExternalLink,
   PlayCircle,
   FileText,
+  AlertTriangle,
+  Cloud,
+  Lock,
 } from 'lucide-react'
 
 export default function DocumentationPage() {
@@ -19,36 +22,42 @@ export default function DocumentationPage() {
       description: 'Compare frameworks and get AI-powered recommendations',
       href: '/tools/tech-stack-analyzer',
       status: 'live',
+      type: 'ai',
       features: [
         'Framework comparison matrix',
         'AI-powered recommendations',
         'Performance metrics analysis',
         'Learning curve assessment',
       ],
+      dataSafety: 'Uses Claude API - only upload non-sensitive, generic framework questions',
     },
     {
       name: 'Code Dependency Visualizer',
       description: 'Analyze project structure and file dependencies',
       href: '/tools/code-reader',
       status: 'live',
+      type: 'browser',
       features: [
         'Upload ZIP files or connect GitHub',
         'Interactive dependency tree',
         'File relationship mapping',
         'Project structure analysis',
       ],
+      dataSafety: 'Processes entirely in your browser - your code never leaves your device',
     },
     {
       name: 'BlurTap',
       description: 'Mask sensitive information in images instantly',
       href: '/tools/blurtap',
       status: 'live',
+      type: 'browser',
       features: [
         'One-click sensitive data masking',
         'Customizable blur intensity',
         'Multiple mask shapes',
         'Instant download',
       ],
+      dataSafety: 'Browser-only processing - images never uploaded to any server',
     },
   ]
 
@@ -59,7 +68,7 @@ export default function DocumentationPage() {
       icon: PlayCircle,
       items: [
         'No account needed for basic features',
-        'All tools work in your browser',
+        'Most tools work entirely in your browser',
         'Your data stays private and local',
         'Export results anytime',
       ],
@@ -71,8 +80,8 @@ export default function DocumentationPage() {
       items: [
         'Minimal data collection',
         'No tracking or analytics',
-        'Client-side processing',
-        'Optional cloud integration',
+        'Client-side processing for most tools',
+        'AI tools: data not stored after processing',
       ],
     },
     {
@@ -83,7 +92,7 @@ export default function DocumentationPage() {
         'Use specific, detailed inputs',
         'Check results with your context',
         'Combine multiple tools for workflows',
-        'Save important results locally',
+        'Never upload sensitive data to AI tools',
       ],
     },
   ]
@@ -110,6 +119,132 @@ export default function DocumentationPage() {
               Everything you need to know about using our tools effectively and securely.
             </p>
           </div>
+
+          {/* Critical Safety Warning */}
+          <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 border-2 border-red-500/50 rounded-2xl p-6 mb-12">
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="w-8 h-8 text-red-400 flex-shrink-0 mt-1" />
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold text-red-300">
+                  ⚠️ IMPORTANT: Before Using AI Tools
+                </h3>
+                <p className="text-gray-200">
+                  Tools marked with an <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                  send your input to Claude API for processing.
+                </p>
+                <div className="bg-black/30 rounded-lg p-4">
+                  <p className="text-red-300 font-semibold mb-2">❌ NEVER Upload:</p>
+                  <ul className="grid md:grid-cols-2 gap-2 text-gray-200 text-sm">
+                    <li>• Personal information (names, emails, addresses)</li>
+                    <li>• Confidential business data</li>
+                    <li>• Trade secrets or proprietary code</li>
+                    <li>• Medical or legal documents</li>
+                    <li>• Customer data or PII</li>
+                    <li>• Financial information</li>
+                  </ul>
+                </div>
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                  <p className="text-green-300 font-semibold mb-2">✅ Safe to Upload:</p>
+                  <p className="text-sm text-gray-200">
+                    Sample data, anonymized content, public information, generic questions, test data
+                  </p>
+                </div>
+                <p className="text-sm text-cyan-400">
+                  → See detailed safety guide in our{' '}
+                  <Link href="/faq" className="underline hover:text-cyan-300">
+                    FAQ
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="/privacy-policy" className="underline hover:text-cyan-300">
+                    Privacy Policy
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tool Types Explanation */}
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-white mb-6 text-center">Understanding Our Tools</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Browser-Only Tools */}
+              <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                    <Lock className="w-6 h-6 text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-green-300">Browser-Only Tools</h3>
+                </div>
+                <p className="text-gray-300 mb-4">
+                  40+ tools that process everything locally in your browser
+                </p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-400 text-lg">✓</span>
+                    <p className="text-gray-300 text-sm">100% client-side processing</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-400 text-lg">✓</span>
+                    <p className="text-gray-300 text-sm">No data sent to any server</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-400 text-lg">✓</span>
+                    <p className="text-gray-300 text-sm">Works offline after page load</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-400 text-lg">✓</span>
+                    <p className="text-gray-300 text-sm">Safe for any data (including sensitive)</p>
+                  </div>
+                </div>
+                <div className="bg-black/30 rounded-lg p-3">
+                  <p className="text-xs text-gray-400 mb-1">Examples:</p>
+                  <p className="text-xs text-gray-300">
+                    Image compressor, Base64 converter, PDF merger, QR generator, BlurTap
+                  </p>
+                </div>
+              </div>
+
+              {/* AI-Powered Tools */}
+              <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                    <Cloud className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-purple-300">AI-Powered Tools</h3>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white">AI</span>
+                  </div>
+                </div>
+                <p className="text-gray-300 mb-4">
+                  Advanced features that require Claude API processing
+                </p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-start gap-2">
+                    <span className="text-yellow-400 text-lg">⚠</span>
+                    <p className="text-gray-300 text-sm">Requires internet connection</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-yellow-400 text-lg">⚠</span>
+                    <p className="text-gray-300 text-sm">Data sent to Claude API temporarily</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-green-400 text-lg">✓</span>
+                    <p className="text-gray-300 text-sm">Not stored after processing</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-red-400 text-lg">×</span>
+                    <p className="text-gray-300 text-sm">NOT for sensitive data</p>
+                  </div>
+                </div>
+                <div className="bg-black/30 rounded-lg p-3">
+                  <p className="text-xs text-gray-400 mb-1">Examples:</p>
+                  <p className="text-xs text-gray-300">
+                    Tech Stack Analyzer, AI code analysis, content generators
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Quick Start Guide */}
           <section className="mb-12">
@@ -154,16 +289,27 @@ export default function DocumentationPage() {
                   className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">{tool.name}</h3>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-xl font-semibold text-white">{tool.name}</h3>
+                        {tool.type === 'ai' ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                            AI
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-green-500/20 text-green-400">
+                            Browser
+                          </span>
+                        )}
+                      </div>
                       <p className="text-gray-400 text-sm">{tool.description}</p>
                     </div>
-                    <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
+                    <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-400 ml-2">
                       {tool.status.toUpperCase()}
                     </span>
                   </div>
 
-                  <div className="mb-6">
+                  <div className="mb-4">
                     <h4 className="text-sm font-semibold text-gray-300 mb-3">Key Features:</h4>
                     <ul className="space-y-1">
                       {tool.features.map((feature, i) => (
@@ -173,6 +319,33 @@ export default function DocumentationPage() {
                         </li>
                       ))}
                     </ul>
+                  </div>
+
+                  {/* Data Safety Info */}
+                  <div
+                    className={`rounded-lg p-3 mb-4 ${
+                      tool.type === 'ai'
+                        ? 'bg-orange-500/10 border border-orange-500/30'
+                        : 'bg-green-500/10 border border-green-500/30'
+                    }`}
+                  >
+                    <div className="flex items-start gap-2">
+                      {tool.type === 'ai' ? (
+                        <AlertTriangle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Lock className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                      )}
+                      <div>
+                        <p
+                          className={`text-xs font-semibold mb-1 ${
+                            tool.type === 'ai' ? 'text-orange-300' : 'text-green-300'
+                          }`}
+                        >
+                          {tool.type === 'ai' ? 'Data Safety Warning:' : 'Privacy Guaranteed:'}
+                        </p>
+                        <p className="text-xs text-gray-300">{tool.dataSafety}</p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex gap-3">
@@ -186,6 +359,90 @@ export default function DocumentationPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Data Safety Best Practices */}
+          <section className="mb-12">
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+              <h2 className="text-2xl font-bold text-white mb-6 text-center">
+                Data Safety Best Practices
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center">
+                    <Shield className="w-5 h-5 mr-2" />
+                    For Browser-Only Tools
+                  </h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300">
+                        Safe to use with ANY data including sensitive information
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300">
+                        No data ever leaves your device
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300">
+                        Perfect for confidential documents and personal files
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300">
+                        Can be used offline (after initial page load)
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-orange-400 mb-4 flex items-center">
+                    <AlertTriangle className="w-5 h-5 mr-2" />
+                    For AI-Powered Tools
+                  </h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-red-400 mr-2">×</span>
+                      <span className="text-gray-300">
+                        Never upload personal or confidential information
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-yellow-400 mr-2">⚠</span>
+                      <span className="text-gray-300">
+                        Data is sent to Claude API for processing
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span className="text-gray-300">
+                        Safe for generic questions and public information
+                      </span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 mr-2">ℹ</span>
+                      <span className="text-gray-300">
+                        When in doubt, anonymize or use sample data
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-6 bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
+                <p className="text-cyan-300 text-sm">
+                  <strong>💡 Pro Tip:</strong> If you need to analyze sensitive data, use our browser-only 
+                  tools. If you need AI features, create anonymized sample data that represents your actual 
+                  data without including any sensitive information.
+                </p>
+              </div>
             </div>
           </section>
 
@@ -211,27 +468,52 @@ export default function DocumentationPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">
                   Is my data safe and private?
                 </h3>
-                <p className="text-gray-300">
-                  Absolutely. Most processing happens in your browser - your files never leave your
-                  device. We store minimal account data (just email for login) and never track or
-                  sell your information.
-                  <Link
-                    href="/privacy-policy"
-                    className="text-cyan-400 hover:text-cyan-300 underline ml-1"
-                  >
-                    Learn more in our Privacy Policy
-                  </Link>
-                  .
+                <p className="text-gray-300 mb-3">
+                  It depends on which type of tool you're using:
+                </p>
+                <ul className="space-y-2 text-sm text-gray-300">
+                  <li className="flex items-start">
+                    <span className="text-green-400 mr-2">•</span>
+                    <span>
+                      <strong>Browser-only tools:</strong> Absolutely! Your files never leave your device. 
+                      Perfect for sensitive data.
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-yellow-400 mr-2">•</span>
+                    <span>
+                      <strong>AI tools:</strong> Your input is sent to Claude API temporarily for processing. 
+                      Not stored after processing, but you should NOT upload sensitive data.
+                    </span>
+                  </li>
+                </ul>
+                <Link
+                  href="/privacy-policy"
+                  className="text-cyan-400 hover:text-cyan-300 underline text-sm mt-2 inline-block"
+                >
+                  Learn more in our Privacy Policy
+                </Link>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
+                <h3 className="text-lg font-semibold text-white mb-3">
+                  How can I tell if a tool uses AI?
+                </h3>
+                <p className="text-gray-300 mb-3">
+                  Very easy! Look for the <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 text-white mx-1">AI</span> badge 
+                  on tool cards. If you see this badge, the tool requires internet and sends data to Claude API.
+                </p>
+                <p className="text-sm text-gray-400">
+                  Tools without this badge are browser-only and process everything locally on your device.
                 </p>
               </div>
 
               <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
                 <h3 className="text-lg font-semibold text-white mb-3">Are there usage limits?</h3>
                 <p className="text-gray-300">
-                  Our free tier is generous - you can process most files and use all core features
-                  without limits. Premium features (like larger file support or advanced AI
-                  analysis) may have fair usage policies to keep the service running smoothly for
-                  everyone.
+                  Browser-only tools have no limits - use them as much as you want! AI-powered tools 
+                  may have fair usage policies to keep the service running smoothly for everyone. 
+                  Premium features unlock higher limits.
                 </p>
               </div>
 
@@ -241,7 +523,8 @@ export default function DocumentationPage() {
                 </h3>
                 <p className="text-gray-300">
                   Yes! All our tools can be used for both personal and commercial projects. You own
-                  the results and outputs - we never claim rights to your work.
+                  the results and outputs - we never claim rights to your work. Just remember not to 
+                  upload confidential business data to AI tools.
                 </p>
               </div>
 
@@ -311,10 +594,10 @@ export default function DocumentationPage() {
                   <span>Contact Page</span>
                 </Link>
                 <Link
-                  href="/blog"
+                  href="/faq"
                   className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
                 >
-                  <span>Read Our Blog</span>
+                  <span>Read FAQ</span>
                 </Link>
               </div>
             </div>

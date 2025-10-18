@@ -33,7 +33,7 @@ interface UsePdfProcessorReturn {
   confirmDownload: () => void
 }
 
-export function usePdfProcessor(): UsePdfProcessorReturn {
+export function usePdfProcessor(hasAgreed: boolean): UsePdfProcessorReturn {
   const [file, setFile] = useState<File | null>(null)
   const [csvUrl, setCsvUrl] = useState<string>('')
   const [excelUrl, setExcelUrl] = useState<string>('')
@@ -47,6 +47,8 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const processFile = async (pdfFile: File) => {
+    if (!hasAgreed) return
+
     if (pdfFile.size > MAX_FILE_SIZE) {
       setError(ERROR_MESSAGES.FILE_TOO_LARGE)
       setTimeout(() => setError(''), ERROR_DISPLAY_DURATION)
@@ -135,6 +137,8 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
     e.preventDefault()
     setIsDragging(false)
 
+    if (!hasAgreed) return
+
     const droppedFile = e.dataTransfer.files[0]
     if (droppedFile?.type === ACCEPTED_FILE_TYPE) {
       await processFile(droppedFile)
@@ -145,6 +149,8 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   }
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!hasAgreed) return
+
     const selectedFile = e.target.files?.[0]
     if (selectedFile) {
       await processFile(selectedFile)
@@ -168,7 +174,7 @@ export function usePdfProcessor(): UsePdfProcessorReturn {
   }
 
   const triggerFileInput = () => {
-    if (!file && !isProcessing) {
+    if (!file && !isProcessing && hasAgreed) {
       fileInputRef.current?.click()
     }
   }
