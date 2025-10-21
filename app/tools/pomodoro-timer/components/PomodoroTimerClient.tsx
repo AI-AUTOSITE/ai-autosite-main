@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Play, Pause, RotateCcw, Settings, CheckCircle, Coffee, Book } from 'lucide-react'
+import { Play, Pause, RotateCcw, Settings, Coffee, Book } from 'lucide-react'
 
 type TimerMode = 'work' | 'shortBreak' | 'longBreak'
 
@@ -54,6 +54,7 @@ export default function PomodoroTimerClient() {
   const [completedSessions, setCompletedSessions] = useState(0)
   const [showSettings, setShowSettings] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [notificationStatus, setNotificationStatus] = useState<NotificationPermission>('default')
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -66,6 +67,13 @@ export default function PomodoroTimerClient() {
     checkDevice()
     window.addEventListener('resize', checkDevice)
     return () => window.removeEventListener('resize', checkDevice)
+  }, [])
+
+  // 通知状態チェック
+  useEffect(() => {
+    if ('Notification' in window) {
+      setNotificationStatus(Notification.permission)
+    }
   }, [])
 
   // タイマーロジック
@@ -126,7 +134,7 @@ export default function PomodoroTimerClient() {
   }
 
   const playNotificationSound = () => {
-    // シンプルなビープ音（Web Audio API）
+    // シンプルなビープ音(Web Audio API)
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
     const oscillator = audioContext.createOscillator()
     const gainNode = audioContext.createGain()
@@ -173,8 +181,38 @@ export default function PomodoroTimerClient() {
   }
 
   const requestNotificationPermission = async () => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      await Notification.requestPermission()
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission()
+      setNotificationStatus(permission)
+      
+      if (permission === 'granted') {
+        new Notification('Pomodoro Timer', {
+          body: 'Notifications enabled! You\'ll be notified when sessions end.',
+          icon: '/favicon.ico'
+        })
+      }
+    }
+  }
+
+  const getNotificationButtonText = () => {
+    switch (notificationStatus) {
+      case 'granted':
+        return '✓ Notifications Enabled'
+      case 'denied':
+        return '✕ Notifications Blocked'
+      default:
+        return 'Enable Notifications'
+    }
+  }
+
+  const getNotificationButtonStyle = () => {
+    switch (notificationStatus) {
+      case 'granted':
+        return 'bg-green-600/20 border-green-500/30 text-green-400 cursor-default'
+      case 'denied':
+        return 'bg-red-600/20 border-red-500/30 text-red-400 cursor-not-allowed'
+      default:
+        return 'bg-cyan-600 hover:bg-cyan-500 text-white cursor-pointer'
     }
   }
 
@@ -182,300 +220,299 @@ export default function PomodoroTimerClient() {
   const ModeIcon = modeInfo.icon
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-5xl">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 
-                      rounded-full px-4 py-2 mb-4">
-          <span className="text-2xl">🍅</span>
-          <span className="text-red-300 text-sm font-medium">
-            Pomodoro Technique - Proven Since 1980s
-          </span>
+    <div className="container mx-auto px-4 py-6 max-w-4xl">
+      {/* Main Timer Card */}
+      <div className={`bg-gradient-to-br ${modeInfo.bgColor} backdrop-blur-xl 
+                    rounded-3xl border ${modeInfo.borderColor} p-8 sm:p-12 mb-6`}>
+        {/* Mode Indicator */}
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <span className="text-4xl">{modeInfo.emoji}</span>
+          <div>
+            <h2 className="text-white font-semibold text-xl sm:text-2xl">
+              {modeInfo.label}
+            </h2>
+            <p className="text-gray-400 text-sm">
+              Session {completedSessions + 1}
+            </p>
+          </div>
         </div>
-        
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-          Pomodoro Timer
-        </h1>
-        <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
-          Stay focused with 25-minute work sessions. 
-          <span className="text-cyan-400"> Boost productivity by 40%.</span>
-        </p>
+
+        {/* Timer Display */}
+        <div className="text-center mb-8">
+          <div className={`text-7xl sm:text-8xl md:text-9xl font-bold bg-gradient-to-r ${modeInfo.color} 
+                        bg-clip-text text-transparent mb-4`}>
+            {formatTime(timeLeft)}
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+            <div 
+              className={`h-full bg-gradient-to-r ${modeInfo.color} transition-all duration-1000 ease-linear`}
+              style={{ width: `${getProgress()}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <button
+            onClick={toggleTimer}
+            className={`px-8 py-4 bg-gradient-to-r ${modeInfo.color} text-white 
+                     rounded-xl font-semibold hover:opacity-90 transition-all 
+                     flex items-center gap-3 shadow-lg min-h-[56px] text-lg`}
+          >
+            {isRunning ? (
+              <>
+                <Pause className="w-5 h-5" />
+                Pause
+              </>
+            ) : (
+              <>
+                <Play className="w-5 h-5" />
+                Start
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={resetTimer}
+            className="px-6 py-4 bg-white/5 border border-white/10 text-white 
+                     rounded-xl font-semibold hover:bg-white/10 transition-all 
+                     flex items-center gap-2 min-h-[56px]"
+          >
+            <RotateCcw className="w-5 h-5" />
+            {!isMobile && 'Reset'}
+          </button>
+
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="px-6 py-4 bg-white/5 border border-white/10 text-white 
+                     rounded-xl font-semibold hover:bg-white/10 transition-all 
+                     flex items-center gap-2 min-h-[56px]"
+          >
+            <Settings className="w-5 h-5" />
+            {!isMobile && 'Settings'}
+          </button>
+        </div>
+
+        {/* Mode Switcher */}
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            onClick={() => setMode('work')}
+            disabled={isRunning}
+            className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
+                      ${mode === 'work' 
+                        ? 'bg-red-600 text-white shadow-lg' 
+                        : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            🍅 Work
+          </button>
+          <button
+            onClick={() => setMode('shortBreak')}
+            disabled={isRunning}
+            className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
+                      ${mode === 'shortBreak' 
+                        ? 'bg-green-600 text-white shadow-lg' 
+                        : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            ☕ Short
+          </button>
+          <button
+            onClick={() => setMode('longBreak')}
+            disabled={isRunning}
+            className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
+                      ${mode === 'longBreak' 
+                        ? 'bg-blue-600 text-white shadow-lg' 
+                        : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
+                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            🌴 Long
+          </button>
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-5 gap-6">
-        {/* Main Timer - Takes more space */}
-        <div className="lg:col-span-3">
-          <div className={`bg-gradient-to-br ${modeInfo.bgColor} backdrop-blur-xl 
-                        rounded-3xl border ${modeInfo.borderColor} p-8 sm:p-12`}>
-            {/* Mode Indicator */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <span className="text-4xl">{modeInfo.emoji}</span>
-              <div>
-                <h2 className="text-white font-semibold text-xl sm:text-2xl">
-                  {modeInfo.label}
-                </h2>
-                <p className="text-gray-400 text-sm">
-                  Session {completedSessions + 1}
-                </p>
-              </div>
+      {/* Stats & Progress Section */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Session Progress */}
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
+          <h3 className="text-white font-semibold mb-4 text-base">
+            📈 Session Progress
+          </h3>
+          
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-400 text-sm">Completed Today</span>
+              <span className="text-white font-semibold">{completedSessions} sessions</span>
             </div>
+            
+            <div className="flex gap-1">
+              {Array.from({ length: config.sessionsBeforeLongBreak }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`flex-1 h-2 rounded-full transition-all duration-300 ${
+                    i < completedSessions % config.sessionsBeforeLongBreak
+                      ? 'bg-red-500 shadow-lg shadow-red-500/50'
+                      : 'bg-white/10'
+                  }`}
+                />
+              ))}
+            </div>
+            
+            <p className="text-xs text-gray-500 text-center">
+              {config.sessionsBeforeLongBreak - (completedSessions % config.sessionsBeforeLongBreak) === config.sessionsBeforeLongBreak 
+                ? 'Long break available! 🎉' 
+                : `${config.sessionsBeforeLongBreak - (completedSessions % config.sessionsBeforeLongBreak)} sessions until long break`}
+            </p>
+          </div>
+        </div>
 
-            {/* Timer Display */}
-            <div className="text-center mb-8">
-              <div className={`text-7xl sm:text-8xl md:text-9xl font-bold bg-gradient-to-r ${modeInfo.color} 
-                            bg-clip-text text-transparent mb-4`}>
-                {formatTime(timeLeft)}
+        {/* Today's Stats */}
+        <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 
+                      backdrop-blur-xl rounded-2xl border border-purple-500/20 p-6">
+          <h3 className="text-white font-semibold mb-4 text-base">
+            📊 Today's Stats
+          </h3>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <p className="text-gray-400 text-xs mb-1">Total Sessions</p>
+              <p className="text-white text-2xl font-bold">{completedSessions}</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <p className="text-gray-400 text-xs mb-1">Focus Time</p>
+              <p className="text-white text-2xl font-bold">
+                {Math.floor(completedSessions * config.workMinutes / 60)}h {(completedSessions * config.workMinutes) % 60}m
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Settings Panel - Collapsible */}
+      {showSettings && (
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 animate-fade-in">
+          <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+            <Settings className="w-5 h-5 text-cyan-400" />
+            Settings
+          </h3>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Timer Settings */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">
+                  Work Duration (minutes)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="60"
+                  value={config.workMinutes}
+                  onChange={(e) => setConfig({...config, workMinutes: Number(e.target.value)})}
+                  disabled={isRunning}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white focus:outline-none focus:border-cyan-400 transition-colors
+                           disabled:opacity-50 disabled:cursor-not-allowed"
+                />
               </div>
-              
-              {/* Progress Bar */}
-              <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full bg-gradient-to-r ${modeInfo.color} transition-all duration-1000 ease-linear`}
-                  style={{ width: `${getProgress()}%` }}
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">
+                  Short Break (minutes)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="15"
+                  value={config.shortBreakMinutes}
+                  onChange={(e) => setConfig({...config, shortBreakMinutes: Number(e.target.value)})}
+                  disabled={isRunning}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white focus:outline-none focus:border-cyan-400 transition-colors
+                           disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">
+                  Long Break (minutes)
+                </label>
+                <input
+                  type="number"
+                  min="10"
+                  max="30"
+                  value={config.longBreakMinutes}
+                  onChange={(e) => setConfig({...config, longBreakMinutes: Number(e.target.value)})}
+                  disabled={isRunning}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white focus:outline-none focus:border-cyan-400 transition-colors
+                           disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-400 mb-2">
+                  Sessions Before Long Break
+                </label>
+                <input
+                  type="number"
+                  min="2"
+                  max="8"
+                  value={config.sessionsBeforeLongBreak}
+                  onChange={(e) => setConfig({...config, sessionsBeforeLongBreak: Number(e.target.value)})}
+                  disabled={isRunning}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white focus:outline-none focus:border-cyan-400 transition-colors
+                           disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
 
-            {/* Controls */}
-            <div className="flex items-center justify-center gap-4">
-              <button
-                onClick={toggleTimer}
-                className={`px-8 py-4 bg-gradient-to-r ${modeInfo.color} text-white 
-                         rounded-xl font-semibold hover:opacity-90 transition-all 
-                         flex items-center gap-3 shadow-lg min-h-[56px] text-lg`}
-              >
-                {isRunning ? (
-                  <>
-                    <Pause className="w-5 h-5" />
-                    Pause
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-5 h-5" />
-                    Start
-                  </>
-                )}
-              </button>
-
-              <button
-                onClick={resetTimer}
-                className="px-6 py-4 bg-white/5 border border-white/10 text-white 
-                         rounded-xl font-semibold hover:bg-white/10 transition-all 
-                         flex items-center gap-2 min-h-[56px]"
-              >
-                <RotateCcw className="w-5 h-5" />
-                {!isMobile && 'Reset'}
-              </button>
-
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="px-6 py-4 bg-white/5 border border-white/10 text-white 
-                         rounded-xl font-semibold hover:bg-white/10 transition-all 
-                         flex items-center gap-2 min-h-[56px]"
-              >
-                <Settings className="w-5 h-5" />
-                {!isMobile && 'Settings'}
-              </button>
-            </div>
-
-            {/* Mode Switcher */}
-            <div className="grid grid-cols-3 gap-2 mt-8">
-              <button
-                onClick={() => setMode('work')}
-                disabled={isRunning}
-                className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
-                          ${mode === 'work' 
-                            ? 'bg-red-600 text-white shadow-lg' 
-                            : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
-                          } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                🍅 Work
-              </button>
-              <button
-                onClick={() => setMode('shortBreak')}
-                disabled={isRunning}
-                className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
-                          ${mode === 'shortBreak' 
-                            ? 'bg-green-600 text-white shadow-lg' 
-                            : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
-                          } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                ☕ Short
-              </button>
-              <button
-                onClick={() => setMode('longBreak')}
-                disabled={isRunning}
-                className={`px-4 py-3 rounded-lg font-medium transition-all text-sm
-                          ${mode === 'longBreak' 
-                            ? 'bg-blue-600 text-white shadow-lg' 
-                            : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'
-                          } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                🌴 Long
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Session Progress */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              Progress
-            </h3>
-            
-            <div className="space-y-3">
+            {/* Notifications & Reset */}
+            <div className="space-y-4">
               <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-400">Completed Sessions</span>
-                  <span className="text-white font-semibold">{completedSessions}</span>
-                </div>
-                <div className="flex gap-1">
-                  {Array.from({ length: config.sessionsBeforeLongBreak }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`flex-1 h-2 rounded-full transition-colors ${
-                        i < completedSessions % config.sessionsBeforeLongBreak
-                          ? 'bg-red-500'
-                          : 'bg-white/10'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  {config.sessionsBeforeLongBreak - (completedSessions % config.sessionsBeforeLongBreak)} until long break
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Settings Panel */}
-          {showSettings && (
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 animate-fade-in">
-              <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <Settings className="w-5 h-5 text-cyan-400" />
-                Settings
-              </h3>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">
-                    Work Duration (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="60"
-                    value={config.workMinutes}
-                    onChange={(e) => setConfig({...config, workMinutes: Number(e.target.value)})}
-                    disabled={isRunning}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white focus:outline-none focus:border-cyan-400 transition-colors
-                             disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">
-                    Short Break (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="15"
-                    value={config.shortBreakMinutes}
-                    onChange={(e) => setConfig({...config, shortBreakMinutes: Number(e.target.value)})}
-                    disabled={isRunning}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white focus:outline-none focus:border-cyan-400 transition-colors
-                             disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">
-                    Long Break (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    min="10"
-                    max="30"
-                    value={config.longBreakMinutes}
-                    onChange={(e) => setConfig({...config, longBreakMinutes: Number(e.target.value)})}
-                    disabled={isRunning}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white focus:outline-none focus:border-cyan-400 transition-colors
-                             disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">
-                    Sessions Before Long Break
-                  </label>
-                  <input
-                    type="number"
-                    min="2"
-                    max="8"
-                    value={config.sessionsBeforeLongBreak}
-                    onChange={(e) => setConfig({...config, sessionsBeforeLongBreak: Number(e.target.value)})}
-                    disabled={isRunning}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white focus:outline-none focus:border-cyan-400 transition-colors
-                             disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </div>
-
+                <label className="block text-sm text-gray-400 mb-2">
+                  Notifications
+                </label>
                 <button
-                  onClick={() => setConfig(DEFAULT_CONFIG)}
-                  disabled={isRunning}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 text-gray-400 
-                           rounded-lg hover:text-white hover:bg-white/10 transition-all text-sm
-                           disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={requestNotificationPermission}
+                  disabled={notificationStatus !== 'default'}
+                  className={`w-full px-4 py-3 border rounded-lg text-sm font-medium transition-all
+                            ${getNotificationButtonStyle()}`}
                 >
-                  Reset to Default
+                  {getNotificationButtonText()}
                 </button>
+                {notificationStatus === 'denied' && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Please enable notifications in your browser settings
+                  </p>
+                )}
+              </div>
+
+              <button
+                onClick={() => setConfig(DEFAULT_CONFIG)}
+                disabled={isRunning}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 text-gray-400 
+                         rounded-lg hover:text-white hover:bg-white/10 transition-all text-sm
+                         disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Reset to Default
+              </button>
+
+              <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-4">
+                <p className="text-cyan-400 text-sm font-medium mb-2">💡 Pro Tips</p>
+                <ul className="space-y-1 text-xs text-gray-300">
+                  <li>• Close distracting apps before starting</li>
+                  <li>• Stand and stretch during breaks</li>
+                  <li>• Keep your phone in another room</li>
+                </ul>
               </div>
             </div>
-          )}
-
-          {/* Tips */}
-          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 
-                        backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-6">
-            <h3 className="text-white font-semibold mb-3 text-base">
-              💡 Quick Tips
-            </h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-0.5">•</span>
-                <span>Eliminate distractions before starting</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-0.5">•</span>
-                <span>Stand up and stretch during breaks</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-0.5">•</span>
-                <span>Hydrate every break</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400 mt-0.5">•</span>
-                <span>Keep your phone in another room</span>
-              </li>
-            </ul>
-
-            <button
-              onClick={requestNotificationPermission}
-              className="mt-4 w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white 
-                       rounded-lg text-sm font-medium transition-colors"
-            >
-              Enable Notifications
-            </button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

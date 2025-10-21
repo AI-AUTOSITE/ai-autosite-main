@@ -35,11 +35,10 @@ export default function Footer() {
   ]
 
   return (
-    // ✅ mt-auto を削除
     <footer className="bg-gradient-to-b from-gray-900/50 to-gray-900 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
-        {/* Desktop Footer - 4 Column Grid */}
-        <div className="hidden md:grid md:grid-cols-4 gap-8 mb-8">
+        {/* Desktop Footer - 4 Column Grid with Better Spacing */}
+        <div className="hidden md:grid md:grid-cols-4 gap-8 lg:gap-16 xl:gap-20 mb-8">
           {/* Resources Column */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
@@ -105,8 +104,8 @@ export default function Footer() {
             <ul className="space-y-2">
               {footerSections.social.map((link) => (
                 <li key={link.href}>
-                  
-                    <a href={link.href}
+                  <a 
+                    href={link.href}
                     className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
                     target="_blank"
                     rel="noopener noreferrer"
