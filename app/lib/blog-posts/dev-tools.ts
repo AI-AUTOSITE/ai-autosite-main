@@ -1,354 +1,42 @@
-import {
-  Code,
-  Globe,
-  ImageIcon,
-  Type,
-  FileText,
-  Key,
-  FileJson,
-  Braces,
-  Cpu,
-  Database,
-  Hash,
-  GitBranch,
-  Terminal,
-  Flame,
-  Code2,
-} from 'lucide-react'
+// app/lib/blog-posts/dev-tools.ts
 import type { BlogPost } from './types'
+import { textCasePost } from '@/tools/text-case/blog-post'
+import { testFileGeneratorPost } from '@/tools/test-file-generator/blog-post'
+import { testImageGeneratorPost } from '@/tools/test-image-generator/blog-post'
+import { networkCheckerPost } from '@/tools/network-checker/blog-post'
+import { pdfTestGeneratorPost } from '@/tools/pdf-test-generator/blog-post'
+import { testTextGeneratorPost } from '@/tools/test-text-generator/blog-post'
+import { base64Post } from '@/tools/base64/blog-post'
+import { aiProjectVisualizerPost } from '@/tools/ai-project-visualizer/blog-post'
+import { markdownHtmlPost } from '@/tools/markdown-html/blog-post'
+import { codeRoasterPost, codeRoasterTutorialPost } from '@/tools/code-roaster/blog-post'
+import { jsonFormatPost } from '@/tools/json-format/blog-post'
+import { jsonCsvPost } from '@/tools/json-csv/blog-post'
+import { faviconGeneratorPost } from '@/tools/favicon-generator/blog-post'
+import { loremIpsumPost } from '@/tools/lorem-ipsum/blog-post'
+import { uuidGeneratorPost } from '@/tools/uuid-generator/blog-post'
+import { codeDependencyVisualizerPost } from '@/tools/code-dependency-visualizer/blog-post'
+import { stackRecommenderPost } from '@/tools/stack-recommender/blog-post'
+import { techStackAnalyzerPost } from '@/tools/tech-stack-analyzer/blog-post'
 
 export const devToolsPosts: BlogPost[] = [
-  {
-    id: 'text-case-converter',
-    title: 'Master Text Case Conversion: 10 Essential Formats',
-    description: 'Complete guide to text case conversion for developers.',
-    readTime: '8 min',
-    publishDate: 'January 2025',
-    icon: Type,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Text Case Converter',
-      url: '/tools/text-case',
-    },
-    tags: ['text-conversion', 'case-converter', 'developer-tools', 'formatting'],
-    category: 'dev-tools',
-    author: 'AI AutoSite Team',
-    views: 0,
-    seoTitle: 'Text Case Converter - 10 Essential Formats for Developers',
-    seoDescription:
-      'Convert text between camelCase, PascalCase, snake_case and more. Essential developer tool for code formatting. Free online converter.',
-    ogImage: '/og/text-case-converter-guide.png',
-  },
-  {
-    id: 'test-file-generator-guide',
-    title: 'How to Use Test File Generator',
-    description:
-      'Complete guide to generating custom test files for development and testing. Learn how to create PDFs with exact size and content specifications.',
-    readTime: '5 min',
-    publishDate: 'October 2025',
-    icon: FileText,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Test File Generator',
-      url: '/tools/test-file-generator',
-    },
-    lastUpdated: '2025-10-05',
-    tags: ['testing', 'development', 'pdf', 'files', 'upload'],
-    author: 'AI AutoSite Team',
-  },
-  ,
-  {
-    id: 'test-image-generator-guide',
-    title: 'Test Image Generator Guide',
-    description:
-      'Complete guide to generating test images with custom specifications for development and testing.',
-    readTime: '5 min',
-    publishDate: 'October 2025',
-    icon: ImageIcon,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Test Image Generator',
-      url: '/tools/test-image-generator',
-    },
-    lastUpdated: '2025-10-06',
-    tags: ['testing', 'images', 'compression', 'development'],
-    author: 'AI AutoSite Team',
-  },
-  {
-  id: 'pdf-test-generator-guide',
-  title: 'PDF Test Generator: Create Test Files Instantly',
-  description: 'Generate test PDFs for validation and testing. Perfect for developers building PDF processing tools.',
-  readTime: '3 min',
-  publishDate: 'October 2025',
-  icon: FileText,
-  featured: false,
-  status: 'published',
-  relatedTool: {
-    name: 'PDF Test Generator',
-    url: '/tools/pdf-test-generator'
-  },
-  lastUpdated: '2025-10',
-  tags: ['testing', 'pdf', 'validation', 'development'],
-  author: 'AI AutoSite Team',
-},
-{
-  id: 'test-text-generator-guide',
-  title: 'Test Text Generator Guide',
-  description: 'Complete guide to generating test text with custom length and complexity for development testing.',
-  readTime: '5 min',
-  publishDate: 'October 2025',
-  icon: FileText,
-  featured: false,
-  status: 'published',
-  relatedTool: {
-    name: 'Test Text Generator',
-    url: '/tools/test-text-generator'
-  },
-  lastUpdated: '2025-10-06',
-  tags: ['testing', 'text', 'lorem ipsum', 'development'],
-  author: 'AI AutoSite Team'
-},
-  {
-    id: 'base64-guide',
-    title: "Base64 Encoding: The Developer's Guide",
-    description:
-      'Everything about Base64 encoding. Learn when to use it, how it works, and common use cases.',
-    readTime: '5 min',
-    publishDate: 'January 2025',
-    icon: Code,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'Base64 Tool',
-      url: '/tools/base64',
-    },
-    lastUpdated: '2025-01-20',
-    tags: ['base64', 'encoding', 'development', 'api'],
-    author: 'AI AutoSite Team',
-  },
-  // app/lib/blog-posts/dev-tools.ts に追加
-  {
-    id: 'ai-project-visualizer-guide',
-    title: 'Transform Your Code into AI-Friendly Diagrams - Project Visualizer Guide',
-    description:
-      'Learn how to create Mermaid diagrams, tree structures, and shareable project visualizations that AI tools understand perfectly.',
-    readTime: '6 min',
-    publishDate: 'January 2025',
-    icon: GitBranch,
-    featured: true, // ⭐ AIコラボツールなので注目記事に
-    status: 'published',
-    relatedTool: {
-      name: 'AI Project Visualizer',
-      url: '/tools/ai-project-visualizer',
-    },
-    lastUpdated: '2025-01-24',
-    tags: ['developer-tools', 'AI-collaboration', 'visualization', 'mermaid', 'documentation'],
-    author: 'AI AutoSite Team',
-  },
-  {
-    id: 'markdown-guide',
-    title: "Master Markdown: The Developer's Writing Tool",
-    description:
-      'Complete guide to Markdown syntax. Learn to write documentation, README files, and blog posts efficiently.',
-    readTime: '6 min',
-    publishDate: 'January 2025',
-    icon: Hash,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'Markdown to HTML',
-      url: '/tools/markdown-html',
-    },
-    lastUpdated: '2025-01-20',
-    tags: ['markdown', 'documentation', 'writing', 'github'],
-    author: 'AI AutoSite Team',
-  },
-  {
-    id: 'code-roaster-guide',
-    title: 'Code Roaster: The AI Code Review Tool That Actually Makes You Laugh',
-    description:
-      'Discover the revolutionary AI-powered code review tool that combines humor with helpful feedback',
-    readTime: '5 min',
-    publishDate: 'January 2025',
-    icon: Flame,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'Code Roaster',
-      url: '/tools/code-roaster',
-    },
-  },
-  {
-    id: 'how-to-use-code-roaster',
-    title: 'How to Use Code Roaster: Complete Guide to AI Code Reviews',
-    description: 'Step-by-step guide to using Code Roaster for AI-powered code reviews',
-    readTime: '7 min',
-    publishDate: 'January 2025',
-    icon: Code2,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Code Roaster',
-      url: '/tools/code-roaster',
-    },
-    tags: ['code-review', 'ai', 'humor', 'feedback', 'development'],
-    category: 'dev-tools',
-    author: 'AI AutoSite Team',
-    views: 0,
-    seoTitle: 'Code Roaster Tutorial - AI Code Reviews with Humor',
-    seoDescription:
-      'Step-by-step guide to using Code Roaster for humorous AI code reviews. Get helpful feedback while having fun. Free developer tool.',
-    ogImage: '/og/code-roaster-tutorial.png',
-  },
-  {
-    id: 'json-beautify-guide',
-    title: 'JSON Beautify: Format & Debug Like a Pro',
-    description: 'Learn how to format, validate, and debug JSON effectively.',
-    readTime: '10 min',
-    publishDate: 'January 2025',
-    icon: Braces,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'JSON Beautify',
-      url: '/tools/json-format',
-    },
-  },
-
-  {
-    id: 'json-csv-converter-guide',
-    title: 'JSON to CSV Converter - Easy Data Conversion',
-    description:
-      'Convert JSON to CSV and CSV to JSON. Free online converter for developers and data analysts.',
-    readTime: '4 min',
-    publishDate: '2025-01-20',
-    icon: FileJson,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'JSON-CSV Converter',
-      url: '/tools/json-csv',
-    },
-    tags: ['json', 'formatter', 'beautify', 'debug', 'developer-tools'],
-    category: 'dev-tools',
-    author: 'AI AutoSite Team',
-    views: 0,
-    seoTitle: 'JSON Beautify & Format - Debug JSON Like a Pro',
-    seoDescription:
-      'Format, validate, and debug JSON with our free online tool. Beautify messy JSON, find errors, and improve readability instantly.',
-    ogImage: '/og/json-beautify-guide.png',
-  },
-  {
-    id: 'favicon-generator-guide',
-    title: 'Favicon Generator - Create Website Icons',
-    description:
-      'Generate favicon.ico and app icons. Create all icon sizes from one image with our free tool.',
-    readTime: '4 min',
-    publishDate: '2025-01-20',
-    icon: Globe,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Favicon Generator',
-      url: '/tools/favicon-generator',
-    },
-    tags: ['favicon', 'icon', 'website'],
-    category: 'dev-tools',
-  },
-  {
-    id: 'lorem-ipsum-generator-guide',
-    title: 'Lorem Ipsum Generator - Dummy Text Tool',
-    description:
-      'Generate Lorem Ipsum placeholder text. Essential tool for designers and developers.',
-    readTime: '3 min',
-    publishDate: '2025-01-20',
-    icon: Type,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Lorem Ipsum Generator',
-      url: '/tools/lorem-ipsum',
-    },
-    tags: ['lorem', 'ipsum', 'text'],
-    category: 'dev-tools',
-  },
-  {
-    id: 'uuid-generator-guide',
-    title: 'UUID Generator - Create Unique Identifiers',
-    description:
-      'Generate UUIDs for databases and APIs. Create unique identifiers instantly with our free tool.',
-    readTime: '4 min',
-    publishDate: '2025-01-20',
-    icon: Key,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'UUID Generator',
-      url: '/tools/uuid-generator',
-    },
-    tags: ['uuid', 'guid', 'identifier'],
-    category: 'dev-tools',
-  },
-  {
-    id: 'code-dependency-analysis',
-    title: 'Understanding Code Dependencies',
-    description: 'Master project architecture by visualizing file relationships.',
-    readTime: '12 min',
-    publishDate: 'January 2025',
-    icon: Database,
-    featured: false,
-    status: 'published',
-    relatedTool: {
-      name: 'Code Dependency Visualizer',
-      url: '/tools/code-reader',
-    },
-    tags: ['code-analysis', 'dependencies', 'architecture', 'visualization'],
-    category: 'dev-tools',
-    author: 'AI AutoSite Team',
-    views: 0,
-    seoTitle: 'Code Dependency Visualizer - Understand Project Architecture',
-    seoDescription:
-      'Visualize code dependencies and file relationships. Master project architecture with interactive dependency graphs. Free developer tool.',
-    ogImage: '/og/code-dependency-guide.png',
-  },
-  {
-    id: 'ai-stack-recommender-guide',
-    title: 'AI Stack Recommender: Get Your Perfect Tech Stack in 30 Seconds',
-    description:
-      'Stop analysis paralysis. Get personalized tech stack recommendations based on your project, budget, and experience level.',
-    readTime: '5 min read',
-    publishDate: 'January 2025',
-    icon: Cpu,
-    featured: true, // Feature this as it's a new AI-powered tool
-    status: 'published',
-    relatedTool: {
-      name: 'AI Stack Recommender',
-      url: '/tools/stack-recommender',
-    },
-  },
-  {
-    id: 'choosing-the-right-tech-stack',
-    title: 'Choosing the Right Tech Stack in 2025',
-    description: 'A complete guide to selecting frameworks and tools.',
-    readTime: '12 min',
-    publishDate: 'January 2025',
-    icon: Code,
-    featured: true,
-    status: 'published',
-    relatedTool: {
-      name: 'Tech Stack Analyzer',
-      url: '/tools/tech-stack-analyzer',
-    },
-    tags: ['tech-stack', 'frameworks', 'architecture', 'decision-making'],
-    category: 'dev-tools',
-    author: 'AI AutoSite Team',
-    views: 0,
-    seoTitle: 'Choose the Right Tech Stack in 2025 - Complete Guide',
-    seoDescription:
-      'Select the perfect tech stack for your project. Compare frameworks, tools, and technologies. Make informed decisions with our comprehensive guide.',
-    ogImage: '/og/tech-stack-guide.png',
-  },
+  textCasePost,
+  testFileGeneratorPost,
+  testImageGeneratorPost,
+  networkCheckerPost,
+  pdfTestGeneratorPost,
+  testTextGeneratorPost,
+  base64Post,
+  aiProjectVisualizerPost,
+  markdownHtmlPost,
+  codeRoasterPost,
+  codeRoasterTutorialPost,
+  jsonFormatPost,
+  jsonCsvPost,
+  faviconGeneratorPost,
+  loremIpsumPost,
+  uuidGeneratorPost,
+  codeDependencyVisualizerPost,
+  stackRecommenderPost,
+  techStackAnalyzerPost,
 ]

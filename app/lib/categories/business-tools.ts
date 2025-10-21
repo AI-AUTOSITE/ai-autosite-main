@@ -3,25 +3,6 @@ import type { Tool } from './types'
 
 export const businessTools: Tool[] = [
   {
-    id: 'competitive-analyzer',
-    name: 'Competitive Analyzer',
-    description: 'Analyze competitor websites and strategies. Get insights.',
-    category: 'business',
-    icon: '📊',
-    emoji: '📊',
-    color: 'from-indigo-500 to-purple-500',
-    status: 'live',
-    url: '/tools/competitive-analyzer',
-    tags: ['business', 'competitor', 'analysis', 'strategy', 'SEO'],
-    difficulty: 'Advanced',
-    timeToUse: '10 minutes',
-    featured: true,
-    new: true,
-    pricing: 'freemium',
-    apiRequired: true,
-    dataProcessing: 'server',
-  },
-  {
     id: 'hashtag-generator',
     name: 'Hashtag Generator',
     description: 'Generate perfect hashtags for social media instantly',

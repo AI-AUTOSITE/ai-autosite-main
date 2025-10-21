@@ -1,0 +1,966 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\playwright.config.ts",
+    "rootDir": "C:/Users/mxsf5/vercel/ai-autosite-main/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 1,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "test-results/html"
+        }
+      ],
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/mxsf5/vercel/ai-autosite-main/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Desktop Chrome",
+        "name": "Desktop Chrome",
+        "testDir": "C:/Users/mxsf5/vercel/ai-autosite-main/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 0
+      },
+      {
+        "outputDir": "C:/Users/mxsf5/vercel/ai-autosite-main/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "C:/Users/mxsf5/vercel/ai-autosite-main/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 0
+      },
+      {
+        "outputDir": "C:/Users/mxsf5/vercel/ai-autosite-main/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "C:/Users/mxsf5/vercel/ai-autosite-main/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 0
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "dev-tools\\json-format.spec.ts",
+      "file": "dev-tools/json-format.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "JSON整形ツール",
+          "file": "dev-tools/json-format.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "JSONを整形できる",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 65700,
+                      "error": {
+                        "message": "Error: page.click: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"整形\")')\u001b[22m\n",
+                        "stack": "Error: page.click: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"整形\")')\u001b[22m\n\n    at C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\tests\\dev-tools\\json-format.spec.ts:15:16",
+                        "location": {
+                          "file": "C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\tests\\dev-tools\\json-format.spec.ts",
+                          "column": 16,
+                          "line": 15
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 13 |\u001b[39m     \n \u001b[90m 14 |\u001b[39m     \u001b[90m// 整形ボタンをクリック\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"整形\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m     \n \u001b[90m 18 |\u001b[39m     \u001b[90m// 結果を取得\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\tests\\dev-tools\\json-format.spec.ts",
+                            "column": 16,
+                            "line": 15
+                          },
+                          "message": "Error: page.click: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"整形\")')\u001b[22m\n\n\n\u001b[0m \u001b[90m 13 |\u001b[39m     \n \u001b[90m 14 |\u001b[39m     \u001b[90m// 整形ボタンをクリック\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'button:has-text(\"整形\")'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m500\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m     \n \u001b[90m 18 |\u001b[39m     \u001b[90m// 結果を取得\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\tests\\dev-tools\\json-format.spec.ts:15:16\u001b[22m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T17:24:37.853Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\test-results\\dev-tools-json-format-JSON整形ツール-JSONを整形できる-Desktop-Chrome\\video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\mxsf5\\vercel\\ai-autosite-main\\tests\\dev-tools\\json-format.spec.ts",
+                        "column": 16,
+                        "line": 15
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-e60295e33bdcc2c22734",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "不正なJSONでエラー表示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-434e671c76fdf7d047bb",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 32,
+              "column": 7
+            },
+            {
+              "title": "JSONを整形できる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-3c10a03c0db888ccf574",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "不正なJSONでエラー表示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-cc9f1225ddbcbdfd59ad",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 32,
+              "column": 7
+            },
+            {
+              "title": "JSONを整形できる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-9c109a267a203e4dd3e4",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "不正なJSONでエラー表示",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "051fe0b699f8f8b5197c-0e484cfeeb636bd178ed",
+              "file": "dev-tools/json-format.spec.ts",
+              "line": 32,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "example.spec.ts",
+      "file": "example.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "最初のテスト",
+          "file": "example.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "トップページが表示される",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-d182c1e13ef236c94d6e",
+              "file": "example.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "ツール一覧ページにアクセスできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-944d312987b7ff40f953",
+              "file": "example.spec.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "トップページが表示される",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-37a192ae5bc3e6877a0d",
+              "file": "example.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "ツール一覧ページにアクセスできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-ebeee5bf962d473eb3fa",
+              "file": "example.spec.ts",
+              "line": 21,
+              "column": 7
+            },
+            {
+              "title": "トップページが表示される",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-501e8ac51563ca9fbf1c",
+              "file": "example.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "ツール一覧ページにアクセスできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "a30a6eba6312f6b87ea5-ccabaf664accf904e3f4",
+              "file": "example.spec.ts",
+              "line": 21,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "quick-tools\\password-generator.spec.ts",
+      "file": "quick-tools/password-generator.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "パスワード生成器",
+          "file": "quick-tools/password-generator.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ページが開く",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-5deca02a111a85c2c95c",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "生成ボタンがある",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-31f63c34790cf31031e3",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "パスワードを生成できる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-31afa8972a16c6c5d287",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 32,
+              "column": 7
+            },
+            {
+              "title": "ページが開く",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-9fbd22c9ae7e3e5407b3",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "生成ボタンがある",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-d5ca4530c14d4be14a0d",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "パスワードを生成できる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-96962cbc8b8674938748",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 32,
+              "column": 7
+            },
+            {
+              "title": "ページが開く",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-acb3772dfba36b6ef8df",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 5,
+              "column": 7
+            },
+            {
+              "title": "生成ボタンがある",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-bc47039fe5e5188a1e4d",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 19,
+              "column": 7
+            },
+            {
+              "title": "パスワードを生成できる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "99cdfaf124ef3111fa45-5460bc6803e09c600562",
+              "file": "quick-tools/password-generator.spec.ts",
+              "line": 32,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "quick-tools\\qr-code.spec.ts",
+      "file": "quick-tools/qr-code.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "QRコード生成",
+          "file": "quick-tools/qr-code.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "URLからQRコード生成",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-116c2aeeacd67c24971c",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "QRコードをダウンロードできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-3991ad9a9ec589b305b8",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "URLからQRコード生成",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-1beb40705ba47a1f82e7",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "QRコードをダウンロードできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-6e49c3b864062da57305",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 26,
+              "column": 7
+            },
+            {
+              "title": "URLからQRコード生成",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-b08660950af515a3b8c0",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "QRコードをダウンロードできる",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "9c97d2f77442f132f8b0-0fafeae5bd473f757962",
+              "file": "quick-tools/qr-code.spec.ts",
+              "line": 26,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "quick-tools\\text-counter.spec.ts",
+      "file": "quick-tools/text-counter.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "文字数カウンター",
+          "file": "quick-tools/text-counter.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "基本的な文字数カウント",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-740a494c57be06844830",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "空のテキストでも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-bed6cfefefc5f15f3a68",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 36,
+              "column": 7
+            },
+            {
+              "title": "長文でも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Desktop Chrome",
+                  "projectName": "Desktop Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-c967f51e037c98f017ca",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "基本的な文字数カウント",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-114429f18fc162ace711",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "空のテキストでも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-398317417c1da834d27f",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 36,
+              "column": 7
+            },
+            {
+              "title": "長文でも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-9c0e03a42927fa6b5379",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 49,
+              "column": 7
+            },
+            {
+              "title": "基本的な文字数カウント",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-732eaccaedde37b8fa37",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "空のテキストでも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-8981369d794301958b1a",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 36,
+              "column": 7
+            },
+            {
+              "title": "長文でも動作する",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 0,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "107ca844c9abc1092d69-cb626315a15c19ce8459",
+              "file": "quick-tools/text-counter.spec.ts",
+              "line": 49,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "message": "\u001b[31mTesting stopped early after 1 maximum allowed failures.\u001b[39m"
+    }
+  ],
+  "stats": {
+    "startTime": "2025-10-18T17:24:25.702Z",
+    "duration": 79041.824,
+    "expected": 0,
+    "skipped": 35,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

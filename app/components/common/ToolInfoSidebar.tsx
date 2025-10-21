@@ -4,7 +4,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Clock, Users, Shield, Star, ExternalLink } from 'lucide-react'
-import type { Tool, Category } from '../../lib/categories'
+import type { Tool } from '../../lib/categories'
+import type { Category } from '../../lib/categories-config'
 
 interface ToolInfoSidebarProps {
   tool: Tool
@@ -134,8 +135,8 @@ export default function ToolInfoSidebar({ tool, category }: ToolInfoSidebarProps
                   className="flex items-center justify-between text-sm text-gray-400 hover:text-cyan-400 transition-colors"
                 >
                   <span className="flex items-center gap-2">
-                    <span>{category.icon}</span>
-                    <span>More {category.title}</span>
+                    <span>{category.emoji}</span>
+                    <span>More {category.name}</span>
                   </span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>

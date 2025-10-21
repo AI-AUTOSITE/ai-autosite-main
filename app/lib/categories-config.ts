@@ -66,7 +66,7 @@ export const CATEGORIES: Category[] = [
     enabled: true,
     order: 3,
     badge: 'NEW',
-    path: '/tools?category=study-tools', // ⭐ 追加（オプション）
+    path: '/tools?category=study-tools',
   },
   {
     id: 'business-tools',
@@ -79,7 +79,7 @@ export const CATEGORIES: Category[] = [
     description: 'Professional productivity tools',
     enabled: true,
     order: 4,
-    path: '/tools?category=business-tools', // ⭐ 追加（オプション）
+    path: '/tools?category=business-tools',
   },
   {
     id: 'creative-tools',
@@ -92,7 +92,7 @@ export const CATEGORIES: Category[] = [
     description: 'Design and creative tools',
     enabled: true,
     order: 5,
-    path: '/tools?category=creative-tools', // ⭐ 追加（オプション）
+    path: '/tools?category=creative-tools',
   },
   {
     id: 'learning-hub',
@@ -105,7 +105,7 @@ export const CATEGORIES: Category[] = [
     description: 'Educational and learning resources',
     enabled: true,
     order: 6,
-    path: '/tools?category=learning-hub', // ⭐ 追加（オプション）
+    path: '/tools?category=learning-hub',
   },
 ]
 

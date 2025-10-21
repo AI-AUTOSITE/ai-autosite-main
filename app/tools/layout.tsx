@@ -27,7 +27,9 @@ const getToolTitle = (pathname: string) => {
     '/tools/password-generator': 'Password Generator',
     '/tools/text-counter': 'Text Counter',
     '/tools/code-roaster': 'Code Roaster',
+    '/tools/cornell-note': 'Cornell Note Generator',
     '/tools/markdown-html': 'Markdown to HTML',
+    '/tools/network-checker': 'Network Checker',
     '/tools/qr-code': 'QR Code Maker',
     '/tools/unit-converter': 'Unit Converter',
     '/tools/base64': 'Base64 Tool',
@@ -35,6 +37,7 @@ const getToolTitle = (pathname: string) => {
     '/tools/code-dependency-visualizer': 'Code Dependency Visualizer',
     '/tools/bmi-calculator': 'BMI Calculator',
     '/tools/percentage-calculator': 'Percentage Calculator',
+    '/tools/haiku-generator': 'AI Haiku Generator',
     '/tools/hashtag-generator': 'Hashtag Generator',
     '/tools/twitter-counter': 'Twitter Counter',
     '/tools/instagram-bio': 'Instagram Bio Generator',
@@ -53,6 +56,7 @@ const getToolTitle = (pathname: string) => {
     '/tools/debate-trainer': 'Master Debate Skills with AI',
     '/tools/pdf-summarizer': 'PDF SUMMARIZER',
     '/tools/pdf-tools': 'PDF Editor',
+    '/tools/pomodoro-timer': 'Pomodoro Timer',
     '/tools/spam-email-checker': 'Spam Email Checker',
     '/tools/stack-recommender': 'Stack Recommender',
     '/tools/tech-stack-analyzer': 'Tech Stack Analyzer',
@@ -71,7 +75,6 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
   }, [pathname])
 
   return (
-    // ✅ Flexbox構造を追加
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <Header />
