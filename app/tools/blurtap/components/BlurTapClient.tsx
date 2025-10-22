@@ -49,6 +49,10 @@ export default function BlurTapClient() {
   const [showGuide, setShowGuide] = useState(false)
   const [currentGuide, setCurrentGuide] = useState<GuideBox>({ x: 0, y: 0, w: 0, h: 0 })
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  // For double-click/double-tap detection
+  const lastTapTime = useRef<number>(0)
+  const DOUBLE_TAP_DELAY = 300 // ms
 
   useEffect(() => {
     if (error) {
@@ -73,9 +77,12 @@ export default function BlurTapClient() {
       const rect = canvasRef.current.getBoundingClientRect()
       let clientX: number, clientY: number
 
-      if ('touches' in e && e.touches.length > 0) {
-        clientX = e.touches[0].clientX
-        clientY = e.touches[0].clientY
+      if ('touches' in e) {
+        // Use touches for touchmove, changedTouches for touchend
+        const touch = e.touches.length > 0 ? e.touches[0] : e.changedTouches[0]
+        if (!touch) return null
+        clientX = touch.clientX
+        clientY = touch.clientY
       } else if ('clientX' in e) {
         clientX = e.clientX
         clientY = e.clientY
@@ -142,6 +149,20 @@ export default function BlurTapClient() {
       const pos = getPosition(e)
       if (!pos) return
 
+      // Check for double-click/double-tap
+      const currentTime = Date.now()
+      const timeSinceLastTap = currentTime - lastTapTime.current
+      
+      if (timeSinceLastTap < DOUBLE_TAP_DELAY && timeSinceLastTap > 0) {
+        // Double-click/double-tap detected!
+        handleDoubleClick(pos)
+        lastTapTime.current = 0 // Reset to prevent triple-click
+        return
+      }
+      
+      lastTapTime.current = currentTime
+
+      // Normal single click/tap behavior
       if (settings.mode === 'click') {
         const size = MASK_SIZE_MAP[settings.maskSize]
         const newMask: MaskRegion = {
@@ -161,6 +182,26 @@ export default function BlurTapClient() {
       }
     },
     [originalImage, settings.mode, settings.maskSize, addMask, getPosition]
+  )
+
+  // Handle double-click/double-tap - always use Large size
+  const handleDoubleClick = useCallback(
+    (pos: { canvasX: number; canvasY: number }) => {
+      const size = MASK_SIZE_MAP.large // Always use Large size for double-click
+      const newMask: MaskRegion = {
+        x: pos.canvasX - size.w / 2,
+        y: pos.canvasY - size.h / 2,
+        w: size.w,
+        h: size.h,
+        id: `mask-${Date.now()}`,
+      }
+      addMask(newMask)
+
+      // Visual feedback: brief flash
+      setShowGuide(true)
+      setTimeout(() => setShowGuide(false), 150)
+    },
+    [addMask]
   )
 
   const handleEnd = useCallback(
@@ -244,36 +285,30 @@ export default function BlurTapClient() {
         <div className="space-y-4">
           {/* Canvas and Actions */}
           <div className="flex flex-col lg:flex-row gap-4">
-            {/* Canvas Area */}
             <div className="flex-1 order-2 lg:order-1">
-              {/* Zoom Control */}
-              <div className="mb-4 bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                <span className="text-sm text-gray-300">Zoom:</span>
-                <input
-                  type="range"
-                  min="0.3"
-                  max="1.5"
-                  step="0.1"
-                  value={displayScale}
-                  onChange={(e) => {
-                    const newScale = parseFloat(e.target.value)
-                    setDisplayScale(newScale)
-                  }}
-                  className="flex-1 accent-cyan-400"
-                />
-                <span className="text-sm text-white font-medium min-w-[50px] text-center sm:text-left">
+              {/* Zoom controls */}
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <span className="text-xs text-gray-400">Zoom:</span>
+                <button
+                  onClick={() => setDisplayScale((prev) => Math.max(0.1, prev - 0.1))}
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
+                >
+                  -
+                </button>
+                <span className="min-w-[60px] text-center text-sm text-white">
                   {Math.round(displayScale * 100)}%
                 </span>
                 <button
+                  onClick={() => setDisplayScale((prev) => Math.min(3, prev + 0.1))}
+                  className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
+                >
+                  +
+                </button>
+                <button
                   onClick={() => {
                     if (originalImage) {
-                      const autoScale = calculateDisplayScale(
-                        originalImage.width,
-                        originalImage.height,
-                        0.7,
-                        0.65
-                      )
-                      setDisplayScale(autoScale)
+                      const scale = calculateDisplayScale(originalImage.width, originalImage.height)
+                      setDisplayScale(scale)
                     }
                   }}
                   className="min-h-[40px] px-3 py-2 text-xs sm:text-sm bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
@@ -291,6 +326,13 @@ export default function BlurTapClient() {
                 onEnd={handleEnd}
                 onLeave={handleLeave}
               />
+              
+              {/* Double-click hint */}
+              <div className="mt-3 text-center">
+                <p className="text-xs text-cyan-400">
+                  💡 Tip: Double-click/tap for quick Large mask
+                </p>
+              </div>
             </div>
 
             {/* Action Panel */}
