@@ -14,13 +14,14 @@ import { aiTools } from './categories/ai-tools'
 import { devTools } from './categories/dev-tools'
 import { learning } from './categories/learning'
 
-// ブログ記事データの同期インポート
-import { quickToolsPosts } from './blog-posts/quick-tools'
+// ブログ記事データの同期インポート（新構造）
+import { convertersPosts } from './blog-posts/converters'
+import { editorsPosts } from './blog-posts/editors'
+import { generatorsPosts } from './blog-posts/generators'
+import { analyzersPosts } from './blog-posts/analyzers'
+import { aiToolsPosts } from './blog-posts/ai-tools'
 import { devToolsPosts } from './blog-posts/dev-tools'
-import { studyToolsPosts } from './blog-posts/study-tools'
-import { businessToolsPosts } from './blog-posts/business-tools'
 import { learningPosts } from './blog-posts/learning'
-import { creativeToolsPosts } from './blog-posts/creative-tools'
 
 // ===================================
 // 型定義
@@ -68,35 +69,39 @@ interface UnifiedPost {
 
 function unifyTool(tool: any): UnifiedTool | null {
   if (!tool) return null
+  const mappedStatus = mapToolStatus(tool.status || 'coming')
+  
   return {
     ...tool,
     // 新しい統一フィールド
-    status: mapToolStatus(tool.status || 'coming'),
+    status: mappedStatus,
     categoryId: mapCategoryId(tool.category || 'uncategorized'),
     // 元のデータも保持（後方互換性）
     originalStatus: tool.status,
     originalCategory: tool.category,
 
-    // 追加のメタデータ
-    isActive: mapToolStatus(tool.status || 'coming') === 'active',
-    isComingSoon: tool.status === 'coming',
-    isMaintenance: tool.status === 'maintenance',
+    // 追加のメタデータ（修正: 'live'と比較）
+    isActive: mappedStatus === 'live',
+    isComingSoon: mappedStatus === 'coming',
+    isMaintenance: mappedStatus === 'maintenance',
   }
 }
 
 function unifyPost(post: any): UnifiedPost | null {
   if (!post) return null
+  const mappedStatus = mapPostStatus(post.status || 'draft')
+  
   return {
     ...post,
     // 新しい統一フィールド
-    status: mapPostStatus(post.status || 'draft'),
+    status: mappedStatus,
     categoryId: post.category ? mapCategoryId(post.category) : 'uncategorized',
     // 元のデータも保持
     originalStatus: post.status,
     originalCategory: post.category,
 
-    // 追加のメタデータ
-    isActive: mapPostStatus(post.status || 'draft') === 'active',
+    // 追加のメタデータ（修正: 'active'と比較）
+    isActive: mappedStatus === 'active',
     isDraft: post.status === 'draft',
     isComingSoon: post.status === 'coming-soon',
   }
@@ -119,14 +124,15 @@ const ALL_TOOLS: UnifiedTool[] = [
   .map(unifyTool)
   .filter((tool): tool is UnifiedTool => tool !== null)
 
-// すべてのブログ記事を統合して変換
+// すべてのブログ記事を統合して変換（新構造）
 const ALL_POSTS: UnifiedPost[] = [
-  ...(quickToolsPosts || []),
+  ...(convertersPosts || []),
+  ...(editorsPosts || []),
+  ...(generatorsPosts || []),
+  ...(analyzersPosts || []),
+  ...(aiToolsPosts || []),
   ...(devToolsPosts || []),
-  ...(studyToolsPosts || []),
-  ...(businessToolsPosts || []),
   ...(learningPosts || []),
-  ...(creativeToolsPosts || []),
 ]
   .map(unifyPost)
   .filter((post): post is UnifiedPost => post !== null)

@@ -1,4 +1,12 @@
-import { Brain, Palette, Code, Zap, BookOpen, Briefcase, TrendingUp } from 'lucide-react'
+import { 
+  RefreshCw, 
+  Scissors, 
+  Sparkles, 
+  BarChart3, 
+  Bot, 
+  Code, 
+  GraduationCap 
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface BlogCategory {
@@ -12,51 +20,59 @@ export interface BlogCategory {
 
 export const blogCategories: BlogCategory[] = [
   {
-    id: 'study-tools',
-    name: 'Study Tools',
-    shortName: 'Study',
-    icon: Brain,
-    color: 'from-green-500 to-teal-500',
-    description: 'AI-powered learning and debate tools',
+    id: 'converters',
+    name: 'Converter Tools',
+    shortName: 'Converters',
+    icon: RefreshCw,
+    color: 'from-blue-500 to-cyan-500',
+    description: 'Transform data between formats instantly',
   },
   {
-    id: 'creative',
-    name: 'Creative Tools',
-    shortName: 'Creative',
-    icon: Palette,
-    color: 'from-pink-500 to-purple-500',
-    description: 'Design and creative content tools',
+    id: 'editors',
+    name: 'Editor Tools',
+    shortName: 'Editors',
+    icon: Scissors,
+    color: 'from-purple-500 to-pink-500',
+    description: 'Edit images and PDFs with privacy',
+  },
+  {
+    id: 'generators',
+    name: 'Generator Tools',
+    shortName: 'Generators',
+    icon: Sparkles,
+    color: 'from-amber-500 to-orange-500',
+    description: 'Generate passwords, QR codes, and templates',
+  },
+  {
+    id: 'analyzers',
+    name: 'Analyzer Tools',
+    shortName: 'Analyzers',
+    icon: BarChart3,
+    color: 'from-green-500 to-emerald-500',
+    description: 'Analyze data and optimize performance',
+  },
+  {
+    id: 'ai-tools',
+    name: 'AI Tools',
+    shortName: 'AI',
+    icon: Bot,
+    color: 'from-indigo-500 to-purple-500',
+    description: 'AI-powered productivity and creativity',
   },
   {
     id: 'dev-tools',
     name: 'Developer Tools',
     shortName: 'Dev',
     icon: Code,
-    color: 'from-purple-500 to-indigo-500',
+    color: 'from-cyan-500 to-blue-600',
     description: 'Code analysis and optimization guides',
-  },
-  {
-    id: 'quick-tools',
-    name: 'Quick Tools',
-    shortName: 'Quick',
-    icon: Zap,
-    color: 'from-cyan-500 to-blue-500',
-    description: 'Instant productivity boosters',
   },
   {
     id: 'learning',
     name: 'Learning Hub',
     shortName: 'Learn',
-    icon: BookOpen,
-    color: 'from-amber-500 to-orange-500',
-    description: 'Interactive tutorials and guides',
-  },
-  {
-    id: 'business',
-    name: 'Business Tools',
-    shortName: 'Business',
-    icon: Briefcase,
-    color: 'from-blue-500 to-purple-600',
-    description: 'Professional tools for business analysis',
+    icon: GraduationCap,
+    color: 'from-pink-500 to-red-500',
+    description: 'Study techniques and productivity tools',
   },
 ]
