@@ -1,0 +1,42 @@
+// app/lib/categories/learning.ts
+import type { Tool } from './types'
+
+export const learning: Tool[] = [
+  {
+    id: 'pomodoro-timer',
+    name: 'Pomodoro Timer',
+    description: '25-minute focus sessions. Boost productivity by 40%.',
+    category: 'learning',
+    icon: '🍅',
+    emoji: '🍅',
+    color: 'from-red-600 to-orange-600',
+    status: 'live',
+    url: '/tools/pomodoro-timer',
+    tags: ['pomodoro', 'timer', 'focus', 'productivity', 'study', 'work', 'time management'],
+    difficulty: 'Instant',
+    timeToUse: '25 minutes',
+    featured: true,
+    new: true,
+    badge: 'NEW',
+    apiRequired: false,
+    pricing: 'free',
+    dataProcessing: 'local',
+    lastUpdated: '2025-10',
+  },
+  {
+    id: 'ai-dev-dictionary',
+    name: 'AI Dev Dictionary',
+    description: 'Comprehensive glossary with interactive examples and demos.',
+    category: 'learning',
+    icon: '📖',
+    color: 'from-amber-500 to-orange-600',
+    status: 'live',
+    url: '/tools/ai-dev-dictionary',
+    tags: ['Learning', 'AI Terms', 'Reference', 'developer'],
+    difficulty: 'Simple',
+    timeToUse: '1 minute',
+    featured: true,
+    pricing: 'free',
+    dataProcessing: 'local',
+  },
+]

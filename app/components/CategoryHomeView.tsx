@@ -180,42 +180,49 @@ export default function CategoryHomeView() {
       {/* Category Selection (Default View) */}
       {selectedCategory === null && !searchQuery && (
         <div className="animate-fadeIn">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center">Choose a Category</h2>
-
           {/* Category Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {categories.map((cat) => {
               const Icon = cat.icon
               return (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCategorySelect(cat.id)}
-                  className="group relative overflow-hidden bg-gray-800 rounded-2xl p-6
-                           hover:bg-gray-750 transition-all duration-300 transform hover:scale-[1.02]
-                           border border-gray-700 hover:border-gray-600 text-left"
-                >
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`p-3 rounded-xl ${cat.bgColor}`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-3xl">{cat.emoji}</span>
-                      </div>
-                      <span className="px-2.5 py-1 bg-gray-700 rounded-full text-sm font-medium text-gray-300">
-                        {categoryStats[cat.id] || 0} tools
-                      </span>
-                    </div>
+<button
+  key={cat.id}
+  onClick={() => handleCategorySelect(cat.id)}
+  className="group relative overflow-hidden bg-gray-800 rounded-2xl p-6
+           hover:bg-gray-750 transition-all duration-300 transform hover:scale-[1.02]
+           border border-gray-700 hover:border-gray-600 text-left w-full"
+>
+  <div className="relative z-10 w-full">
+    {/* ✅ w-full を追加、items-start に変更 */}
+    <div className="flex items-start justify-between mb-4 w-full">
+      <div className="flex items-center gap-3">
+        <div className={`w-12 h-12 p-2.5 rounded-xl ${cat.bgColor} flex items-center justify-center flex-shrink-0`}>
+          <Icon className="w-7 h-7 text-white" />
+        </div>
+        <span className="text-3xl leading-none">{cat.emoji}</span>
+      </div>
+      <span className="px-2.5 py-1 bg-gray-700 rounded-full text-sm font-medium text-gray-300 flex-shrink-0">
+        {categoryStats[cat.id] || 0} tools
+      </span>
+    </div>
 
-                    <h3 className="text-2xl font-bold mb-2 text-white">{cat.name}</h3>
-                    <p className="text-base text-gray-400 mb-4">{cat.description}</p>
+    {/* ✅ w-full を追加、text-left を明示 */}
+    <h3 className="text-2xl font-bold mb-2 text-white text-left w-full">
+      {cat.name}
+    </h3>
+    
+    {/* ✅ w-full + min-h で高さを統一 */}
+    <p className="text-base text-gray-400 mb-4 text-left w-full min-h-[3rem] leading-relaxed">
+      {cat.description}
+    </p>
 
-                    <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
-                      Browse tools
-                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-                </button>
+    {/* ✅ w-full を追加 */}
+    <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all w-full">
+      Browse tools
+      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+    </div>
+  </div>
+</button>
               )
             })}
           </div>

@@ -13,34 +13,37 @@ export { CATEGORIES } from '../categories-config'
 // ===================================
 // Tool Collections by Category
 // ===================================
-import { quickTools } from './quick-tools'
+import { converters } from './converters'
+import { editors } from './editors'
+import { generators } from './generators'
+import { analyzers } from './analyzers'
+import { aiTools } from './ai-tools'
 import { devTools } from './dev-tools'
-import { studyTools } from './study-tools'
-import { businessTools } from './business-tools'
-import { creativeTools } from './creative-tools'
-import { learningTools } from './learning-tools'
+import { learning } from './learning'
 
 // Combine all tools into single array
 export const TOOLS: Tool[] = [
-  ...quickTools,
+  ...converters,
+  ...editors,
+  ...generators,
+  ...analyzers,
+  ...aiTools,
   ...devTools,
-  ...studyTools,
-  ...businessTools,
-  ...creativeTools,
-  ...learningTools,
+  ...learning,
 ]
 
 // Export individual collections for direct access
-export { quickTools, devTools, studyTools, businessTools, creativeTools, learningTools }
+export { converters, editors, generators, analyzers, aiTools, devTools, learning }
 
 // Tools organized by category ID
 export const toolsByCategory = {
-  'quick-tools': quickTools,
+  converters: converters,
+  editors: editors,
+  generators: generators,
+  analyzers: analyzers,
+  'ai-tools': aiTools,
   'dev-tools': devTools,
-  'study-tools': studyTools,
-  business: businessTools,
-  creative: creativeTools,
-  learning: learningTools,
+  learning: learning,
 } as const
 
 // ===================================
