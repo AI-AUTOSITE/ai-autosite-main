@@ -1,30 +1,47 @@
 // app/lib/core/status-map.ts
 // ===================================
-// ステータスマッピング（完全版）
+// Status & Category Mapping
 // ===================================
 
-// ツールのステータスマッピング
+// Tool status mapping (for backward compatibility)
+// Current tools use: 'live', 'coming', 'maintenance'
 export const TOOL_STATUS_MAP = {
-  live: 'active',
+  active: 'live',
+  live: 'live',
   coming: 'coming',
+  'coming-soon': 'coming',
   maintenance: 'maintenance',
 } as const
 
-// ブログ記事のステータスマッピング
+// Blog post status mapping
 export const POST_STATUS_MAP = {
   published: 'active',
+  active: 'active',
   'coming-soon': 'coming',
   draft: 'draft',
 } as const
 
-// カテゴリーIDの正規化
+// Category ID normalization/mapping
+// Maps old category names to new ones (for backward compatibility)
 export const CATEGORY_MAP = {
-  business: 'business-tools',
-  creative: 'creative-tools',
-  learning: 'learning-hub',
+  // Old → New mappings
+  'business-tools': 'ai-tools',
+  'creative-tools': 'editors',
+  'quick-tools': 'converters',
+  'study-tools': 'learning',
+  'learning-hub': 'learning',
+  
+  // Current categories (identity mapping)
+  'converters': 'converters',
+  'editors': 'editors',
+  'generators': 'generators',
+  'analyzers': 'analyzers',
+  'ai-tools': 'ai-tools',
+  'dev-tools': 'dev-tools',
+  'learning': 'learning',
 } as const
 
-// マッピング関数（明示的にexport）
+// Mapping functions
 export function mapToolStatus(status: string): string {
   return TOOL_STATUS_MAP[status as keyof typeof TOOL_STATUS_MAP] || status
 }
@@ -37,9 +54,7 @@ export function mapCategoryId(category: string): string {
   return CATEGORY_MAP[category as keyof typeof CATEGORY_MAP] || category
 }
 
-// デバッグ用: すべてエクスポートされているか確認
-console.log('status-map.ts loaded:', {
-  mapToolStatus: typeof mapToolStatus,
-  mapPostStatus: typeof mapPostStatus,
-  mapCategoryId: typeof mapCategoryId,
-})
+// Type exports for strict typing
+export type ToolStatus = 'live' | 'coming' | 'maintenance'
+export type PostStatus = 'active' | 'coming' | 'draft'
+export type CategoryId = 'converters' | 'editors' | 'generators' | 'analyzers' | 'ai-tools' | 'dev-tools' | 'learning'
