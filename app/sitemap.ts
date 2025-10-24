@@ -3,6 +3,18 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://ai-autosite.com'
+  
+  // Tool category pages (NEW!)
+  const toolCategories = [
+    'converters',
+    'editors',
+    'generators',
+    'analyzers',
+    'ai-tools',
+    'dev-tools',
+    'learning'
+  ]
+  
   const tools = [
     'age-calculator',
     'ai-dev-dictionary',
@@ -133,12 +145,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
   
   return [
+    // Homepage
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 1.0,
     },
+    
+    // Main pages
     {
       url: `${baseUrl}/tools`,
       lastModified: new Date(),
@@ -152,6 +167,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
 
+    // Tool category pages (NEW!)
+    ...toolCategories.map(category => ({
+      url: `${baseUrl}/tools/${category}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
+    })),
+
+    // Individual tools
     ...tools.map(tool => ({
       url: `${baseUrl}/tools/${tool}`,
       lastModified: new Date(),
@@ -159,6 +183,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: highPriorityTools.includes(tool) ? 0.9 : 0.7,
     })),
 
+    // Blog posts
     ...blogPosts.map(slug => ({
       url: `${baseUrl}/blog/${slug}`,
       lastModified: new Date(),
