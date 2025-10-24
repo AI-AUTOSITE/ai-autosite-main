@@ -1,12 +1,12 @@
 'use client'
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { getToolsByCategory } from '@/lib/unified-data'
+import { getToolsByCategory } from '@/lib/categories'
 import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
-export default function LearningHubClient() {
+export default function LearningClient() {
   const tools = useMemo(
-    () => getToolsByCategory('learning-hub').filter((t) => t.status === 'active'),
+    () => getToolsByCategory('learning').filter((t) => t.status === 'live'),
     []
   )
 
@@ -23,11 +23,11 @@ export default function LearningHubClient() {
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">🎓</span>
-            <h1 className="text-4xl font-bold">Learning Hub</h1>
+            <span className="text-4xl">📚</span>
+            <h1 className="text-4xl font-bold">Learning Tools</h1>
           </div>
           <p className="text-xl text-gray-400">
-            {tools.length} interactive learning resources and tutorials.
+            {tools.length} tools to enhance your learning and productivity.
           </p>
         </div>
 

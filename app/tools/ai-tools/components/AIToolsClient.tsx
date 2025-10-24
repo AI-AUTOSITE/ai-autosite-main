@@ -1,12 +1,12 @@
 'use client'
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { getToolsByCategory } from '@/lib/unified-data'
+import { getToolsByCategory } from '@/lib/categories'
 import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
-export default function CreativeToolsClient() {
+export default function AIToolsClient() {
   const tools = useMemo(
-    () => getToolsByCategory('creative-tools').filter((t) => t.status === 'active'),
+    () => getToolsByCategory('ai-tools').filter((t) => t.status === 'live'),
     []
   )
 
@@ -23,11 +23,11 @@ export default function CreativeToolsClient() {
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">🎨</span>
-            <h1 className="text-4xl font-bold">Creative Tools</h1>
+            <span className="text-4xl">🤖</span>
+            <h1 className="text-4xl font-bold">AI Tools</h1>
           </div>
           <p className="text-xl text-gray-400">
-            {tools.length} tools for designers and content creators.
+            {tools.length} AI-powered tools for productivity and creativity.
           </p>
         </div>
 
@@ -60,6 +60,11 @@ function ToolCard({ tool }: any) {
             {tool.new && (
               <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
                 New
+              </span>
+            )}
+            {tool.badge === 'AI' && (
+              <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs font-medium">
+                AI
               </span>
             )}
           </div>

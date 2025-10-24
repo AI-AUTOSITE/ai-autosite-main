@@ -2,11 +2,11 @@ import { Metadata } from 'next'
 import DevToolsClient from './components/DevToolsClient'
 
 export const metadata: Metadata = {
-  title: 'Free Developer Tools - Debug & Optimize | AI AutoSite',
+  title: 'Free Developer Tools - Code Analysis & Debug | AI AutoSite',
   description:
-    'Professional developer tools for debugging, testing, and optimizing code. JSON formatter, regex tester, API testing tools. No ads.',
+    'Professional developer tools for code analysis, dependency visualization, debugging. No ads, no tracking, works offline.',
   keywords:
-    'developer tools, debugging tools, json formatter, regex tester, api tools, free, no ads',
+    'developer tools, code analysis, dependency visualizer, debugging tools, programming, free, no ads',
   openGraph: {
     title: 'Developer Tools - Truly Free, No Ads Ever',
     description: 'Zero ads, zero tracking, zero BS. Professional tools for developers.',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Free Developer Tools - No Ads, No Sign Up',
-    description: 'Debug and optimize your code without ads or tracking.',
+    description: 'Code analysis and debugging without ads or tracking.',
   },
   robots: {
     index: true,

@@ -22,7 +22,7 @@ export const aiTools: Tool[] = [
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'server',
-    lastUpdated: '2025-01',
+    lastUpdated: '2025-08',
   },
   {
     id: 'ai-prompt-generator',
@@ -81,7 +81,7 @@ export const aiTools: Tool[] = [
     pricing: 'freemium',
     apiRequired: true,
     dataProcessing: 'server',
-    lastUpdated: '2025-01',
+    lastUpdated: '2025-08',
   },
   {
     id: 'pdf-summarizer',

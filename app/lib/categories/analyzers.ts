@@ -19,7 +19,7 @@ export const analyzers: Tool[] = [
     new: true,
     pricing: 'free',
     dataProcessing: 'local',
-    lastUpdated: '2025-01',
+    lastUpdated: '2025-08',
   },
   {
     id: 'network-checker',

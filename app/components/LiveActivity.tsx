@@ -19,8 +19,6 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
     popularTools: [],
   })
 
-  const [isVisible, setIsVisible] = useState(false)
-
   useEffect(() => {
     // シミュレートされたデータ（本番環境ではAPIから取得）
     const simulateStats = () => {
@@ -34,7 +32,6 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
 
     // 初回データ取得
     simulateStats()
-    setIsVisible(true)
 
     // 5秒ごとに更新
     const interval = setInterval(simulateStats, 5000)
@@ -43,9 +40,9 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
   }, [toolName])
 
   return (
-    <div
-      className={`transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
-    >
+    // ✅ translate-y-2 を削除、opacity のみのアニメーション
+    // ✅ min-h で高さを事前確保（レイアウトシフト防止）
+    <div className="transition-opacity duration-500 opacity-100 min-h-[160px]">
       <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-xl border border-white/10 p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -88,7 +85,7 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
 
 // グローバル統計表示コンポーネント
 export function GlobalStats() {
-  const [stats, setStats] = useState({
+  const [stats] = useState({
     totalUsers: '12.5k',
     totalUses: '2.3M',
     toolsAvailable: 25,
@@ -96,7 +93,8 @@ export function GlobalStats() {
   })
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    // ✅ min-h で高さを事前確保
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 min-h-[100px]">
       <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center">
         <p className="text-2xl font-bold text-cyan-400">{stats.totalUsers}</p>
         <p className="text-xs text-gray-400 mt-1">Total Users</p>

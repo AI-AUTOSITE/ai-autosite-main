@@ -1,21 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // React Strict Mode（本番環境では true 推奨）
-  reactStrictMode: process.env.NODE_ENV === 'production',
-
-  // TypeScriptエラーを一時的に無視
+  reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
   },
-
-  // ESLintエラーも一時的に無視
   eslint: {
     ignoreDuringBuilds: true,
   },
-
-  // Webpack設定のカスタマイズ
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   webpack: (config, { dev, isServer }) => {
-    // サーバーサイドでpdf-parseのcanvas依存を外部化
     if (isServer) {
       config.externals = config.externals || []
       config.externals.push({
@@ -23,31 +18,24 @@ const nextConfig = {
       })
     }
 
-    // 開発環境でのロギングレベルを制御
     if (dev && !isServer) {
       config.infrastructureLogging = {
-        level: 'error', // 'none' | 'error' | 'warn' | 'info' | 'log' | 'verbose'
+        level: 'error',
       }
-
-      // ソースマップの最適化（開発時の速度向上）
       config.devtool = 'eval-source-map'
-
-      // WebAssembly対応（Tesseract.js用）
       config.experiments = {
         ...config.experiments,
         asyncWebAssembly: true,
       }
     }
 
-    // 本番環境の最適化
     if (!dev) {
-      // Terser設定（圧縮最適化）
       config.optimization.minimizer = config.optimization.minimizer.map((minimizer) => {
         if (minimizer.constructor.name === 'TerserPlugin') {
           minimizer.options.terserOptions = {
             ...minimizer.options.terserOptions,
             compress: {
-              drop_console: true, // console.logを削除
+              drop_console: true,
             },
           }
         }
@@ -55,7 +43,6 @@ const nextConfig = {
       })
     }
 
-    // pdf.jsとTesseract.js用の設定
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
@@ -64,10 +51,8 @@ const nextConfig = {
     return config
   },
 
-  // リダイレクト設定
   async redirects() {
     return [
-      // tool7.ai-autosite.com → /tools/blurtap
       {
         source: '/',
         destination: '/tools/blurtap',
@@ -79,7 +64,6 @@ const nextConfig = {
           },
         ],
       },
-      // www → non-www
       {
         source: '/:path*',
         destination: 'https://ai-autosite.com/:path*',
@@ -94,19 +78,17 @@ const nextConfig = {
     ]
   },
 
-  // 画像最適化設定
   images: {
     domains: ['ai-autosite.com', 'tool7.ai-autosite.com'],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30日間のキャッシュ
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // 実験的機能の設定
   experimental: {
-    // App Directory最適化
     optimizeCss: true,
-
-    // サーバーコンポーネントの最適化
+    optimizePackageImports: ['lucide-react'],
     serverComponentsExternalPackages: [
       'pdf-lib',
       'pdfjs-dist',
@@ -116,11 +98,9 @@ const nextConfig = {
     ],
   },
 
-  // パフォーマンス設定
-  poweredByHeader: false, // X-Powered-Byヘッダーを削除
-  compress: true, // gzip圧縮を有効化
+  poweredByHeader: false,
+  compress: true,
 
-  // CORS設定（PDF処理用）
   async headers() {
     return [
       {
@@ -136,10 +116,48 @@ const nextConfig = {
           },
         ],
       },
+      // ✅ 画像ファイルのキャッシュ強化
+      {
+        source: '/:path(.*\\.(?:jpg|jpeg|png|gif|webp|avif|svg|ico)$)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // ✅ フォントファイルのキャッシュ強化
+      {
+        source: '/:path(.*\\.(?:woff|woff2|eot|ttf|otf)$)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // ✅ CSSファイルのキャッシュ設定追加
+      {
+        source: '/:path(.*\\.css$)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // ✅ JSファイルのキャッシュ設定追加
+      {
+        source: '/:path(.*\\.(?:js|mjs)$)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ]
   },
-
-  // 環境変数の設定
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || '1.0.0',
     NEXT_PUBLIC_ENVIRONMENT: process.env.NODE_ENV || 'development',

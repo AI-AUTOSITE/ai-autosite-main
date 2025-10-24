@@ -27,39 +27,54 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: var(--font-inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
   overflow-x: hidden;
   max-width: 100vw;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 16px; /* Base font size for better readability */
+  font-size: 16px;
   line-height: 1.5;
+}
+
+/* ===================================
+   Layout Shift Prevention (CLS対策)
+   =================================== */
+@layer base {
+  /* ✅ 画像のレイアウトシフト防止 */
+  img, svg, video, canvas, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* ✅ 画像読み込み前のスペース確保 */
+  img:not([width]):not([height]) {
+    aspect-ratio: 16 / 9; /* デフォルトのアスペクト比 */
+  }
+  
+  /* ✅ フォント読み込み最適化 */
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap; /* レイアウトシフト防止 */
+    font-weight: 100 900;
+    font-style: normal;
+  }
 }
 
 /* ===================================
    Layout Components
    =================================== */
 @layer components {
-  /* Header z-index fix */
   header {
     z-index: 50;
+    /* ✅ ヘッダーの高さを事前確保（レイアウトシフト防止） */
+    min-height: 4rem; /* h-16 = 64px = 4rem */
   }
 
-  /* Backdrop blur effect */
   .backdrop-blur-xl {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
 
-  /* Ensure minimum tap target size */
   button,
   a {
     min-width: 44px;
@@ -69,7 +84,6 @@ body {
     justify-content: center;
   }
 
-  /* Focus styles for accessibility */
   *:focus-visible {
     outline: 2px solid #06b6d4;
     outline-offset: 2px;
@@ -80,7 +94,6 @@ body {
    Scrollbar Styles
    =================================== */
 @layer utilities {
-  /* Custom scrollbar for dark theme */
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -94,7 +107,6 @@ body {
     @apply bg-gray-600 rounded-full hover:bg-gray-500 transition-colors;
   }
 
-  /* Hide scrollbar utility */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -106,48 +118,32 @@ body {
 }
 
 /* ===================================
-   Simple Animations (Only Essential)
+   Animations (Consolidated)
    =================================== */
 @layer utilities {
-  /* Simple fade in */
   @keyframes fadeIn {
     from {
       opacity: 0;
+      transform: translateY(-10px);
     }
     to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  /* Simple spin for loading */
-  @keyframes spin {
+  @keyframes slideIn {
     from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .animate-spin {
-    animation: spin 1s linear infinite;
-  }
-
-  /* Modal animations */
-  @keyframes fade-in {
-    from {
+      transform: translateX(100%);
       opacity: 0;
     }
     to {
+      transform: translateX(0);
       opacity: 1;
     }
   }
 
-  @keyframes scale-in {
+  @keyframes scaleIn {
     from {
       opacity: 0;
       transform: scale(0.95);
@@ -158,35 +154,52 @@ body {
     }
   }
 
+  /* ✅ アニメーションの最適化（will-change追加） */
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+    will-change: opacity, transform;
+  }
+
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out;
+    will-change: transform, opacity;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+    will-change: transform, opacity;
+  }
+
   .animate-fade-in {
-    animation: fade-in 0.2s ease-out;
+    animation: fadeIn 0.2s ease-out;
+    will-change: opacity, transform;
   }
 
   .animate-scale-in {
-    animation: scale-in 0.2s ease-out;
+    animation: scaleIn 0.2s ease-out;
+    will-change: opacity, transform;
+  }
+
+  .animate-slide-down {
+    animation: fadeIn 0.2s ease-out;
+    will-change: opacity, transform;
+  }
+  
+  /* ✅ アニメーション完了後にwill-changeを削除 */
+  .animate-fadeIn,
+  .animate-slideIn,
+  .animate-slide-in,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-slide-down {
+    animation-fill-mode: forwards;
   }
 }
 
-/* 右からスライドインアニメーション */
-@keyframes slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
-}
 /* ===================================
    Text Utilities
    =================================== */
 @layer utilities {
-  /* Line clamp utilities */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -203,10 +216,29 @@ body {
 }
 
 /* ===================================
-   Accessibility Improvements
+   Performance Optimization
    =================================== */
 @layer utilities {
-  /* High contrast mode support */
+  /* ✅ GPUアクセラレーション */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* ✅ 重い要素の最適化 */
+  .contain-layout {
+    contain: layout;
+  }
+  
+  .contain-paint {
+    contain: paint;
+  }
+}
+
+/* ===================================
+   Accessibility
+   =================================== */
+@layer utilities {
   @media (prefers-contrast: high) {
     .border-white\/10 {
       @apply border-white/20;
@@ -217,30 +249,12 @@ body {
     }
   }
 
-  /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     * {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-  }
-
-  /* Ensure readable font sizes */
-  .text-xs {
-    font-size: 0.875rem; /* 14px minimum */
-  }
-
-  .text-sm {
-    font-size: 0.9375rem; /* 15px */
-  }
-
-  .text-base {
-    font-size: 1rem; /* 16px */
-  }
-
-  .text-lg {
-    font-size: 1.125rem; /* 18px */
   }
 }
 
@@ -257,55 +271,4 @@ body {
     background: white;
     color: black;
   }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animate-slideIn {
-  animation: slideIn 0.3s ease-out;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-slide-down {
-  animation: slide-down 0.2s ease-out;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.2s ease-out;
 }

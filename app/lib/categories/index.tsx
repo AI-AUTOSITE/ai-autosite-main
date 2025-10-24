@@ -49,6 +49,9 @@ export const toolsByCategory = {
 // ===================================
 // Re-export Utility Functions
 // ===================================
+import type { Tool } from './types'
+import * as utils from './utils'
+
 export {
   // Category functions
   getEnabledCategories,
@@ -56,17 +59,6 @@ export {
   getCategoryById,
   getCategoryByPath,
   getCategoriesWithToolCount,
-
-  // Tool query functions
-  getToolsByCategory,
-  getLiveTools,
-  getLiveToolsByCategory,
-  getFeaturedTools,
-  getNewTools,
-  getComingSoonTools,
-  getMaintenanceTools,
-  getToolById,
-  getToolByUrl,
 
   // Statistics
   getToolCountByCategory,
@@ -91,60 +83,51 @@ export {
 } from './utils'
 
 // ===================================
-// Compatibility Functions (using TOOLS array)
+// Simplified Tool Query Functions (Auto-inject TOOLS array)
 // ===================================
-import type { Tool } from './types'
-import * as utils from './utils'
-
-// These functions maintain backward compatibility
-// by passing the TOOLS array to the utility functions
-
-export const getToolsByCategoryCompat = (categoryId: string) =>
+export const getToolsByCategory = (categoryId: string) =>
   utils.getToolsByCategory(TOOLS, categoryId)
 
-export const getLiveToolsCompat = () => utils.getLiveTools(TOOLS)
+export const getLiveTools = () => utils.getLiveTools(TOOLS)
 
-export const getLiveToolsByCategoryCompat = (categoryId: string) =>
+export const getLiveToolsByCategory = (categoryId: string) =>
   utils.getLiveToolsByCategory(TOOLS, categoryId)
 
-export const getFeaturedToolsCompat = () => utils.getFeaturedTools(TOOLS)
+export const getFeaturedTools = () => utils.getFeaturedTools(TOOLS)
 
-export const getNewToolsCompat = () => utils.getNewTools(TOOLS)
+export const getNewTools = () => utils.getNewTools(TOOLS)
 
-export const getComingSoonToolsCompat = () => utils.getComingSoonTools(TOOLS)
+export const getComingSoonTools = () => utils.getComingSoonTools(TOOLS)
 
-export const getMaintenanceToolsCompat = () => utils.getMaintenanceTools(TOOLS)
+export const getMaintenanceTools = () => utils.getMaintenanceTools(TOOLS)
 
-export const getToolByIdCompat = (id: string) => utils.getToolById(TOOLS, id)
+export const getToolById = (id: string) => utils.getToolById(TOOLS, id)
 
-export const getToolByUrlCompat = (url: string) => utils.getToolByUrl(TOOLS, url)
+export const getToolByUrl = (url: string) => utils.getToolByUrl(TOOLS, url)
 
-export const getToolCountByCategoryCompat = (categoryId: string) =>
-  utils.getToolCountByCategory(TOOLS, categoryId)
-
-export const getTotalLiveToolsCountCompat = () => utils.getTotalLiveToolsCount(TOOLS)
-
-export const getTotalComingSoonCountCompat = () => utils.getTotalComingSoonCount(TOOLS)
-
-export const getTotalMaintenanceCountCompat = () => utils.getTotalMaintenanceCount(TOOLS)
-
-export const searchToolsCompat = (query: string, categoryId?: string) =>
-  utils.searchTools(TOOLS, query, categoryId)
-
-export const getCategoriesWithToolCountCompat = () => utils.getCategoriesWithToolCount(TOOLS)
-
-export const getTopToolsByUsersCompat = (limit: number = 5) =>
-  utils.getTopToolsByUsers(TOOLS, limit)
-
-export const getTopToolsByCategoryCompat = (categoryId: string, limit: number = 3) =>
-  utils.getTopToolsByCategory(TOOLS, categoryId, limit)
-
-export const getApiRequiredToolsCompat = () => utils.getApiRequiredTools(TOOLS)
-
-export const getToolsByPricingCompat = (pricing: 'free' | 'freemium' | 'paid') =>
-  utils.getToolsByPricing(TOOLS, pricing)
-
-export const getToolsByProcessingTypeCompat = (type: 'local' | 'server' | 'hybrid') =>
-  utils.getToolsByProcessingType(TOOLS, type)
-
-export const getToolsWithDependenciesCompat = () => utils.getToolsWithDependencies(TOOLS)
+// ===================================
+// Raw Utility Functions (for advanced usage with custom tool arrays)
+// ===================================
+export {
+  getToolsByCategory as getToolsByCategoryRaw,
+  getLiveTools as getLiveToolsRaw,
+  getLiveToolsByCategory as getLiveToolsByCategoryRaw,
+  getFeaturedTools as getFeaturedToolsRaw,
+  getNewTools as getNewToolsRaw,
+  getComingSoonTools as getComingSoonToolsRaw,
+  getMaintenanceTools as getMaintenanceToolsRaw,
+  getToolById as getToolByIdRaw,
+  getToolByUrl as getToolByUrlRaw,
+  getToolCountByCategory as getToolCountByCategoryRaw,
+  getTotalLiveToolsCount as getTotalLiveToolsCountRaw,
+  getTotalComingSoonCount as getTotalComingSoonCountRaw,
+  getTotalMaintenanceCount as getTotalMaintenanceCountRaw,
+  searchTools as searchToolsRaw,
+  getCategoriesWithToolCount as getCategoriesWithToolCountRaw,
+  getTopToolsByUsers as getTopToolsByUsersRaw,
+  getTopToolsByCategory as getTopToolsByCategoryRaw,
+  getApiRequiredTools as getApiRequiredToolsRaw,
+  getToolsByPricing as getToolsByPricingRaw,
+  getToolsByProcessingType as getToolsByProcessingTypeRaw,
+  getToolsWithDependencies as getToolsWithDependenciesRaw,
+} from './utils'

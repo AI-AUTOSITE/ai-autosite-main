@@ -1,12 +1,12 @@
 'use client'
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { getToolsByCategory } from '@/lib/unified-data'
+import { getToolsByCategory } from '@/lib/categories'
 import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
-export default function StudyToolsClient() {
+export default function GeneratorsClient() {
   const tools = useMemo(
-    () => getToolsByCategory('study-tools').filter((t) => t.status === 'active'),
+    () => getToolsByCategory('generators').filter((t) => t.status === 'live'),
     []
   )
 
@@ -23,11 +23,11 @@ export default function StudyToolsClient() {
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">📚</span>
-            <h1 className="text-4xl font-bold">Study Tools</h1>
+            <span className="text-4xl">✨</span>
+            <h1 className="text-4xl font-bold">Generator Tools</h1>
           </div>
           <p className="text-xl text-gray-400">
-            {tools.length} AI-powered tools for smart learning assistance.
+            {tools.length} tools to generate passwords, QR codes, templates, and test data.
           </p>
         </div>
 

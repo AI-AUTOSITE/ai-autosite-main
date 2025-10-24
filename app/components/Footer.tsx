@@ -35,11 +35,15 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900/50 to-gray-900 border-t border-gray-800">
+    <footer 
+      className="bg-gradient-to-b from-gray-900/50 to-gray-900 border-t border-gray-800"
+      style={{
+        minHeight: '320px',
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
-        {/* Desktop Footer - 4 Column Grid with Better Spacing */}
+        {/* Desktop Footer */}
         <div className="hidden md:grid md:grid-cols-4 gap-8 lg:gap-16 xl:gap-20 mb-8">
-          {/* Resources Column */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
               Resources
@@ -58,7 +62,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company Column */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
               Company
@@ -77,7 +80,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal Column */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
               Legal
@@ -96,7 +98,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Connect Column */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
               Connect
@@ -118,7 +119,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Mobile Footer - Compact List */}
+        {/* Mobile Footer */}
         <div className="md:hidden mb-6">
           <div className="flex flex-wrap gap-3 justify-center">
             {mobileLinks.map((link) => (
@@ -136,7 +137,6 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            {/* Brand & Copyright */}
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
               <Link
                 href="/"
@@ -150,7 +150,6 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Tagline */}
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-cyan-400" />
               <p className="text-sm text-gray-400 font-medium">

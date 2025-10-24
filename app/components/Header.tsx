@@ -4,13 +4,16 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Shield, Sparkles, Menu, X, HelpCircle, Home, FileText } from 'lucide-react'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react'
 
 export default function Header() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showGuide, setShowGuide] = useState(false)
   const [GuideComponent, setGuideComponent] = useState<React.ComponentType<any> | null>(null)
+  
+  // ✅ Ref for DOM operations (avoid forced reflow)
+  const headerRef = useRef<HTMLElement>(null)
 
   // Navigation items with icons
   const navItems = [
@@ -56,7 +59,7 @@ export default function Header() {
     setShowGuide(false)
   }, [pathname, isToolPage])
 
-  // Handle ESC key press
+  // ✅ Optimized: Handle ESC key press and body overflow
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -65,42 +68,58 @@ export default function Header() {
       }
     }
 
-    if (showGuide) {
+    // ✅ Batch DOM operations to prevent forced reflow
+    if (showGuide || mobileMenuOpen) {
       document.addEventListener('keydown', handleEsc)
-      document.body.style.overflow = 'hidden'
-    } else if (mobileMenuOpen) {
-      document.addEventListener('keydown', handleEsc)
+      // ✅ Use requestAnimationFrame to batch style changes
+      requestAnimationFrame(() => {
+        if (showGuide) {
+          document.body.style.overflow = 'hidden'
+        }
+      })
+    } else {
+      // ✅ Cleanup in batch
+      requestAnimationFrame(() => {
+        document.body.style.overflow = ''
+      })
     }
 
     return () => {
       document.removeEventListener('keydown', handleEsc)
-      document.body.style.overflow = ''
+      requestAnimationFrame(() => {
+        document.body.style.overflow = ''
+      })
     }
   }, [showGuide, mobileMenuOpen])
 
-  // Close mobile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (target.closest('header')) return
-      setMobileMenuOpen(false)
-    }
+  // ✅ Optimized: Close mobile menu when clicking outside
+  const handleClickOutside = useCallback((e: MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (target.closest('header')) return
+    setMobileMenuOpen(false)
+  }, [])
 
+  useEffect(() => {
     if (mobileMenuOpen) {
-      setTimeout(() => {
+      // ✅ Use setTimeout to avoid immediate event listener trigger
+      const timeoutId = setTimeout(() => {
         document.addEventListener('click', handleClickOutside)
       }, 100)
-    }
 
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
+      return () => {
+        clearTimeout(timeoutId)
+        document.removeEventListener('click', handleClickOutside)
+      }
     }
-  }, [mobileMenuOpen])
+  }, [mobileMenuOpen, handleClickOutside])
 
   return (
     <>
       {/* Main Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700">
+      <header 
+        ref={headerRef}
+        className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/95 border-b border-gray-700"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -124,43 +143,43 @@ export default function Header() {
               </div>
             </Link>
 
-{/* Desktop Navigation */}
-<nav className="hidden md:flex items-center space-x-1">
-  {/* Guide button (only on tool pages) */}
-  {isToolPage && GuideComponent && (
-    <button
-      onClick={() => setShowGuide(!showGuide)}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all mr-2"
-      title="View tool guide"
-    >
-      <HelpCircle className="w-4 h-4" />
-      <span className="text-sm font-medium">Guide</span>
-    </button>
-  )}
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {/* Guide button (only on tool pages) */}
+              {isToolPage && GuideComponent && (
+                <button
+                  onClick={() => setShowGuide(!showGuide)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all mr-2"
+                  title="View tool guide"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span className="text-sm font-medium">Guide</span>
+                </button>
+              )}
 
-  {/* Navigation links */}
-  {navItems.map((item) => {
-    const isActive =
-      pathname === item.href || (item.href === '/blog' && pathname.startsWith('/blog'))
+              {/* Navigation links */}
+              {navItems.map((item) => {
+                const isActive =
+                  pathname === item.href || (item.href === '/blog' && pathname.startsWith('/blog'))
 
-    return (
-      <Link
-        key={item.href}
-        href={item.href}
-        className={`
-          px-4 py-2 rounded-lg text-sm font-medium transition-all
-          ${
-            isActive
-              ? 'bg-cyan-500/20 text-cyan-400'
-              : 'text-gray-300 hover:text-white hover:bg-white/10'
-          }
-        `}
-      >
-        {item.label}
-      </Link>
-    )
-  })}
-</nav>
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`
+                      px-4 py-2 rounded-lg text-sm font-medium transition-all
+                      ${
+                        isActive
+                          ? 'bg-cyan-500/20 text-cyan-400'
+                          : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </nav>
 
             {/* Mobile Menu Button */}
             <button

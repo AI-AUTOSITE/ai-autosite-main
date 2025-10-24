@@ -3,7 +3,13 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+// ✅ フォント最適化（既存設定を維持）
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap', // フォント読み込み中もテキスト表示（CLS改善）
+  preload: true,
+  variable: '--font-inter', // CSS変数として使用可能
+})
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-autosite.com'
 
@@ -82,18 +88,28 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
+        {/* ✅ 1. DNS Prefetch - 最優先で解決 */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        
+        {/* ✅ 2. Preconnect - 早期接続確立 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* ✅ 3. Viewport設定 */}
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
         />
+        
+        {/* ✅ 4. JSON-LD構造化データ */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      {/* ✅ Flexbox構造を追加 */}
       <body className={`${inter.className} overflow-x-hidden flex flex-col min-h-screen`}>
         {children}
       </body>

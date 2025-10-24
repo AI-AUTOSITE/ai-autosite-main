@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { getToolsByCategory } from '@/lib/categories'
 import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
-export default function DevToolsClient() {
+export default function ConvertersClient() {
   const tools = useMemo(
-    () => getToolsByCategory('dev-tools').filter((t) => t.status === 'live'),
+    () => getToolsByCategory('converters').filter((t) => t.status === 'live'),    
     []
   )
 
@@ -23,11 +23,11 @@ export default function DevToolsClient() {
 
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-4xl">🔧</span>
-            <h1 className="text-4xl font-bold">Developer Tools</h1>
+            <span className="text-4xl">🔄</span>
+            <h1 className="text-4xl font-bold">Converter Tools</h1>
           </div>
           <p className="text-xl text-gray-400">
-            {tools.length} professional tools for code analysis and debugging.
+            {tools.length} tools to transform data between formats instantly.
           </p>
         </div>
 

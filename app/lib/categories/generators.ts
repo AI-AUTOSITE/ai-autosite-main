@@ -22,7 +22,7 @@ export const generators: Tool[] = [
     apiRequired: false,
     pricing: 'free',
     dataProcessing: 'local',
-    lastUpdated: '2025-01',
+    lastUpdated: '2025-08',
   },
   {
     id: 'uuid-generator',
