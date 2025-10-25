@@ -13,7 +13,6 @@ import { twitterCounterPost } from '@/tools/twitter-counter/blog-post'
 import { ageCalculatorPost } from '@/tools/age-calculator/blog-post'
 import { bmiCalculatorPost } from '@/tools/bmi-calculator/blog-post'
 import { percentageCalculatorPost } from '@/tools/percentage-calculator/blog-post'
-import { youtubeThumbnailPost } from '@/tools/youtube-thumbnail/blog-post'
 
 export const convertersPosts: BlogPost[] = [
   textCasePost,
@@ -27,5 +26,4 @@ export const convertersPosts: BlogPost[] = [
   ageCalculatorPost,
   bmiCalculatorPost,
   percentageCalculatorPost,
-  youtubeThumbnailPost,
 ]

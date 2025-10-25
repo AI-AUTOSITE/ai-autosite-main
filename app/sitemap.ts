@@ -67,9 +67,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'twitter-counter',
     'unit-converter',
     'uuid-generator',
-    'whatsapp-link',
-    'youtube-thumbnail'
-  ]
+    'whatsapp-link'
+    ]
 
   const blogPosts = [
     'age-calculator-guide',
@@ -121,9 +120,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'twitter-counter-guide',
     'unit-converter-guide',
     'uuid-generator-guide',
-    'whatsapp-link-generator-guide',
-    'youtube-thumbnail-guide'
-  ]
+    'whatsapp-link-generator-guide'
+    ]
 
   const highPriorityTools = [
     'ai-dev-dictionary',
