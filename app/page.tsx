@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CategoryHomeView from '@/components/CategoryHomeView'
 
-// SEO Metadata - 変更なし
+// SEO Metadata - no changes
 export const metadata: Metadata = {
   title: 'AI AutoSite - Free Online Tools | No Ads, No Tracking, 100% Private',
   description:

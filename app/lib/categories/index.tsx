@@ -49,7 +49,6 @@ export const toolsByCategory = {
 // ===================================
 // Re-export Utility Functions
 // ===================================
-import type { Tool } from './types'
 import * as utils from './utils'
 
 export {
@@ -81,6 +80,11 @@ export {
   // Validation
   validateTool,
 } from './utils'
+
+// ===================================
+// Import Tool type for the simplified functions
+// ===================================
+import type { Tool } from './types'
 
 // ===================================
 // Simplified Tool Query Functions (Auto-inject TOOLS array)

@@ -3,12 +3,12 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-// ✅ フォント最適化（既存設定を維持）
+// Font optimization (maintain existing settings)
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap', // フォント読み込み中もテキスト表示（CLS改善）
+  display: 'swap', // Display text during font loading (improves CLS)
   preload: true,
-  variable: '--font-inter', // CSS変数として使用可能
+  variable: '--font-inter', // Available as CSS variable
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-autosite.com'
@@ -90,21 +90,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        {/* ✅ 1. DNS Prefetch - 最優先で解決 */}
+        {/* 1. DNS Prefetch - resolve first */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
-        {/* ✅ 2. Preconnect - 早期接続確立 */}
+        {/* 2. Preconnect - establish early connection */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
-        {/* ✅ 3. Viewport設定 */}
+        {/* 3. Viewport settings */}
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
         />
         
-        {/* ✅ 4. JSON-LD構造化データ */}
+        {/* 4. JSON-LD structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

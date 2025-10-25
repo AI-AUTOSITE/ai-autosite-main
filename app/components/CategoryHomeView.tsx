@@ -39,7 +39,7 @@ export default function CategoryHomeView() {
   const categoryStats = useMemo(() => {
     const stats: Record<string, number> = {}
     categories.forEach((cat) => {
-      const categoryTools = getToolsByCategory(cat.id).filter((t) => t.status === 'active')
+const categoryTools = getToolsByCategory(cat.id).filter((t) => t.isActive)
       stats[cat.id] = categoryTools.length
     })
     return stats

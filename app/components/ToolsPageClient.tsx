@@ -32,7 +32,7 @@ export default function ToolsPageClient() {
   const categoryStats = useMemo(() => {
     const stats: Record<string, number> = {}
     categories.forEach((cat) => {
-      const categoryTools = getToolsByCategory(cat.id).filter((t) => t.status === 'active')
+      const categoryTools = getToolsByCategory(cat.id).filter((t) => t.isActive || t.status === 'live')
       stats[cat.id] = categoryTools.length
     })
     return stats
@@ -55,7 +55,7 @@ export default function ToolsPageClient() {
     let filtered =
       selectedCategory === 'all'
         ? tools
-        : getToolsByCategory(selectedCategory).filter((t) => t.status === 'active')
+        : getToolsByCategory(selectedCategory).filter((t) => t.isActive || t.status === 'live')
 
     if (searchQuery) {
       filtered = searchTools(searchQuery)

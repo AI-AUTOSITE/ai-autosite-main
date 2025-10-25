@@ -11,6 +11,11 @@ module.exports = {
                 discardComments: {
                   removeAll: true,
                 },
+                normalizeWhitespace: true,
+                colormin: true,
+                convertValues: true,
+                // Prevent breaking animations
+                reduceTransforms: false,
               },
             ],
           },

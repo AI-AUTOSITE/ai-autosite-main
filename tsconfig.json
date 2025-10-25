@@ -1,46 +1,72 @@
 {
   "compilerOptions": {
+    // Language and Environment
     "target": "ES2017",
     "lib": ["ES2015", "ES2017", "DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "jsx": "preserve",
+    
+    // Modules
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
+    "esModuleInterop": true,
+    "allowJs": true,
+    
+    // Type Checking (relaxed for beginners)
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "skipLibCheck": true,
+    
+    // Emit
+    "noEmit": true,
     "incremental": true,
-    "baseUrl": ".",
-    "downlevelIteration": true,
+    "isolatedModules": true,
+    
+    // Interop Constraints
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "downlevelIteration": true,
+    
+    // Path Mapping
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*"],
       "@/components/*": ["./app/components/*"],
       "@/lib/*": ["./app/lib/*"],
       "@/tools/*": ["./app/tools/*"],
       "@/utils/*": ["./app/utils/*"],
+      "@/hooks/*": ["./app/hooks/*"],
       "@/types/*": ["./app/types/*"],
-      "@/config/*": ["./app/config/*"]
-    }
+      "@/styles/*": ["./app/styles/*"],
+      "@/config/*": ["./app/config/*"],
+      "@/public/*": ["./public/*"]
+    },
+    
+    // Plugins
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-  "next-env.d.ts",
-  "**/*.ts",
-  "**/*.tsx",
-  ".next/types/**/*.ts",
-  "tests/**/*.ts",
-  "app/lib/categories.config.backup",
-  "app/lib/utils/errorHandler.backup"
-],
-  "exclude": ["node_modules"]
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tests/**/*.ts",
+    "app/lib/categories.config.backup",
+    "app/lib/utils/errorHandler.backup"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "build",
+    "dist",
+    "test-results",
+    "playwright-report",
+    "coverage"
+  ]
 }

@@ -94,15 +94,15 @@ export const getTopToolsByUsers = (tools: Tool[], limit: number = 5) => {
   return tools
     .filter((tool) => tool.status === 'live')
     .sort((a, b) => {
-      // featuredを優先
+      // Prioritize featured tools
       if (a.featured && !b.featured) return -1
       if (!a.featured && b.featured) return 1
 
-      // 新しいツールを優先
+      // Prioritize new tools
       if (a.new && !b.new) return -1
       if (!a.new && b.new) return 1
 
-      // 最終的に更新日でソート
+      // Finally sort by update date
       const aDate = a.lastUpdated || '0000-00'
       const bDate = b.lastUpdated || '0000-00'
       return bDate.localeCompare(aDate)
@@ -114,11 +114,11 @@ export const getTopToolsByCategory = (tools: Tool[], categoryId: string, limit: 
   return tools
     .filter((tool) => tool.category === categoryId && tool.status === 'live')
     .sort((a, b) => {
-      // featured優先、その後は最新のものから
+      // Prioritize featured, then sort by update date
       if (a.featured && !b.featured) return -1
       if (!a.featured && b.featured) return 1
 
-      // 両方featuredまたは両方非featuredの場合、更新日でソート
+      // Both featured or both not featured, sort by update date
       const aDate = a.lastUpdated || '0000-00'
       const bDate = b.lastUpdated || '0000-00'
       return bDate.localeCompare(aDate)

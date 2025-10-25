@@ -16,6 +16,9 @@ node_modules/
 /coverage
 /coverage.lcov
 *.coverage
+/test-results
+/playwright-report
+/playwright/.cache
 
 # ========================================
 # Next.js Build Output
@@ -24,9 +27,6 @@ node_modules/
 /out/
 /build
 /dist
-
-# Next.js cache and build info
-.next/
 *.tsbuildinfo
 next-env.d.ts
 
@@ -48,7 +48,7 @@ next-env.d.ts
 .env.test.local
 .env.production.local
 
-# You can commit template files
+# Template files can be committed
 !.env.example
 !.env.template
 
@@ -87,7 +87,7 @@ $RECYCLE.BIN/
 # ========================================
 # IDE & Editor Files
 # ========================================
-# VSCode - Keep settings but ignore workspace files
+# VSCode - Keep project settings
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -109,11 +109,9 @@ $RECYCLE.BIN/
 # Vim
 *.swp
 *.swo
-*~
 .netrwhist
 
 # Emacs
-*~
 \#*\#
 .\#*
 
@@ -139,24 +137,40 @@ temp/
 *.pfx
 
 # ========================================
-# Optional: Large Files & Media
+# Project Specific
 # ========================================
-# Uncomment if you want to ignore large files
-# *.zip
-# *.tar.gz
-# *.rar
-# *.mp4
-# *.mov
+# Bundle analysis
+analyze/
+.next/analyze/
 
-# ========================================
-# Optional: Documentation Build
-# ========================================
-# Uncomment if using docs generators
-# /docs/.vitepress/dist
-# /docs/.vitepress/cache
+# Backup files
+*.backup
+*.bak
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+
+# Uploads (if storing locally)
+/uploads
+/public/uploads
+
+# Generated files
+/public/sw.js
+/public/workbox-*.js
+/public/fallback-*.js
+/public/pdf.worker.min.js.map
 
 # ========================================
 # Miscellaneous
 # ========================================
 .turbo
 .contentlayer
+
+# Scripts output
+scripts/output/
+scripts/temp/
+
+# Tool status files (keep in repo)
+!app/tools/**/.*/status.md

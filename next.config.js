@@ -1,16 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Core configuration
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // For beginner-friendly development
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // For beginner-friendly development
   },
+
+  // Compiler configuration
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+
+  // Webpack configuration
   webpack: (config, { dev, isServer }) => {
+    // Server-side configuration
     if (isServer) {
       config.externals = config.externals || []
       config.externals.push({
@@ -18,17 +24,15 @@ const nextConfig = {
       })
     }
 
+    // Development configuration
     if (dev && !isServer) {
       config.infrastructureLogging = {
         level: 'error',
       }
       config.devtool = 'eval-source-map'
-      config.experiments = {
-        ...config.experiments,
-        asyncWebAssembly: true,
-      }
     }
 
+    // Production optimization
     if (!dev) {
       config.optimization.minimizer = config.optimization.minimizer.map((minimizer) => {
         if (minimizer.constructor.name === 'TerserPlugin') {
@@ -43,6 +47,7 @@ const nextConfig = {
       })
     }
 
+    // PDF.js alias for legacy support
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
@@ -51,6 +56,7 @@ const nextConfig = {
     return config
   },
 
+  // Redirects configuration
   async redirects() {
     return [
       {
@@ -78,31 +84,19 @@ const nextConfig = {
     ]
   },
 
+  // Image optimization configuration
   images: {
     domains: ['ai-autosite.com', 'tool7.ai-autosite.com'],
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60 * 60 * 24 * 30,
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react'],
-    serverComponentsExternalPackages: [
-      'pdf-lib',
-      'pdfjs-dist',
-      'tesseract.js',
-      'canvas',
-      'pdf-parse',
-    ],
-  },
-
-  poweredByHeader: false,
-  compress: true,
-
+  // Security and performance headers
   async headers() {
     return [
+      // API CORS headers
       {
         source: '/api/:path*',
         headers: [
@@ -111,14 +105,13 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
           {
             key: 'Access-Control-Allow-Headers',
-            value:
-              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+            value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
           },
         ],
       },
-      // ✅ 画像ファイルのキャッシュ強化
+      // Static assets caching - Images
       {
-        source: '/:path(.*\\.(?:jpg|jpeg|png|gif|webp|avif|svg|ico)$)',
+        source: '/:path*.jpg',
         headers: [
           {
             key: 'Cache-Control',
@@ -126,9 +119,8 @@ const nextConfig = {
           },
         ],
       },
-      // ✅ フォントファイルのキャッシュ強化
       {
-        source: '/:path(.*\\.(?:woff|woff2|eot|ttf|otf)$)',
+        source: '/:path*.jpeg',
         headers: [
           {
             key: 'Cache-Control',
@@ -136,9 +128,8 @@ const nextConfig = {
           },
         ],
       },
-      // ✅ CSSファイルのキャッシュ設定追加
       {
-        source: '/:path(.*\\.css$)',
+        source: '/:path*.png',
         headers: [
           {
             key: 'Cache-Control',
@@ -146,22 +137,141 @@ const nextConfig = {
           },
         ],
       },
-      // ✅ JSファイルのキャッシュ設定追加
       {
-        source: '/:path(.*\\.(?:js|mjs)$)',
+        source: '/:path*.gif',
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.webp',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.svg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Static assets caching - Fonts
+      {
+        source: '/:path*.woff',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.woff2',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.ttf',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*.otf',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Static assets caching - CSS
+      {
+        source: '/_next/static/css/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Static assets caching - JavaScript
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Security headers for all pages
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },
     ]
   },
+
+  // Environment variables
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || '1.0.0',
     NEXT_PUBLIC_ENVIRONMENT: process.env.NODE_ENV || 'development',
   },
+
+  // Disable powered by header for security
+  poweredByHeader: false,
+  
+  // Enable compression
+  compress: true,
+
+  // Experimental features are removed for stability
 }
 
 module.exports = nextConfig
