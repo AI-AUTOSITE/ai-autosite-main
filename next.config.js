@@ -3,47 +3,27 @@ const nextConfig = {
   // Core configuration
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: true, // For beginner-friendly development
+    ignoreBuildErrors: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // For beginner-friendly development
+    ignoreDuringBuilds: true,
   },
+
+  // 🔥 メモリ最適化: スタンドアロン出力
+  output: 'standalone',
 
   // Compiler configuration
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Webpack configuration
-  webpack: (config, { dev, isServer }) => {
+  // 🔥 メモリ最適化: Webpack設定を簡略化
+  webpack: (config, { isServer }) => {
     // Server-side configuration
     if (isServer) {
       config.externals = config.externals || []
       config.externals.push({
         canvas: 'canvas',
-      })
-    }
-
-    // Development configuration
-    if (dev && !isServer) {
-      config.infrastructureLogging = {
-        level: 'error',
-      }
-      config.devtool = 'eval-source-map'
-    }
-
-    // Production optimization
-    if (!dev) {
-      config.optimization.minimizer = config.optimization.minimizer.map((minimizer) => {
-        if (minimizer.constructor.name === 'TerserPlugin') {
-          minimizer.options.terserOptions = {
-            ...minimizer.options.terserOptions,
-            compress: {
-              drop_console: true,
-            },
-          }
-        }
-        return minimizer
       })
     }
 
@@ -271,7 +251,12 @@ const nextConfig = {
   // Enable compression
   compress: true,
 
-  // Experimental features are removed for stability
+  // 🔥 メモリ最適化: 実験的機能を無効化
+  experimental: {
+    // メモリ使用量を抑制
+    optimizeCss: false,
+    swcTraceProfiling: false,
+  },
 }
 
 module.exports = nextConfig
