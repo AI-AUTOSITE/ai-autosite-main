@@ -174,3 +174,4 @@ scripts/temp/
 
 # Tool status files (keep in repo)
 !app/tools/**/.*/status.md
+.vercel

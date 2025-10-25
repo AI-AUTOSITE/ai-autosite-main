@@ -8,15 +8,15 @@
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30,
-      "memory": 1024
+      "memory": 512
     },
     "app/api/ai-*/**/*.ts": {
       "maxDuration": 60,
-      "memory": 2048
+      "memory": 1024
     },
     "app/api/pdf-*/**/*.ts": {
       "maxDuration": 60,
-      "memory": 3072
+      "memory": 1024
     },
     "app/tools/**/page.tsx": {
       "maxDuration": 10,
