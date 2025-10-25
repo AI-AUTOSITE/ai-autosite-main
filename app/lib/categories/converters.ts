@@ -86,23 +86,6 @@ export const converters: Tool[] = [
     pricing: 'free',
     dataProcessing: 'local',
   },
-  
-  // メディア変換
-  {
-    id: 'youtube-thumbnail',
-    name: 'YouTube Thumbnail Downloader',
-    description: 'Download video thumbnails in HD quality',
-    category: 'converters',
-    icon: '📹',
-    color: 'from-red-500 to-pink-500',
-    status: 'live',
-    url: '/tools/youtube-thumbnail',
-    tags: ['youtube', 'thumbnail', 'download', 'video'],
-    difficulty: 'Instant',
-    timeToUse: '5 seconds',
-    featured: true,
-    new: true,
-  },
   {
     id: 'whatsapp-link',
     name: 'WhatsApp Link Generator',

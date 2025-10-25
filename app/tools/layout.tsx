@@ -41,7 +41,6 @@ const getToolTitle = (pathname: string) => {
     '/tools/hashtag-generator': 'Hashtag Generator',
     '/tools/twitter-counter': 'Twitter Counter',
     '/tools/instagram-bio': 'Instagram Bio Generator',
-    '/tools/youtube-thumbnail': 'YouTube Thumbnail',
     '/tools/whatsapp-link': 'WhatsApp Link Generator',
     '/tools/ai-prompt-generator': 'AI Prompt Generator',
     '/tools/favicon-generator': 'Favicon Generator',
