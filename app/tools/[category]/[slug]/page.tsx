@@ -97,7 +97,6 @@ export default function ToolPage({ params, searchParams = {} }: PageProps) {
     <UnifiedToolLayout
       toolId={slug}
       showSidebar={true}
-      showCrossSell={true}
       containerWidth="xl"
     >
       {getToolComponent()}
