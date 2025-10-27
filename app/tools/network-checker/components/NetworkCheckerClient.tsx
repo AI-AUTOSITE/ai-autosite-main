@@ -106,7 +106,6 @@ export default function NetworkCheckerClient() {
   return (
     <UnifiedToolLayout 
       toolId="network-checker"
-      showCrossSell={true}
       showToolInfo={true}
       containerWidth="xl"
     >

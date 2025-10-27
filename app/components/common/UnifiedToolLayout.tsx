@@ -4,7 +4,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { X, Info } from 'lucide-react'
-import { PeopleAlsoUse } from '../CrossSell'
 import type { Tool, Category } from '../../lib/categories'
 import { TOOLS, CATEGORIES } from '../../lib/categories'
 import ToolInfoSidebar from './ToolInfoSidebar'
@@ -13,7 +12,6 @@ import RelatedTools from './RelatedTools'
 interface UnifiedToolLayoutProps {
   children: ReactNode
   toolId?: string
-  showCrossSell?: boolean
   showToolInfo?: boolean
   showSidebar?: boolean
   containerWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
@@ -32,7 +30,6 @@ function getCategoryById(categoryId: string): Category | undefined {
 export default function UnifiedToolLayout({
   children,
   toolId,
-  showCrossSell = true,
   showToolInfo = true,
   showSidebar = true,
   containerWidth = 'xl',
@@ -61,6 +58,11 @@ export default function UnifiedToolLayout({
     xl: 'max-w-7xl',
     '2xl': 'max-w-[1600px]',
     full: 'max-w-full',
+  }
+
+  // Type guard to ensure category has required properties
+  const isValidCategory = (cat: Category | undefined): cat is Category => {
+    return cat !== undefined
   }
 
   return (
@@ -92,21 +94,23 @@ export default function UnifiedToolLayout({
             {children}
           </div>
 
-          {/* Related tools (when no sidebar) */}
-          {tool && category && !showSidebar && (
-            <RelatedTools currentTool={tool} category={category} />
+          {/* Related tools (when no sidebar) - with type guard */}
+          {tool && isValidCategory(category) && !showSidebar && (
+            <div className="mt-8">
+              <RelatedTools currentTool={tool} category={category} />
+            </div>
           )}
         </div>
 
-        {/* Desktop sidebar */}
-        {showSidebar && showToolInfo && tool && category && (
+        {/* Desktop sidebar - with type guard */}
+        {showSidebar && showToolInfo && tool && isValidCategory(category) && (
           <aside className="hidden lg:block lg:w-80">
             <ToolInfoSidebar tool={tool} category={category} />
           </aside>
         )}
 
-        {/* Mobile sidebar overlay */}
-        {showSidebar && showToolInfo && tool && category && isMobileMenuOpen && (
+        {/* Mobile sidebar overlay - with type guard */}
+        {showSidebar && showToolInfo && tool && isValidCategory(category) && isMobileMenuOpen && (
           <div className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm">
             <div className="absolute right-0 top-0 bottom-0 w-80 bg-slate-900 p-4 overflow-y-auto">
               <button
@@ -124,15 +128,12 @@ export default function UnifiedToolLayout({
         )}
       </div>
 
-      {/* Cross-sell section */}
-      {showCrossSell && tool && (
-        <div className="mt-12">
-          <PeopleAlsoUse currentToolId={tool.id} />
+      {/* Related tools (with sidebar) - with type guard */}
+      {tool && isValidCategory(category) && showSidebar && (
+        <div className="mt-8">
+          <RelatedTools currentTool={tool} category={category} />
         </div>
       )}
-
-      {/* Related tools (with sidebar) */}
-      {tool && category && showSidebar && <RelatedTools currentTool={tool} category={category} />}
     </div>
   )
 }

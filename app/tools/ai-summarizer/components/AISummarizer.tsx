@@ -16,7 +16,6 @@ import {
   Target,
   Layers,
 } from 'lucide-react'
-import { PeopleAlsoUse } from '../../../components/CrossSell'
 
 type SummaryLength = 'brief' | 'standard' | 'detailed'
 type SummaryTone = 'professional' | 'casual' | 'technical'
@@ -118,7 +117,7 @@ export default function AISummarizer() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Main content with sidebar layout - タイトルセクション削除 */}
+      {/* Main content with sidebar layout */}
       <div className="flex gap-8 lg:flex-row flex-col">
         {/* Main content area */}
         <div className="flex-1">
@@ -361,11 +360,6 @@ export default function AISummarizer() {
             </div>
           </div>
         </aside>
-      </div>
-
-      {/* Cross-sell section */}
-      <div className="mt-12">
-        <PeopleAlsoUse currentToolId="ai-summarizer" />
       </div>
     </div>
   )
