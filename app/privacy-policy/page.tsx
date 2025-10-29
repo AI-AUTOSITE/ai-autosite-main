@@ -594,7 +594,7 @@ export default function PrivacyPolicyPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a
-                    href="mailto:aiautosite@gmail.com"
+                    href="mailto:privacy@ai-autosite.com"
                     className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                   >
                     <span>Contact Us</span>

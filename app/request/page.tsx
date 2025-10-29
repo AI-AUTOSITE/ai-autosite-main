@@ -117,7 +117,7 @@ export default function RequestToolPage() {
               prioritize what to build next.
             </p>
             <a
-              href="mailto:aiautosite@gmail.com?subject=Tool%20Request%20-%20[Your%20Tool%20Name]&body=Hi!%20I%20would%20love%20to%20see%20a%20tool%20that%3A%0A%0A%5BDescribe%20what%20the%20tool%20should%20do%5D%0A%0AWhy%20I%20need%20this%3A%0A%5BExplain%20your%20use%20case%5D%0A%0AHow%20often%20would%20you%20use%20it%3A%0A%5BDaily%2FWeekly%2FMonthly%5D%0A%0AThanks!"
+              href="mailto:contact@ai-autosite.com?subject=Tool%20Request%20-%20[Your%20Tool%20Name]&body=Hi!%20I%20would%20love%20to%20see%20a%20tool%20that%3A%0A%0A%5BDescribe%20what%20the%20tool%20should%20do%5D%0A%0AWhy%20I%20need%20this%3A%0A%5BExplain%20your%20use%20case%5D%0A%0AHow%20often%20would%20you%20use%20it%3A%0A%5BDaily%2FWeekly%2FMonthly%5D%0A%0AThanks!"
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all text-lg font-semibold"
             >
               <Lightbulb className="w-5 h-5 mr-2" />
@@ -153,7 +153,7 @@ export default function RequestToolPage() {
                       Under Consideration
                     </span>
                     <a
-                      href={`mailto:aiautosite@gmail.com?subject=Vote%20for%20${request.title}&body=I%20would%20like%20to%20vote%20for%20the%20${request.title}%20tool!`}
+                      href={`mailto:contact@ai-autosite.com?subject=Vote%20for%20${request.title}&body=I%20would%20like%20to%20vote%20for%20the%20${request.title}%20tool!`}
                       className="text-cyan-400 hover:text-cyan-300 text-sm transition-colors"
                     >
                       +1 This Request
@@ -175,7 +175,7 @@ export default function RequestToolPage() {
                 return (
                   <a
                     key={index}
-                    href={`mailto:aiautosite@gmail.com?subject=Tool%20Request%20-%20${category.name}&body=I%20have%20an%20idea%20for%20a%20${category.name}%20tool%3A%0A%0A%5BDescribe%20your%20idea%20here%5D`}
+                    href={`mailto:contact@ai-autosite.com?subject=Tool%20Request%20-%20${category.name}&body=I%20have%20an%20idea%20for%20a%20${category.name}%20tool%3A%0A%0A%5BDescribe%20your%20idea%20here%5D`}
                     className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 hover:bg-white/10 transition-all group text-center"
                   >
                     <div
@@ -319,7 +319,7 @@ export default function RequestToolPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="mailto:aiautosite@gmail.com?subject=Tool%20Request%20-%20[Your%20Tool%20Name]&body=Hi!%20I%20would%20love%20to%20see%20a%20tool%20that%3A%0A%0A%5BDescribe%20what%20the%20tool%20should%20do%5D%0A%0AWhy%20I%20need%20this%3A%0A%5BExplain%20your%20use%20case%5D%0A%0AHow%20often%20would%20you%20use%20it%3A%0A%5BDaily%2FWeekly%2FMonthly%5D%0A%0AThanks!"
+                  href="mailto:contact@ai-autosite.com?subject=Tool%20Request%20-%20[Your%20Tool%20Name]&body=Hi!%20I%20would%20love%20to%20see%20a%20tool%20that%3A%0A%0A%5BDescribe%20what%20the%20tool%20should%20do%5D%0A%0AWhy%20I%20need%20this%3A%0A%5BExplain%20your%20use%20case%5D%0A%0AHow%20often%20would%20you%20use%20it%3A%0A%5BDaily%2FWeekly%2FMonthly%5D%0A%0AThanks!"
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                 >
                   <span>Submit Request</span>

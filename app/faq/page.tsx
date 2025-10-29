@@ -191,7 +191,7 @@ export default function FAQPage() {
                   <li><strong>Stop using the tool immediately</strong></li>
                   <li><strong>Close the browser tab</strong></li>
                   <li><strong>Change any exposed passwords or credentials</strong></li>
-                  <li><strong>Contact us</strong> at aiautosite@gmail.com with details</li>
+                  <li><strong>Contact us</strong> at support@ai-autosite.com with details</li>
                 </ol>
               </div>
 
