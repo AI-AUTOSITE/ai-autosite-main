@@ -178,7 +178,7 @@ export default function AIToolWarningModal({
               </button>
             </div>
             <p className="text-xs text-gray-500 text-center mt-3">
-              Your agreement will be saved locally. You won't see this message again on this device.
+              🔒 This warning will be shown each time for your security. We store nothing on your device.
             </p>
           </div>
         </div>

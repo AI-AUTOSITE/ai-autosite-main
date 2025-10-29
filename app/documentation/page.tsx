@@ -562,7 +562,7 @@ export default function DocumentationPage() {
                     <ExternalLink className="w-4 h-4 ml-2" />
                   </a>
                   <a
-                    href="mailto:aiautosite@gmail.com?subject=API%20Access%20Request"
+                    href="mailto:support@ai-autosite.com?subject=API%20Access%20Request"
                     className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                   >
                     <span>Request API Access</span>
@@ -582,7 +582,7 @@ export default function DocumentationPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="mailto:aiautosite@gmail.com"
+                  href="mailto:support@ai-autosite.com"
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
                 >
                   <span>Email Support</span>

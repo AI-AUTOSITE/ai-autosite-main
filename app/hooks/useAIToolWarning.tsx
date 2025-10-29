@@ -1,27 +1,17 @@
-// app/hooks/useAIToolWarning.ts
+// app/hooks/useAIToolWarning.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
-
 export function useAIToolWarning() {
-  const [showWarning, setShowWarning] = useState(false)
+  const [showWarning, setShowWarning] = useState(true)
   const [hasAgreed, setHasAgreed] = useState(false)
-  const [isChecking, setIsChecking] = useState(true) // ✅ 追加
+  const [isChecking, setIsChecking] = useState(false)
 
   useEffect(() => {
-    // localStorageから同意状態を確認
-    const agreed = localStorage.getItem('ai_tool_warning_agreed')
-    if (agreed === 'true') {
-      setHasAgreed(true)
-    } else {
-      // 未同意なら自動的にモーダル表示
-      setShowWarning(true)
-    }
-    setIsChecking(false) // ✅ チェック完了
+    setIsChecking(false)
   }, [])
 
   const handleAgree = () => {
-    localStorage.setItem('ai_tool_warning_agreed', 'true')
     setHasAgreed(true)
     setShowWarning(false)
   }
@@ -31,7 +21,6 @@ export function useAIToolWarning() {
   }
 
   const resetAgreement = () => {
-    localStorage.removeItem('ai_tool_warning_agreed')
     setHasAgreed(false)
     setShowWarning(true)
   }
@@ -39,7 +28,7 @@ export function useAIToolWarning() {
   return {
     showWarning,
     hasAgreed,
-    isChecking, // ✅ 追加
+    isChecking,
     handleAgree,
     handleDisagree,
     resetAgreement,

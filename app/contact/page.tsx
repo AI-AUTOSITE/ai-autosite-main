@@ -20,7 +20,7 @@ export default function ContactPage() {
       title: 'Report a Bug',
       description: 'Found something broken? Help us fix it quickly.',
       action: 'Report Bug',
-      href: 'mailto:aiautosite@gmail.com?subject=Bug%20Report',
+      href: 'mailto:support@ai-autosite.com?subject=Bug%20Report',
       color: 'from-red-500 to-pink-500',
     },
     {
@@ -28,7 +28,7 @@ export default function ContactPage() {
       title: 'Feature Request',
       description: 'Have an idea for a new tool or improvement?',
       action: 'Share Idea',
-      href: 'mailto:aiautosite@gmail.com?subject=Feature%20Request',
+      href: 'mailto:contact@ai-autosite.com?subject=Feature%20Request',
       color: 'from-yellow-500 to-orange-500',
     },
     {
@@ -36,7 +36,7 @@ export default function ContactPage() {
       title: 'General Feedback',
       description: 'Tell us what you think or ask questions.',
       action: 'Send Feedback',
-      href: 'mailto:aiautosite@gmail.com?subject=Feedback',
+      href: 'mailto:contact@ai-autosite.com?subject=Feedback',
       color: 'from-blue-500 to-cyan-500',
     },
     {
@@ -44,7 +44,7 @@ export default function ContactPage() {
       title: 'Partnership',
       description: 'Interested in collaborating or integrating?',
       action: 'Get in Touch',
-      href: 'mailto:aiautosite@gmail.com?subject=Partnership%20Inquiry',
+      href: 'mailto:contact@ai-autosite.com?subject=Partnership%20Inquiry',
       color: 'from-purple-500 to-pink-500',
     },
   ]
@@ -78,11 +78,11 @@ export default function ContactPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Quick Contact</h2>
             <p className="text-gray-400 mb-6">For the fastest response, email us directly:</p>
             <a
-              href="mailto:aiautosite@gmail.com"
+              href="mailto:contact@ai-autosite.com"
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all text-lg font-semibold"
             >
               <Mail className="w-5 h-5 mr-2" />
-              aiautosite@gmail.com
+              contact@ai-autosite.com
             </a>
             <div className="flex items-center justify-center mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4 mr-1" />
@@ -217,7 +217,7 @@ export default function ContactPage() {
                 improving our services for users worldwide.
               </p>
               <div className="mt-6 text-sm text-gray-500">
-                <p>🌍 Remote-first team • 🛡️ Privacy-focused • 🚀 User-driven development</p>
+                <p>🌐 Remote-first team • 🛡️ Privacy-focused • 🚀 User-driven development</p>
               </div>
             </div>
           </section>
