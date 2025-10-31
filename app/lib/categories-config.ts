@@ -12,7 +12,9 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-// カテゴリーの型定義
+// ========================================
+// Type Definition
+// ========================================
 export interface Category {
   id: string
   name: string
@@ -27,10 +29,12 @@ export interface Category {
   badge?: string
   benefits?: string[]
   path?: string
-  tagFilter?: boolean // タグフィルタを表示するか
+  tagFilter?: boolean // Show tag filter on category page
 }
 
-// カテゴリー定義（一元管理）
+// ========================================
+// Category Configuration (Centralized)
+// ========================================
 export const CATEGORIES: Category[] = [
   {
     id: 'converters',
@@ -59,7 +63,7 @@ export const CATEGORIES: Category[] = [
     order: 2,
     badge: 'NEW',
     path: '/tools?category=editors',
-    tagFilter: true, // タグフィルタを表示
+    tagFilter: true, // Display tag filter
   },
   {
     id: 'generators',
@@ -133,7 +137,7 @@ export const CATEGORIES: Category[] = [
     path: '/tools?category=learning',
     tagFilter: false,
   },
-  // 将来追加用カテゴリ（disabled）
+  // Future categories (disabled)
   {
     id: 'automation',
     name: 'Automation',
@@ -166,19 +170,34 @@ export const CATEGORIES: Category[] = [
   },
 ]
 
-// ヘルパー関数
+// ========================================
+// Helper Functions
+// ========================================
+
+/**
+ * Get all enabled categories sorted by order
+ */
 export function getEnabledCategories(): Category[] {
   return CATEGORIES.filter((cat) => cat.enabled !== false).sort(
     (a, b) => (a.order || 0) - (b.order || 0)
   )
 }
 
+/**
+ * Get category by ID
+ */
 export function getCategoryById(id: string): Category | undefined {
   return CATEGORIES.find((cat) => cat.id === id)
 }
 
+/**
+ * Get category by name
+ */
 export function getCategoryByName(name: string): Category | undefined {
   return CATEGORIES.find((cat) => cat.name === name)
 }
 
+// ========================================
+// Default Export
+// ========================================
 export default CATEGORIES

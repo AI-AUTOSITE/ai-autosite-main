@@ -6,7 +6,9 @@ import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
 export default function DevToolsClient() {
   const tools = useMemo(
-    () => getToolsByCategory('dev-tools').filter((t) => t.status === 'live'),
+    () => getToolsByCategory('dev-tools')
+      .filter((t) => t.status === 'live')
+      .sort((a, b) => a.name.localeCompare(b.name)),
     []
   )
 
@@ -60,6 +62,11 @@ function ToolCard({ tool }: any) {
             {tool.new && (
               <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
                 New
+              </span>
+            )}
+            {tool.badge === 'AI' && (
+              <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs font-medium">
+                AI
               </span>
             )}
           </div>

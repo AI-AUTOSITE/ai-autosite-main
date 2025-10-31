@@ -6,7 +6,9 @@ import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
 
 export default function AIToolsClient() {
   const tools = useMemo(
-    () => getToolsByCategory('ai-tools').filter((t) => t.status === 'live'),
+    () => getToolsByCategory('ai-tools')
+      .filter((t) => t.status === 'live')
+      .sort((a, b) => a.name.localeCompare(b.name)),
     []
   )
 

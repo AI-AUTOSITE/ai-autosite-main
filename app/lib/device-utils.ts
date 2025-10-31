@@ -1,4 +1,5 @@
 // lib/device-utils.ts
+import { useState, useEffect } from 'react'
 
 /**
  * Device detection utilities - No personal data collection
@@ -147,6 +148,3 @@ export function useDeviceDetection() {
     isDesktop: deviceType === DeviceType.DESKTOP,
   }
 }
-
-// React hooks imports (add at top of file when using)
-import { useState, useEffect } from 'react'

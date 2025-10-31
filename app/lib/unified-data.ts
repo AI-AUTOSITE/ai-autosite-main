@@ -2,10 +2,10 @@
 import { mapToolStatus, mapPostStatus, mapCategoryId } from './core/status-map'
 
 // ===================================
-// 同期インポート - すべてのデータを即座に読み込み
+// Synchronous Imports - Load all data immediately
 // ===================================
 
-// ツールデータの同期インポート（新構造）
+// Tool data synchronous import (new structure)
 import { converters } from './categories/converters'
 import { editors } from './categories/editors'
 import { generators } from './categories/generators'
@@ -14,7 +14,7 @@ import { aiTools } from './categories/ai-tools'
 import { devTools } from './categories/dev-tools'
 import { learning } from './categories/learning'
 
-// ブログ記事データの同期インポート（新構造）
+// Blog post data synchronous import (new structure)
 import { convertersPosts } from './blog-posts/converters'
 import { editorsPosts } from './blog-posts/editors'
 import { generatorsPosts } from './blog-posts/generators'
@@ -24,7 +24,7 @@ import { devToolsPosts } from './blog-posts/dev-tools'
 import { learningPosts } from './blog-posts/learning'
 
 // ===================================
-// 型定義
+// Type Definitions
 // ===================================
 
 interface UnifiedTool {
@@ -64,23 +64,23 @@ interface UnifiedPost {
 }
 
 // ===================================
-// 統一フォーマット変換関数
+// Unified Format Conversion Functions
 // ===================================
 
 function unifyTool(tool: any): UnifiedTool | null {
   if (!tool) return null
   const mappedStatus = mapToolStatus(tool.status || 'coming')
-  
+
   return {
     ...tool,
-    // 新しい統一フィールド
+    // New unified fields
     status: mappedStatus,
     categoryId: mapCategoryId(tool.category || 'uncategorized'),
-    // 元のデータも保持（後方互換性）
+    // Keep original data for backward compatibility
     originalStatus: tool.status,
     originalCategory: tool.category,
 
-    // 追加のメタデータ（修正: 'live'と比較）
+    // Additional metadata (fix: compare with 'live')
     isActive: mappedStatus === 'live',
     isComingSoon: mappedStatus === 'coming',
     isMaintenance: mappedStatus === 'maintenance',
@@ -90,17 +90,17 @@ function unifyTool(tool: any): UnifiedTool | null {
 function unifyPost(post: any): UnifiedPost | null {
   if (!post) return null
   const mappedStatus = mapPostStatus(post.status || 'draft')
-  
+
   return {
     ...post,
-    // 新しい統一フィールド
+    // New unified fields
     status: mappedStatus,
     categoryId: post.category ? mapCategoryId(post.category) : 'uncategorized',
-    // 元のデータも保持
+    // Keep original data
     originalStatus: post.status,
     originalCategory: post.category,
 
-    // 追加のメタデータ（修正: 'active'と比較）
+    // Additional metadata (fix: compare with 'active')
     isActive: mappedStatus === 'active',
     isDraft: post.status === 'draft',
     isComingSoon: post.status === 'coming-soon',
@@ -108,10 +108,10 @@ function unifyPost(post: any): UnifiedPost | null {
 }
 
 // ===================================
-// データの統合と変換（即座に実行）
+// Data Integration and Conversion (Execute immediately)
 // ===================================
 
-// すべてのツールを統合して変換（新構造）
+// Integrate and convert all tools (new structure)
 const ALL_TOOLS: UnifiedTool[] = [
   ...(converters || []),
   ...(editors || []),
@@ -124,7 +124,7 @@ const ALL_TOOLS: UnifiedTool[] = [
   .map(unifyTool)
   .filter((tool): tool is UnifiedTool => tool !== null)
 
-// すべてのブログ記事を統合して変換（新構造）
+// Integrate and convert all blog posts (new structure)
 const ALL_POSTS: UnifiedPost[] = [
   ...(convertersPosts || []),
   ...(editorsPosts || []),
@@ -137,28 +137,30 @@ const ALL_POSTS: UnifiedPost[] = [
   .map(unifyPost)
   .filter((post): post is UnifiedPost => post !== null)
 
-// データロード完了をログ出力
-console.log('📊 Unified Data System Loaded:', {
-  tools: ALL_TOOLS.length,
-  posts: ALL_POSTS.length,
-  activeTools: ALL_TOOLS.filter((t) => t.isActive).length,
-  activePosts: ALL_POSTS.filter((p) => p.isActive).length,
-  categories: [...new Set(ALL_TOOLS.map((t) => t.categoryId))],
-})
+// Log data load completion (development only)
+if (process.env.NODE_ENV === 'development') {
+  console.log('📊 Unified Data System Loaded:', {
+    tools: ALL_TOOLS.length,
+    posts: ALL_POSTS.length,
+    activeTools: ALL_TOOLS.filter((t) => t.isActive).length,
+    activePosts: ALL_POSTS.filter((p) => p.isActive).length,
+    categories: [...new Set(ALL_TOOLS.map((t) => t.categoryId))],
+  })
+}
 
 // ===================================
-// エクスポート関数（同期版）
+// Export Functions (Synchronous)
 // ===================================
 
 /**
- * 全ツールを統一フォーマットで取得
+ * Get all tools in unified format
  */
 export function getAllTools(): UnifiedTool[] {
   return ALL_TOOLS
 }
 
 /**
- * カテゴリー別にツールを取得
+ * Get tools by category
  */
 export function getToolsByCategory(categoryId: string): UnifiedTool[] {
   return ALL_TOOLS.filter(
@@ -167,21 +169,21 @@ export function getToolsByCategory(categoryId: string): UnifiedTool[] {
 }
 
 /**
- * アクティブなツールのみ取得
+ * Get only active tools
  */
 export function getActiveTools(): UnifiedTool[] {
   return ALL_TOOLS.filter((tool) => tool.isActive)
 }
 
 /**
- * 全ブログ記事を統一フォーマットで取得
+ * Get all blog posts in unified format
  */
 export function getAllPosts(): UnifiedPost[] {
   return ALL_POSTS
 }
 
 /**
- * カテゴリー別にブログ記事を取得
+ * Get blog posts by category
  */
 export function getPostsByCategory(categoryId: string): UnifiedPost[] {
   return ALL_POSTS.filter(
@@ -190,14 +192,14 @@ export function getPostsByCategory(categoryId: string): UnifiedPost[] {
 }
 
 /**
- * アクティブなブログ記事のみ取得
+ * Get only active blog posts
  */
 export function getActivePosts(): UnifiedPost[] {
   return ALL_POSTS.filter((post) => post.isActive)
 }
 
 /**
- * 注目のツールを取得
+ * Get featured tools
  */
 export function getFeaturedTools(limit?: number): UnifiedTool[] {
   const tools = ALL_TOOLS.filter((tool) => tool.featured && tool.isActive)
@@ -205,7 +207,7 @@ export function getFeaturedTools(limit?: number): UnifiedTool[] {
 }
 
 /**
- * 注目のブログ記事を取得
+ * Get featured blog posts
  */
 export function getFeaturedPosts(limit?: number): UnifiedPost[] {
   const posts = ALL_POSTS.filter((post) => post.featured && post.isActive)
@@ -213,7 +215,7 @@ export function getFeaturedPosts(limit?: number): UnifiedPost[] {
 }
 
 /**
- * 新着ツールを取得
+ * Get new tools
  */
 export function getNewTools(limit?: number): UnifiedTool[] {
   const tools = ALL_TOOLS.filter((tool) => tool.new && tool.isActive)
@@ -221,7 +223,7 @@ export function getNewTools(limit?: number): UnifiedTool[] {
 }
 
 /**
- * ツール検索
+ * Search tools
  */
 export function searchTools(query: string): UnifiedTool[] {
   const lowerQuery = query.toLowerCase()
@@ -235,7 +237,7 @@ export function searchTools(query: string): UnifiedTool[] {
 }
 
 /**
- * ブログ記事検索
+ * Search blog posts
  */
 export function searchPosts(query: string): UnifiedPost[] {
   const lowerQuery = query.toLowerCase()
@@ -249,7 +251,7 @@ export function searchPosts(query: string): UnifiedPost[] {
 }
 
 /**
- * 統計情報
+ * Statistics
  */
 export function getStatistics() {
   return {
@@ -281,7 +283,7 @@ export function getStatistics() {
 }
 
 /**
- * 非同期版の取得関数（互換性のため残す）
+ * Async version of get function (kept for compatibility)
  */
 export async function getUnifiedData() {
   return {
@@ -292,12 +294,12 @@ export async function getUnifiedData() {
 }
 
 // ===================================
-// 開発環境でのデバッグ用グローバル公開
+// Global Exposure for Development Debugging
 // ===================================
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   ;(window as any).unifiedData = {
-    // 関数
+    // Functions
     getAllTools,
     getAllPosts,
     getStatistics,
@@ -310,17 +312,17 @@ if (typeof window !== 'undefined') {
     getNewTools,
     searchTools,
     searchPosts,
-    // 生データ（デバッグ用）
+    // Raw data (for debugging)
     _raw: {
       tools: ALL_TOOLS,
       posts: ALL_POSTS,
     },
   }
   console.log('✅ Unified Data System ready. Access via window.unifiedData')
-  console.log('🔍 Debug: window.unifiedData.getActiveTools() で全ツールを確認')
+  console.log('🔍 Debug: window.unifiedData.getActiveTools() to view all tools')
 }
 
-// デフォルトエクスポート
+// Default Export
 export default {
   getAllTools,
   getActiveTools,
