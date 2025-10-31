@@ -2,14 +2,16 @@
 
 import { useState, useEffect, useMemo, ReactNode } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Search, Sparkles, Clock, ArrowRight, X } from 'lucide-react'
 
 // Import unified data system
-import { getActiveTools,
-    getToolsByCategory,
-    getFeaturedTools,
-    getNewTools } 
-    from '@/lib/unified-data'
+import {
+  getActiveTools,
+  getToolsByCategory,
+  getFeaturedTools,
+  getNewTools,
+} from '@/lib/unified-data'
 
 // Import categories from unified config
 import { getEnabledCategories } from '@/lib/categories-config'
@@ -63,10 +65,17 @@ interface CategoryGridProps {
   stats: Stats
 }
 
+interface SearchResultsProps {
+  searchQuery: string
+  filteredTools: Tool[]
+  onClearSearch: () => void
+}
+
 // ========================================
 // Main Component
 // ========================================
 export default function ToolsPageClient() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [tools, setTools] = useState<Tool[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -75,17 +84,16 @@ export default function ToolsPageClient() {
   const categories = useMemo(() => getEnabledCategories(), [])
 
   // Category statistics
-// Category statistics
-const categoryStats = useMemo(() => {
-  const stats: Record<string, number> = {}
-  categories.forEach((cat) => {
-    const categoryTools = getToolsByCategory(cat.id).filter(
-      (t: Tool) => t.isActive || t.status === 'live'
-    )
-    stats[cat.id] = categoryTools.length
-  })
-  return stats
-}, [categories])
+  const categoryStats = useMemo(() => {
+    const stats: Record<string, number> = {}
+    categories.forEach((cat) => {
+      const categoryTools = getToolsByCategory(cat.id).filter(
+        (t: Tool) => t.isActive || t.status === 'live'
+      )
+      stats[cat.id] = categoryTools.length
+    })
+    return stats
+  }, [categories])
 
   // Load data on mount
   useEffect(() => {
@@ -94,7 +102,7 @@ const categoryStats = useMemo(() => {
       setTools(allTools)
       setIsLoading(false)
     }
-  loadData()
+    loadData()
   }, [])
 
   // Statistics
@@ -111,12 +119,31 @@ const categoryStats = useMemo(() => {
   const featuredTools = useMemo(() => getFeaturedTools(4), [])
   const newTools = useMemo(() => getNewTools(4), [])
 
-  // Handle search - redirect to search results
+  // Real-time search filtering
+  const filteredTools = useMemo(() => {
+    if (!searchQuery.trim()) return []
+
+    const query = searchQuery.toLowerCase().trim()
+    
+    return tools.filter((tool) => {
+      const nameMatch = tool.name.toLowerCase().includes(query)
+      const descMatch = tool.description.toLowerCase().includes(query)
+      const idMatch = tool.id.toLowerCase().includes(query)
+      
+      return nameMatch || descMatch || idMatch
+    })
+  }, [searchQuery, tools])
+
+  // Handle search - use Next.js router for Enter key
   const handleSearch = (query: string) => {
     if (query.trim()) {
-      // Redirect to a search results page or handle inline
-      window.location.href = `/tools?search=${encodeURIComponent(query)}`
+      router.push(`/tools?search=${encodeURIComponent(query)}`)
     }
+  }
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchQuery('')
   }
 
   // Loading State
@@ -141,16 +168,25 @@ const categoryStats = useMemo(() => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onSearch={handleSearch}
+        onClear={handleClearSearch}
       />
 
-      {/* Category Grid */}
-      <CategoryGrid
-        categories={categories}
-        categoryStats={categoryStats}
-        featuredTools={featuredTools}
-        newTools={newTools}
-        stats={stats}
-      />
+      {/* Conditional Rendering: Search Results or Category Grid */}
+      {searchQuery.trim() ? (
+        <SearchResults
+          searchQuery={searchQuery}
+          filteredTools={filteredTools}
+          onClearSearch={handleClearSearch}
+        />
+      ) : (
+        <CategoryGrid
+          categories={categories}
+          categoryStats={categoryStats}
+          featuredTools={featuredTools}
+          newTools={newTools}
+          stats={stats}
+        />
+      )}
     </div>
   )
 }
@@ -180,10 +216,12 @@ function SearchBar({
   searchQuery,
   setSearchQuery,
   onSearch,
+  onClear,
 }: {
   searchQuery: string
   setSearchQuery: (query: string) => void
   onSearch: (query: string) => void
+  onClear: () => void
 }) {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
@@ -203,16 +241,104 @@ function SearchBar({
           onKeyPress={handleKeyPress}
           className="w-full pl-12 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-xl 
                    text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 text-lg"
+          aria-label="Search tools"
         />
         {searchQuery && (
           <button
-            onClick={() => setSearchQuery('')}
+            onClick={onClear}
             className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-700 rounded-lg transition-colors"
+            aria-label="Clear search"
           >
             <X className="w-4 h-4 text-gray-500" />
           </button>
         )}
       </div>
+    </div>
+  )
+}
+
+// ========================================
+// Search Results Component
+// ========================================
+function SearchResults({ searchQuery, filteredTools, onClearSearch }: SearchResultsProps) {
+  return (
+    <div className="space-y-6">
+      {/* Search Results Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">
+          Search Results for "{searchQuery}"
+        </h2>
+        <button
+          onClick={onClearSearch}
+          className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center gap-2"
+        >
+          Clear search
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* Results Count */}
+      <p className="text-gray-400">
+        Found {filteredTools.length} {filteredTools.length === 1 ? 'tool' : 'tools'}
+      </p>
+
+      {/* Results Grid */}
+      {filteredTools.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredTools.map((tool) => (
+            <Link
+              key={tool.id}
+              href={tool.url || `/tools/${tool.id}`}
+              className="group bg-gray-800 rounded-xl p-4 border border-gray-700 
+                       hover:border-cyan-500/50 transition-all duration-300 
+                       hover:shadow-lg hover:shadow-cyan-500/20 block"
+            >
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl flex-shrink-0">{tool.emoji || tool.icon || '🔧'}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-white mb-1 line-clamp-1">{tool.name}</h3>
+                  <p className="text-sm text-gray-400 line-clamp-2">{tool.description}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                {tool.timeToUse && (
+                  <span className="text-xs text-gray-500">{tool.timeToUse}</span>
+                )}
+                <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all ml-auto" />
+              </div>
+
+              {/* Badges */}
+              <div className="flex gap-2 mt-3">
+                {tool.featured && (
+                  <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-xs rounded-full">
+                    Featured
+                  </span>
+                )}
+                {tool.new && (
+                  <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
+                    New
+                  </span>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-xl font-bold text-white mb-2">No tools found</h3>
+          <p className="text-gray-400 mb-4">
+            Try searching with different keywords or browse by category
+          </p>
+          <button
+            onClick={onClearSearch}
+            className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
+          >
+            Clear search
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -232,11 +358,7 @@ function CategoryGrid({
       {/* Category Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((cat) => (
-          <CategoryCard
-            key={cat.id}
-            category={cat}
-            toolCount={categoryStats[cat.id] || 0}
-          />
+          <CategoryCard key={cat.id} category={cat} toolCount={categoryStats[cat.id] || 0} />
         ))}
       </div>
 
@@ -265,13 +387,7 @@ function CategoryGrid({
 // ========================================
 // Category Card Component
 // ========================================
-function CategoryCard({
-  category,
-  toolCount,
-}: {
-  category: Category
-  toolCount: number
-}) {
+function CategoryCard({ category, toolCount }: { category: Category; toolCount: number }) {
   const Icon = category.icon
 
   return (

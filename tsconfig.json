@@ -58,7 +58,7 @@
     "tests/**/*.ts",
     "app/lib/categories.config.backup",
     "app/lib/utils/errorHandler.backup"
-  ],
+, "app/tools/business-tools/components/BusinessToolsClient.backup", "app/tools/business-tools/page.backup"  ],
   "exclude": [
     "node_modules",
     ".next",

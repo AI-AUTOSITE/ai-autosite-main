@@ -20,7 +20,7 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
   })
 
   useEffect(() => {
-    // シミュレートされたデータ（本番環境ではAPIから取得）
+    // Simulated data (fetch from API in production)
     const simulateStats = () => {
       setStats({
         currentUsers: Math.floor(Math.random() * 50) + 10,
@@ -30,18 +30,18 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
       })
     }
 
-    // 初回データ取得
+    // Initial data fetch
     simulateStats()
 
-    // 5秒ごとに更新
+    // Update every 5 seconds
     const interval = setInterval(simulateStats, 5000)
 
     return () => clearInterval(interval)
   }, [toolName])
 
   return (
-    // ✅ translate-y-2 を削除、opacity のみのアニメーション
-    // ✅ min-h で高さを事前確保（レイアウトシフト防止）
+    // Removed translate-y-2, only opacity animation
+    // Added min-h to prevent layout shift
     <div className="transition-opacity duration-500 opacity-100 min-h-[160px]">
       <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-xl border border-white/10 p-4">
         <div className="flex items-center justify-between mb-3">
@@ -73,7 +73,9 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-purple-400" />
             <div>
-              <p className="text-2xl font-bold text-white">{stats.todayTotal.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">
+                {stats.todayTotal.toLocaleString()}
+              </p>
               <p className="text-xs text-gray-400">Uses today</p>
             </div>
           </div>
@@ -83,7 +85,7 @@ export function LiveActivity({ toolName }: { toolName?: string }) {
   )
 }
 
-// グローバル統計表示コンポーネント
+// Global Statistics Display Component
 export function GlobalStats() {
   const [stats] = useState({
     totalUsers: '12.5k',
@@ -93,7 +95,7 @@ export function GlobalStats() {
   })
 
   return (
-    // ✅ min-h で高さを事前確保
+    // Added min-h to prevent layout shift
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 min-h-[100px]">
       <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10 text-center">
         <p className="text-2xl font-bold text-cyan-400">{stats.totalUsers}</p>

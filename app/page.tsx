@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import CategoryHomeView from '@/components/CategoryHomeView'
+import CategoryHomeView from '@/components/ToolsPageClient'
 
 // SEO Metadata - no changes
 export const metadata: Metadata = {

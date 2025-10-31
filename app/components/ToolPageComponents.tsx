@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Shield, Lock, Zap, HelpCircle, ChevronDown, Check, X, Info } from 'lucide-react'
 
-// プライバシーバッジコンポーネント
+// Privacy Badge Component
 export function PrivacyBadge() {
   const [showDetails, setShowDetails] = useState(false)
 
@@ -62,7 +62,7 @@ export function PrivacyBadge() {
   )
 }
 
-// コスト透明性表示コンポーネント
+// Cost Transparency Display Component
 export function CostTransparency({
   toolId,
   isFree = true,
@@ -130,7 +130,7 @@ export function CostTransparency({
   )
 }
 
-// ツール使用統計コンポーネント
+// Tool Usage Statistics Component
 export function ToolStats({ toolId }: { toolId: string }) {
   const [stats, setStats] = useState({
     totalUses: 0,
@@ -140,7 +140,7 @@ export function ToolStats({ toolId }: { toolId: string }) {
   })
 
   useEffect(() => {
-    // 統計データをシミュレート
+    // Simulate statistics data
     setStats({
       totalUses: Math.floor(Math.random() * 10000) + 1000,
       todayUses: Math.floor(Math.random() * 500) + 50,
@@ -171,7 +171,7 @@ export function ToolStats({ toolId }: { toolId: string }) {
   )
 }
 
-// 機能リストコンポーネント
+// Features List Component
 export function FeatureList({ features }: { features: string[] }) {
   return (
     <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
@@ -188,7 +188,7 @@ export function FeatureList({ features }: { features: string[] }) {
   )
 }
 
-// 使い方ステップコンポーネント
+// How to Use Steps Component
 export function HowToUse({ steps }: { steps: string[] }) {
   return (
     <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-xl rounded-xl border border-purple-500/20 p-4">
