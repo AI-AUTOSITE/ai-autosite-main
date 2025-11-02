@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import AIToolsClient from './components/AIToolsClient'
+import { getToolsByCategory } from '@/lib/categories'
 
 export const metadata: Metadata = {
   title: 'Free AI Tools - Powered by Claude & GPT | AI AutoSite',
@@ -27,5 +28,16 @@ export const metadata: Metadata = {
 }
 
 export default function AIToolsPage() {
-  return <AIToolsClient />
+  // Get tools in Server Component
+  const tools = getToolsByCategory('ai-tools')
+    .filter((t) => t.status === 'live')
+    .sort((a, b) => a.name.localeCompare(b.name))
+    // Remove icon property (React component) to make it serializable
+    .map(({ icon, ...tool }) => ({
+      ...tool,
+      // Ensure emoji is available
+      emoji: tool.emoji || tool.icon || '🔧',
+    }))
+
+  return <AIToolsClient tools={tools} />
 }

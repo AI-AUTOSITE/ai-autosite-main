@@ -16,6 +16,9 @@ import {
 // Import categories from unified config
 import { getEnabledCategories } from '@/lib/categories-config'
 
+// Import unified ToolCard component ✨ NEW
+import ToolCard, { ToolCardCompact } from '@/components/ToolCard'
+
 // ========================================
 // Type Definitions
 // ========================================
@@ -159,7 +162,7 @@ export default function ToolsPageClient() {
   }
 
   return (
-    <div className="py-6">
+    <div className="py-4 sm:py-6 md:py-8">
       {/* Hero Section */}
       <HeroSection stats={stats} />
 
@@ -192,17 +195,18 @@ export default function ToolsPageClient() {
 }
 
 // ========================================
-// Hero Section Component
+// Hero Section Component - RESPONSIVE
 // ========================================
 function HeroSection({ stats }: { stats: Stats }) {
   return (
-    <div className="text-center mb-6">
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-cyan-500/10 rounded-full mb-2">
-        <Sparkles className="w-4 h-4 text-cyan-400" />
-        <span className="text-sm text-cyan-400">Free Forever • No Sign-up Required</span>
+    <div className="text-center mb-4 sm:mb-6 md:mb-8 px-4">
+      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 
+                    bg-cyan-500/10 rounded-full mb-2 sm:mb-3">
+        <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" />
+        <span className="text-xs sm:text-sm text-cyan-400">Free Forever • No Sign-up Required</span>
       </div>
-      <h1 className="text-4xl font-bold mb-2">Instant Tools</h1>
-      <p className="text-lg text-gray-400">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3">Instant Tools</h1>
+      <p className="text-sm sm:text-base md:text-lg text-gray-400 px-4">
         {stats.total} tools available • Zero Ads • Zero Tracking • 100% Free
       </p>
     </div>
@@ -210,7 +214,7 @@ function HeroSection({ stats }: { stats: Stats }) {
 }
 
 // ========================================
-// Search Bar Component
+// Search Bar Component - RESPONSIVE
 // ========================================
 function SearchBar({
   searchQuery,
@@ -230,23 +234,28 @@ function SearchBar({
   }
 
   return (
-    <div className="mb-6">
+    <div className="mb-4 sm:mb-6 md:mb-8 px-4">
       <div className="relative max-w-2xl mx-auto">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+        <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 
+                         text-gray-500 w-4 h-4 sm:w-5 sm:h-5" />
         <input
           type="text"
           placeholder="Search all tools..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyPress={handleKeyPress}
-          className="w-full pl-12 pr-12 py-3 bg-gray-800 border border-gray-700 rounded-xl 
-                   text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 text-lg"
+          className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2.5 sm:py-3 
+                   bg-gray-800 border border-gray-700 rounded-xl 
+                   text-white placeholder-gray-500 
+                   focus:outline-none focus:border-cyan-400 
+                   text-base sm:text-lg"
           aria-label="Search tools"
         />
         {searchQuery && (
           <button
             onClick={onClear}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-700 rounded-lg transition-colors"
+            className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 
+                     p-1 hover:bg-gray-700 rounded-lg transition-colors"
             aria-label="Clear search"
           >
             <X className="w-4 h-4 text-gray-500" />
@@ -258,82 +267,49 @@ function SearchBar({
 }
 
 // ========================================
-// Search Results Component
+// Search Results Component - WITH UNIFIED CARD
 // ========================================
 function SearchResults({ searchQuery, filteredTools, onClearSearch }: SearchResultsProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 px-4">
       {/* Search Results Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-white truncate">
           Search Results for "{searchQuery}"
         </h2>
         <button
           onClick={onClearSearch}
-          className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center gap-2"
+          className="text-cyan-400 hover:text-cyan-300 text-xs sm:text-sm 
+                   font-medium flex items-center gap-1.5 sm:gap-2 flex-shrink-0"
         >
-          Clear search
+          <span className="hidden sm:inline">Clear search</span>
           <X className="w-4 h-4" />
         </button>
       </div>
 
       {/* Results Count */}
-      <p className="text-gray-400">
+      <p className="text-sm sm:text-base text-gray-400">
         Found {filteredTools.length} {filteredTools.length === 1 ? 'tool' : 'tools'}
       </p>
 
-      {/* Results Grid */}
+      {/* Results Grid - FULLY RESPONSIVE */}
       {filteredTools.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 auto-rows-fr">
           {filteredTools.map((tool) => (
-            <Link
-              key={tool.id}
-              href={tool.url || `/tools/${tool.id}`}
-              className="group bg-gray-800 rounded-xl p-4 border border-gray-700 
-                       hover:border-cyan-500/50 transition-all duration-300 
-                       hover:shadow-lg hover:shadow-cyan-500/20 block"
-            >
-              <div className="flex items-start gap-3 mb-3">
-                <span className="text-2xl flex-shrink-0">{tool.emoji || tool.icon || '🔧'}</span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-white mb-1 line-clamp-1">{tool.name}</h3>
-                  <p className="text-sm text-gray-400 line-clamp-2">{tool.description}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                {tool.timeToUse && (
-                  <span className="text-xs text-gray-500">{tool.timeToUse}</span>
-                )}
-                <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all ml-auto" />
-              </div>
-
-              {/* Badges */}
-              <div className="flex gap-2 mt-3">
-                {tool.featured && (
-                  <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-xs rounded-full">
-                    Featured
-                  </span>
-                )}
-                {tool.new && (
-                  <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
-                    New
-                  </span>
-                )}
-              </div>
-            </Link>
+            <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-white mb-2">No tools found</h3>
-          <p className="text-gray-400 mb-4">
+        <div className="text-center py-8 sm:py-12 px-4">
+          <div className="text-5xl sm:text-6xl mb-4">🔍</div>
+          <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No tools found</h3>
+          <p className="text-sm sm:text-base text-gray-400 mb-4">
             Try searching with different keywords or browse by category
           </p>
           <button
             onClick={onClearSearch}
-            className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 
+                     text-white rounded-lg transition-colors text-sm sm:text-base"
           >
             Clear search
           </button>
@@ -344,7 +320,7 @@ function SearchResults({ searchQuery, filteredTools, onClearSearch }: SearchResu
 }
 
 // ========================================
-// Category Grid Component
+// Category Grid Component - RESPONSIVE
 // ========================================
 function CategoryGrid({
   categories,
@@ -354,19 +330,19 @@ function CategoryGrid({
   stats,
 }: CategoryGridProps) {
   return (
-    <div className="space-y-8">
-      {/* Category Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-6 sm:space-y-8 px-4">
+      {/* Category Cards Grid - RESPONSIVE */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
         {categories.map((cat) => (
           <CategoryCard key={cat.id} category={cat} toolCount={categoryStats[cat.id] || 0} />
         ))}
       </div>
 
-      {/* Quick Access Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Quick Access Sections - RESPONSIVE */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
         <QuickAccessCard
           title="Featured Tools"
-          icon={<Sparkles className="w-5 h-5 mr-2 text-purple-400" />}
+          icon={<Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-400" />}
           tools={featuredTools}
           count={stats.featured}
           href="/tools?featured=true"
@@ -374,7 +350,7 @@ function CategoryGrid({
 
         <QuickAccessCard
           title="Recently Added"
-          icon={<Clock className="w-5 h-5 mr-2 text-cyan-400" />}
+          icon={<Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-cyan-400" />}
           tools={newTools}
           count={stats.new}
           href="/tools?new=true"
@@ -385,7 +361,7 @@ function CategoryGrid({
 }
 
 // ========================================
-// Category Card Component
+// Category Card Component - RESPONSIVE
 // ========================================
 function CategoryCard({ category, toolCount }: { category: Category; toolCount: number }) {
   const Icon = category.icon
@@ -394,30 +370,36 @@ function CategoryCard({ category, toolCount }: { category: Category; toolCount: 
     <Link
       href={`/tools/${category.id}`}
       className="relative group bg-gradient-to-br from-gray-800 to-gray-900 
-                 rounded-2xl p-6 border border-gray-700 
-                 hover:border-cyan-500/50 transition-all duration-300 
+                 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 
+                 border border-gray-700 hover:border-cyan-500/50 
+                 transition-all duration-300 
                  hover:shadow-xl hover:shadow-cyan-500/20 
                  hover:scale-[1.02] cursor-pointer overflow-hidden block"
     >
       <div className="relative z-10">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-xl ${category.bgColor}`}>
-              <Icon className="w-6 h-6 text-white" />
+        <div className="flex items-start justify-between mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${category.bgColor}`}>
+              <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
-            <span className="text-3xl">{category.emoji}</span>
+            <span className="text-2xl sm:text-3xl">{category.emoji}</span>
           </div>
-          <span className="px-2.5 py-1 bg-gray-700 rounded-full text-sm font-medium text-gray-300">
+          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gray-700 rounded-full 
+                       text-xs sm:text-sm font-medium text-gray-300 flex-shrink-0">
             {toolCount} tools
           </span>
         </div>
 
-        <h3 className="text-2xl font-bold mb-2 text-white">{category.name}</h3>
-        <p className="text-base text-gray-400 mb-4">{category.description}</p>
+        <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">{category.name}</h3>
+        <p className="text-sm sm:text-base text-gray-400 mb-3 sm:mb-4 line-clamp-2">
+          {category.description}
+        </p>
 
-        <div className="flex items-center text-base font-semibold text-cyan-400 group-hover:gap-3 transition-all">
+        <div className="flex items-center text-sm sm:text-base font-semibold 
+                      text-cyan-400 group-hover:gap-3 transition-all">
           Browse tools
-          <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="ml-2 w-3.5 h-3.5 sm:w-4 sm:h-4 
+                               group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
     </Link>
@@ -425,33 +407,23 @@ function CategoryCard({ category, toolCount }: { category: Category; toolCount: 
 }
 
 // ========================================
-// Quick Access Card Component
+// Quick Access Card Component - WITH COMPACT VARIANT
 // ========================================
 function QuickAccessCard({ title, icon, tools, count, href }: QuickAccessCardProps) {
   return (
-    <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-      <h3 className="text-lg font-bold mb-4 flex items-center text-white">
+    <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700">
+      <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center text-white">
         {icon}
         {title}
       </h3>
       <div className="space-y-2">
         {tools.map((tool) => (
-          <Link key={tool.id} href={tool.url || `/tools/${tool.id}`}>
-            <div className="flex items-center justify-between p-2.5 rounded-xl hover:bg-gray-700 transition-all group">
-              <span className="flex items-center gap-3">
-                <span className="text-xl">{tool.emoji || tool.icon || '🔧'}</span>
-                <div>
-                  <span className="font-medium text-sm text-white block">{tool.name}</span>
-                  <p className="text-xs text-gray-400 line-clamp-1">{tool.description}</p>
-                </div>
-              </span>
-              <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-gray-300 group-hover:translate-x-1 transition-all" />
-            </div>
-          </Link>
+          <ToolCardCompact key={tool.id} tool={tool} />
         ))}
         <Link
           href={href}
-          className="w-full text-center text-cyan-400 hover:text-cyan-300 text-sm font-medium pt-1 block"
+          className="w-full text-center text-cyan-400 hover:text-cyan-300 
+                   text-xs sm:text-sm font-medium pt-2 block"
         >
           View all {count} {title.toLowerCase()} →
         </Link>
