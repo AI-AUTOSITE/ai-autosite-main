@@ -2,7 +2,8 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { getToolsByCategory } from '@/lib/categories'
-import { Clock, ChevronRight, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
+import ToolCard from '@/components/ToolCard'
 
 export default function AnalyzersClient() {
   const tools = useMemo(
@@ -33,59 +34,13 @@ export default function AnalyzersClient() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
+                      gap-4 sm:gap-5 md:gap-6 auto-rows-fr">
           {tools.map((tool) => (
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
       </div>
     </div>
-  )
-}
-
-function ToolCard({ tool }: any) {
-  return (
-    <Link href={tool.url} className="block group">
-      <div
-        className="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all 
-                      border border-gray-700 hover:border-gray-600 h-full min-h-[240px]
-                      flex flex-col hover:scale-[1.02] transform"
-      >
-        <div className="flex items-start justify-between mb-4">
-          <div className="text-3xl">{tool.icon || tool.emoji}</div>
-          <div className="flex gap-1">
-            {tool.featured && (
-              <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded text-xs font-medium">
-                Featured
-              </span>
-            )}
-            {tool.new && (
-              <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded text-xs font-medium">
-                New
-              </span>
-            )}
-            {tool.badge === 'AI' && (
-              <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs font-medium">
-                AI
-              </span>
-            )}
-          </div>
-        </div>
-
-        <h3 className="text-xl font-bold mb-3 text-white line-clamp-2">{tool.name}</h3>
-        <p className="text-base text-gray-400 mb-4 line-clamp-3 flex-grow">{tool.description}</p>
-
-        <div className="flex items-center justify-between text-sm mt-auto pt-3 border-t border-gray-700">
-          <span className="text-gray-500 flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            {tool.timeToUse}
-          </span>
-          <ChevronRight
-            className="w-4 h-4 text-gray-500 group-hover:text-gray-300 
-                        group-hover:translate-x-1 transition-all"
-          />
-        </div>
-      </div>
-    </Link>
   )
 }
