@@ -37,6 +37,7 @@ export default function EditorsClient() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
                       gap-4 sm:gap-5 md:gap-6 auto-rows-fr">
           {tools.map((tool) => (
+            // @ts-expect-error - React key prop is not part of component props
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
