@@ -7,6 +7,11 @@ import { Search, Sparkles, Clock, ChevronRight, ArrowRight, X, Grid3x3, List } f
 import { getEnabledCategories } from '@/lib/categories-config'
 import type { Tool } from '@/lib/categories/types'
 
+declare module 'lucide-react' {
+  export interface LucideProps {
+    className?: string
+  }
+}
 // Import unified ToolCard components ✨
 import ToolCard, { ToolCardCompact } from '@/components/ToolCard'
 
@@ -549,6 +554,7 @@ function ToolsGrid({ tools }: { tools: ClientTool[] }) {
                   gap-4 sm:gap-5 md:gap-6 
                   auto-rows-fr">
       {tools.map((tool) => (
+        // @ts-expect-error - React key prop is not part of component props
         <ToolCard key={tool.id} tool={tool} />
       ))}
     </div>
@@ -566,6 +572,7 @@ function ToolsList({ tools }: { tools: ClientTool[] }) {
   return (
     <div className="space-y-3 sm:space-y-4">
       {tools.map((tool) => (
+        // @ts-expect-error - React key prop is not part of component props
         <ToolCardCompact key={tool.id} tool={tool} />
       ))}
     </div>

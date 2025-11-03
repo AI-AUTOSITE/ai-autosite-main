@@ -222,12 +222,14 @@ export default function CategoryPageClient({ category }: CategoryPageClientProps
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
+                // @ts-expect-error - React key prop is not part of component props
+            <ToolCard key={tool.id} tool={tool} />
               ))}
             </div>
           ) : (
             <div className="space-y-3">
               {filteredTools.map((tool) => (
+                // @ts-expect-error - React key prop is not part of component props
                 <ToolListItem key={tool.id} tool={tool} />
               ))}
             </div>

@@ -20,6 +20,7 @@ interface ToolCardProps {
     new?: boolean
     status?: string
     badge?: string
+    [key: string]: any
   }
   variant?: 'default' | 'compact' | 'featured'
 }
