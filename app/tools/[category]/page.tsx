@@ -1,9 +1,10 @@
 // app/tools/[category]/page.tsx
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getCategoryById } from '@/lib/categories-config'
 import { getToolsByCategory } from '@/lib/unified-data'
 import CategoryDetailView from '@/components/CategoryDetailView'
+import { mapCategoryId } from '@/lib/core/status-map'
 
 // Generate metadata for SEO
 export async function generateMetadata({
@@ -11,7 +12,9 @@ export async function generateMetadata({
 }: {
   params: { category: string }
 }): Promise<Metadata> {
-  const category = getCategoryById(params.category)
+  // Map old category names to new ones
+  const mappedCategoryId = mapCategoryId(params.category)
+  const category = getCategoryById(mappedCategoryId)
 
   if (!category) {
     return {
@@ -40,6 +43,12 @@ export default function CategoryPage({
 }: {
   params: { category: string }
 }) {
+  // Handle old category names (redirect to new ones)
+  const mappedCategoryId = mapCategoryId(params.category)
+  if (mappedCategoryId !== params.category) {
+    redirect(`/tools/${mappedCategoryId}`)
+  }
+
   const category = getCategoryById(params.category)
 
   if (!category || category.enabled === false) {
@@ -56,9 +65,13 @@ export default function CategoryPage({
     return (a.name || '').localeCompare(b.name || '')
   })
 
+  // Remove icon (function) from category before passing to client component
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { icon, ...categoryWithoutIcon } = category
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <CategoryDetailView category={category} tools={sortedTools} />
+    <div className="min-h-screen bg-gray-800">
+      <CategoryDetailView category={categoryWithoutIcon as any} tools={sortedTools} />
     </div>
   )
 }

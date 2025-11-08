@@ -146,7 +146,7 @@ export default function CategoryDetailView({
       </Link>
 
       {/* Category Header */}
-      <CategoryHeader category={category} Icon={Icon} toolCount={tools.length} />
+      <CategoryHeader category={category} Icon={Icon || null} toolCount={tools.length} />
 
       {/* Search Bar */}
       <SearchBar
@@ -211,9 +211,11 @@ function CategoryHeader({
   return (
     <div className="mb-6 sm:mb-8">
       <div className="flex items-start gap-3 sm:gap-4 mb-4">
-        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${category.bgColor}`}>
-          <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-        </div>
+        {Icon && (
+          <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${category.bgColor}`}>
+            <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          </div>
+        )}
         <div className="flex-1">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">{category.name}</h1>
@@ -404,6 +406,7 @@ function ToolsGrid({ tools }: { tools: Tool[] }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
                   gap-4 sm:gap-5 md:gap-6 auto-rows-fr mb-8 sm:mb-12">
       {tools.map((tool) => (
+        // @ts-expect-error - key is a special React prop
         <ToolCard key={tool.id} tool={tool} />
       ))}
     </div>
@@ -426,6 +429,7 @@ function ToolsList({ tools }: { tools: Tool[] }) {
   return (
     <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-12">
       {tools.map((tool) => (
+        // @ts-expect-error - key is a special React prop
         <ToolCardCompact key={tool.id} tool={tool} />
       ))}
     </div>
@@ -451,12 +455,14 @@ function OtherCategories({ currentCategoryId }: { currentCategoryId: string }) {
             <Link
               key={cat.id}
               href={`/tools/${cat.id}`}
-              className="flex items-center gap-3 p-3 sm:p-4 bg-gray-800 rounded-xl 
-                       border border-gray-700 hover:border-gray-600 transition-all group"
+              className="flex items-center gap-3 p-3 sm:p-4 bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl 
+                       border border-gray-600 hover:border-cyan-400/60 hover:shadow-lg hover:shadow-cyan-500/25 transition-all group"
             >
-              <div className={`p-2 rounded-lg ${cat.bgColor}`}>
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-              </div>
+              {Icon && (
+                <div className={`p-2 rounded-lg ${cat.bgColor}`}>
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm sm:text-base text-white 
                            group-hover:text-cyan-400 transition-colors truncate">

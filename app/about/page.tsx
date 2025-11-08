@@ -64,11 +64,11 @@ export default function AboutPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col">
-      {/* Background animation */}
+    <div className="min-h-screen bg-gray-800 flex flex-col">
+      {/* Background animation - more subtle */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-pulse"></div>
       </div>
 
       <Header />
@@ -89,7 +89,7 @@ export default function AboutPage() {
 
           {/* Mission Statement */}
           <section className="mb-16">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
               <div className="text-center">
                 <Target className="w-12 h-12 text-cyan-400 mx-auto mb-6" />
                 <h2 className="text-2xl font-bold text-white mb-6">Our Mission</h2>
@@ -112,7 +112,7 @@ export default function AboutPage() {
                 return (
                   <div
                     key={index}
-                    className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8"
+                    className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8"
                   >
                     <div
                       className={`w-12 h-12 bg-gradient-to-br ${value.color} rounded-xl flex items-center justify-center mb-4`}
@@ -129,7 +129,7 @@ export default function AboutPage() {
 
           {/* Stats */}
           <section className="mb-16">
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
               <h2 className="text-2xl font-bold text-white mb-8 text-center">
                 Impact by the Numbers
               </h2>
@@ -151,7 +151,7 @@ export default function AboutPage() {
           <section className="mb-16">
             <h2 className="text-2xl font-bold text-white mb-8 text-center">How We're Different</h2>
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
+              <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6">
                 <h3 className="text-lg font-semibold text-red-400 mb-4">❌ What We Don't Do</h3>
                 <ul className="space-y-2 text-gray-300">
                   <li>• Track your behavior or build user profiles</li>
@@ -163,7 +163,7 @@ export default function AboutPage() {
                 </ul>
               </div>
 
-              <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
+              <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6">
                 <h3 className="text-lg font-semibold text-green-400 mb-4">✅ What We Do</h3>
                 <ul className="space-y-2 text-gray-300">
                   <li>• Build tools that work instantly in your browser</li>
@@ -184,7 +184,7 @@ export default function AboutPage() {
               {team.map((member, index) => (
                 <div
                   key={index}
-                  className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6 text-center"
+                  className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6 text-center"
                 >
                   <div className="text-4xl mb-4">{member.avatar}</div>
                   <h3 className="text-lg font-semibold text-white mb-2">{member.name}</h3>
@@ -197,7 +197,7 @@ export default function AboutPage() {
 
           {/* Technology Stack */}
           <section className="mb-16">
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
               <h2 className="text-2xl font-bold text-white mb-6 text-center">
                 Built with Modern Tech
               </h2>
@@ -233,7 +233,7 @@ export default function AboutPage() {
 
           {/* Future Vision */}
           <section className="mb-16">
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8">
+            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
               <h2 className="text-2xl font-bold text-white mb-6 text-center">Looking Ahead</h2>
               <div className="max-w-3xl mx-auto text-center">
                 <p className="text-gray-300 leading-relaxed mb-6">

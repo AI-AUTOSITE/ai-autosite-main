@@ -13,7 +13,7 @@ type FAQCategory = {
   icon: any
   questions: {
     q: string
-    a: string | JSX.Element
+    a: string | React.ReactElement
   }[]
 }
 
@@ -897,7 +897,7 @@ export default function FAQPage() {
       : faqCategories.filter((cat) => cat.id === selectedCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-gray-800 flex flex-col overflow-x-hidden">
       {/* Background animation */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -991,7 +991,7 @@ export default function FAQPage() {
                     return (
                       <div
                         key={itemId}
-                        className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 overflow-hidden"
+                        className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 overflow-hidden"
                       >
                         <button
                           onClick={() => toggleItem(itemId)}
@@ -1019,7 +1019,7 @@ export default function FAQPage() {
           </div>
 
           {/* Contact Section */}
-          <div className="mt-16 text-center bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-2xl border border-white/10 p-8">
+          <div className="mt-16 text-center bg-gradient-to-br from-gray-700 to-gray-800 rounded-2xl border border-gray-600 p-8">
             <h3 className="text-2xl font-bold text-white mb-4">Still have questions?</h3>
             <p className="text-gray-400 mb-6">
               We're here to help! Contact us and we'll get back to you as soon as possible.

@@ -199,7 +199,7 @@ export default function ToolsPageClient() {
 // ========================================
 function HeroSection({ stats }: { stats: Stats }) {
   return (
-    <div className="text-center mb-4 sm:mb-6 md:mb-8 px-4">
+    <div className="max-w-7xl mx-auto text-center mb-4 sm:mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
       <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 
                     bg-cyan-500/10 rounded-full mb-2 sm:mb-3">
         <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" />
@@ -227,14 +227,14 @@ function SearchBar({
   onSearch: (query: string) => void
   onClear: () => void
 }) {
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e as any).key === 'Enter' && searchQuery.trim()) {
       onSearch(searchQuery)
     }
   }
 
   return (
-    <div className="mb-4 sm:mb-6 md:mb-8 px-4">
+    <div className="max-w-7xl mx-auto mb-4 sm:mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
       <div className="relative max-w-2xl mx-auto">
         <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 
                          text-gray-500 w-4 h-4 sm:w-5 sm:h-5" />
@@ -243,7 +243,7 @@ function SearchBar({
           placeholder="Search all tools..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
           className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2.5 sm:py-3 
                    bg-gray-800 border border-gray-700 rounded-xl 
                    text-white placeholder-gray-500 
@@ -271,7 +271,7 @@ function SearchBar({
 // ========================================
 function SearchResults({ searchQuery, filteredTools, onClearSearch }: SearchResultsProps) {
   return (
-    <div className="space-y-4 sm:space-y-6 px-4">
+    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Search Results Header */}
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-white truncate">
@@ -296,6 +296,7 @@ function SearchResults({ searchQuery, filteredTools, onClearSearch }: SearchResu
       {filteredTools.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 auto-rows-fr">
           {filteredTools.map((tool) => (
+            // @ts-expect-error - key is a special React prop
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
@@ -330,10 +331,11 @@ function CategoryGrid({
   stats,
 }: CategoryGridProps) {
   return (
-    <div className="space-y-6 sm:space-y-8 px-4">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
       {/* Category Cards Grid - RESPONSIVE */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
         {categories.map((cat) => (
+          // @ts-expect-error - key is a special React prop
           <CategoryCard key={cat.id} category={cat} toolCount={categoryStats[cat.id] || 0} />
         ))}
       </div>
@@ -369,11 +371,11 @@ function CategoryCard({ category, toolCount }: { category: Category; toolCount: 
   return (
     <Link
       href={`/tools/${category.id}`}
-      className="relative group bg-gradient-to-br from-gray-800 to-gray-900 
+      className="relative group bg-gradient-to-br from-gray-700 to-gray-800 
                  rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 
-                 border border-gray-700 hover:border-cyan-500/50 
+                 border border-gray-600 hover:border-cyan-400/60 
                  transition-all duration-300 
-                 hover:shadow-xl hover:shadow-cyan-500/20 
+                 hover:shadow-xl hover:shadow-cyan-500/25 
                  hover:scale-[1.02] cursor-pointer overflow-hidden block"
     >
       <div className="relative z-10">
@@ -384,14 +386,14 @@ function CategoryCard({ category, toolCount }: { category: Category; toolCount: 
             </div>
             <span className="text-2xl sm:text-3xl">{category.emoji}</span>
           </div>
-          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gray-700 rounded-full 
-                       text-xs sm:text-sm font-medium text-gray-300 flex-shrink-0">
+          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-gray-600 rounded-full 
+                       text-xs sm:text-sm font-medium text-gray-200 flex-shrink-0">
             {toolCount} tools
           </span>
         </div>
 
         <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white">{category.name}</h3>
-        <p className="text-sm sm:text-base text-gray-400 mb-3 sm:mb-4 line-clamp-2">
+        <p className="text-sm sm:text-base text-gray-300 mb-3 sm:mb-4 line-clamp-2">
           {category.description}
         </p>
 
@@ -411,13 +413,14 @@ function CategoryCard({ category, toolCount }: { category: Category; toolCount: 
 // ========================================
 function QuickAccessCard({ title, icon, tools, count, href }: QuickAccessCardProps) {
   return (
-    <div className="bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700">
+    <div className="bg-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-600">
       <h3 className="text-base sm:text-lg font-bold mb-3 sm:mb-4 flex items-center text-white">
         {icon}
         {title}
       </h3>
       <div className="space-y-2">
         {tools.map((tool) => (
+          // @ts-expect-error - key is a special React prop
           <ToolCardCompact key={tool.id} tool={tool} />
         ))}
         <Link

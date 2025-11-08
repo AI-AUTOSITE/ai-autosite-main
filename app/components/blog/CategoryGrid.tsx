@@ -54,7 +54,7 @@ function CategoryMobileScroll({
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch', // iOS対応
-          } as React.CSSProperties
+          } as any
         }
       >
         <div className="flex gap-3 pb-2">
@@ -65,7 +65,7 @@ function CategoryMobileScroll({
               <button
                 key={cat.id}
                 onClick={() => onSelectCategory(cat.id)}
-                className="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-3 rounded-xl transition-all bg-white/10 text-gray-300 hover:bg-white/15"
+                className="flex-shrink-0 flex flex-col items-center gap-2 px-6 py-3 rounded-xl transition-all bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-600 text-gray-300 hover:border-cyan-400/60 hover:shadow-lg hover:shadow-cyan-500/25"
               >
                 <Icon className="w-5 h-5" />
                 <div className="text-center">
@@ -115,7 +115,8 @@ function CategoryDesktopGrid({
             className={`
               relative ${paddingClass} rounded-xl transition-all hover:scale-105 
               flex flex-col items-center justify-center min-h-[180px]
-              bg-white/5 hover:bg-white/10 border border-white/10
+              bg-gradient-to-br from-gray-700 to-gray-800 border border-gray-600
+              hover:border-cyan-400/60 hover:shadow-lg hover:shadow-cyan-500/25
               group cursor-pointer
             `}
           >
