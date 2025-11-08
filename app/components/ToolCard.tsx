@@ -68,7 +68,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
                          text-[10px] sm:text-xs font-semibold rounded-full
                          ${
                            tool.badge === 'AI' 
-                             ? 'bg-blue-500/20 border border-blue-500/30 text-blue-300'
+                             ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                              : tool.badge === 'HOT'
                              ? 'bg-orange-500/20 border border-orange-500/30 text-orange-300'
                              : 'bg-gray-500/20 border border-gray-500/30 text-gray-300'
@@ -186,7 +186,7 @@ export function ToolCardCompact({ tool }: ToolCardProps) {
               <span className={`px-1.5 py-0.5 text-[9px] sm:text-[10px] font-semibold rounded
                              ${
                                tool.badge === 'AI' 
-                                 ? 'bg-blue-500/20 text-blue-400'
+                                 ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                                  : tool.badge === 'HOT'
                                  ? 'bg-orange-500/20 text-orange-400'
                                  : 'bg-gray-500/20 text-gray-400'
@@ -245,7 +245,7 @@ export function ToolCardFeatured({ tool }: ToolCardProps) {
             <span className={`px-2.5 py-1 backdrop-blur-sm text-xs font-semibold rounded-full
                            ${
                              tool.badge === 'AI' 
-                               ? 'bg-blue-500/20 border border-blue-500/30 text-blue-300'
+                               ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                                : tool.badge === 'HOT'
                                ? 'bg-orange-500/20 border border-orange-500/30 text-orange-300'
                                : 'bg-gray-500/20 border border-gray-500/30 text-gray-300'

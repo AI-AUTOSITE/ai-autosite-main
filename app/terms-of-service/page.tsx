@@ -5,7 +5,7 @@ import { FileText, Shield, Zap, Users, AlertTriangle, CheckCircle, Cloud, Lock }
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex flex-col">
+    <div className="min-h-screen bg-gray-800 flex flex-col">
       {/* Background animation */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>

@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+    <div className="min-h-screen bg-gray-800 text-white flex flex-col">
       <Header />
       <main className="flex-1">
         <Suspense

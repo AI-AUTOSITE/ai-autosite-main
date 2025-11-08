@@ -41,7 +41,7 @@ export default function Footer() {
         minHeight: '320px',
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Desktop Footer */}
         <div className="hidden md:grid md:grid-cols-4 gap-8 lg:gap-16 xl:gap-20 mb-8">
           <div>
