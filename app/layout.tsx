@@ -14,12 +14,17 @@ const inter = Inter({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-autosite.com'
 
 export const metadata: Metadata = {
-  title: 'Instant Tools - Free Online Tools No Sign-up Required',
+  title: {
+    default: 'Signal - Transparent & Privacy-First Tools',
+    template: '%s | Signal'
+  },
   description:
-    'Collection of free instant tools that work in your browser. No registration, no upload, no quality limits. Privacy-first tools for everyday tasks.',
+    'Signal provides transparent, privacy-first tools that work entirely in your browser. No data collection, no tracking, no compromises.',
   keywords:
-    'free online tools, no signup tools, instant tools, privacy tools, browser tools, no registration, local processing',
-  authors: [{ name: 'AI AutoSite' }],
+    'privacy tools, transparent tools, browser tools, no tracking, secure tools, local processing, privacy-first, Signal',
+  authors: [{ name: 'Signal' }],
+  creator: 'Signal',
+  publisher: 'Signal',
 
   metadataBase: new URL(siteUrl),
 
@@ -27,25 +32,34 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: siteUrl,
-    siteName: 'Instant Tools',
-    title: 'Instant Tools - Free Online Tools No Sign-up Required',
+    siteName: 'Signal',
+    title: 'Signal - Transparent & Privacy-First Tools',
     description:
-      'Collection of free instant tools that work in your browser. Privacy-first, no registration needed.',
+      'Privacy-first tools that work entirely in your browser. No data collection, no tracking, just pure functionality.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Instant Tools - Free Browser Tools',
+        alt: 'Signal - Transparent & Privacy-First Tools',
       },
     ],
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Instant Tools - Free Online Tools',
-    description: 'Free instant tools that work in your browser. No sign-up required.',
-    images: ['/og-image.png'],
+    title: 'Signal - Transparent & Privacy-First Tools',
+    description: 'Privacy-first tools that work entirely in your browser. No tracking, no compromises.',
+    images: ['/opengraph-image'],
+  },
+
+  icons: {
+    icon: [
+      { url: '/icon?<generated>' },
+    ],
+    apple: [
+      { url: '/apple-icon?<generated>' },
+    ],
   },
 
   robots: {
@@ -64,8 +78,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Instant Tools',
-  description: 'Collection of free instant tools for privacy, productivity, and creativity',
+  name: 'Signal',
+  description: 'Transparent, privacy-first tools for everyday tasks',
   url: siteUrl,
   potentialAction: {
     '@type': 'SearchAction',
@@ -77,7 +91,7 @@ const jsonLd = {
   },
   author: {
     '@type': 'Organization',
-    name: 'AI AutoSite',
+    name: 'Signal',
   },
   aggregateRating: {
     '@type': 'AggregateRating',
