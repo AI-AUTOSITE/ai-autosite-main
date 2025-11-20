@@ -208,14 +208,6 @@ export const getRuleCafeScenario = (): BotScenarioData => {
         action: 'faq-menu',
         ariaLabel: 'Frequently asked questions'
       },
-      {
-        id: 'btn-human-support',
-        label: '👤 Talk to Staff',
-        value: 'human',
-        action: 'escalation',
-        ariaLabel: 'Contact a staff member',
-        isEscalation: true
-      },
     ],
     ariaLabel: 'Main menu',
   },
@@ -967,6 +959,14 @@ export const getRuleCafeScenario = (): BotScenarioData => {
         action: 'faq-cancellation',
         ariaLabel: 'Cancellation policy'
       },
+          {
+      id: 'btn-human-support-faq',
+      label: '👤 Still Need Help? Talk to Staff',
+      value: 'human',
+      action: 'escalation',
+      ariaLabel: 'Contact a staff member',
+      isEscalation: true
+    },
       {
         id: 'btn-back-main-faq',
         label: '⬅️ Back to Menu',
