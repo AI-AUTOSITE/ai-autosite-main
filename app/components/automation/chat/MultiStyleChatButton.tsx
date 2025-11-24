@@ -196,47 +196,55 @@ export default function MultiStyleChatButton({
     </button>
   );
 
-  // Style 8: Corner Peek (角からチラ見) - さりげない
+// Style 8: Corner Peek (角からチラ見) - さりげない
   const PeekButton = () => (
     <button
       onClick={() => setIsOpen(true)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-0 right-0 bg-gradient-to-tl from-indigo-500 to-purple-600 text-white shadow-2xl transition-all duration-500 z-50 overflow-hidden"
-      aria-label="Open chat"
+      className={`fixed bottom-0 right-0 bg-gradient-to-tl from-indigo-500 to-purple-600 text-white shadow-2xl transition-all duration-500 z-50 overflow-hidden ${
+        isHovered 
+          ? 'w-[140px] h-[140px] sm:w-[180px] sm:h-[180px]' 
+          : 'w-[56px] h-[56px] sm:w-[72px] sm:h-[72px]'
+      }`}
       style={{
-        borderTopLeftRadius: window.innerWidth < 640 ? '24px' : '32px',
-        width: isHovered ? (window.innerWidth < 640 ? '140px' : '180px') : (window.innerWidth < 640 ? '64px' : '80px'),
-        height: isHovered ? (window.innerWidth < 640 ? '140px' : '180px') : (window.innerWidth < 640 ? '64px' : '80px'),
+        borderTopLeftRadius: isHovered ? '32px' : '24px',
       }}
+      aria-label="Open chat"
     >
+      {/* Chat Icon - 右下隅に固定 */}
       <div 
-        className="absolute transition-all duration-500"
-        style={{
-          bottom: isHovered ? (window.innerWidth < 640 ? '20px' : '24px') : (window.innerWidth < 640 ? '14px' : '16px'),
-          right: isHovered ? (window.innerWidth < 640 ? '20px' : '24px') : (window.innerWidth < 640 ? '14px' : '16px'),
-        }}
+        className={`absolute transition-all duration-500 ${
+          isHovered 
+            ? 'bottom-4 right-4 sm:bottom-5 sm:right-5' 
+            : 'bottom-3 right-3 sm:bottom-4 sm:right-4'
+        }`}
       >
         <MessageCircle 
-          className={`transition-all duration-500 ${isHovered ? 'w-6 h-6 sm:w-8 sm:h-8' : 'w-5 h-5 sm:w-6 sm:h-6'}`}
+          className={`transition-all duration-500 ${
+            isHovered ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-5 h-5 sm:w-6 sm:h-6'
+          }`}
         />
       </div>
+      
+            {/* Text - アイコンの左上に配置（重ならないように） */}
       <div 
-        className={`absolute bottom-6 right-6 sm:bottom-8 sm:right-8 text-[10px] sm:text-xs font-semibold transition-all duration-500 ${
+        className={`absolute top-3 left-3 sm:top-4 sm:left-4 font-semibold transition-all duration-500 ${
           isHovered ? 'opacity-100' : 'opacity-0'
         }`}
         style={{
           transform: isHovered ? 'translateY(0)' : 'translateY(10px)',
         }}
       >
-        <div>Chat</div>
-        <div className="text-[8px] sm:text-[10px] text-white/80">with us</div>
+        <div className="text-xs sm:text-sm md:text-base leading-tight">Chat</div>
+        <div className="text-[10px] sm:text-xs md:text-sm text-white/80 leading-tight">with us</div>
       </div>
+      
+      {/* Online indicator - 右上 */}
       <div 
-        className="absolute top-2 right-2 sm:top-3 sm:right-3 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"
-        style={{
-          opacity: isHovered ? 1 : 0,
-        }}
+        className={`absolute top-2 right-2 sm:top-3 sm:right-3 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full transition-opacity duration-500 ${
+          isHovered ? 'opacity-100 animate-pulse' : 'opacity-0'
+        }`}
       />
     </button>
   );

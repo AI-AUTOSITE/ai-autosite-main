@@ -4,14 +4,14 @@ import type { BlogPost } from '../../../app/lib/blog-posts/types'
 
 export const qrCodePost: BlogPost = {
     id: 'qr-code-guide',
-    title: 'QR Code Generator - Create Custom QR Codes Instantly',
+    title: 'Free QR Code Generator with Logo - No Expiration, No Ads',
     description:
-      'Generate QR codes for URLs, WiFi, text, and more. Customize colors and styles for your brand.',
-    readTime: '4 min',
-    publishDate: 'October 2025',
-    lastUpdated: '2025-10-19',
+      'Create custom QR codes with free logo embedding, 8 color presets, 6 dot styles. No 14-day expiration like QRMonkey. 100% private, works offline.',
+    readTime: '5 min',
+    publishDate: 'November 2025',
+    lastUpdated: '2025-11-24',
     icon: QrCode,
-    featured: false,
+    featured: true,
     status: 'published',
     
     relatedTool: {
@@ -19,18 +19,26 @@ export const qrCodePost: BlogPost = {
       url: '/tools/qr-code',
     },
     
-    tags: ['qr-code', 'generator', 'barcode', 'scan', 'mobile'],
-    keywords: ['qr code generator', 'create qr code', 'custom qr code'],
+    tags: ['qr-code', 'generator', 'logo', 'wifi', 'vcard', 'free', 'no-expiration'],
+    keywords: [
+      'free qr code generator',
+      'qr code with logo free',
+      'qrmonkey alternative',
+      'no expiration qr code',
+      'wifi qr code',
+      'vcard qr code',
+      'custom qr code colors',
+    ],
     category: 'quick-tools',
     author: 'AI AutoSite Team',
     views: 0,
     
-    seoTitle: 'QR Code Generator - Create Custom QR Codes Free',
+    seoTitle: 'Free QR Code Generator with Logo - No Expiration, No Ads',
     seoDescription:
-      'Generate QR codes for URLs, WiFi, text, and more. Customize colors and download in high quality. Free online tool.',
+      'Create QR codes with free logo embedding, custom colors & styles. Unlike QRMonkey, your codes never expire. 100% private, no server uploads.',
     ogImage: '/og/qr-code-guide.png',
     canonical: 'https://ai-autosite.com/blog/qr-code-guide',
     
-    priority: 0.7,
-    changeFreq: 'monthly',
+    priority: 0.9,
+    changeFreq: 'weekly',
   }

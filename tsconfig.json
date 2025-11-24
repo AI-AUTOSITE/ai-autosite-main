@@ -58,7 +58,7 @@
     "tests/**/*.ts",
     "app/lib/categories.config.backup",
     "app/lib/utils/errorHandler.backup"
-, "app/tools/business-tools/components/BusinessToolsClient.backup", "app/tools/business-tools/page.backup"  ],
+, "app/tools/business-tools/components/BusinessToolsClient.backup", "app/tools/business-tools/page.backup", "app/tools/qr-code/components/PrivacyBadge.backup"  ],
   "exclude": [
     "node_modules",
     ".next",
