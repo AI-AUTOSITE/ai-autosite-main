@@ -5,7 +5,6 @@
 'use client'
 
 import { useQRCode } from '../hooks/useQRCode'
-import { PrivacyBadge } from './PrivacyBadge'
 import { QRTypeSelector } from './QRTypeSelector'
 import { ContentInput } from './ContentInput'
 import { ColorOptions } from './ColorOptions'
@@ -32,12 +31,7 @@ export default function QRCodeClient() {
           onDownload={qr.handleDownload}
         />
       </div>
-
-      {/* Privacy Badge */}
-      <div className="mb-4">
-        <PrivacyBadge />
-      </div>
-
+      
       {/* QR Type Selection */}
       <div className="mb-4">
         <QRTypeSelector

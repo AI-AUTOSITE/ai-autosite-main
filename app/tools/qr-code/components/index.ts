@@ -3,7 +3,7 @@
 // ============================================
 
 export { default as QRCodeClient } from './QRCodeClient'
-export { PrivacyBadge } from './PrivacyBadge'
+export { PrivacyBadge } from './PrivacyBadge.backup'
 export { QRTypeSelector } from './QRTypeSelector'
 export { ContentInput } from './ContentInput'
 export { ColorOptions } from './ColorOptions'
