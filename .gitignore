@@ -147,6 +147,14 @@ analyze/
 *.backup
 *.bak
 
+# Archive files (NEVER commit - may contain sensitive data)
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+
 # Database
 *.sqlite
 *.sqlite3
