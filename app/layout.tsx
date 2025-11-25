@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { ThemeProvider } from './components/theme-provider'
 
 // Font optimization (maintain existing settings)
 const inter = Inter({ 
@@ -125,7 +126,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${inter.className} overflow-x-hidden flex flex-col min-h-screen`}>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

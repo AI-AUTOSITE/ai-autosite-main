@@ -1,23 +1,50 @@
-import { X, Type, FileText, Copy, Layout } from 'lucide-react'
+import { X, Type, FileText, Copy, Layout, Moon, Download, Zap, Keyboard } from 'lucide-react'
 
 export const toolGuide = {
   title: 'How to use Lorem Ipsum Generator',
   steps: [
-    { icon: '1', text: 'Choose format (paragraphs, words, lists)' },
-    { icon: '2', text: 'Set amount needed' },
-    { icon: '3', text: 'Generate placeholder text' },
-    { icon: '4', text: 'Copy to clipboard' },
+    { icon: '1', text: 'Choose generation type (words, sentences, paragraphs)' },
+    { icon: '2', text: 'Set amount with slider or use quick presets' },
+    { icon: '3', text: 'Select output format (Text, HTML, Markdown, JSON)' },
+    { icon: '4', text: 'Generate, copy, or download instantly' },
   ],
   tips: [
-    'Standard Lorem Ipsum starts with "Lorem ipsum dolor sit amet"',
-    'Use for mockups and prototypes',
-    'Different variations available',
-    'Helps focus on design, not content',
+    'Toggle dark mode for comfortable late-night work',
+    'Use keyboard shortcuts for faster workflow (Ctrl+Enter to generate)',
+    'Download in multiple formats for different use cases',
+    'Auto-generate mode updates text as you change settings',
+    'Share URL with parameters to recreate exact settings',
+    'Works offline once installed as PWA',
+    'API available for programmatic generation',
+  ],
+  features: [
+    {
+      icon: Moon,
+      title: 'Dark Mode',
+      description: 'Easy on the eyes for night work',
+    },
+    {
+      icon: Download,
+      title: 'Download',
+      description: 'Save in TXT, HTML, MD, or JSON',
+    },
+    {
+      icon: Zap,
+      title: 'Quick Presets',
+      description: 'One-click common amounts',
+    },
+    {
+      icon: Keyboard,
+      title: 'Shortcuts',
+      description: 'Ctrl+Enter to generate, Ctrl+Shift+C to copy',
+    },
   ],
   troubleshooting: [
-    { problem: 'Need different style', solution: 'Try Bacon Ipsum or Hipster Ipsum' },
-    { problem: 'Too repetitive', solution: 'Generate more paragraphs' },
-    { problem: 'Need specific length', solution: 'Use word count option' },
+    { problem: 'Need different style', solution: 'Select a theme (Professional, Legal, Medical, Tech) - coming soon!' },
+    { problem: 'Want specific format', solution: 'Use format selector and download button for TXT, HTML, Markdown, or JSON' },
+    { problem: 'Repetitive workflow', solution: 'Enable auto-generate mode or use keyboard shortcuts (Ctrl+Enter)' },
+    { problem: 'Need API access', solution: 'Use /api/lorem endpoint with query parameters - see documentation' },
+    { problem: 'Want to share settings', solution: 'Click Share button to copy URL with current parameters' },
   ],
 }
 
@@ -56,7 +83,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
       </div>
 
       <div className="space-y-2 mb-6">
-        <h4 className="text-sm font-semibold text-gray-300">Usage</h4>
+        <h4 className="text-sm font-semibold text-gray-300">Features & Tips</h4>
         <div className="bg-white/5 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
             <p key={index} className="text-xs text-gray-300">
@@ -64,6 +91,16 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
             </p>
           ))}
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-6">
+        {toolGuide.features.map((feature, index) => (
+          <div key={index} className="bg-white/5 rounded-lg p-3 border border-white/10">
+            <feature.icon className="w-5 h-5 text-purple-400 mb-2" />
+            <h5 className="text-xs font-semibold text-white mb-1">{feature.title}</h5>
+            <p className="text-xxs text-gray-400">{feature.description}</p>
+          </div>
+        ))}
       </div>
 
       <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">

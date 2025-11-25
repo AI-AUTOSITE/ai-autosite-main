@@ -1,23 +1,23 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, Type, FileText, Copy, Layout } from 'lucide-react'
+import { ArrowLeft, Type, FileText, Copy, Layout, Moon, Download, Zap, Keyboard, Share2, Code } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Lorem Ipsum Generator - Dummy Text for Designers | AI AutoSite',
+  title: 'Lorem Ipsum Generator - Dark Mode, API, Multiple Formats | AI AutoSite',
   description:
-    'Generate Lorem Ipsum placeholder text for designs and mockups. Create dummy content in various lengths and formats. Free Lorem Ipsum tool.',
-  keywords: 'lorem ipsum generator, dummy text, placeholder text, mock text, lorem ipsum dolor',
+    'Modern Lorem Ipsum generator with dark mode, download in 4 formats, keyboard shortcuts, and API access. Privacy-first alternative to traditional generators.',
+  keywords: 'lorem ipsum generator, dummy text, placeholder text, dark mode lorem ipsum, lorem ipsum api, download lorem ipsum, modern lorem ipsum generator',
   openGraph: {
-    title: 'Lorem Ipsum Generator - Designer Text Guide',
-    description: 'Generate perfect placeholder text for your designs',
+    title: 'Modern Lorem Ipsum Generator - Dark Mode, API, Multiple Formats',
+    description: 'Privacy-first Lorem Ipsum generator with modern features',
     type: 'article',
   },
 }
 
 export default function LoremIpsumGuidePage() {
-  const publishDate = '2025-01-20'
+  const publishDate = '2025-11-25'
   const author = 'AI AutoSite Team'
-  const readTime = '3 min read'
+  const readTime = '5 min read'
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -38,11 +38,10 @@ export default function LoremIpsumGuidePage() {
           <span>{readTime}</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-          Lorem Ipsum Generator Guide
+          Modern Lorem Ipsum Generator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Generate placeholder text for your designs and mockups. The designer's essential tool for
-          content-free layouts.
+          Privacy-first Lorem Ipsum generator with dark mode, multiple download formats, keyboard shortcuts, and API access. A modern alternative to traditional generators.
         </p>
       </header>
 
@@ -80,6 +79,48 @@ export default function LoremIpsumGuidePage() {
               <Type className="w-8 h-8 text-green-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Professional</h3>
               <p className="text-gray-400 text-sm">Industry standard practice</p>
+            </div>
+          </div>
+        </div>
+
+        {/* What Makes This Different */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">What Makes This Different?</h2>
+          <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-xl p-6 border border-purple-500/20 mb-6">
+            <p className="text-gray-300 mb-4">
+              Unlike traditional Lorem Ipsum generators (some 23+ years old!), our modern generator prioritizes privacy, user experience, and developer workflow.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Moon className="w-8 h-8 text-purple-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Dark Mode</h3>
+              <p className="text-gray-400 text-sm">First Lorem generator with true dark mode - easy on the eyes for late-night work</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Download className="w-8 h-8 text-blue-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Multiple Formats</h3>
+              <p className="text-gray-400 text-sm">Download as TXT, HTML, Markdown, or JSON - ready for any workflow</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Keyboard className="w-8 h-8 text-green-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Keyboard Shortcuts</h3>
+              <p className="text-gray-400 text-sm">Ctrl+Enter to generate, Ctrl+Shift+C to copy - built for speed</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Code className="w-8 h-8 text-yellow-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">API Access</h3>
+              <p className="text-gray-400 text-sm">Programmatic generation with rate-limited API endpoint</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Zap className="w-8 h-8 text-orange-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Quick Presets</h3>
+              <p className="text-gray-400 text-sm">One-click generation of common amounts - no typing needed</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Share2 className="w-8 h-8 text-pink-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Privacy First</h3>
+              <p className="text-gray-400 text-sm">100% client-side, no tracking, no cookies, no data collection</p>
             </div>
           </div>
         </div>
@@ -158,6 +199,173 @@ export default function LoremIpsumGuidePage() {
           </ul>
         </div>
 
+        {/* Keyboard Shortcuts */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">Keyboard Shortcuts</h2>
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <p className="text-gray-300 mb-4">Speed up your workflow with these keyboard shortcuts:</p>
+            <table className="w-full">
+              <thead>
+                <tr className="text-left border-b border-white/10">
+                  <th className="text-white pb-3 pr-4">Action</th>
+                  <th className="text-white pb-3">Shortcut</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300">
+                <tr className="border-b border-white/5">
+                  <td className="py-3 pr-4">Generate Lorem Ipsum</td>
+                  <td className="py-3">
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
+                    {' + '}
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Enter</kbd>
+                  </td>
+                </tr>
+                <tr className="border-b border-white/5">
+                  <td className="py-3 pr-4">Copy to Clipboard</td>
+                  <td className="py-3">
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
+                    {' + '}
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Shift</kbd>
+                    {' + '}
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">C</kbd>
+                  </td>
+                </tr>
+                <tr className="border-b border-white/5">
+                  <td className="py-3 pr-4">Download</td>
+                  <td className="py-3">
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
+                    {' + '}
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">D</kbd>
+                  </td>
+                </tr>
+                <tr className="border-b border-white/5">
+                  <td className="py-3 pr-4">Clear Output</td>
+                  <td className="py-3">
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Escape</kbd>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-3 pr-4">Toggle Dark Mode</td>
+                  <td className="py-3">
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
+                    {' + '}
+                    <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">/</kbd>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="text-gray-400 text-sm mt-4">
+              💡 <strong>Tip:</strong> On Mac, use <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Cmd</kbd> instead of <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
+            </p>
+          </div>
+        </div>
+
+        {/* API Documentation */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">API Documentation</h2>
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <p className="text-gray-300 mb-4">
+              Use our API endpoint for programmatic Lorem Ipsum generation:
+            </p>
+            <div className="bg-gray-900 rounded-lg p-4 mb-4 overflow-x-auto">
+              <code className="text-green-400 text-sm">
+                GET /api/lorem?type=paragraphs&amount=3&format=text&start=true
+              </code>
+            </div>
+            <h3 className="text-white font-semibold mb-2">Query Parameters</h3>
+            <table className="w-full mb-4">
+              <thead>
+                <tr className="text-left border-b border-white/10">
+                  <th className="text-white pb-2 pr-4">Parameter</th>
+                  <th className="text-white pb-2 pr-4">Values</th>
+                  <th className="text-white pb-2">Default</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-300 text-sm">
+                <tr className="border-b border-white/5">
+                  <td className="py-2 pr-4"><code className="text-purple-400">type</code></td>
+                  <td className="py-2 pr-4">words, sentences, paragraphs</td>
+                  <td className="py-2">paragraphs</td>
+                </tr>
+                <tr className="border-b border-white/5">
+                  <td className="py-2 pr-4"><code className="text-purple-400">amount</code></td>
+                  <td className="py-2 pr-4">1-100</td>
+                  <td className="py-2">3</td>
+                </tr>
+                <tr className="border-b border-white/5">
+                  <td className="py-2 pr-4"><code className="text-purple-400">format</code></td>
+                  <td className="py-2 pr-4">text, html, markdown, json</td>
+                  <td className="py-2">text</td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-4"><code className="text-purple-400">start</code></td>
+                  <td className="py-2 pr-4">true, false</td>
+                  <td className="py-2">true</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="bg-yellow-500/10 rounded-lg p-4 border border-yellow-500/20">
+              <p className="text-yellow-400 text-sm">
+                <strong>⚡ Rate Limit:</strong> 100 requests per hour per IP address
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Download Formats */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">Download Formats</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">📄 Plain Text (.txt)</h3>
+              <p className="text-gray-400 text-sm">Simple paragraphs separated by line breaks - perfect for quick copy-paste</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">🌐 HTML (.html)</h3>
+              <p className="text-gray-400 text-sm">Wrapped in &lt;p&gt; tags - ready to drop into your web projects</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">📝 Markdown (.md)</h3>
+              <p className="text-gray-400 text-sm">With headers and formatting - ideal for documentation</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">💾 JSON (.json)</h3>
+              <p className="text-gray-400 text-sm">Structured data with metadata - perfect for API testing</p>
+            </div>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">Is this really privacy-first?</h3>
+              <p className="text-gray-400 text-sm">
+                Yes! All generation happens in your browser. We don't use cookies, tracking scripts, or collect any data. Compare this to traditional generators that load 6+ ad networks and track your location.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">Why does it start with "Lorem ipsum"?</h3>
+              <p className="text-gray-400 text-sm">
+                Toggle the "Start with Lorem ipsum..." checkbox if you want completely random text. Starting with the classic phrase helps clients recognize it as placeholder text.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">Can I use the API commercially?</h3>
+              <p className="text-gray-400 text-sm">
+                Yes! The API is free for commercial use within the rate limits (100 requests/hour). Need higher limits? Contact us about enterprise access.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">What's auto-generate mode?</h3>
+              <p className="text-gray-400 text-sm">
+                When enabled, text regenerates automatically as you change settings. Great for previewing different amounts without clicking Generate each time.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Best Practices */}
         <div>
           <h2 className="text-2xl font-bold text-white mb-4">Best Practices</h2>
@@ -186,9 +394,9 @@ export default function LoremIpsumGuidePage() {
 
       {/* CTA */}
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/10 mt-12">
-        <h2 className="text-3xl font-bold text-white mb-4">Generate Lorem Ipsum Text</h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Try the Modern Lorem Ipsum Generator</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Free Lorem Ipsum generator with custom lengths and formats.
+          Dark mode, multiple formats, keyboard shortcuts, API access - all privacy-first and 100% free.
         </p>
         <Link
           href="/tools/lorem-ipsum"
