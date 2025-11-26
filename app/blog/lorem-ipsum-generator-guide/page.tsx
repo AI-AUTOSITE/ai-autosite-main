@@ -1,23 +1,24 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { ArrowLeft, Type, FileText, Copy, Layout, Moon, Download, Zap, Keyboard, Share2, Code } from 'lucide-react'
+import { ArrowLeft, Type, FileText, Copy, Layout, Moon, Sun, Download, Zap, Keyboard, Share2, Code, Maximize2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Lorem Ipsum Generator - Dark Mode, API, Multiple Formats | AI AutoSite',
+  title: 'Lorem Ipsum Generator - Light/Dark Mode, Floating Preview, API | AI AutoSite',
   description:
-    'Modern Lorem Ipsum generator with dark mode, download in 4 formats, keyboard shortcuts, and API access. Privacy-first alternative to traditional generators.',
-  keywords: 'lorem ipsum generator, dummy text, placeholder text, dark mode lorem ipsum, lorem ipsum api, download lorem ipsum, modern lorem ipsum generator',
+    'Modern Lorem Ipsum generator with light/dark mode toggle, floating preview panel, download in 4 formats, keyboard shortcuts, and API access. Privacy-first alternative to traditional generators.',
+  keywords: 'lorem ipsum generator, dummy text, placeholder text, dark mode lorem ipsum, light mode, floating preview, lorem ipsum api, download lorem ipsum, modern lorem ipsum generator',
   openGraph: {
-    title: 'Modern Lorem Ipsum Generator - Dark Mode, API, Multiple Formats',
-    description: 'Privacy-first Lorem Ipsum generator with modern features',
+    title: 'Modern Lorem Ipsum Generator - Light/Dark Mode, Floating Preview, API',
+    description: 'Privacy-first Lorem Ipsum generator with modern features including floating preview',
     type: 'article',
   },
 }
 
 export default function LoremIpsumGuidePage() {
-  const publishDate = '2025-11-25'
+  const publishDate = '2025-11-26'
+  const updateDate = '2025-11-26'
   const author = 'AI AutoSite Team'
-  const readTime = '5 min read'
+  const readTime = '6 min read'
 
   return (
     <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -30,10 +31,12 @@ export default function LoremIpsumGuidePage() {
       </Link>
 
       <header className="mb-12">
-        <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+        <div className="flex items-center gap-2 text-sm text-gray-400 mb-4 flex-wrap">
           <span className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full">Dev Tools</span>
           <span>•</span>
           <time>{publishDate}</time>
+          <span>•</span>
+          <span className="px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full text-xs">Updated {updateDate}</span>
           <span>•</span>
           <span>{readTime}</span>
         </div>
@@ -41,7 +44,7 @@ export default function LoremIpsumGuidePage() {
           Modern Lorem Ipsum Generator Guide
         </h1>
         <p className="text-xl text-gray-300 leading-relaxed">
-          Privacy-first Lorem Ipsum generator with dark mode, multiple download formats, keyboard shortcuts, and API access. A modern alternative to traditional generators.
+          Privacy-first Lorem Ipsum generator with light/dark mode toggle, floating preview panel, multiple download formats, keyboard shortcuts, and API access. A modern alternative to traditional generators.
         </p>
       </header>
 
@@ -93,9 +96,19 @@ export default function LoremIpsumGuidePage() {
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <Moon className="w-8 h-8 text-purple-400 mb-2" />
-              <h3 className="text-white font-semibold mb-2">Dark Mode</h3>
-              <p className="text-gray-400 text-sm">First Lorem generator with true dark mode - easy on the eyes for late-night work</p>
+              <div className="flex items-center gap-2 mb-2">
+                <Moon className="w-6 h-6 text-purple-400" />
+                <Sun className="w-6 h-6 text-yellow-400" />
+              </div>
+              <h3 className="text-white font-semibold mb-2">Light/Dark Mode Toggle</h3>
+              <p className="text-gray-400 text-sm">Switch between light and dark themes instantly - work comfortably in any environment</p>
+            </div>
+            <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-xl p-4 border border-purple-500/20">
+              <Maximize2 className="w-8 h-8 text-purple-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Floating Preview Panel</h3>
+              <p className="text-gray-400 text-sm">
+                <span className="text-purple-400 font-medium">NEW!</span> See your generated text in a floating panel that slides up from the bottom. Copy or download without scrolling!
+              </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <Download className="w-8 h-8 text-blue-400 mb-2" />
@@ -121,6 +134,58 @@ export default function LoremIpsumGuidePage() {
               <Share2 className="w-8 h-8 text-pink-400 mb-2" />
               <h3 className="text-white font-semibold mb-2">Privacy First</h3>
               <p className="text-gray-400 text-sm">100% client-side, no tracking, no cookies, no data collection</p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <Layout className="w-8 h-8 text-cyan-400 mb-2" />
+              <h3 className="text-white font-semibold mb-2">Fully Responsive</h3>
+              <p className="text-gray-400 text-sm">Works perfectly on desktop, tablet, and mobile devices</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Preview Feature */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-4">
+            <span className="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-sm mr-2">NEW</span>
+            Floating Preview Panel
+          </h2>
+          <div className="bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-xl p-6 border border-purple-500/20 mb-6">
+            <p className="text-gray-300 mb-4">
+              The new floating preview panel appears at the bottom of your screen when text is generated. No more scrolling back and forth!
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 mt-6">
+              <div className="bg-black/20 rounded-lg p-4 text-center">
+                <div className="text-3xl mb-2">👆</div>
+                <h4 className="text-white font-medium mb-1">Click to Expand</h4>
+                <p className="text-gray-400 text-xs">Tap the tab to show the full preview panel</p>
+              </div>
+              <div className="bg-black/20 rounded-lg p-4 text-center">
+                <div className="text-3xl mb-2">📋</div>
+                <h4 className="text-white font-medium mb-1">Quick Actions</h4>
+                <p className="text-gray-400 text-xs">Copy or download directly from the panel</p>
+              </div>
+              <div className="bg-black/20 rounded-lg p-4 text-center">
+                <div className="text-3xl mb-2">✕</div>
+                <h4 className="text-white font-medium mb-1">Minimize</h4>
+                <p className="text-gray-400 text-xs">Click × to minimize to a small pill button</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <h3 className="text-white font-semibold mb-3">Panel States</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="w-24 text-purple-400 font-medium">Collapsed:</span>
+                <span className="text-gray-300">Shows tab with word count - click to expand</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="w-24 text-purple-400 font-medium">Expanded:</span>
+                <span className="text-gray-300">Shows preview, stats, copy & download buttons</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="w-24 text-purple-400 font-medium">Minimized:</span>
+                <span className="text-gray-300">Small pill button - click to restore</span>
+              </div>
             </div>
           </div>
         </div>
@@ -245,7 +310,7 @@ export default function LoremIpsumGuidePage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="py-3 pr-4">Toggle Dark Mode</td>
+                  <td className="py-3 pr-4">Toggle Light/Dark Mode</td>
                   <td className="py-3">
                     <kbd className="px-2 py-1 bg-gray-800 rounded text-purple-400 text-xs font-mono">Ctrl</kbd>
                     {' + '}
@@ -352,6 +417,12 @@ export default function LoremIpsumGuidePage() {
               </p>
             </div>
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">What is the floating preview panel?</h3>
+              <p className="text-gray-400 text-sm">
+                The floating preview is a panel that appears at the bottom of your screen when text is generated. It lets you see your text, copy it, or download it without scrolling. You can minimize it to a small button if you prefer more screen space.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
               <h3 className="text-white font-semibold mb-2">Can I use the API commercially?</h3>
               <p className="text-gray-400 text-sm">
                 Yes! The API is free for commercial use within the rate limits (100 requests/hour). Need higher limits? Contact us about enterprise access.
@@ -361,6 +432,12 @@ export default function LoremIpsumGuidePage() {
               <h3 className="text-white font-semibold mb-2">What's auto-generate mode?</h3>
               <p className="text-gray-400 text-sm">
                 When enabled, text regenerates automatically as you change settings. Great for previewing different amounts without clicking Generate each time.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <h3 className="text-white font-semibold mb-2">Does it work on mobile?</h3>
+              <p className="text-gray-400 text-sm">
+                Yes! The generator is fully responsive and works great on phones and tablets. The floating preview panel adapts to smaller screens automatically.
               </p>
             </div>
           </div>
@@ -396,7 +473,7 @@ export default function LoremIpsumGuidePage() {
       <section className="text-center py-12 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-2xl border border-white/10 mt-12">
         <h2 className="text-3xl font-bold text-white mb-4">Try the Modern Lorem Ipsum Generator</h2>
         <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-          Dark mode, multiple formats, keyboard shortcuts, API access - all privacy-first and 100% free.
+          Light/dark mode toggle, floating preview panel, multiple formats, keyboard shortcuts, API access - all privacy-first and 100% free.
         </p>
         <Link
           href="/tools/lorem-ipsum"

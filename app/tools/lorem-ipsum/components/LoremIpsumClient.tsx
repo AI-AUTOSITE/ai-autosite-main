@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useDebounce } from 'use-debounce'
 import { Copy, Check, FileText, HelpCircle } from 'lucide-react'
 import { useTheme } from 'next-themes'
@@ -11,6 +12,7 @@ import { FormatSelector } from './FormatSelector'
 import { PresetButtons } from './PresetButtons'
 import { AmountSlider } from './AmountSlider'
 import { KeyboardShortcutsDialog } from './KeyboardShortcutsDialog'
+import { FloatingPreview } from './FloatingPreview'
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
 import { formatOutput, type OutputFormat } from '../lib/formatters'
 
@@ -62,8 +64,39 @@ export default function LoremIpsumClient() {
   const [copied, setCopied] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [autoGenerate, setAutoGenerate] = useState(true)
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null)
   
   const { setTheme, theme } = useTheme()
+
+  // Get portal target after mount - with retry for timing issues
+  useEffect(() => {
+    const findPortalTarget = () => {
+      const target = document.getElementById('tool-header-actions')
+      if (target) {
+        setPortalTarget(target)
+        return true
+      }
+      return false
+    }
+
+    // Try immediately
+    if (findPortalTarget()) return
+
+    // Retry a few times with increasing delays
+    const timeouts = [50, 100, 200, 500]
+    const timers: NodeJS.Timeout[] = []
+    
+    timeouts.forEach((delay) => {
+      const timer = setTimeout(() => {
+        findPortalTarget()
+      }, delay)
+      timers.push(timer)
+    })
+
+    return () => {
+      timers.forEach(clearTimeout)
+    }
+  }, [])
 
   // Debounce values for auto-generation
   const [debouncedAmount] = useDebounce(amount, 300)
@@ -265,31 +298,38 @@ export default function LoremIpsumClient() {
     return generatedText.replace(/<[^>]*>/g, '').length
   }
 
+  // Action buttons component
+  const ActionButtons = () => (
+    <>
+      {/* Keyboard shortcuts - hidden on mobile/tablet */}
+      <button
+        onClick={() => setShowShortcuts(true)}
+        className="hidden lg:flex min-h-[40px] min-w-[40px] p-2 rounded-lg bg-gray-200 dark:bg-white/10 border border-gray-300 dark:border-white/10 hover:bg-gray-300 dark:hover:bg-white/20 transition-all group items-center justify-center"
+        aria-label="Show keyboard shortcuts"
+        title="Keyboard shortcuts (?)"
+      >
+        <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors" />
+      </button>
+      <ThemeToggle />
+    </>
+  )
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
-      {/* Header with Theme Toggle */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white dark:text-white">Lorem Ipsum Generator</h1>
-          <p className="text-gray-400 dark:text-gray-400 text-sm mt-1">
-            Generate placeholder text instantly
-          </p>
+      {/* Action buttons via Portal - rendered in layout header if available */}
+      {portalTarget && createPortal(<ActionButtons />, portalTarget)}
+      
+      {/* Fallback: show buttons inline if portal target not found */}
+      {!portalTarget && (
+        <div className="flex justify-end items-center mb-4 -mt-2">
+          <div className="flex items-center gap-2">
+            <ActionButtons />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowShortcuts(true)}
-            className="min-h-[44px] min-w-[44px] p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-            aria-label="Show keyboard shortcuts"
-            title="Keyboard shortcuts (?)"
-          >
-            <HelpCircle className="w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
-          </button>
-          <ThemeToggle />
-        </div>
-      </div>
+      )}
 
       {/* Controls */}
-      <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 dark:border-white/10 p-6 mb-6">
+      <div className="bg-gray-100 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-white/10 p-6 mb-6">
         <div className="grid sm:grid-cols-2 gap-4 mb-4">
           {/* Amount Slider */}
           <div>
@@ -304,7 +344,7 @@ export default function LoremIpsumClient() {
 
           {/* Type Selection */}
           <div>
-            <label className="block text-white font-medium mb-2">Type</label>
+            <label className="block text-gray-900 dark:text-white font-medium mb-2">Type</label>
             <div className="grid grid-cols-3 gap-2">
               {(['words', 'sentences', 'paragraphs'] as GenerationType[]).map((t) => (
                 <button
@@ -315,8 +355,8 @@ export default function LoremIpsumClient() {
                   }}
                   className={`min-h-[44px] px-2 py-3 rounded-lg capitalize transition-all text-xs sm:text-sm ${
                     type === t
-                      ? 'bg-gray-600 text-white'
-                      : 'bg-white/5 text-gray-400 hover:text-white'
+                      ? 'bg-purple-600 dark:bg-gray-600 text-white'
+                      : 'bg-gray-200 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-300 dark:hover:bg-white/10'
                   }`}
                 >
                   {t === 'paragraphs' ? (
@@ -361,7 +401,7 @@ export default function LoremIpsumClient() {
 
         {/* Options */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <label className="flex items-center gap-2 text-gray-300 cursor-pointer min-h-[44px]">
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer min-h-[44px]">
             <input
               type="checkbox"
               checked={startWithLorem}
@@ -374,7 +414,7 @@ export default function LoremIpsumClient() {
             <span>Start with "Lorem ipsum..."</span>
           </label>
 
-          <label className="flex items-center gap-2 text-gray-300 cursor-pointer min-h-[44px]">
+          <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 cursor-pointer min-h-[44px]">
             <input
               type="checkbox"
               checked={autoGenerate}
@@ -391,7 +431,7 @@ export default function LoremIpsumClient() {
         {/* Generate Button */}
         <button
           onClick={handleGenerate}
-          className="min-h-[44px] w-full px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-800 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
+          className="min-h-[44px] w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-800 dark:from-gray-600 dark:to-gray-800 text-white rounded-xl font-medium hover:opacity-90 transition-all flex items-center justify-center gap-2"
         >
           <FileText className="w-5 h-5" />
           Generate Lorem Ipsum
@@ -400,28 +440,34 @@ export default function LoremIpsumClient() {
 
       {/* Generated Text */}
       {generatedText && (
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+        <div className="bg-gray-100 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-white/10 p-4 sm:p-6 mb-6">
+          {/* Stats and Actions - responsive layout */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+            {/* Word/Character counts */}
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
               <span>{getWordCount()} words</span>
               <span>{getCharCount()} characters</span>
             </div>
-            <div className="flex items-center gap-2">
+            {/* Action buttons - full width on mobile */}
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <button
                 onClick={handleCopy}
-                className={`min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                  copied ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                className={`min-h-[44px] flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm ${
+                  copied 
+                    ? 'bg-green-500 text-white' 
+                    : 'bg-gray-200 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/10'
                 }`}
               >
                 {copied ? (
                   <>
                     <Check className="w-4 h-4" />
-                    Copied!
+                    <span className="hidden xs:inline">Copied!</span>
+                    <span className="xs:hidden">✓</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    Copy
+                    <span>Copy</span>
                   </>
                 )}
               </button>
@@ -432,16 +478,16 @@ export default function LoremIpsumClient() {
             </div>
           </div>
 
-          <div className="bg-black/20 rounded-xl p-4 max-h-96 overflow-y-auto">
-            <pre className="text-gray-300 whitespace-pre-wrap font-sans">{generatedText}</pre>
+          <div className="bg-white dark:bg-black/20 rounded-xl p-4 max-h-96 overflow-y-auto border border-gray-200 dark:border-transparent">
+            <pre className="text-gray-800 dark:text-gray-300 whitespace-pre-wrap font-sans text-sm sm:text-base">{generatedText}</pre>
           </div>
         </div>
       )}
 
       {/* Info */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-6">
-        <h3 className="text-white font-medium mb-3">About Lorem Ipsum</h3>
-        <p className="text-gray-400 text-sm">
+      <div className="bg-gray-100 dark:bg-white/5 backdrop-blur-xl rounded-xl border border-gray-200 dark:border-white/10 p-6">
+        <h3 className="text-gray-900 dark:text-white font-medium mb-3">About Lorem Ipsum</h3>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
           Lorem Ipsum has been the industry's standard dummy text since the 1500s. It's used by
           designers and developers to fill layouts with text before final content is ready.
         </p>
@@ -449,6 +495,15 @@ export default function LoremIpsumClient() {
 
       {/* Keyboard Shortcuts Dialog */}
       <KeyboardShortcutsDialog isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
+
+      {/* Floating Preview */}
+      <FloatingPreview
+        generatedText={generatedText}
+        wordCount={getWordCount()}
+        charCount={getCharCount()}
+        onCopy={handleCopy}
+        copied={copied}
+      />
     </div>
   )
 }

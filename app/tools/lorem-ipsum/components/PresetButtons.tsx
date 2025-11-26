@@ -38,8 +38,8 @@ export function PresetButtons({
 
   return (
     <div>
-      <label className="block text-white font-medium mb-2 flex items-center gap-2">
-        <Zap className="w-4 h-4 text-yellow-400" />
+      <label className="block text-gray-900 dark:text-white font-medium mb-2 flex items-center gap-2">
+        <Zap className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
         Quick Presets
       </label>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -52,8 +52,8 @@ export function PresetButtons({
             }}
             className={`min-h-[44px] px-3 py-2 rounded-lg transition-all text-sm font-medium ${
               isActive(preset)
-                ? 'bg-yellow-500/20 text-yellow-400 border-2 border-yellow-500/50'
-                : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border-2 border-transparent'
+                ? 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 border-2 border-yellow-400 dark:border-yellow-500/50'
+                : 'bg-gray-200 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-300 dark:hover:bg-white/10 border-2 border-transparent'
             }`}
           >
             {preset.label}

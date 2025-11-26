@@ -54,20 +54,22 @@ interface ToolGuideProps {
 
 export default function ToolGuide({ onClose }: ToolGuideProps) {
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 max-w-md w-full relative">
+    <div className="bg-gray-900/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl p-6 border border-gray-700 dark:border-white/20 max-w-md w-full relative shadow-2xl">
+      {/* Close button - positioned outside title area */}
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-colors"
+          className="absolute -top-3 -right-3 p-2 bg-red-500 hover:bg-red-600 rounded-full transition-colors shadow-lg z-10"
           aria-label="Close guide"
         >
-          <X className="w-5 h-5 text-gray-400 hover:text-white" />
+          <X className="w-5 h-5 text-white" />
         </button>
       )}
 
-      <div className="flex items-center gap-2 mb-6">
-        <Type className="w-6 h-6 text-purple-400" />
-        <h3 className="text-xl font-bold text-white">{toolGuide.title}</h3>
+      {/* Header with responsive title */}
+      <div className="flex items-start gap-3 mb-6 pr-2">
+        <Type className="w-6 h-6 text-purple-400 flex-shrink-0 mt-0.5" />
+        <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">{toolGuide.title}</h3>
       </div>
 
       <div className="space-y-3 mb-6">
@@ -84,7 +86,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
 
       <div className="space-y-2 mb-6">
         <h4 className="text-sm font-semibold text-gray-300">Features & Tips</h4>
-        <div className="bg-white/5 rounded-lg p-3 space-y-1">
+        <div className="bg-gray-800/80 rounded-lg p-3 space-y-1">
           {toolGuide.tips.map((tip, index) => (
             <p key={index} className="text-xs text-gray-300">
               • {tip}
@@ -95,7 +97,7 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
 
       <div className="grid grid-cols-2 gap-3 mb-6">
         {toolGuide.features.map((feature, index) => (
-          <div key={index} className="bg-white/5 rounded-lg p-3 border border-white/10">
+          <div key={index} className="bg-gray-800/80 rounded-lg p-3 border border-gray-700">
             <feature.icon className="w-5 h-5 text-purple-400 mb-2" />
             <h5 className="text-xs font-semibold text-white mb-1">{feature.title}</h5>
             <p className="text-xxs text-gray-400">{feature.description}</p>
@@ -103,8 +105,8 @@ export default function ToolGuide({ onClose }: ToolGuideProps) {
         ))}
       </div>
 
-      <div className="p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
-        <p className="text-xs text-purple-400">
+      <div className="p-3 bg-purple-500/20 rounded-lg border border-purple-500/30">
+        <p className="text-xs text-purple-300">
           <FileText className="w-3 h-3 inline mr-1" />
           <strong>History:</strong> Used in printing since the 1500s!
         </p>

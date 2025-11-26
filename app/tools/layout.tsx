@@ -96,7 +96,11 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
               </div>
 
               {/* Tool title - center on desktop, left on mobile */}
-              <h1 className="text-xl font-medium text-white md:mx-auto">{toolTitle}</h1>
+              <div className="flex items-center gap-3 md:mx-auto">
+                <h1 className="text-xl font-medium text-white">{toolTitle}</h1>
+                {/* Portal target for tool-specific action buttons */}
+                <div id="tool-header-actions" className="flex items-center gap-2" />
+              </div>
             </div>
           </nav>
         )}
