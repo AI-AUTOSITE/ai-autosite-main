@@ -38,7 +38,7 @@ export function PresetButtons({
 
   return (
     <div>
-      <label className="block text-gray-900 dark:text-white font-medium mb-2 flex items-center gap-2">
+      <label className="text-gray-900 dark:text-white font-medium mb-2 flex items-center gap-2">
         <Zap className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
         Quick Presets
       </label>
