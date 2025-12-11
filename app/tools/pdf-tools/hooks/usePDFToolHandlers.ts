@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { PageData } from '../types'
 import { RotateHandler } from '../features/rotate/RotateHandler'
-import { SplitHandler } from '../features/split/SplitHandler'
-import { MergeHandler } from '../features/merge/MergeHandler'
-import { CompressHandler } from '../features/compress/CompressHandler'
-import { PageNumberHandler } from '../features/pageNumber/PageNumberHandler'
-import { BlankPageHandler } from '../features/blankPage/BlankPageHandler'
-import { DuplicateHandler } from '../features/duplicate/DuplicateHandler'
-import { OCRHandler } from '../features/ocr/OCRHandler'
+import { EnhancedSplitHandler as SplitHandler } from '../features/split/EnhancedSplitHandler'
+import { MergeHandler, PageOrder } from '../features/merge/MergeHandler'
+import EnhancedCompressHandler from '../features/compress/EnhancedCompressHandler'
+import { PageNumberHandler, PageNumberOptions, BatesOptions } from '../features/pageNumber/PageNumberHandler'
+import { BlankPageHandler, BlankPageOptions } from '../features/blankPage/BlankPageHandler'
+import { DuplicateHandler, DuplicateOptions, DEFAULT_DUPLICATE_OPTIONS } from '../features/duplicate/DuplicateHandler'
+import EnhancedOCRHandler from '../features/ocr/EnhancedOCRHandler'
 import { WatermarkHandler } from '../features/watermark/WatermarkHandler'
 import { SignatureHandler } from '../features/signature/SignatureHandler'
 import { ConvertHandler } from '../features/convert/ConvertHandler'
 import { AnnotateHandler } from '../features/annotate/AnnotateHandler'
 import type { AnnotationOptions } from '../features/annotate/AnnotateHandler'
+
+// Alias for backwards compatibility
+const CompressHandler = EnhancedCompressHandler
+const OCRHandler = EnhancedOCRHandler
 
 interface UsePDFToolHandlersProps {
   file: File | null
@@ -24,6 +28,7 @@ interface UsePDFToolHandlersProps {
   downloadPDF: (pdfBytes: Uint8Array, filename: string) => void
   handleProcessComplete: (blob: Blob) => void
   keepSelection?: boolean
+  loadMergedPDF?: (pdfBytes: Uint8Array) => Promise<void>
 }
 
 // Helper function to convert Uint8Array to Blob safely
@@ -66,11 +71,16 @@ export function usePDFToolHandlers({
   downloadPDF,
   handleProcessComplete,
   keepSelection = false,
+  loadMergedPDF,
 }: UsePDFToolHandlersProps) {
   const [showWatermarkUI, setShowWatermarkUI] = useState(false)
   const [showSignatureUI, setShowSignatureUI] = useState(false)
   const [showConvertUI, setShowConvertUI] = useState(false)
   const [showAnnotateUI, setShowAnnotateUI] = useState(false)
+  const [showMergeUI, setShowMergeUI] = useState(false)
+  const [showDuplicateUI, setShowDuplicateUI] = useState(false)
+  const [showPageNumberUI, setShowPageNumberUI] = useState(false)
+  const [showBlankPageUI, setShowBlankPageUI] = useState(false)
   
   // Track currently active tool UI
   const [activeToolUI, setActiveToolUI] = useState<string | null>(null)
@@ -96,6 +106,10 @@ export function usePDFToolHandlers({
     setShowWatermarkUI(false)
     setShowSignatureUI(false)
     setShowConvertUI(false)
+    setShowMergeUI(false)
+    setShowDuplicateUI(false)
+    setShowPageNumberUI(false)
+    setShowBlankPageUI(false)
     setActiveToolUI(null)
   }
 
@@ -232,44 +246,168 @@ export function usePDFToolHandlers({
     }
   }
 
-  // Merge Handler
+  // Merge Handler - Now opens UI
   const handleMerge = async () => {
     if (!file) {
       alert('Please upload a PDF file first')
       return
     }
 
+    closeAllToolUIs()
+    setShowMergeUI(true)
+  }
+
+  // Apply Merge - with position support (before/after/page number)
+  const handleApplyMerge = async (additionalFiles: File[], position: 'before' | 'after' | number) => {
+    if (!file || additionalFiles.length === 0) return
+
+    setShowMergeUI(false)
+    setIsProcessing(true)
+    
     try {
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = '.pdf'
-      input.multiple = true
-
-      input.onchange = async (e) => {
-        const additionalFiles = Array.from((e.target as HTMLInputElement).files || [])
-        if (additionalFiles.length > 0) {
-          setIsProcessing(true)
-          try {
-            const mergedPdf = await MergeHandler.mergeFiles([file, ...additionalFiles])
-            downloadPDF(mergedPdf, `merged_${file.name}`)
-            handleProcessComplete(uint8ArrayToBlob(mergedPdf))
-
-            if (!keepSelection) {
-              clearSelection()
-            }
-          } catch (error) {
-            console.error('Merge error:', error)
-            alert('Failed to merge PDFs')
-          } finally {
-            setIsProcessing(false)
-          }
-        }
+      let mergedPdf: Uint8Array
+      
+      if (position === 'before') {
+        // New files first, then current
+        mergedPdf = await MergeHandler.mergeFiles([...additionalFiles, file])
+      } else if (position === 'after') {
+        // Current first, then new files
+        mergedPdf = await MergeHandler.mergeFiles([file, ...additionalFiles])
+      } else {
+        // Insert after specific page number
+        // First merge all additional files into one
+        const additionalMerged = additionalFiles.length === 1 
+          ? additionalFiles[0]
+          : await MergeHandler.mergeFiles(additionalFiles).then(bytes => {
+              // Convert Uint8Array to ArrayBuffer for File constructor
+              const buffer = new ArrayBuffer(bytes.length)
+              new Uint8Array(buffer).set(bytes)
+              return new File([buffer], 'merged_additional.pdf', { type: 'application/pdf' })
+            })
+        
+        // Then insert at position
+        mergedPdf = await MergeHandler.insertPages(
+          file, 
+          additionalMerged instanceof File ? additionalMerged : new File([additionalMerged], 'temp.pdf'),
+          position
+        )
       }
+      
+      downloadPDF(mergedPdf, `merged_${file.name}`)
+      handleProcessComplete(uint8ArrayToBlob(mergedPdf))
 
-      input.click()
+      if (!keepSelection) {
+        clearSelection()
+      }
     } catch (error) {
       console.error('Merge error:', error)
       alert('Failed to merge PDFs')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Apply Merge and Load to Editor
+  const handleApplyMergeAndEdit = async (additionalFiles: File[], position: 'before' | 'after' | number) => {
+    if (!file || additionalFiles.length === 0) return
+    if (!loadMergedPDF) {
+      // Fallback to download if loadMergedPDF not provided
+      handleApplyMerge(additionalFiles, position)
+      return
+    }
+
+    setShowMergeUI(false)
+    setIsProcessing(true)
+    
+    try {
+      let mergedPdf: Uint8Array
+      
+      if (position === 'before') {
+        mergedPdf = await MergeHandler.mergeFiles([...additionalFiles, file])
+      } else if (position === 'after') {
+        mergedPdf = await MergeHandler.mergeFiles([file, ...additionalFiles])
+      } else {
+        const additionalMerged = additionalFiles.length === 1 
+          ? additionalFiles[0]
+          : await MergeHandler.mergeFiles(additionalFiles).then(bytes => {
+              // Convert Uint8Array to ArrayBuffer for File constructor
+              const buffer = new ArrayBuffer(bytes.length)
+              new Uint8Array(buffer).set(bytes)
+              return new File([buffer], 'merged_additional.pdf', { type: 'application/pdf' })
+            })
+        
+        mergedPdf = await MergeHandler.insertPages(
+          file, 
+          additionalMerged instanceof File ? additionalMerged : new File([additionalMerged], 'temp.pdf'),
+          position
+        )
+      }
+      
+      // Load merged PDF into editor
+      await loadMergedPDF(mergedPdf)
+      
+      if (!keepSelection) {
+        clearSelection()
+      }
+    } catch (error) {
+      console.error('Merge error:', error)
+      alert('Failed to merge PDFs')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Apply Merge with Custom Page Order - Download
+  const handleApplyMergeWithCustomOrder = async (
+    currentFile: File,
+    addedFiles: File[],
+    pageOrder: PageOrder[]
+  ) => {
+    setShowMergeUI(false)
+    setIsProcessing(true)
+    
+    try {
+      const mergedPdf = await MergeHandler.mergeWithCustomOrder(currentFile, addedFiles, pageOrder)
+      downloadPDF(mergedPdf, `merged_${currentFile.name}`)
+      handleProcessComplete(uint8ArrayToBlob(mergedPdf))
+
+      if (!keepSelection) {
+        clearSelection()
+      }
+    } catch (error) {
+      console.error('Custom merge error:', error)
+      alert('Failed to merge PDFs with custom order')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Apply Merge with Custom Page Order - Load to Editor
+  const handleApplyMergeWithCustomOrderAndEdit = async (
+    currentFile: File,
+    addedFiles: File[],
+    pageOrder: PageOrder[]
+  ) => {
+    if (!loadMergedPDF) {
+      handleApplyMergeWithCustomOrder(currentFile, addedFiles, pageOrder)
+      return
+    }
+
+    setShowMergeUI(false)
+    setIsProcessing(true)
+    
+    try {
+      const mergedPdf = await MergeHandler.mergeWithCustomOrder(currentFile, addedFiles, pageOrder)
+      await loadMergedPDF(mergedPdf)
+
+      if (!keepSelection) {
+        clearSelection()
+      }
+    } catch (error) {
+      console.error('Custom merge error:', error)
+      alert('Failed to merge PDFs with custom order')
+    } finally {
+      setIsProcessing(false)
     }
   }
 
@@ -282,9 +420,9 @@ export function usePDFToolHandlers({
 
     setIsProcessing(true)
     try {
-      const compressedPdf = await CompressHandler.compress(file, 'medium')
-      downloadPDF(compressedPdf, `compressed_${file.name}`)
-      handleProcessComplete(uint8ArrayToBlob(compressedPdf))
+      const compressResult = await CompressHandler.compress(file, 'medium')
+      downloadPDF(compressResult.data, `compressed_${file.name}`)
+      handleProcessComplete(uint8ArrayToBlob(compressResult.data))
 
       if (!keepSelection) {
         clearSelection()
@@ -297,21 +435,27 @@ export function usePDFToolHandlers({
     }
   }
 
-  // Page Numbers Handler
-  const handleAddPageNumbers = async () => {
+  // Page Numbers Handler - Opens UI for options
+  const handleAddPageNumbers = () => {
     if (!file) {
       alert('Please upload a PDF file first')
       return
     }
+    closeAllToolUIs()
+    setShowPageNumberUI(true)
+  }
 
+  // Apply Page Numbers with options from UI
+  const handleApplyPageNumbers = async (options: PageNumberOptions) => {
+    if (!file) {
+      setShowPageNumberUI(false)
+      return
+    }
+
+    setShowPageNumberUI(false)
     setIsProcessing(true)
     try {
-      const pdfWithNumbers = await PageNumberHandler.addPageNumbers(file, {
-        position: 'bottom-center',
-        format: 'X',
-        startFrom: 1,
-        fontSize: 12,
-      })
+      const pdfWithNumbers = await PageNumberHandler.addPageNumbers(file, options)
       downloadPDF(pdfWithNumbers, `numbered_${file.name}`)
       handleProcessComplete(uint8ArrayToBlob(pdfWithNumbers))
 
@@ -326,38 +470,107 @@ export function usePDFToolHandlers({
     }
   }
 
-  // Blank Page Handler
+  // Apply Bates Numbers with options from UI
+  const handleApplyBatesNumbers = async (options: BatesOptions) => {
+    if (!file) {
+      setShowPageNumberUI(false)
+      return
+    }
+
+    setShowPageNumberUI(false)
+    setIsProcessing(true)
+    try {
+      const pdfWithBates = await PageNumberHandler.addBatesNumbers(file, options)
+      downloadPDF(pdfWithBates, `bates_${file.name}`)
+      handleProcessComplete(uint8ArrayToBlob(pdfWithBates))
+
+      if (!keepSelection) {
+        clearSelection()
+      }
+    } catch (error) {
+      console.error('Bates numbering error:', error)
+      alert('Failed to add Bates numbers')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  // Blank Page Handler - Opens UI for options
   const handleInsertBlankPage = () => {
     if (pages.length === 0) {
       alert('Please upload a PDF file first')
       return
     }
+    closeAllToolUIs()
+    setShowBlankPageUI(true)
+  }
 
-    const pageNumber = prompt('Insert blank page after page number:')
-    if (pageNumber) {
-      const insertAfter = parseInt(pageNumber)
-      if (isNaN(insertAfter) || insertAfter < 0 || insertAfter > pages.length) {
-        alert('Invalid page number')
-        return
-      }
+  // Apply Blank Page with options from UI
+  const handleApplyBlankPage = (options: BlankPageOptions, insertAfterPage: number) => {
+    if (pages.length === 0) {
+      setShowBlankPageUI(false)
+      return
+    }
 
-      const newPages = BlankPageHandler.insertBlankPagesInMemory(pages, [insertAfter])
-      updatePages(newPages)
+    let insertPages: number[] = []
+    
+    // Determine insert position
+    if (options.insertPosition === 'after') {
+      insertPages = [insertAfterPage]
+    } else if (options.insertPosition === 'before') {
+      insertPages = [insertAfterPage - 1]
+    } else if (options.insertPosition === 'at-start') {
+      insertPages = [0]
+    } else if (options.insertPosition === 'at-end') {
+      insertPages = [pages.length]
+    }
 
-      if (!keepSelection) {
-        clearSelection()
-      }
+    const newPages = BlankPageHandler.insertBlankPagesInMemory(pages, insertPages, options)
+    updatePages(newPages)
+    setShowBlankPageUI(false)
+
+    if (!keepSelection) {
+      clearSelection()
     }
   }
 
-  // Duplicate Pages Handler
+  // Duplicate Pages Handler - Opens UI for options
   const handleDuplicatePages = () => {
     if (selectedPages.size === 0) {
       alert('Select pages to duplicate')
       return
     }
 
-    const newPages = DuplicateHandler.duplicatePagesInMemory(pages, selectedPages, true)
+    // Open Duplicate UI for options
+    closeAllToolUIs()
+    setShowDuplicateUI(true)
+  }
+
+  // Apply Duplicate with options from UI
+  const handleApplyDuplicate = (options: DuplicateOptions) => {
+    if (selectedPages.size === 0) {
+      alert('Select pages to duplicate')
+      setShowDuplicateUI(false)
+      return
+    }
+
+    const newPages = DuplicateHandler.duplicatePagesInMemory(pages, selectedPages, options)
+    updatePages(newPages)
+    setShowDuplicateUI(false)
+
+    if (!keepSelection && !KEEP_SELECTION_ACTIONS.has('duplicate')) {
+      clearSelection()
+    }
+  }
+
+  // Quick duplicate (1 copy, after original) - for backwards compatibility
+  const handleQuickDuplicate = () => {
+    if (selectedPages.size === 0) {
+      alert('Select pages to duplicate')
+      return
+    }
+
+    const newPages = DuplicateHandler.duplicatePagesInMemory(pages, selectedPages, DEFAULT_DUPLICATE_OPTIONS)
     updatePages(newPages)
 
     if (!keepSelection && !KEEP_SELECTION_ACTIONS.has('duplicate')) {
@@ -556,20 +769,18 @@ export function usePDFToolHandlers({
 
       switch (format) {
         case 'word':
-          result = await ConvertHandler.toWord(file, options)
-          filename = file.name.replace('.pdf', '.docx')
-          break
+          // Word conversion not supported in browser
+          throw new Error('Word conversion is not supported. Please use Text or HTML format.')
         case 'excel':
-          result = await ConvertHandler.toExcel(file, options)
-          filename = file.name.replace('.pdf', '.xlsx')
-          break
+          // Excel conversion not supported in browser
+          throw new Error('Excel conversion is not supported. Please use Text or HTML format.')
         case 'text':
           const text = await ConvertHandler.toText(file)
           result = new Blob([text], { type: 'text/plain' })
           filename = file.name.replace('.pdf', '.txt')
           break
         case 'html':
-          const html = await ConvertHandler.toHTML(file, options.preserveFormatting)
+          const html = await ConvertHandler.toHTML(file)
           result = new Blob([html], { type: 'text/html' })
           filename = file.name.replace('.pdf', '.html')
           break
@@ -649,7 +860,6 @@ export function usePDFToolHandlers({
         const searchablePdf = await OCRHandler.createSearchablePDF(
           file,
           'eng',
-          'fast',
           (progress) => {
             const progressBar = document.getElementById('ocr-progress-bar')
             const statusText = document.getElementById('ocr-status')
@@ -662,9 +872,9 @@ export function usePDFToolHandlers({
         handleProcessComplete(uint8ArrayToBlob(searchablePdf))
         alert('Searchable PDF created successfully!')
       } else {
-        const result = await OCRHandler.processPDF(
+        const result = await OCRHandler.extractTextFromPDF(
           file,
-          { language: 'eng', mode: 'fast', outputFormat: 'text' },
+          'eng',
           (progress) => {
             const progressBar = document.getElementById('ocr-progress-bar')
             const statusText = document.getElementById('ocr-status')
@@ -705,6 +915,12 @@ export function usePDFToolHandlers({
     setShowConvertUI,
     showAnnotateUI,
     setShowAnnotateUI,
+    showMergeUI,
+    setShowMergeUI,
+    showDuplicateUI,
+    setShowDuplicateUI,
+    showPageNumberUI,
+    setShowPageNumberUI,
     
     // Helper functions
     closeAllToolUIs,
@@ -719,10 +935,18 @@ export function usePDFToolHandlers({
     handleDeleteSelected,
     handleSplit,
     handleMerge,
+    handleApplyMerge,
+    handleApplyMergeAndEdit,
+    handleApplyMergeWithCustomOrder,
+    handleApplyMergeWithCustomOrderAndEdit,
     handleCompress,
     handleAddPageNumbers,
+    handleApplyPageNumbers,
+    handleApplyBatesNumbers,
     handleInsertBlankPage,
     handleDuplicatePages,
+    handleApplyDuplicate,
+    handleQuickDuplicate,
     handleWatermark,
     handleApplyWatermark,
     handleSignature,

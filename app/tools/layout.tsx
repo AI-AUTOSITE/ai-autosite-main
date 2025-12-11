@@ -61,17 +61,139 @@ const getToolTitle = (pathname: string) => {
     '/tools/tech-stack-analyzer': 'Tech Stack Analyzer',
     '/tools/token-compressor': 'AI Token Compressor',
     '/tools/pdf-test-generator': 'PDF Test Generator',
+    '/tools/timestamp-converter': 'Timestamp Converter',
+    '/tools/url-encoder': 'URL Encoder / Decoder',
+    '/tools/aspect-ratio-calculator': 'Aspect Ratio Calculator',
+    '/tools/word-counter-pro': 'Word Counter Pro',
+    '/tools/hash-generator': 'Hash Generator',
+    '/tools/regex-tester': 'Regex Tester',
+    '/tools/code-formatter': 'Code Formatter',
+    '/tools/meta-tag-generator': 'Meta Tag Generator',
+    '/tools/cron-generator': 'Cron Generator',
+    '/tools/diff-checker': 'Diff Checker',
   }
   return toolMap[pathname] || ''
+}
+
+// Tool to Category mapping
+const getToolCategory = (pathname: string): { id: string; name: string } | null => {
+  const toolCategoryMap: Record<string, { id: string; name: string }> = {
+    // Converters
+    '/tools/text-case': { id: 'converters', name: 'Converters' },
+    '/tools/json-format': { id: 'converters', name: 'Converters' },
+    '/tools/json-csv': { id: 'converters', name: 'Converters' },
+    '/tools/markdown-html': { id: 'converters', name: 'Converters' },
+    '/tools/base64': { id: 'converters', name: 'Converters' },
+    '/tools/unit-converter': { id: 'converters', name: 'Converters' },
+    '/tools/age-calculator': { id: 'converters', name: 'Converters' },
+    '/tools/bmi-calculator': { id: 'converters', name: 'Converters' },
+    '/tools/percentage-calculator': { id: 'converters', name: 'Converters' },
+    '/tools/text-counter': { id: 'converters', name: 'Converters' },
+    '/tools/twitter-counter': { id: 'converters', name: 'Converters' },
+    '/tools/whatsapp-link': { id: 'converters', name: 'Converters' },
+    '/tools/timestamp-converter': { id: 'converters', name: 'Converters' },
+    '/tools/url-encoder': { id: 'converters', name: 'Converters' },
+    '/tools/aspect-ratio-calculator': { id: 'converters', name: 'Converters' },
+    '/tools/word-counter-pro': { id: 'converters', name: 'Converters' },
+    
+    // Editors
+    '/tools/blurtap': { id: 'editors', name: 'Editors' },
+    '/tools/color-palette': { id: 'editors', name: 'Editors' },
+    '/tools/image-compress': { id: 'editors', name: 'Editors' },
+    '/tools/image-grid-maker': { id: 'editors', name: 'Editors' },
+    '/tools/image-splitter': { id: 'editors', name: 'Editors' },
+    '/tools/japanese-ocr': { id: 'editors', name: 'Editors' },
+    '/tools/pdf-tools': { id: 'editors', name: 'Editors' },
+    
+    // Generators
+    '/tools/password-generator': { id: 'generators', name: 'Generators' },
+    '/tools/qr-code': { id: 'generators', name: 'Generators' },
+    '/tools/favicon-generator': { id: 'generators', name: 'Generators' },
+    '/tools/lorem-ipsum': { id: 'generators', name: 'Generators' },
+    '/tools/gradient-generator': { id: 'generators', name: 'Generators' },
+    '/tools/uuid-generator': { id: 'generators', name: 'Generators' },
+    '/tools/countdown-timer': { id: 'generators', name: 'Generators' },
+    '/tools/hashtag-generator': { id: 'generators', name: 'Generators' },
+    '/tools/instagram-bio': { id: 'generators', name: 'Generators' },
+    '/tools/haiku-generator': { id: 'generators', name: 'Generators' },
+    
+    // Analyzers
+    '/tools/network-checker': { id: 'analyzers', name: 'Analyzers' },
+    '/tools/pc-optimizer': { id: 'analyzers', name: 'Analyzers' },
+    '/tools/spam-email-checker': { id: 'analyzers', name: 'Analyzers' },
+    '/tools/competitive-analyzer': { id: 'analyzers', name: 'Analyzers' },
+    '/tools/tech-stack-analyzer': { id: 'analyzers', name: 'Analyzers' },
+    
+    // Privacy
+    '/tools/pdf-to-data': { id: 'privacy', name: 'Privacy' },
+    
+    // AI Tools
+    '/tools/ai-summarizer': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/code-roaster': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/ai-prompt-generator': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/ai-dev-dictionary': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/ai-project-visualizer': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/ai-resume': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/pdf-summarizer': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/stack-recommender': { id: 'ai-tools', name: 'AI Tools' },
+    '/tools/token-compressor': { id: 'ai-tools', name: 'AI Tools' },
+    
+    // Dev Tools
+    '/tools/test-file-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/test-image-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/test-text-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/pdf-test-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/code-dependency-visualizer': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/hash-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/regex-tester': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/code-formatter': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/meta-tag-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/cron-generator': { id: 'dev-tools', name: 'Dev Tools' },
+    '/tools/diff-checker': { id: 'dev-tools', name: 'Dev Tools' },
+    
+    // Learning
+    '/tools/cornell-note': { id: 'learning', name: 'Learning' },
+    '/tools/debate-trainer': { id: 'learning', name: 'Learning' },
+    '/tools/pomodoro-timer': { id: 'learning', name: 'Learning' },
+  }
+  return toolCategoryMap[pathname] || null
 }
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [toolTitle, setToolTitle] = useState('')
+  const [toolCategory, setToolCategory] = useState<{ id: string; name: string } | null>(null)
 
   useEffect(() => {
     setToolTitle(getToolTitle(pathname))
+    setToolCategory(getToolCategory(pathname))
   }, [pathname])
+
+  // Get category name from pathname for category pages (e.g., /tools/editors)
+  const getCategoryFromPath = (): { id: string; name: string } | null => {
+    const categoryMap: Record<string, string> = {
+      'converters': 'Converters',
+      'editors': 'Editors',
+      'generators': 'Generators',
+      'analyzers': 'Analyzers',
+      'privacy': 'Privacy',
+      'ai-tools': 'AI Tools',
+      'dev-tools': 'Dev Tools',
+      'learning': 'Learning',
+    }
+    const parts = pathname.split('/')
+    if (parts.length === 3 && parts[1] === 'tools') {
+      const categoryId = parts[2]
+      const categoryName = categoryMap[categoryId]
+      if (categoryName) {
+        return { id: categoryId, name: categoryName }
+      }
+    }
+    return null
+  }
+
+  const currentCategory = getCategoryFromPath()
+  const isCategoryPage = currentCategory !== null && !toolTitle
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -93,6 +215,17 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
                 <Link href="/tools" className="hover:text-gray-300 transition-colors">
                   Tools
                 </Link>
+                {toolCategory && (
+                  <>
+                    <span className="mx-2">›</span>
+                    <Link 
+                      href={`/tools/${toolCategory.id}`} 
+                      className="hover:text-gray-300 transition-colors"
+                    >
+                      {toolCategory.name}
+                    </Link>
+                  </>
+                )}
               </div>
 
               {/* Tool title - center on desktop, left on mobile */}
@@ -100,6 +233,32 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
                 <h1 className="text-xl font-medium text-white">{toolTitle}</h1>
                 {/* Portal target for tool-specific action buttons */}
                 <div id="tool-header-actions" className="flex items-center gap-2" />
+              </div>
+            </div>
+          </nav>
+        )}
+
+        {/* Category page breadcrumb (e.g., /tools/editors) */}
+        {isCategoryPage && currentCategory && (
+          <nav className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
+            <div className="container mx-auto px-4 py-3">
+              <div className="flex items-center gap-2 text-sm">
+                <Link
+                  href="/"
+                  className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                >
+                  <Home className="w-4 h-4" />
+                  <span>Home</span>
+                </Link>
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+                <Link
+                  href="/tools"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Tools
+                </Link>
+                <ChevronRight className="w-4 h-4 text-gray-600" />
+                <span className="text-gray-300">{currentCategory.name}</span>
               </div>
             </div>
           </nav>

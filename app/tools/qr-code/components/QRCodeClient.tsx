@@ -12,12 +12,23 @@ import { AdvancedOptions } from './AdvancedOptions'
 import { QRPreview } from './QRPreview'
 import { FloatingPreview } from './FloatingPreview'
 import { Features } from './Features'
+import { Lock } from 'lucide-react'
 
 export default function QRCodeClient() {
   const qr = useQRCode()
 
   return (
     <div className="container mx-auto px-4 py-4 sm:py-6 max-w-2xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-2">
+        <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <p className="text-green-300 font-medium">100% Private - Generated Locally</p>
+          <p className="text-green-400/70 text-xs mt-1">
+            QR codes are created in your browser • No data sent to servers • Works offline
+          </p>
+        </div>
+      </div>
       {/* Main Preview Section (Normal position) */}
       <div className="mb-4">
         <QRPreview

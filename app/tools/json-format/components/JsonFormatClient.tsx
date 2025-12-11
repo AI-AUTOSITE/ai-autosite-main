@@ -11,9 +11,15 @@ import {
   CheckCircle,
   Minimize2,
   Maximize2,
+  Lock,
+  ChevronRight,
+  ChevronDown,
+  List,
+  Code,
 } from 'lucide-react'
 
 type ProcessMode = 'beautify' | 'minify'
+type ViewMode = 'code' | 'tree'
 
 interface JsonStats {
   keys: number
@@ -73,6 +79,84 @@ const calculateStats = (jsonString: string): JsonStats => {
   }
 }
 
+// Tree View Component
+interface TreeNodeProps {
+  name: string
+  value: unknown
+  path: string
+  onCopyPath: (path: string) => void
+}
+
+function TreeNode({ name, value, path, onCopyPath }: TreeNodeProps) {
+  const [isOpen, setIsOpen] = useState(true)
+  
+  const isObject = value !== null && typeof value === 'object'
+  const isArray = Array.isArray(value)
+  const displayName = name || (isArray ? '[]' : '{}')
+  
+  const getValueDisplay = () => {
+    if (value === null) return <span className="text-gray-500">null</span>
+    if (typeof value === 'boolean') return <span className="text-purple-400">{value.toString()}</span>
+    if (typeof value === 'number') return <span className="text-cyan-400">{value}</span>
+    if (typeof value === 'string') return <span className="text-green-400">"{value.length > 50 ? value.slice(0, 50) + '...' : value}"</span>
+    return null
+  }
+
+  if (!isObject) {
+    return (
+      <div 
+        className="flex items-center gap-2 py-0.5 hover:bg-white/5 rounded px-1 group cursor-pointer"
+        onClick={() => onCopyPath(path)}
+      >
+        <span className="w-4" />
+        <span className="text-gray-300 font-mono text-sm">{displayName}:</span>
+        {getValueDisplay()}
+        <span className="text-gray-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+          Click to copy path
+        </span>
+      </div>
+    )
+  }
+
+  const entries = isArray 
+    ? (value as unknown[]).map((v, i) => [i.toString(), v])
+    : Object.entries(value as object)
+
+  return (
+    <div>
+      <div 
+        className="flex items-center gap-1 py-0.5 hover:bg-white/5 rounded px-1 cursor-pointer group"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
+        <span className="text-gray-300 font-mono text-sm">{displayName}</span>
+        <span className="text-gray-600 text-xs">
+          {isArray ? `[${entries.length}]` : `{${entries.length}}`}
+        </span>
+        <button 
+          className="ml-2 text-gray-600 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={(e) => { e.stopPropagation(); onCopyPath(path) }}
+        >
+          Copy path
+        </button>
+      </div>
+      {isOpen && (
+        <div className="ml-4 border-l border-white/10 pl-2">
+          {entries.map(([key, val]) => (
+            <TreeNode
+              key={key}
+              name={key}
+              value={val}
+              path={path ? `${path}.${key}` : key}
+              onCopyPath={onCopyPath}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function JsonFormatClient() {
   const [inputJson, setInputJson] = useState('')
   const [outputJson, setOutputJson] = useState('')
@@ -81,6 +165,8 @@ export default function JsonFormatClient() {
   const [copied, setCopied] = useState(false)
   const [indentSize, setIndentSize] = useState<2 | 4 | 8>(2)
   const [mode, setMode] = useState<ProcessMode>('beautify')
+  const [viewMode, setViewMode] = useState<ViewMode>('code')
+  const [parsedJson, setParsedJson] = useState<unknown>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const stats = useMemo(() => calculateStats(outputJson), [outputJson])
@@ -95,16 +181,34 @@ export default function JsonFormatClient() {
       if (result.success) {
         setOutputJson(result.output)
         if (result.output) {
+          try {
+            setParsedJson(JSON.parse(text))
+          } catch {
+            setParsedJson(null)
+          }
           setSuccess('Valid JSON')
           setTimeout(() => setSuccess(''), 2000)
+        } else {
+          setParsedJson(null)
         }
       } else {
         setOutputJson('')
+        setParsedJson(null)
         setError(result.error || '')
       }
     },
     [mode, indentSize]
   )
+
+  const handleCopyPath = useCallback(async (path: string) => {
+    try {
+      await navigator.clipboard.writeText(path)
+      setSuccess(`Copied: ${path}`)
+      setTimeout(() => setSuccess(''), 2000)
+    } catch {
+      setError('Copy failed')
+    }
+  }, [])
 
   const handleInputChange = useCallback(
     (text: string) => {
@@ -151,6 +255,17 @@ export default function JsonFormatClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-2">
+        <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <p className="text-green-300 font-medium">100% Private</p>
+          <p className="text-green-400/70 text-xs mt-1">
+            JSON is processed entirely in your browser • Never sent to any server
+          </p>
+        </div>
+      </div>
+
       {/* Control Panel */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4 mb-4">
         <div className="flex flex-col gap-3">
@@ -289,7 +404,31 @@ export default function JsonFormatClient() {
         {/* Output */}
         <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-4">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-white font-medium">Output</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-white font-medium">Output</h3>
+              {/* View Mode Toggle */}
+              <div className="flex gap-1 bg-black/20 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('code')}
+                  className={`p-1.5 rounded transition-all ${
+                    viewMode === 'code' ? 'bg-cyan-500 text-white' : 'text-gray-400 hover:text-white'
+                  }`}
+                  title="Code View"
+                >
+                  <Code className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('tree')}
+                  disabled={!parsedJson}
+                  className={`p-1.5 rounded transition-all ${
+                    viewMode === 'tree' ? 'bg-cyan-500 text-white' : 'text-gray-400 hover:text-white disabled:opacity-50'
+                  }`}
+                  title="Tree View"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={handleCopy}
@@ -313,13 +452,29 @@ export default function JsonFormatClient() {
               </button>
             </div>
           </div>
-          <textarea
-            value={outputJson}
-            readOnly
-            placeholder="Formatted JSON will appear here..."
-            className="w-full h-64 sm:h-80 lg:h-96 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 resize-none font-mono text-sm"
-            spellCheck={false}
-          />
+          
+          {viewMode === 'code' ? (
+            <textarea
+              value={outputJson}
+              readOnly
+              placeholder="Formatted JSON will appear here..."
+              className="w-full h-64 sm:h-80 lg:h-96 p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 resize-none font-mono text-sm"
+              spellCheck={false}
+            />
+          ) : (
+            <div className="w-full h-64 sm:h-80 lg:h-96 p-3 bg-white/5 border border-white/10 rounded-lg overflow-auto">
+              {parsedJson ? (
+                <TreeNode
+                  name=""
+                  value={parsedJson}
+                  path=""
+                  onCopyPath={handleCopyPath}
+                />
+              ) : (
+                <p className="text-gray-500 text-sm">Parse valid JSON to see tree view</p>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

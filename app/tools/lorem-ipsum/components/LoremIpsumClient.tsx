@@ -17,27 +17,76 @@ import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
 import { formatOutput, type OutputFormat } from '../lib/formatters'
 
 type GenerationType = 'words' | 'sentences' | 'paragraphs'
+type TextTheme = 'latin' | 'corporate' | 'tech' | 'hipster'
 
-const LOREM_WORDS = [
-  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-  'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-  'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-  'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-  'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-  'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-  'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-  'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'perspiciatis', 'unde',
-  'omnis', 'iste', 'natus', 'error', 'voluptatem', 'accusantium', 'doloremque',
-  'laudantium', 'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo',
-  'inventore', 'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta',
-  'explicabo', 'nemo', 'ipsam', 'quia', 'voluptas', 'aspernatur', 'aut', 'odit',
-  'fugit', 'consequuntur', 'magni', 'dolores', 'eos', 'ratione', 'sequi',
-  'nesciunt', 'neque', 'porro', 'quisquam', 'dolorem', 'adipisci', 'numquam',
-  'eius', 'modi', 'tempora', 'incidunt', 'magnam', 'quaerat', 'etiam',
-]
+const TEXT_THEMES: Record<TextTheme, { name: string; words: string[]; start: string }> = {
+  latin: {
+    name: 'Classic Latin',
+    words: [
+      'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
+      'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
+      'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
+      'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
+      'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
+      'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
+      'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
+      'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'perspiciatis', 'unde',
+      'omnis', 'iste', 'natus', 'error', 'voluptatem', 'accusantium', 'doloremque',
+      'laudantium', 'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo',
+      'inventore', 'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta',
+      'explicabo', 'nemo', 'ipsam', 'quia', 'voluptas', 'aspernatur', 'aut', 'odit',
+      'fugit', 'consequuntur', 'magni', 'dolores', 'eos', 'ratione', 'sequi',
+      'nesciunt', 'neque', 'porro', 'quisquam', 'dolorem', 'adipisci', 'numquam',
+      'eius', 'modi', 'tempora', 'incidunt', 'magnam', 'quaerat', 'etiam',
+    ],
+    start: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+  corporate: {
+    name: 'Corporate',
+    words: [
+      'synergy', 'leverage', 'optimize', 'stakeholder', 'deliverable', 'bandwidth', 'paradigm', 'scalable',
+      'proactive', 'innovative', 'streamline', 'benchmark', 'ecosystem', 'holistic', 'agile', 'dynamic',
+      'strategy', 'implementation', 'collaboration', 'integration', 'transformation', 'sustainability', 'growth',
+      'revenue', 'pipeline', 'roadmap', 'milestone', 'framework', 'methodology', 'initiative', 'objective',
+      'performance', 'efficiency', 'productivity', 'engagement', 'alignment', 'value', 'proposition', 'metrics',
+      'analytics', 'insights', 'actionable', 'empower', 'facilitate', 'accelerate', 'maximize', 'minimize',
+      'enhance', 'cultivate', 'foster', 'drive', 'enable', 'establish', 'maintain', 'develop', 'achieve',
+      'deliver', 'execute', 'implement', 'launch', 'deploy', 'solution', 'platform', 'resource', 'capability',
+    ],
+    start: 'Leveraging synergy across stakeholders, our proactive approach drives scalable innovation while optimizing deliverables and maximizing value.',
+  },
+  tech: {
+    name: 'Tech',
+    words: [
+      'algorithm', 'API', 'backend', 'frontend', 'microservice', 'container', 'kubernetes', 'docker',
+      'serverless', 'cloud', 'distributed', 'scalable', 'latency', 'throughput', 'bandwidth', 'cache',
+      'database', 'query', 'index', 'schema', 'migration', 'deployment', 'pipeline', 'integration',
+      'continuous', 'automated', 'testing', 'monitoring', 'logging', 'metrics', 'alerting', 'debugging',
+      'refactoring', 'optimization', 'performance', 'security', 'authentication', 'authorization', 'encryption',
+      'protocol', 'endpoint', 'webhook', 'callback', 'async', 'sync', 'parallel', 'concurrent', 'thread',
+      'process', 'memory', 'CPU', 'GPU', 'network', 'socket', 'streaming', 'batch', 'real-time', 'infrastructure',
+      'DevOps', 'CI/CD', 'repository', 'branch', 'merge', 'commit', 'pull', 'push', 'clone', 'fork',
+    ],
+    start: 'Deploying microservices on Kubernetes clusters enables scalable distributed systems with automated CI/CD pipelines and real-time monitoring.',
+  },
+  hipster: {
+    name: 'Hipster',
+    words: [
+      'artisan', 'craft', 'handmade', 'organic', 'sustainable', 'vintage', 'retro', 'aesthetic',
+      'curated', 'bespoke', 'authentic', 'minimalist', 'ethical', 'conscious', 'mindful', 'intentional',
+      'slow', 'local', 'farm-to-table', 'single-origin', 'cold-brew', 'pour-over', 'espresso', 'roast',
+      'vinyl', 'analog', 'film', 'polaroid', 'typewriter', 'journal', 'zine', 'podcast', 'newsletter',
+      'sourdough', 'fermented', 'kombucha', 'matcha', 'oat-milk', 'avocado', 'toast', 'brunch', 'cafe',
+      'coworking', 'remote', 'freelance', 'creative', 'studio', 'gallery', 'installation', 'exhibit',
+      'thrift', 'upcycle', 'reclaim', 'restore', 'repurpose', 'sustainable', 'eco-friendly', 'zero-waste',
+      'plant-based', 'wellness', 'meditation', 'yoga', 'mindfulness', 'breathwork', 'ritual', 'ceremony',
+    ],
+    start: 'Curating artisan experiences through sustainable craft, our mindful approach celebrates authentic, slow-living aesthetics with intentional design.',
+  },
+}
 
-const LOREM_START =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+const LOREM_WORDS = TEXT_THEMES.latin.words
+const LOREM_START = TEXT_THEMES.latin.start
 
 export default function LoremIpsumClient() {
   const searchParams = useSearchParams()
@@ -54,6 +103,7 @@ export default function LoremIpsumClient() {
     const paramStart = searchParams.get('start')
     return paramStart !== 'false'
   })
+  const [textTheme, setTextTheme] = useState<TextTheme>('latin')
   const [selectedFormat, setSelectedFormat] = useState<OutputFormat>(() => {
     const paramFormat = searchParams.get('format')
     return (paramFormat === 'text' || paramFormat === 'html' || paramFormat === 'markdown' || paramFormat === 'json')
@@ -112,8 +162,9 @@ export default function LoremIpsumClient() {
 
   const generateWords = (count: number): string => {
     const words: string[] = []
+    const themeWords = TEXT_THEMES[textTheme].words
     for (let i = 0; i < count; i++) {
-      words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)])
+      words.push(themeWords[Math.floor(Math.random() * themeWords.length)])
     }
     return words.join(' ')
   }
@@ -121,8 +172,9 @@ export default function LoremIpsumClient() {
   const generateSentence = (): string => {
     const length = 8 + Math.floor(Math.random() * 10)
     const words: string[] = []
+    const themeWords = TEXT_THEMES[textTheme].words
     for (let i = 0; i < length; i++) {
-      words.push(LOREM_WORDS[Math.floor(Math.random() * LOREM_WORDS.length)])
+      words.push(themeWords[Math.floor(Math.random() * themeWords.length)])
     }
     words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1)
     return words.join(' ') + '.'
@@ -140,15 +192,16 @@ export default function LoremIpsumClient() {
   const handleGenerate = () => {
     const num = parseInt(amount) || 1
     let result = ''
+    const themeStart = TEXT_THEMES[textTheme].start
 
     switch (type) {
       case 'words':
         if (startWithLorem) {
-          const loremWords = LOREM_START.split(' ').slice(0, Math.min(num, 19))
+          const startWords = themeStart.split(' ').slice(0, Math.min(num, 19))
           if (num <= 19) {
-            result = loremWords.join(' ')
+            result = startWords.join(' ')
           } else {
-            result = LOREM_START + ' ' + generateWords(num - 19)
+            result = themeStart + ' ' + generateWords(num - 19)
           }
         } else {
           result = generateWords(num)
@@ -158,7 +211,7 @@ export default function LoremIpsumClient() {
       case 'sentences':
         const sentences: string[] = []
         if (startWithLorem) {
-          sentences.push(LOREM_START)
+          sentences.push(themeStart)
           for (let i = 1; i < num; i++) {
             sentences.push(generateSentence())
           }
@@ -173,7 +226,7 @@ export default function LoremIpsumClient() {
       case 'paragraphs':
         const paragraphs: string[] = []
         if (startWithLorem) {
-          paragraphs.push(LOREM_START + ' ' + generateParagraph())
+          paragraphs.push(themeStart + ' ' + generateParagraph())
           for (let i = 1; i < num; i++) {
             paragraphs.push(generateParagraph())
           }
@@ -378,6 +431,29 @@ export default function LoremIpsumClient() {
           </div>
         </div>
 
+        {/* Theme Selection */}
+        <div className="mb-4">
+          <label className="block text-gray-900 dark:text-white font-medium mb-2">Theme</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {(Object.keys(TEXT_THEMES) as TextTheme[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setTextTheme(t)
+                  vibrate(30)
+                }}
+                className={`min-h-[44px] px-3 py-2 rounded-lg transition-all text-xs sm:text-sm ${
+                  textTheme === t
+                    ? 'bg-purple-600 dark:bg-gray-600 text-white'
+                    : 'bg-gray-200 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-300 dark:hover:bg-white/10'
+                }`}
+              >
+                {TEXT_THEMES[t].name}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Preset Buttons */}
         <div className="mb-6">
           <PresetButtons
@@ -444,9 +520,10 @@ export default function LoremIpsumClient() {
           {/* Stats and Actions - responsive layout */}
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
             {/* Word/Character counts */}
-            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 flex-wrap">
               <span>{getWordCount()} words</span>
-              <span>{getCharCount()} characters</span>
+              <span>{getCharCount()} chars</span>
+              <span>~{Math.max(1, Math.ceil(getWordCount() / 200))} min read</span>
             </div>
             {/* Action buttons - full width on mobile */}
             <div className="flex items-center gap-2 w-full sm:w-auto">

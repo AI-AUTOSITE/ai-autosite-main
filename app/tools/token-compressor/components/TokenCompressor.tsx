@@ -1,683 +1,748 @@
 'use client'
 
-import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react'
-import {
-  Zap,
-  Upload,
-  Copy,
-  Check,
-  Download,
-  X,
-  Trash2,
-  AlertTriangle,
-  Shield,
-  Loader2,
-  FileText,
-  TrendingDown,
-  Sparkles,
-  Eye,
-  EyeOff,
-  Sliders,
-  ChevronDown,
-  Info,
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { 
+  FileText, Download, Scissors, X, Zap, ChevronDown, ChevronUp,
+  Grid3X3, Smartphone, Printer, Instagram, Twitter, Hash
 } from 'lucide-react'
 
-// Type definitions
-interface ProcessedFile {
-  id: string
+// ============================================
+// Types & Constants
+// ============================================
+type SplitMode = 'paper' | 'height' | 'count' | 'manual' | 'preset'
+type PaperSize = 'A4' | 'A5' | 'B5' | 'Letter'
+type PresetType = 'instagram' | 'twitter' | 'pinterest' | 'custom'
+type ExportFormat = 'png' | 'jpeg'
+
+interface Preset {
   name: string
-  type: string
-  size: number
-  content: string
-  compressedContent?: string
-  originalTokens?: number
-  compressedTokens?: number
-  compressionLevel?: 'light' | 'standard' | 'aggressive' | 'extreme'
+  icon: React.ReactNode
+  width: number
+  height: number
+  description: string
 }
 
-interface SecurityIssue {
-  type: 'api_key' | 'email' | 'phone' | 'private_key'
-  severity: 'high' | 'medium' | 'low'
-  count: number
+const PAPER_SIZES = {
+  A4: { width: 210, height: 297, name: 'A4 (210×297mm)' },
+  A5: { width: 148, height: 210, name: 'A5 (148×210mm)' },
+  B5: { width: 182, height: 257, name: 'B5 (182×257mm)' },
+  Letter: { width: 216, height: 279, name: 'US Letter' },
 }
 
-interface ModelTokens {
-  gpt4: number
-  gpt35: number
-  claude: number
-  gemini: number
-}
+const DPI_OPTIONS = [72, 96, 150, 300]
 
-type OutputFormat = 'clipboard' | 'markdown' | 'json' | 'zip'
-type CompressionLevel = 'light' | 'standard' | 'aggressive' | 'extreme'
-
-// AI Model configurations
-const AI_MODELS = {
-  gpt4: { name: 'GPT-4', ratio: 4, color: 'text-green-400' },
-  gpt35: { name: 'GPT-3.5', ratio: 4, color: 'text-blue-400' },
-  claude: { name: 'Claude', ratio: 3.5, color: 'text-purple-400' },
-  gemini: { name: 'Gemini', ratio: 4, color: 'text-orange-400' },
-}
-
-// Compression levels with descriptions - NO EMOJI
-const COMPRESSION_LEVELS: Record<
-  CompressionLevel,
-  { name: string; description: string }
-> = {
-  light: { name: 'Light', description: 'Keep readability' },
-  standard: { name: 'Standard', description: 'Balanced' },
-  aggressive: { name: 'Aggressive', description: 'Max compression' },
-  extreme: { name: 'Extreme', description: 'AI only' },
-}
-
-// Enhanced compression function
-function compressText(text: string, level: CompressionLevel = 'standard'): string {
-  let compressed = text
-
-  if (level === 'light') {
-    // Light: Only remove comments and excess whitespace
-    compressed = compressed
-      .replace(/\/\/.*$/gm, '')
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\n\s*\n/g, '\n')
-      .trim()
-  } else if (level === 'standard') {
-    // Standard: Remove comments, normalize whitespace
-    compressed = compressed
-      .replace(/\/\/.*$/gm, '')
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/<!--[\s\S]*?-->/g, '')
-      .replace(/#.*$/gm, '')
-      .replace(/[ \t]+/g, ' ')
-      .replace(/\n\s*\n/g, '\n')
-      .replace(/^\s+/gm, '')
-      .replace(/\s+$/gm, '')
-      .trim()
-  } else if (level === 'aggressive') {
-    // Aggressive: Remove all unnecessary characters
-    compressed = compressed
-      .replace(/\/\/.*$/gm, '')
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/<!--[\s\S]*?-->/g, '')
-      .replace(/#.*$/gm, '')
-      .replace(/[ \t]+/g, ' ')
-      .replace(/\n+/g, ' ')
-      .replace(/\s*([{}()\[\];,:])\s*/g, '$1')
-      .replace(/\s*([=+\-*/&|<>!?])\s*/g, '$1')
-      .replace(/;\s*/g, ';')
-      .replace(/,\s*/g, ',')
-      .trim()
-  } else if (level === 'extreme') {
-    // Extreme: Single line, minimal spacing
-    compressed = compressed
-      .replace(/\/\/.*$/gm, '')
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\s+/g, ' ')
-      .replace(/\s*([{}()\[\];,:=+\-*/&|<>!?])\s*/g, '$1')
-      .replace(/[^\x20-\x7E]+/g, '') // Remove non-printable
-      .replace(/\s+/g, ' ')
-      .trim()
-
-    // Additional extreme optimizations
-    if (compressed.length > 1000) {
-      // Remove all unnecessary quotes in JSON-like structures
-      compressed = compressed.replace(/"([^"]+)":/g, '$1:')
-    }
-  }
-
-  return compressed
-}
-
-// Calculate tokens for different models
-function calculateModelTokens(text: string): ModelTokens {
-  return {
-    gpt4: Math.ceil(text.length / AI_MODELS.gpt4.ratio),
-    gpt35: Math.ceil(text.length / AI_MODELS.gpt35.ratio),
-    claude: Math.ceil(text.length / AI_MODELS.claude.ratio),
-    gemini: Math.ceil(text.length / AI_MODELS.gemini.ratio),
+const PRESETS: Record<PresetType, Preset> = {
+  instagram: {
+    name: 'Instagram Carousel',
+    icon: <Instagram className="w-4 h-4" />,
+    width: 1080,
+    height: 1080,
+    description: '1080×1080px squares'
+  },
+  twitter: {
+    name: 'Twitter Header',
+    icon: <Twitter className="w-4 h-4" />,
+    width: 1500,
+    height: 500,
+    description: '1500×500px banner'
+  },
+  pinterest: {
+    name: 'Pinterest Pin',
+    icon: <Grid3X3 className="w-4 h-4" />,
+    width: 1000,
+    height: 1500,
+    description: '1000×1500px vertical'
+  },
+  custom: {
+    name: 'Custom Size',
+    icon: <Scissors className="w-4 h-4" />,
+    width: 800,
+    height: 800,
+    description: 'Custom dimensions'
   }
 }
 
-// Security check
-function checkSecurity(content: string): SecurityIssue[] {
-  const issues: SecurityIssue[] = []
+// ============================================
+// Main Component
+// ============================================
+export default function ImageSplitterClient() {
+  const [mode, setMode] = useState<SplitMode>('paper')
+  const [paperSize, setPaperSize] = useState<PaperSize>('A4')
+  const [dpi, setDpi] = useState(96)
+  const [heightPx, setHeightPx] = useState(900)
+  const [count, setCount] = useState(3)
+  const [img, setImg] = useState<HTMLImageElement | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const [splitParts, setSplitParts] = useState<string[]>([])
+  const [manualSplits, setManualSplits] = useState<number[]>([])
+  const [downloadType, setDownloadType] = useState<'merged' | 'separate'>('separate')
+  
+  // New settings
+  const [presetType, setPresetType] = useState<PresetType>('instagram')
+  const [customWidth, setCustomWidth] = useState(800)
+  const [customHeight, setCustomHeight] = useState(800)
+  const [overlap, setOverlap] = useState(0)
+  const [showNumbers, setShowNumbers] = useState(true)
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('png')
+  const [jpegQuality, setJpegQuality] = useState(92)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  
+  const imageRef = useRef<HTMLImageElement>(null)
 
-  // API Keys
-  if (/(?:api[_\-]?key|apikey|token)[\s:=]+["']?[a-zA-Z0-9\-_]{20,}/gi.test(content)) {
-    issues.push({ type: 'api_key', severity: 'high', count: 1 })
-  }
+  // Calculate paper height in pixels
+  const getPaperHeightPx = useCallback(() => {
+    const paper = PAPER_SIZES[paperSize]
+    return Math.round((paper.height / 25.4) * dpi)
+  }, [paperSize, dpi])
 
-  // Emails
-  const emails = content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g)
-  if (emails?.length) {
-    issues.push({ type: 'email', severity: 'medium', count: emails.length })
-  }
+  // Get preset dimensions
+  const getPresetHeight = useCallback(() => {
+    if (presetType === 'custom') return customHeight
+    return PRESETS[presetType].height
+  }, [presetType, customHeight])
 
-  // Phone numbers
-  const phones = content.match(/(\+\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g)
-  if (phones?.length) {
-    issues.push({ type: 'phone', severity: 'medium', count: phones.length })
-  }
+  const onFile = (file: File | null) => {
+    if (!file || !file.type.startsWith('image/')) return
 
-  // Private keys
-  if (/-----BEGIN (RSA |EC )?PRIVATE KEY-----/.test(content)) {
-    issues.push({ type: 'private_key', severity: 'high', count: 1 })
-  }
-
-  return issues
-}
-
-// Remove sensitive data
-function removeSensitiveData(content: string): string {
-  return content
-    .replace(/(?:api[_\-]?key|apikey|token)[\s:=]+["']?[a-zA-Z0-9\-_]{20,}/gi, '[REDACTED_KEY]')
-    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[EMAIL]')
-    .replace(/(\+\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g, '[PHONE]')
-    .replace(/-----BEGIN[\s\S]*?-----END[\s\S]*?-----/g, '[PRIVATE_KEY]')
-}
-
-export default function TokenCompressor() {
-  const [files, setFiles] = useState<ProcessedFile[]>([])
-  const [compressionLevel, setCompressionLevel] = useState<CompressionLevel>('standard')
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const [securityIssues, setSecurityIssues] = useState<SecurityIssue[]>([])
-  const [showPreview, setShowPreview] = useState(false)
-  const [selectedModel, setSelectedModel] = useState<keyof typeof AI_MODELS>('gpt4')
-  const [copied, setCopied] = useState(false)
-  const [showModelDetails, setShowModelDetails] = useState(false)
-  const [autoCompress, setAutoCompress] = useState(true)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  // Calculate totals
-  const totals = useMemo(() => {
-    const original = files.reduce((sum, f) => sum + (f.originalTokens || 0), 0)
-    const compressed = files.reduce((sum, f) => sum + (f.compressedTokens || 0), 0)
-    const saved = original - compressed
-    const rate = original > 0 ? Math.round((saved / original) * 100) : 0
-
-    return { original, compressed, saved, rate }
-  }, [files])
-
-  // Process files
-  const processFiles = useCallback(
-    async (uploadedFiles: File[]) => {
-      setIsProcessing(true)
-
-      try {
-        const processed: ProcessedFile[] = []
-
-        for (const file of uploadedFiles) {
-          const content = await file.text()
-          const id = `${Date.now()}-${Math.random()}`
-
-          // Check security
-          const issues = checkSecurity(content)
-          if (issues.length > 0) {
-            setSecurityIssues((prev) => [...prev, ...issues])
-          }
-
-          // Calculate tokens
-          const originalTokens = Math.ceil(content.length / AI_MODELS[selectedModel].ratio)
-          const compressedContent = compressText(content, compressionLevel)
-          const compressedTokens = Math.ceil(
-            compressedContent.length / AI_MODELS[selectedModel].ratio
-          )
-
-          processed.push({
-            id,
-            name: file.name,
-            type: file.type || 'text/plain',
-            size: file.size,
-            content,
-            compressedContent,
-            originalTokens,
-            compressedTokens,
-            compressionLevel,
-          })
+    const im = new Image()
+    im.onload = () => {
+      setImg(im)
+      setPreview(im.src)
+      if (mode === 'manual') {
+        const defaultSplits = []
+        for (let i = 1; i < 3; i++) {
+          defaultSplits.push(Math.floor((im.height * i) / 3))
         }
-
-        setFiles((prev) => [...prev, ...processed])
-      } catch (error) {
-        console.error('Processing error:', error)
-      } finally {
-        setIsProcessing(false)
+        setManualSplits(defaultSplits)
       }
-    },
-    [compressionLevel, selectedModel]
-  )
+    }
+    im.src = URL.createObjectURL(file)
+  }
 
-  // Handle file upload
-  const handleFileUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files
-      if (files) {
-        processFiles(Array.from(files))
-      }
-    },
-    [processFiles]
-  )
+  const clearImage = () => {
+    if (preview) URL.revokeObjectURL(preview)
+    setImg(null)
+    setPreview(null)
+    setSplitParts([])
+    setManualSplits([])
+  }
 
-  // Handle drag and drop
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault()
-      setIsDragging(false)
-
-      const files = Array.from(e.dataTransfer.files)
-      if (files.length > 0) {
-        processFiles(files)
-      }
-    },
-    [processFiles]
-  )
-
-  // Recompress all files when level changes
+  // Generate split previews
   useEffect(() => {
-    if (autoCompress && files.length > 0) {
-      const recompressed = files.map((file) => {
-        const compressedContent = compressText(file.content, compressionLevel)
-        const compressedTokens = Math.ceil(
-          compressedContent.length / AI_MODELS[selectedModel].ratio
-        )
+    if (!img) return
 
-        return {
-          ...file,
-          compressedContent,
-          compressedTokens,
-          compressionLevel,
-        }
-      })
+    let splitLines: number[] = []
+    let partHeight = 0
 
-      setFiles(recompressed)
+    if (mode === 'paper') {
+      partHeight = getPaperHeightPx()
+    } else if (mode === 'height') {
+      partHeight = heightPx
+    } else if (mode === 'preset') {
+      partHeight = getPresetHeight()
+    } else if (mode === 'count') {
+      partHeight = Math.ceil(img.height / count)
+    } else if (mode === 'manual') {
+      splitLines = manualSplits
     }
-  }, [compressionLevel, selectedModel, autoCompress])
 
-  // Copy to clipboard
-  const handleCopy = async () => {
-    const output = files
-      .map((f) => `### ${f.name}\n${f.compressedContent || f.content}`)
-      .join('\n\n')
+    if (mode !== 'manual' && mode !== 'count') {
+      let y = partHeight
+      while (y < img.height) {
+        splitLines.push(y)
+        y += partHeight
+      }
+    } else if (mode === 'count') {
+      for (let i = 1; i < count; i++) {
+        splitLines.push(partHeight * i)
+      }
+    }
 
-    await navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    generateSplitPreviews(splitLines)
+  }, [img, mode, paperSize, dpi, heightPx, count, manualSplits, presetType, customHeight])
+
+  const generateSplitPreviews = (splitLines: number[]) => {
+    if (!img) return
+
+    const parts: string[] = []
+    const w = img.width
+    let lastY = 0
+
+    const createPart = (startY: number, height: number, index: number, total: number) => {
+      // Adjust for overlap
+      const adjustedStartY = Math.max(0, startY - (index > 0 ? overlap : 0))
+      const adjustedHeight = Math.min(img.height - adjustedStartY, height + (index > 0 ? overlap : 0) + (index < total - 1 ? overlap : 0))
+      
+      const c = document.createElement('canvas')
+      c.width = w
+      c.height = adjustedHeight
+      const ctx = c.getContext('2d')!
+      ctx.drawImage(img, 0, adjustedStartY, w, adjustedHeight, 0, 0, w, adjustedHeight)
+      
+      // Add number overlay
+      if (showNumbers) {
+        const fontSize = Math.max(24, Math.min(w / 10, 60))
+        ctx.fillStyle = 'rgba(0,0,0,0.7)'
+        ctx.fillRect(0, 0, fontSize * 2.5, fontSize * 1.8)
+        ctx.fillStyle = '#ffffff'
+        ctx.font = `bold ${fontSize}px system-ui`
+        ctx.fillText(String(index + 1), fontSize * 0.5, fontSize * 1.3)
+      }
+      
+      return c
+    }
+
+    const totalParts = splitLines.length + 1
+    
+    splitLines.forEach((y, index) => {
+      const h = y - lastY
+      const canvas = createPart(lastY, h, index, totalParts)
+      parts.push(canvas.toDataURL(exportFormat === 'jpeg' ? 'image/jpeg' : 'image/png', jpegQuality / 100))
+      lastY = y
+    })
+
+    if (lastY < img.height) {
+      const h = img.height - lastY
+      const canvas = createPart(lastY, h, splitLines.length, totalParts)
+      parts.push(canvas.toDataURL(exportFormat === 'jpeg' ? 'image/jpeg' : 'image/png', jpegQuality / 100))
+    }
+
+    setSplitParts(parts)
   }
 
-  // Generate download
-  const handleDownload = () => {
-    const output = files
-      .map((f) => `### ${f.name}\n${f.compressedContent || f.content}`)
-      .join('\n\n---\n\n')
+  const downloadMerged = () => {
+    if (!img || splitParts.length === 0) return
 
-    const blob = new Blob([output], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `compressed-${Date.now()}.txt`
-    a.click()
-    URL.revokeObjectURL(url)
+    // Recreate parts without preview scaling
+    let splitLines: number[] = []
+    let partHeight = 0
+
+    if (mode === 'paper') {
+      partHeight = getPaperHeightPx()
+    } else if (mode === 'height') {
+      partHeight = heightPx
+    } else if (mode === 'preset') {
+      partHeight = getPresetHeight()
+    } else if (mode === 'count') {
+      partHeight = Math.ceil(img.height / count)
+    } else if (mode === 'manual') {
+      splitLines = manualSplits
+    }
+
+    if (mode !== 'manual' && mode !== 'count') {
+      let y = partHeight
+      while (y < img.height) {
+        splitLines.push(y)
+        y += partHeight
+      }
+    } else if (mode === 'count') {
+      for (let i = 1; i < count; i++) {
+        splitLines.push(partHeight * i)
+      }
+    }
+
+    const parts: HTMLCanvasElement[] = []
+    const w = img.width
+    let lastY = 0
+    const totalParts = splitLines.length + 1
+
+    const createPartFull = (startY: number, height: number, index: number) => {
+      const adjustedStartY = Math.max(0, startY - (index > 0 ? overlap : 0))
+      const adjustedHeight = Math.min(img.height - adjustedStartY, height + (index > 0 ? overlap : 0) + (index < totalParts - 1 ? overlap : 0))
+      
+      const c = document.createElement('canvas')
+      c.width = w
+      c.height = adjustedHeight
+      const ctx = c.getContext('2d')!
+      ctx.drawImage(img, 0, adjustedStartY, w, adjustedHeight, 0, 0, w, adjustedHeight)
+      
+      if (showNumbers) {
+        const fontSize = Math.max(24, Math.min(w / 10, 60))
+        ctx.fillStyle = 'rgba(0,0,0,0.7)'
+        ctx.fillRect(0, 0, fontSize * 2.5, fontSize * 1.8)
+        ctx.fillStyle = '#ffffff'
+        ctx.font = `bold ${fontSize}px system-ui`
+        ctx.fillText(String(index + 1), fontSize * 0.5, fontSize * 1.3)
+      }
+      
+      return c
+    }
+
+    splitLines.forEach((y, index) => {
+      const h = y - lastY
+      parts.push(createPartFull(lastY, h, index))
+      lastY = y
+    })
+
+    if (lastY < img.height) {
+      const h = img.height - lastY
+      parts.push(createPartFull(lastY, h, splitLines.length))
+    }
+
+    // Merge horizontally
+    const totalW = w * parts.length
+    const maxH = parts.reduce((m, c) => Math.max(m, c.height), 0)
+
+    const m = document.createElement('canvas')
+    m.width = totalW
+    m.height = maxH
+    const ctx = m.getContext('2d')!
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, m.width, m.height)
+
+    parts.forEach((c, i) => ctx.drawImage(c, i * w, 0))
+
+    const mimeType = exportFormat === 'jpeg' ? 'image/jpeg' : 'image/png'
+    m.toBlob((blob) => {
+      if (!blob) return
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `split-${mode === 'paper' ? paperSize : mode}-merged.${exportFormat}`
+      a.click()
+      URL.revokeObjectURL(url)
+    }, mimeType, jpegQuality / 100)
   }
 
-  // Remove file
-  const handleRemoveFile = (id: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== id))
+  const downloadSeparate = () => {
+    splitParts.forEach((dataUrl, index) => {
+      const a = document.createElement('a')
+      a.href = dataUrl
+      a.download = `split-part-${(index + 1).toString().padStart(2, '0')}.${exportFormat}`
+      a.click()
+    })
   }
 
-  // Clear all
-  const handleClear = () => {
-    setFiles([])
-    setSecurityIssues([])
+  const handleDrop: React.DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault()
+    e.currentTarget.classList.remove('border-cyan-400', 'bg-cyan-500/10')
+    onFile(e.dataTransfer.files?.[0] ?? null)
+  }
+
+  const addSplitLine = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (!imageRef.current || !img || mode !== 'manual') return
+    const rect = imageRef.current.getBoundingClientRect()
+    const scale = img.height / rect.height
+    const y = Math.round((e.clientY - rect.top) * scale)
+    
+    if (y > 10 && y < img.height - 10) {
+      setManualSplits((prev) => [...prev, y].sort((a, b) => a - b))
+    }
+  }
+
+  const removeSplitLine = (index: number) => {
+    setManualSplits((prev) => prev.filter((_, i) => i !== index))
   }
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-5xl">
-      {/* Main Stats - Tool First */}
-      <div className="text-center mb-8">
-        {files.length === 0 ? (
-          <></>
-        ) : (
-          <div className="space-y-4">
-            {/* Big Numbers */}
-            <div className="flex justify-center items-baseline gap-4 sm:gap-8">
-              <div>
-                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-                  {totals.compressed.toLocaleString()}
-                </div>
-                <div className="text-xs sm:text-sm text-gray-400 mt-1">Compressed</div>
-              </div>
-              <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
-              <div>
-                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-400">
-                  {totals.rate}%
-                </div>
-                <div className="text-xs sm:text-sm text-gray-400 mt-1">Saved</div>
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="w-full max-w-md mx-auto">
-              <div className="flex justify-between text-xs text-gray-400 mb-1">
-                <span>{totals.original.toLocaleString()} original</span>
-                <span>{totals.saved.toLocaleString()} saved</span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-cyan-400 to-green-400 transition-all duration-500"
-                  style={{ width: `${totals.rate}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Privacy Badge */}
+      <div className="flex justify-end mb-4">
+        <div className="flex items-center gap-2 text-xs text-gray-400 bg-white/5 px-3 py-2 rounded-lg">
+          <Zap className="w-3 h-3 text-green-400" />
+          <span>100% Browser-based • No Data Upload</span>
+        </div>
       </div>
 
-      {/* Compression Controls */}
-      <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-4 sm:p-6 mb-6 border border-white/10">
-        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-          {/* Compression Level */}
-          <div>
-            <div className="flex items-center gap-2 h-6 mb-3 sm:mb-4">
-              <Sliders className="w-4 h-4 text-gray-400" />
-              <span className="text-sm font-medium text-gray-300">Level</span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {(Object.entries(COMPRESSION_LEVELS) as [CompressionLevel, any][]).map(
-                ([level, info]) => (
-                  <button
-                    key={level}
-                    onClick={() => setCompressionLevel(level)}
-                    className={`min-h-[48px] sm:min-h-[56px] px-3 sm:px-4 py-3 rounded-lg transition-all ${
-                      compressionLevel === level
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                    }`}
-                    title={info.description}
-                  >
-                    <div className="text-left">
-                      <div className="font-medium text-sm">{info.name}</div>
-                      <div className="text-xs opacity-70 hidden sm:block">{info.description}</div>
-                    </div>
-                  </button>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* AI Model Selection */}
-          <div>
-            <div className="flex items-center gap-2 h-6 mb-3 sm:mb-4">
-              <Zap className="w-4 h-4 text-gray-400" />
-              <span className="text-sm font-medium text-gray-300">AI Model</span>
-              {files.length > 0 && (
-                <button
-                  onClick={() => setShowModelDetails(!showModelDetails)}
-                  className="ml-auto min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-cyan-400 transition-colors"
-                  title="Compare models"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform ${showModelDetails ? 'rotate-180' : ''}`}
-                  />
-                </button>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(
-                ([model, info]) => (
-                  <button
-                    key={model}
-                    onClick={() => setSelectedModel(model)}
-                    className={`min-h-[48px] sm:min-h-[56px] px-3 sm:px-4 py-3 rounded-lg transition-all flex flex-col justify-center ${
-                      selectedModel === model
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                    }`}
-                  >
-                    <div
-                      className={`font-medium text-sm ${selectedModel === model ? 'text-white' : info.color}`}
-                    >
-                      {info.name}
-                    </div>
-                    <div className="text-xs mt-1 opacity-70 hidden sm:block">
-                      1 token = {info.ratio} chars
-                    </div>
-                  </button>
-                )
-              )}
-            </div>
+      <div className="space-y-6">
+        {/* Mode Selection */}
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <h4 className="text-white text-sm font-medium mb-3">Split Mode</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            {[
+              { value: 'paper', label: 'Paper Size', icon: <Printer className="w-4 h-4" /> },
+              { value: 'preset', label: 'Presets', icon: <Smartphone className="w-4 h-4" /> },
+              { value: 'height', label: 'By Height', icon: <FileText className="w-4 h-4" /> },
+              { value: 'count', label: 'By Count', icon: <Hash className="w-4 h-4" /> },
+              { value: 'manual', label: 'Manual', icon: <Scissors className="w-4 h-4" /> },
+            ].map((m) => (
+              <button
+                key={m.value}
+                onClick={() => setMode(m.value as SplitMode)}
+                className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all flex flex-col items-center gap-1 ${
+                  mode === m.value
+                    ? 'bg-cyan-600 text-white'
+                    : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                }`}
+              >
+                {m.icon}
+                {m.label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Model Details (collapsible) */}
-        {showModelDetails && files.length > 0 && (
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-gray-400 mb-3">Token comparison</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {(Object.entries(AI_MODELS) as [keyof typeof AI_MODELS, any][]).map(
-                ([model, info]) => {
-                  const modelTokens = files.reduce((sum, f) => {
-                    return sum + Math.ceil((f.compressedContent || f.content).length / info.ratio)
-                  }, 0)
+        {/* Mode-specific Settings */}
+        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="flex flex-wrap items-center gap-4">
+            {mode === 'paper' && (
+              <>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-300 font-medium">Size:</label>
+                  <select
+                    value={paperSize}
+                    onChange={(e) => setPaperSize(e.target.value as PaperSize)}
+                    className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
+                  >
+                    {Object.entries(PAPER_SIZES).map(([key, val]) => (
+                      <option key={key} value={key} className="bg-gray-800 text-white">
+                        {val.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-gray-300 font-medium">DPI:</label>
+                  <select
+                    value={dpi}
+                    onChange={(e) => setDpi(Number(e.target.value))}
+                    className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
+                  >
+                    {DPI_OPTIONS.map((d) => (
+                      <option key={d} value={d} className="bg-gray-800 text-white">
+                        {d}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="text-sm text-cyan-400 font-medium">= {getPaperHeightPx()}px per page</div>
+              </>
+            )}
 
-                  return (
-                    <div
-                      key={model}
-                      className={`text-center p-3 rounded-lg ${
-                        selectedModel === model ? 'bg-white/10' : 'bg-black/20'
+            {mode === 'preset' && (
+              <div className="w-full">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+                  {Object.entries(PRESETS).map(([key, preset]) => (
+                    <button
+                      key={key}
+                      onClick={() => setPresetType(key as PresetType)}
+                      className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all flex flex-col items-center gap-1 ${
+                        presetType === key
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10'
                       }`}
                     >
-                      <div className={`text-lg font-bold ${info.color}`}>
-                        {modelTokens.toLocaleString()}
-                      </div>
-                      <div className="text-xs text-gray-500">{info.name}</div>
+                      {preset.icon}
+                      <span className="text-xs">{preset.name}</span>
+                    </button>
+                  ))}
+                </div>
+                {presetType === 'custom' && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs text-gray-400">W:</label>
+                      <input
+                        type="number"
+                        value={customWidth}
+                        onChange={(e) => setCustomWidth(Number(e.target.value))}
+                        className="w-20 min-h-[40px] px-2 py-1 rounded-lg bg-white/10 border border-white/20 text-white text-sm"
+                      />
                     </div>
-                  )
-                }
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Drop Zone */}
-      <div
-        className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 transition-all ${
-          isDragging
-            ? 'border-cyan-400 bg-cyan-400/10 scale-[1.02]'
-            : files.length > 0
-              ? 'border-white/20 bg-white/5'
-              : 'border-white/20 bg-white/5 hover:border-cyan-400/50'
-        }`}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setIsDragging(true)
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault()
-          setIsDragging(false)
-        }}
-        onDrop={handleDrop}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={handleFileUpload}
-          accept="*"
-        />
-
-        {files.length === 0 ? (
-          <div className="text-center">
-            <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-white font-medium mb-2 text-sm sm:text-base">Drop files here</p>
-            <p className="text-gray-400 text-sm mb-4">or</p>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              disabled={isProcessing}
-              className="min-h-[48px] px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50"
-            >
-              {isProcessing ? (
-                <Loader2 className="animate-spin inline" size={16} />
-              ) : (
-                'Choose Files'
-              )}
-            </button>
-            <p className="text-xs text-gray-500 mt-4">Auto compress with security scan</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {/* File List */}
-            <div className="max-h-48 overflow-y-auto space-y-2">
-              {files.map((file) => (
-                <div
-                  key={file.id}
-                  className="flex items-center justify-between p-3 bg-black/30 rounded-lg group"
-                >
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm text-white font-medium truncate">{file.name}</div>
-                      <div className="text-xs text-gray-500">
-                        {file.originalTokens?.toLocaleString()} to{' '}
-                        {file.compressedTokens?.toLocaleString()}
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs text-gray-400">H:</label>
+                      <input
+                        type="number"
+                        value={customHeight}
+                        onChange={(e) => setCustomHeight(Number(e.target.value))}
+                        className="w-20 min-h-[40px] px-2 py-1 rounded-lg bg-white/10 border border-white/20 text-white text-sm"
+                      />
                     </div>
                   </div>
+                )}
+                {presetType !== 'custom' && (
+                  <p className="text-xs text-gray-500">{PRESETS[presetType].description}</p>
+                )}
+              </div>
+            )}
 
-                  <button
-                    onClick={() => handleRemoveFile(file.id)}
-                    className="ml-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-400 transition-all flex-shrink-0"
-                    aria-label="Remove file"
-                  >
-                    <X size={20} />
-                  </button>
+            {mode === 'height' && (
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-300 font-medium">Height (px):</label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  className="w-28 min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-cyan-400"
+                  min={100}
+                  max={5000}
+                  value={heightPx}
+                  onChange={(e) => setHeightPx(Number(e.target.value))}
+                />
+              </div>
+            )}
+
+            {mode === 'count' && (
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-300 font-medium">Parts:</label>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  className="w-24 min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-cyan-400"
+                  min={2}
+                  max={100}
+                  value={count}
+                  onChange={(e) => setCount(Number(e.target.value))}
+                />
+              </div>
+            )}
+
+            {mode === 'manual' && (
+              <div className="text-sm text-cyan-400">
+                Click on the image below to add split lines
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Advanced Settings */}
+        <div className="bg-white/5 rounded-xl border border-white/10">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="w-full p-4 flex justify-between items-center"
+          >
+            <span className="text-white font-medium flex items-center gap-2">
+              <Scissors className="w-4 h-4 text-cyan-400" />
+              Advanced Options
+            </span>
+            {showAdvanced ? <ChevronUp className="w-5 h-5 text-gray-400" /> : <ChevronDown className="w-5 h-5 text-gray-400" />}
+          </button>
+          
+          {showAdvanced && (
+            <div className="px-4 pb-4 space-y-4">
+              {/* Overlap */}
+              <div>
+                <label className="text-sm text-gray-300 block mb-2">
+                  Overlap (for printing): <span className="text-cyan-400">{overlap}px</span>
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={50}
+                  value={overlap}
+                  onChange={(e) => setOverlap(Number(e.target.value))}
+                  className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer
+                           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 
+                           [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-cyan-500 
+                           [&::-webkit-slider-thumb]:rounded-full"
+                />
+                <p className="text-xs text-gray-500 mt-1">Add overlap between parts for seamless printing assembly</p>
+              </div>
+
+              {/* Show Numbers */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showNumbers}
+                  onChange={(e) => setShowNumbers(e.target.checked)}
+                  className="w-4 h-4 rounded bg-white/10 border-white/20 text-cyan-500 focus:ring-cyan-500"
+                />
+                <span className="text-sm text-gray-300">Show part numbers on images</span>
+              </label>
+
+              {/* Export Format */}
+              <div className="flex items-center gap-4">
+                <div>
+                  <label className="text-sm text-gray-300 block mb-2">Format</label>
+                  <div className="flex gap-2">
+                    {(['png', 'jpeg'] as ExportFormat[]).map((fmt) => (
+                      <button
+                        key={fmt}
+                        onClick={() => setExportFormat(fmt)}
+                        className={`px-4 py-2 rounded-lg text-xs font-medium uppercase transition-all ${
+                          exportFormat === fmt
+                            ? 'bg-cyan-600 text-white'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        }`}
+                      >
+                        {fmt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              ))}
+                {exportFormat === 'jpeg' && (
+                  <div className="flex-1">
+                    <label className="text-sm text-gray-300 block mb-2">Quality: {jpegQuality}%</label>
+                    <input
+                      type="range"
+                      min={50}
+                      max={100}
+                      value={jpegQuality}
+                      onChange={(e) => setJpegQuality(Number(e.target.value))}
+                      className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer
+                               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 
+                               [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-cyan-500 
+                               [&::-webkit-slider-thumb]:rounded-full"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
+          )}
+        </div>
 
-            {/* Add More Button */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full min-h-[48px] py-2.5 border border-dashed border-white/20 rounded-lg text-gray-400 hover:border-cyan-400 hover:text-cyan-400 transition-all"
+        {/* Drop Zone */}
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => document.getElementById('split-file')?.click()}
+          onKeyDown={(e) => e.key === 'Enter' ? document.getElementById('split-file')?.click() : null}
+          onDragOver={(e) => {
+            e.preventDefault()
+            e.currentTarget.classList.add('border-cyan-400', 'bg-cyan-500/10')
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault()
+            e.currentTarget.classList.remove('border-cyan-400', 'bg-cyan-500/10')
+          }}
+          onDrop={handleDrop}
+          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/30 text-gray-300 text-center py-10 min-h-[150px] hover:border-cyan-400 hover:bg-cyan-500/10 transition-all flex flex-col items-center justify-center"
+        >
+          <Scissors className="w-10 h-10 text-cyan-400 mb-3" />
+          <div className="text-lg font-medium mb-2">Drop a long image here</div>
+          <div className="text-sm">or click to select</div>
+        </div>
+
+        {/* Download Options */}
+        {splitParts.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              value={downloadType}
+              onChange={(e) => setDownloadType(e.target.value as 'merged' | 'separate')}
+              className="min-h-[44px] px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm focus:outline-none focus:border-cyan-400"
             >
-              + Add More
+              <option value="separate" className="bg-gray-800 text-white">Separate files ({splitParts.length})</option>
+              <option value="merged" className="bg-gray-800 text-white">Merged (side by side)</option>
+            </select>
+            <button
+              className="min-h-[48px] px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
+              onClick={downloadType === 'merged' ? downloadMerged : downloadSeparate}
+            >
+              <Download className="w-4 h-4" />
+              <span>Download {exportFormat.toUpperCase()}</span>
+            </button>
+            <button
+              onClick={clearImage}
+              className="min-h-[44px] px-4 py-2 bg-white/5 text-gray-300 rounded-lg hover:bg-white/10 transition-all"
+            >
+              Clear
             </button>
           </div>
         )}
+
+        {/* Preview */}
+        {preview && (
+          <div className="space-y-6">
+            {/* Original with Split Lines */}
+            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-white font-semibold flex items-center gap-2">
+                  Original Image
+                  {img && <span className="text-xs text-gray-500 font-normal">({img.width}×{img.height}px)</span>}
+                </h3>
+                {mode === 'manual' && (
+                  <span className="text-cyan-400 text-xs sm:text-sm">Click to add split line</span>
+                )}
+              </div>
+              <div className="max-h-96 overflow-auto rounded-lg bg-black/20 p-2">
+                <div className="relative inline-block">
+                  <img
+                    ref={imageRef}
+                    src={preview}
+                    alt="original"
+                    className="max-w-full cursor-crosshair"
+                    style={{ maxHeight: '400px' }}
+                    onClick={mode === 'manual' ? addSplitLine : undefined}
+                  />
+
+                  {/* Manual split lines */}
+                  {mode === 'manual' && img && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      {manualSplits.map((y, index) => (
+                        <div
+                          key={index}
+                          className="absolute w-full"
+                          style={{ top: `${(y / img.height) * 100}%` }}
+                        >
+                          <div className="w-full h-0.5 bg-cyan-400 shadow-lg" />
+                          <span className="absolute left-2 -mt-6 bg-black/90 text-cyan-400 text-xs rounded px-2 py-1">
+                            {y}px
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeSplitLine(index)
+                            }}
+                            className="absolute right-2 -mt-8 min-w-[44px] min-h-[32px] bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg px-3 py-1 pointer-events-auto transition-colors flex items-center gap-1"
+                          >
+                            <X className="w-3 h-3" />
+                            <span className="hidden sm:inline">Remove</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Split Parts Preview */}
+            {splitParts.length > 0 && (
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                  <span>Split Result</span>
+                  <span className="text-xs text-cyan-400 bg-cyan-500/20 px-2 py-0.5 rounded">
+                    {splitParts.length} parts
+                  </span>
+                  {overlap > 0 && (
+                    <span className="text-xs text-gray-500">+{overlap}px overlap</span>
+                  )}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {splitParts.map((part, index) => (
+                    <div key={index} className="bg-black/20 rounded-lg p-2 hover:bg-black/30 transition-colors">
+                      <div className="text-xs text-cyan-400 font-medium mb-1 text-center">
+                        Part {index + 1}
+                      </div>
+                      <img
+                        src={part}
+                        alt={`Part ${index + 1}`}
+                        className="w-full h-auto rounded"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <input
+          id="split-file"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => onFile(e.target.files?.[0] || null)}
+        />
       </div>
 
-      {/* Security Issues */}
-      {securityIssues.length > 0 && (
-        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <Shield className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-yellow-400 font-medium mb-2 text-sm sm:text-base">
-                Security Alert
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {securityIssues.map((issue, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full"
-                  >
-                    {issue.count} {issue.type.replace('_', ' ')}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={() => {
-                  const cleaned = files.map((f) => ({
-                    ...f,
-                    content: removeSensitiveData(f.content),
-                    compressedContent: removeSensitiveData(f.compressedContent || ''),
-                  }))
-                  setFiles(cleaned)
-                  setSecurityIssues([])
-                }}
-                className="mt-3 min-h-[44px] px-4 py-2 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm hover:bg-yellow-500/30 transition-all"
-              >
-                Remove Sensitive Data
-              </button>
-            </div>
-          </div>
+      {/* Features */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="text-lg mb-1">📄</div>
+          <div className="text-xs text-gray-400">Paper sizes</div>
         </div>
-      )}
-
-      {/* Actions */}
-      {files.length > 0 && (
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handleClear}
-            className="min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-1 sm:order-1"
-          >
-            <Trash2 className="inline mr-2" size={16} />
-            Clear
-          </button>
-
-          <button
-            onClick={() => setShowPreview(!showPreview)}
-            className="min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-2 sm:order-2"
-          >
-            {showPreview ? (
-              <>
-                <EyeOff className="inline mr-2" size={16} />
-                Hide
-              </>
-            ) : (
-              <>
-                <Eye className="inline mr-2" size={16} />
-                Preview
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handleCopy}
-            className="flex-1 min-h-[48px] px-4 py-2.5 bg-white/5 text-gray-300 rounded-lg font-medium hover:bg-white/10 transition-all order-3 sm:order-3"
-          >
-            {copied ? (
-              <>
-                <Check className="inline mr-2" size={16} />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="inline mr-2" size={16} />
-                Copy
-              </>
-            )}
-          </button>
-
-          <button
-            onClick={handleDownload}
-            className="flex-1 min-h-[48px] px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all order-4 sm:order-4"
-          >
-            <Download className="inline mr-2" size={16} />
-            Download
-          </button>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="text-lg mb-1">📱</div>
+          <div className="text-xs text-gray-400">Social presets</div>
         </div>
-      )}
-
-      {/* Preview */}
-      {showPreview && files.length > 0 && (
-        <div className="mt-6 bg-black/40 rounded-xl p-4 border border-white/10">
-          <h3 className="text-sm font-medium text-gray-400 mb-3">Preview</h3>
-          <pre className="text-xs text-gray-300 font-mono overflow-x-auto whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
-            {files
-              .slice(0, 2)
-              .map(
-                (f) =>
-                  `### ${f.name}\n${(f.compressedContent || f.content).substring(0, 500)}${
-                    (f.compressedContent || f.content).length > 500 ? '...' : ''
-                  }`
-              )
-              .join('\n\n')}
-            {files.length > 2 && `\n\n... and ${files.length - 2} more files`}
-          </pre>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="text-lg mb-1">✂️</div>
+          <div className="text-xs text-gray-400">Manual split</div>
         </div>
-      )}
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="text-lg mb-1">🔢</div>
+          <div className="text-xs text-gray-400">Part numbers</div>
+        </div>
+      </div>
     </div>
   )
 }

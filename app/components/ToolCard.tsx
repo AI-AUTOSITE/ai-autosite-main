@@ -33,10 +33,10 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
   return (
     <Link
       href={tool.url || `/tools/${tool.id}`}
-      className="group relative bg-gray-800/50 backdrop-blur-sm rounded-xl 
-                 border border-gray-700/50 hover:border-cyan-500/50
-                 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10
-                 hover:scale-[1.02] overflow-hidden flex flex-col h-full items-start
+      className="group relative bg-white/5 backdrop-blur-xl rounded-2xl 
+                 border border-white/10 hover:border-white/20 hover:bg-white/10
+                 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10
+                 hover:-translate-y-1 overflow-hidden flex flex-col h-full items-start
                  p-4 sm:p-5 md:p-6"
     >
       {/* Badge Container - Responsive positioning */}
@@ -109,7 +109,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
 
         {/* Footer - Same structure as CategoryCard */}
         <div className="w-full flex items-center justify-between 
-                      border-t border-gray-700/50 gap-2 mt-auto pt-3 sm:pt-4">
+                      border-t border-white/10 gap-2 mt-auto pt-3 sm:pt-4">
           {/* Time indicator */}
           {tool.timeToUse && (
             <span className="flex items-center gap-1 sm:gap-1.5 
@@ -149,9 +149,9 @@ export function ToolCardCompact({ tool }: ToolCardProps) {
     <Link
       href={tool.url || `/tools/${tool.id}`}
       className="group flex items-center gap-3 sm:gap-4 
-               p-3 sm:p-4 rounded-xl bg-gray-800/50 
-               border border-gray-700/50 hover:border-cyan-500/50
-               transition-all duration-200 hover:bg-gray-800"
+               p-3 sm:p-4 rounded-xl bg-white/5 backdrop-blur-sm
+               border border-white/10 hover:border-white/20
+               transition-all duration-300 hover:bg-white/10"
     >
       {/* Icon - CENTERED IN BOX */}
       <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0
@@ -217,10 +217,11 @@ export function ToolCardFeatured({ tool }: ToolCardProps) {
   return (
     <Link
       href={tool.url || `/tools/${tool.id}`}
-      className="group relative bg-gradient-to-br from-gray-800 to-gray-900 
-                 rounded-2xl border-2 border-cyan-500/20 hover:border-cyan-500/50
-                 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20
-                 hover:scale-[1.02] overflow-hidden flex flex-col h-full items-start
+      className="group relative bg-white/5 backdrop-blur-xl 
+                 rounded-2xl sm:rounded-3xl border border-white/10 
+                 hover:border-white/20 hover:bg-white/10
+                 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10
+                 hover:-translate-y-1 overflow-hidden flex flex-col h-full items-start
                  p-6 sm:p-8"
     >
       {/* Featured Badge & Other Badges */}
@@ -282,7 +283,7 @@ export function ToolCardFeatured({ tool }: ToolCardProps) {
       </p>
 
       {/* CTA */}
-      <div className="flex items-center justify-between pt-4 border-t border-gray-700/50 mt-auto">
+      <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-auto w-full">
         {tool.timeToUse && (
           <span className="flex items-center gap-2 text-sm text-gray-400">
             <Clock className="w-4 h-4" />

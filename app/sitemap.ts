@@ -63,11 +63,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'test-text-generator',
     'text-case',
     'text-counter',
+    'timestamp-converter',
     'token-compressor',
     'twitter-counter',
     'unit-converter',
+    'url-encoder',
     'uuid-generator',
-    'whatsapp-link'
+    'whatsapp-link',
+    'word-counter-pro',
+    'hash-generator',
+    'regex-tester',
+    'code-formatter',
+    'meta-tag-generator',
+    'cron-generator',
+    'diff-checker',
+    'aspect-ratio-calculator'
     ]
 
   const blogPosts = [
@@ -120,7 +130,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'twitter-counter-guide',
     'unit-converter-guide',
     'uuid-generator-guide',
-    'whatsapp-link-generator-guide'
+    'whatsapp-link-generator-guide',
+    'timestamp-converter-guide',
+    'url-encoder-guide',
+    'aspect-ratio-calculator-guide',
+    'word-counter-pro-guide',
+    'hash-generator-guide',
+    'regex-tester-guide',
+    'code-formatter-guide',
+    'meta-tag-generator-guide',
+    'cron-generator-guide',
+    'diff-checker-guide'
     ]
 
   const highPriorityTools = [

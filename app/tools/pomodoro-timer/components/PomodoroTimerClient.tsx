@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Play, Pause, RotateCcw, Settings, Coffee, Book } from 'lucide-react'
+import { Play, Pause, RotateCcw, Settings, Coffee, Book, Lock } from 'lucide-react'
 
 type TimerMode = 'work' | 'shortBreak' | 'longBreak'
 
@@ -221,6 +221,17 @@ export default function PomodoroTimerClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-2">
+        <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <p className="text-green-300 font-medium">100% Private</p>
+          <p className="text-green-400/70 text-xs mt-1">
+            Session data stays in your browser • Resets on page reload • No tracking
+          </p>
+        </div>
+      </div>
+
       {/* Main Timer Card */}
       <div className={`bg-gradient-to-br ${modeInfo.bgColor} backdrop-blur-xl 
                     rounded-3xl border ${modeInfo.borderColor} p-8 sm:p-12 mb-6`}>

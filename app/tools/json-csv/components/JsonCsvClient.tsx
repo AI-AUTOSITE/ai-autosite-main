@@ -11,14 +11,44 @@ import {
   FileJson,
   FileSpreadsheet,
   AlertCircle,
+  Lock,
+  ChevronDown,
+  ChevronUp,
+  Settings2,
 } from 'lucide-react'
 
 type ConversionMode = 'json-to-csv' | 'csv-to-json'
+type FlattenStyle = 'dot' | 'underscore' | 'bracket'
+type Delimiter = ',' | ';' | '\t' | '|'
 
 interface ConversionResult {
   output: string
   preview: string[][]
   error?: string
+  errorLine?: number
+  stats?: {
+    rows: number
+    columns: number
+  }
+}
+
+const DELIMITERS: { value: Delimiter; label: string }[] = [
+  { value: ',', label: 'Comma (,)' },
+  { value: ';', label: 'Semicolon (;)' },
+  { value: '\t', label: 'Tab' },
+  { value: '|', label: 'Pipe (|)' },
+]
+
+const FLATTEN_STYLES: { value: FlattenStyle; label: string; example: string }[] = [
+  { value: 'dot', label: 'Dot Notation', example: 'user.address.city' },
+  { value: 'underscore', label: 'Underscore', example: 'user_address_city' },
+  { value: 'bracket', label: 'Bracket', example: 'user[address][city]' },
+]
+
+const vibrate = (duration: number = 30) => {
+  if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    navigator.vibrate(duration)
+  }
 }
 
 export default function JsonCsvClient() {
@@ -26,65 +56,100 @@ export default function JsonCsvClient() {
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ConversionResult | null>(null)
   const [copied, setCopied] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
+  
+  // Options
+  const [delimiter, setDelimiter] = useState<Delimiter>(',')
+  const [flattenStyle, setFlattenStyle] = useState<FlattenStyle>('dot')
+  const [addBom, setAddBom] = useState(false)
+  const [unwindArrays, setUnwindArrays] = useState(false)
+
+  // Flatten nested objects with selected style
+  const flattenObject = useCallback((obj: any, prefix = ''): any => {
+    return Object.keys(obj).reduce((acc: any, key: string) => {
+      const value = obj[key]
+      let newKey: string
+      
+      switch (flattenStyle) {
+        case 'underscore':
+          newKey = prefix ? `${prefix}_${key}` : key
+          break
+        case 'bracket':
+          newKey = prefix ? `${prefix}[${key}]` : key
+          break
+        default: // dot
+          newKey = prefix ? `${prefix}.${key}` : key
+      }
+
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        Object.assign(acc, flattenObject(value, newKey))
+      } else if (Array.isArray(value)) {
+        if (unwindArrays && value.length > 0 && typeof value[0] !== 'object') {
+          // Simple array: stringify
+          acc[newKey] = JSON.stringify(value)
+        } else {
+          acc[newKey] = JSON.stringify(value)
+        }
+      } else {
+        acc[newKey] = value
+      }
+
+      return acc
+    }, {})
+  }, [flattenStyle, unwindArrays])
 
   // JSON to CSV conversion
   const jsonToCsv = useCallback((jsonString: string): ConversionResult => {
     try {
-      const data = JSON.parse(jsonString)
+      let data: any
+      try {
+        data = JSON.parse(jsonString)
+      } catch (e: any) {
+        // Try to find the error position
+        const match = e.message.match(/position (\d+)/)
+        const position = match ? parseInt(match[1]) : 0
+        const lines = jsonString.substring(0, position).split('\n')
+        const errorLine = lines.length
+        
+        return {
+          output: '',
+          preview: [],
+          error: `JSON syntax error: ${e.message}`,
+          errorLine,
+        }
+      }
 
       // Handle single object
       if (!Array.isArray(data)) {
-        return jsonToCsv(JSON.stringify([data]))
+        data = [data]
       }
 
-      // Empty array check
       if (data.length === 0) {
         return {
           output: '',
           preview: [],
-          error: 'Empty data',
+          error: 'Empty data array',
         }
       }
 
-      // Flatten nested objects
-      const flattenObject = (obj: any, prefix = ''): any => {
-        return Object.keys(obj).reduce((acc: any, key: string) => {
-          const value = obj[key]
-          const newKey = prefix ? `${prefix}.${key}` : key
-
-          if (value && typeof value === 'object' && !Array.isArray(value)) {
-            Object.assign(acc, flattenObject(value, newKey))
-          } else if (Array.isArray(value)) {
-            acc[newKey] = JSON.stringify(value)
-          } else {
-            acc[newKey] = value
-          }
-
-          return acc
-        }, {})
-      }
-
       // Flatten all objects
-      const flatData = data.map((item) => flattenObject(item))
+      const flatData = data.map((item: any) => flattenObject(item))
 
       // Get all unique headers
-      const headers = Array.from(new Set(flatData.flatMap((item) => Object.keys(item))))
+      const headers = Array.from(new Set(flatData.flatMap((item: any) => Object.keys(item)))) as string[]
 
-      // Create CSV
+      // Create CSV rows
       const csvRows: string[][] = []
-
-      // Add headers
       csvRows.push(headers)
 
-      // Add data rows
-      flatData.forEach((item) => {
+      flatData.forEach((item: any) => {
         const row = headers.map((header) => {
           const value = item[header]
           if (value === null || value === undefined) return ''
 
-          // Escape quotes and wrap in quotes if contains comma or newline
           const stringValue = String(value)
-          if (stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')) {
+          // Escape quotes and wrap in quotes if contains delimiter or newline
+          if (stringValue.includes(delimiter) || stringValue.includes('\n') || stringValue.includes('"')) {
             return `"${stringValue.replace(/"/g, '""')}"`
           }
           return stringValue
@@ -93,11 +158,20 @@ export default function JsonCsvClient() {
       })
 
       // Convert to CSV string
-      const csvString = csvRows.map((row) => row.join(',')).join('\n')
+      let csvString = csvRows.map((row) => row.join(delimiter)).join('\n')
+      
+      // Add BOM for Excel compatibility
+      if (addBom) {
+        csvString = '\ufeff' + csvString
+      }
 
       return {
         output: csvString,
-        preview: csvRows.slice(0, 6), // Show first 5 rows + header
+        preview: csvRows.slice(0, 6),
+        stats: {
+          rows: csvRows.length - 1,
+          columns: headers.length,
+        },
       }
     } catch (error) {
       return {
@@ -106,7 +180,7 @@ export default function JsonCsvClient() {
         error: error instanceof Error ? error.message : 'Invalid JSON',
       }
     }
-  }, [])
+  }, [delimiter, addBom, flattenObject])
 
   // CSV to JSON conversion
   const csvToJson = useCallback((csvString: string): ConversionResult => {
@@ -117,11 +191,11 @@ export default function JsonCsvClient() {
         return {
           output: '',
           preview: [],
-          error: 'Need at least header and one row',
+          error: 'Need at least header row and one data row',
         }
       }
 
-      // Parse CSV (simple parser, handles quoted fields)
+      // Parse CSV line (handles quoted fields)
       const parseCSVLine = (line: string): string[] => {
         const result: string[] = []
         let current = ''
@@ -137,7 +211,7 @@ export default function JsonCsvClient() {
             } else {
               inQuotes = !inQuotes
             }
-          } else if (char === ',' && !inQuotes) {
+          } else if (char === delimiter && !inQuotes) {
             result.push(current.trim())
             current = ''
           } else {
@@ -149,7 +223,6 @@ export default function JsonCsvClient() {
         return result
       }
 
-      // Parse all lines
       const headers = parseCSVLine(lines[0])
       const rows = lines.slice(1).map((line) => parseCSVLine(line))
 
@@ -160,7 +233,7 @@ export default function JsonCsvClient() {
           const value = row[index] || ''
 
           // Try to parse numbers
-          if (value && !isNaN(Number(value))) {
+          if (value && !isNaN(Number(value)) && value.trim() !== '') {
             obj[header] = Number(value)
           }
           // Try to parse booleans
@@ -169,8 +242,13 @@ export default function JsonCsvClient() {
           } else if (value.toLowerCase() === 'false') {
             obj[header] = false
           }
-          // Try to parse arrays
-          else if (value.startsWith('[') && value.endsWith(']')) {
+          // Try to parse null
+          else if (value.toLowerCase() === 'null') {
+            obj[header] = null
+          }
+          // Try to parse arrays/objects
+          else if ((value.startsWith('[') && value.endsWith(']')) || 
+                   (value.startsWith('{') && value.endsWith('}'))) {
             try {
               obj[header] = JSON.parse(value)
             } catch {
@@ -185,12 +263,15 @@ export default function JsonCsvClient() {
         return obj
       })
 
-      // Create preview table
       const previewData = [headers, ...rows.slice(0, 5)]
 
       return {
         output: JSON.stringify(jsonData, null, 2),
         preview: previewData,
+        stats: {
+          rows: jsonData.length,
+          columns: headers.length,
+        },
       }
     } catch (error) {
       return {
@@ -199,9 +280,8 @@ export default function JsonCsvClient() {
         error: error instanceof Error ? error.message : 'Invalid CSV',
       }
     }
-  }, [])
+  }, [delimiter])
 
-  // Handle conversion
   const handleConvert = useCallback(() => {
     if (!input.trim()) {
       setResult({
@@ -212,103 +292,105 @@ export default function JsonCsvClient() {
       return
     }
 
+    vibrate(30)
     const conversionResult = mode === 'json-to-csv' ? jsonToCsv(input) : csvToJson(input)
     setResult(conversionResult)
   }, [input, mode, jsonToCsv, csvToJson])
 
-  // Handle file upload
-  const handleFileUpload = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (!file) return
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-      // Check file size (5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        setResult({
-          output: '',
-          preview: [],
-          error: 'File too large (max 5MB)',
-        })
-        return
-      }
+    if (file.size > 10 * 1024 * 1024) {
+      setResult({
+        output: '',
+        preview: [],
+        error: 'File too large (max 10MB)',
+      })
+      return
+    }
 
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const text = event.target?.result as string
-        setInput(text)
-      }
-      reader.readAsText(file)
-    },
-    []
-  )
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const text = event.target?.result as string
+      setInput(text)
+      vibrate(30)
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }, [])
 
-  // Copy to clipboard
   const handleCopy = useCallback(async () => {
-    if (!result?.output) return
-
-    await navigator.clipboard.writeText(result.output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (result?.output) {
+      await navigator.clipboard.writeText(result.output)
+      setCopied(true)
+      vibrate(30)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }, [result])
 
-  // Download file
   const handleDownload = useCallback(() => {
-    if (!result?.output) return
-
-    const extension = mode === 'json-to-csv' ? 'csv' : 'json'
-    const mimeType = mode === 'json-to-csv' ? 'text/csv' : 'application/json'
-
-    const blob = new Blob([result.output], { type: mimeType })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `converted-${Date.now()}.${extension}`
-    a.click()
-    URL.revokeObjectURL(url)
+    if (result?.output) {
+      const ext = mode === 'json-to-csv' ? 'csv' : 'json'
+      const mimeType = mode === 'json-to-csv' ? 'text/csv' : 'application/json'
+      
+      const blob = new Blob([result.output], { type: `${mimeType};charset=utf-8` })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `converted-${Date.now()}.${ext}`
+      link.click()
+      URL.revokeObjectURL(url)
+      vibrate(30)
+    }
   }, [result, mode])
 
-  // Clear all
   const handleClear = useCallback(() => {
     setInput('')
     setResult(null)
-    setCopied(false)
+    vibrate(30)
   }, [])
 
-  // Switch mode
   const handleSwitchMode = useCallback(() => {
     setMode((prev) => (prev === 'json-to-csv' ? 'csv-to-json' : 'json-to-csv'))
     setInput('')
     setResult(null)
-    setCopied(false)
+    vibrate(30)
   }, [])
 
-  // Sample data
   const loadSample = useCallback(() => {
+    vibrate(30)
     if (mode === 'json-to-csv') {
       const sample = [
-        { id: 1, name: 'John', age: 30, city: 'New York' },
-        { id: 2, name: 'Jane', age: 25, city: 'Los Angeles' },
-        { id: 3, name: 'Bob', age: 35, city: 'Chicago' },
+        { id: 1, name: 'John Doe', email: 'john@example.com', address: { city: 'New York', zip: '10001' } },
+        { id: 2, name: 'Jane Smith', email: 'jane@example.com', address: { city: 'Los Angeles', zip: '90001' } },
+        { id: 3, name: 'Bob Johnson', email: 'bob@example.com', address: { city: 'Chicago', zip: '60601' } },
       ]
       setInput(JSON.stringify(sample, null, 2))
     } else {
-      const sample = `id,name,age,city
-1,John,30,New York
-2,Jane,25,Los Angeles
-3,Bob,35,Chicago`
+      const sample = `id,name,email,city
+1,John Doe,john@example.com,New York
+2,Jane Smith,jane@example.com,Los Angeles
+3,Bob Johnson,bob@example.com,Chicago`
       setInput(sample)
     }
   }, [mode])
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-6xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-2">
+        <Lock className="w-4 h-4 text-green-400 flex-shrink-0" />
+        <p className="text-green-400 text-xs">
+          <span className="font-medium">100% Private</span> — All conversion happens locally in your browser. No data uploaded.
+        </p>
+      </div>
+
       {/* Mode Switcher */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl rounded-full p-2 border border-white/10">
           <button
-            onClick={() => {
-              if (mode !== 'json-to-csv') handleSwitchMode()
-            }}
+            onClick={() => { if (mode !== 'json-to-csv') handleSwitchMode() }}
             className={`min-h-[44px] px-4 sm:px-6 py-2 rounded-full transition-all flex items-center gap-2 ${
               mode === 'json-to-csv'
                 ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
@@ -316,15 +398,13 @@ export default function JsonCsvClient() {
             }`}
           >
             <FileJson className="w-4 h-4" />
-            <span className="text-sm font-medium">JSON to CSV</span>
+            <span className="text-sm font-medium">JSON → CSV</span>
           </button>
 
           <ArrowRightLeft className="w-4 h-4 text-gray-400" />
 
           <button
-            onClick={() => {
-              if (mode !== 'csv-to-json') handleSwitchMode()
-            }}
+            onClick={() => { if (mode !== 'csv-to-json') handleSwitchMode() }}
             className={`min-h-[44px] px-4 sm:px-6 py-2 rounded-full transition-all flex items-center gap-2 ${
               mode === 'csv-to-json'
                 ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
@@ -332,9 +412,87 @@ export default function JsonCsvClient() {
             }`}
           >
             <FileSpreadsheet className="w-4 h-4" />
-            <span className="text-sm font-medium">CSV to JSON</span>
+            <span className="text-sm font-medium">CSV → JSON</span>
           </button>
         </div>
+      </div>
+
+      {/* Options Panel */}
+      <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 mb-4">
+        <button
+          onClick={() => setShowOptions(!showOptions)}
+          className="w-full p-3 flex items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-2">
+            <Settings2 className="w-4 h-4 text-gray-400" />
+            <span className="text-white text-sm font-medium">Conversion Options</span>
+          </div>
+          {showOptions ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+        </button>
+        
+        {showOptions && (
+          <div className="px-4 pb-4 border-t border-white/10 pt-4 space-y-4">
+            <div className="grid sm:grid-cols-2 gap-4">
+              {/* Delimiter */}
+              <div>
+                <label className="block text-gray-400 text-xs mb-2">Delimiter</label>
+                <div className="grid grid-cols-4 gap-1">
+                  {DELIMITERS.map((d) => (
+                    <button
+                      key={d.value}
+                      onClick={() => setDelimiter(d.value)}
+                      className={`px-2 py-2 rounded text-xs transition-all ${
+                        delimiter === d.value
+                          ? 'bg-purple-500 text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                      }`}
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Flatten Style (JSON to CSV only) */}
+              {mode === 'json-to-csv' && (
+                <div>
+                  <label className="block text-gray-400 text-xs mb-2">Nested Object Style</label>
+                  <div className="grid grid-cols-3 gap-1">
+                    {FLATTEN_STYLES.map((s) => (
+                      <button
+                        key={s.value}
+                        onClick={() => setFlattenStyle(s.value)}
+                        className={`px-2 py-2 rounded text-xs transition-all ${
+                          flattenStyle === s.value
+                            ? 'bg-purple-500 text-white'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        }`}
+                        title={s.example}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Checkboxes */}
+            {mode === 'json-to-csv' && (
+              <div className="flex flex-wrap gap-4">
+                <label className="flex items-center gap-2 text-gray-300 text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={addBom}
+                    onChange={(e) => setAddBom(e.target.checked)}
+                    className="w-4 h-4 rounded"
+                  />
+                  <span>Add BOM for Excel</span>
+                </label>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -343,15 +501,9 @@ export default function JsonCsvClient() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               {mode === 'json-to-csv' ? (
-                <>
-                  <FileJson className="w-5 h-5" />
-                  JSON Input
-                </>
+                <><FileJson className="w-5 h-5" /> JSON Input</>
               ) : (
-                <>
-                  <FileSpreadsheet className="w-5 h-5" />
-                  CSV Input
-                </>
+                <><FileSpreadsheet className="w-5 h-5" /> CSV Input</>
               )}
             </h2>
 
@@ -360,7 +512,7 @@ export default function JsonCsvClient() {
                 <Upload className="w-4 h-4 text-gray-400" />
                 <input
                   type="file"
-                  accept={mode === 'json-to-csv' ? '.json' : '.csv'}
+                  accept={mode === 'json-to-csv' ? '.json' : '.csv,.txt'}
                   onChange={handleFileUpload}
                   className="hidden"
                 />
@@ -370,7 +522,6 @@ export default function JsonCsvClient() {
                 <button
                   onClick={handleClear}
                   className="min-h-[44px] min-w-[44px] flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg transition-all"
-                  aria-label="Clear"
                 >
                   <Trash2 className="w-4 h-4 text-gray-400" />
                 </button>
@@ -393,7 +544,7 @@ export default function JsonCsvClient() {
             <button
               onClick={handleConvert}
               disabled={!input.trim()}
-              className="flex-1 min-h-[48px] px-4 py-2.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="flex-1 min-h-[48px] px-4 py-2.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Convert
             </button>
@@ -412,15 +563,9 @@ export default function JsonCsvClient() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               {mode === 'json-to-csv' ? (
-                <>
-                  <FileSpreadsheet className="w-5 h-5" />
-                  CSV Output
-                </>
+                <><FileSpreadsheet className="w-5 h-5" /> CSV Output</>
               ) : (
-                <>
-                  <FileJson className="w-5 h-5" />
-                  JSON Output
-                </>
+                <><FileJson className="w-5 h-5" /> JSON Output</>
               )}
             </h2>
 
@@ -429,22 +574,11 @@ export default function JsonCsvClient() {
                 <button
                   onClick={handleCopy}
                   className={`min-h-[44px] px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
-                    copied
-                      ? 'bg-green-500 text-white'
-                      : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                    copied ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10'
                   }`}
                 >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      <span className="text-sm hidden sm:inline">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      <span className="text-sm hidden sm:inline">Copy</span>
-                    </>
-                  )}
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  <span className="text-sm hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
                 </button>
 
                 <button
@@ -464,10 +598,21 @@ export default function JsonCsvClient() {
               <div>
                 <p className="text-red-400 font-medium text-sm">Error</p>
                 <p className="text-red-300 text-sm mt-1">{result.error}</p>
+                {result.errorLine && (
+                  <p className="text-red-400/70 text-xs mt-1">Near line {result.errorLine}</p>
+                )}
               </div>
             </div>
           ) : result?.output ? (
             <div className="space-y-4">
+              {/* Stats */}
+              {result.stats && (
+                <div className="flex gap-4 text-xs text-gray-400">
+                  <span>{result.stats.rows} rows</span>
+                  <span>{result.stats.columns} columns</span>
+                </div>
+              )}
+
               {/* Preview Table */}
               {result.preview.length > 0 && (
                 <div>
@@ -477,10 +622,7 @@ export default function JsonCsvClient() {
                       <thead>
                         <tr className="border-b border-white/10">
                           {result.preview[0].map((header, i) => (
-                            <th
-                              key={i}
-                              className="text-left text-gray-400 font-medium pb-2 pr-4 whitespace-nowrap"
-                            >
+                            <th key={i} className="text-left text-gray-400 font-medium pb-2 pr-4 whitespace-nowrap">
                               {header}
                             </th>
                           ))}
@@ -490,7 +632,7 @@ export default function JsonCsvClient() {
                         {result.preview.slice(1).map((row, i) => (
                           <tr key={i} className="border-b border-white/5">
                             {row.map((cell, j) => (
-                              <td key={j} className="text-gray-300 py-2 pr-4 whitespace-nowrap">
+                              <td key={j} className="text-gray-300 py-2 pr-4 whitespace-nowrap max-w-[150px] truncate">
                                 {cell}
                               </td>
                             ))}
@@ -507,7 +649,8 @@ export default function JsonCsvClient() {
                 <p className="text-xs text-gray-400 mb-2">Full Output</p>
                 <div className="bg-black/30 rounded-xl p-4 max-h-48 overflow-y-auto">
                   <pre className="text-gray-300 text-xs font-mono whitespace-pre-wrap break-words">
-                    {result.output}
+                    {result.output.slice(0, 5000)}
+                    {result.output.length > 5000 && '\n... (truncated)'}
                   </pre>
                 </div>
               </div>
@@ -518,11 +661,6 @@ export default function JsonCsvClient() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Info */}
-      <div className="mt-6 text-center text-xs text-gray-500">
-        <p>All processing happens in your browser. No data is uploaded.</p>
       </div>
     </div>
   )

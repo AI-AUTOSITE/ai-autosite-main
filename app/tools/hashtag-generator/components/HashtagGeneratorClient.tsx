@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Hash, Copy, Check, Instagram, Twitter, Music2, Sparkles, TrendingUp } from 'lucide-react'
+import { Hash, Copy, Check, Instagram, Twitter, Music2, Sparkles, TrendingUp, Lock } from 'lucide-react'
 
 type Platform = 'instagram' | 'twitter' | 'tiktok'
 
@@ -432,6 +432,17 @@ export default function HashtagGeneratorClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-2">
+        <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <p className="text-green-300 font-medium">100% Private</p>
+          <p className="text-green-400/70 text-xs mt-1">
+            Hashtags generated locally in your browser • No tracking • No data collection
+          </p>
+        </div>
+      </div>
+
       {/* Platform Selection */}
       <div className="bg-white/5 backdrop-blur-xl rounded-xl border border-white/10 p-2 mb-6">
         <div className="grid grid-cols-3 gap-2">

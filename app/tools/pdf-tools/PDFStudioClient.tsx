@@ -2,7 +2,7 @@
 
 import './styles/pdf-tools.css'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { PDFDocument, degrees } from 'pdf-lib'
 import { Menu, ChevronLeft, HelpCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -29,6 +29,7 @@ import { WatermarkUI } from './features/watermark/WatermarkUI'
 import { SignatureUI } from './features/signature/SignatureUI'
 import { ConvertUI } from './features/convert/ConvertUI'
 import { AnnotateUI } from './features/annotate/AnnotateUI'
+import { MergeUI } from './features/merge/MergeUI'
 
 // Constants
 import { availableTools } from './constants/tools'
@@ -80,7 +81,9 @@ export default function PDFStudioClient() {
 
   // Helper functions
   const downloadPDF = (pdfBytes: Uint8Array, filename: string) => {
-    const buffer = new Uint8Array(pdfBytes)
+    // Create a new ArrayBuffer to avoid TypeScript type issues
+    const buffer = new ArrayBuffer(pdfBytes.length)
+    new Uint8Array(buffer).set(pdfBytes)
     const blob = new Blob([buffer], { type: 'application/pdf' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -94,6 +97,35 @@ export default function PDFStudioClient() {
     // Process completion handler (for future use)
   }
 
+  // Load merged PDF into editor
+  const loadMergedPDF = useCallback(async (pdfBytes: Uint8Array) => {
+    // Create a new ArrayBuffer to avoid TypeScript type issues
+    const buffer = new ArrayBuffer(pdfBytes.length)
+    new Uint8Array(buffer).set(pdfBytes)
+    const mergedBlob = new Blob([buffer], { type: 'application/pdf' })
+    const mergedFile = new File([mergedBlob], file?.name ? `merged_${file.name}` : 'merged.pdf', { 
+      type: 'application/pdf' 
+    })
+    
+    setFile(mergedFile)
+    clearSelection()
+    clearHistory()
+
+    try {
+      const newPages = await loadPDF(mergedFile, isMobile)
+      if (newPages.length > MAX_PAGES) {
+        alert(`Merged PDF has ${newPages.length} pages. Maximum allowed is ${MAX_PAGES} pages.`)
+        setFile(null)
+        setInitialPages([])
+        return
+      }
+      updatePages(newPages)
+    } catch (error) {
+      console.error('Failed to load merged PDF:', error)
+      alert('Failed to load merged PDF into editor')
+    }
+  }, [file, setFile, clearSelection, clearHistory, loadPDF, isMobile, setInitialPages, updatePages])
+
   const {
     showWatermarkUI,
     setShowWatermarkUI,
@@ -103,6 +135,8 @@ export default function PDFStudioClient() {
     setShowConvertUI,
     showAnnotateUI,
     setShowAnnotateUI,
+    showMergeUI,
+    setShowMergeUI,
     closeAllToolUIs,
     activeToolUI,
     confirmDialog,
@@ -111,6 +145,10 @@ export default function PDFStudioClient() {
     handleDeleteSelected,
     handleSplit,
     handleMerge,
+    handleApplyMerge,
+    handleApplyMergeAndEdit,
+    handleApplyMergeWithCustomOrder,
+    handleApplyMergeWithCustomOrderAndEdit,
     handleCompress,
     handleAddPageNumbers,
     handleInsertBlankPage,
@@ -135,6 +173,7 @@ export default function PDFStudioClient() {
     downloadPDF,
     handleProcessComplete,
     keepSelection,
+    loadMergedPDF,
   })
 
   // Sync pages
@@ -168,22 +207,16 @@ export default function PDFStudioClient() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [file, pages])
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = e.target.files?.[0]
-    if (!uploadedFile) return
-
+  // Common file processing logic
+  const processFile = useCallback(async (uploadedFile: File) => {
     if (uploadedFile.type !== 'application/pdf') {
       alert('Please upload a PDF file')
-      if (fileInputRef.current) fileInputRef.current.value = ''
-      return
+      return false
     }
 
     if (uploadedFile.size > MAX_FILE_SIZE) {
-      alert(
-        `File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit. Please upload a smaller file.`
-      )
-      if (fileInputRef.current) fileInputRef.current.value = ''
-      return
+      alert(`File size exceeds ${MAX_FILE_SIZE / 1024 / 1024}MB limit. Please upload a smaller file.`)
+      return false
     }
 
     setFile(uploadedFile)
@@ -196,17 +229,42 @@ export default function PDFStudioClient() {
         alert(`PDF has ${newPages.length} pages. Maximum allowed is ${MAX_PAGES} pages.`)
         setFile(null)
         setInitialPages([])
-        if (fileInputRef.current) fileInputRef.current.value = ''
-        return
+        return false
       }
 
       updatePages(newPages)
+      return true
     } catch (error) {
       alert('Failed to load PDF. Please try again.')
       setFile(null)
-      if (fileInputRef.current) fileInputRef.current.value = ''
+      return false
+    }
+  }, [setFile, clearSelection, clearHistory, loadPDF, isMobile, setInitialPages, updatePages])
+
+  // Handle file input change
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = e.target.files?.[0]
+    if (!uploadedFile) return
+
+    const success = await processFile(uploadedFile)
+    if (!success && fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
+
+  // Handle file dropped via drag & drop
+  const handleFileDropped = useCallback(async (droppedFile: File) => {
+    // If there's an existing file, confirm replacement
+    if (file && pages.length > 0) {
+      const confirmed = confirm('Replace current PDF? All changes will be lost.')
+      if (!confirmed) return
+    }
+
+    await processFile(droppedFile)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }, [file, pages.length, processFile])
 
   const handleClearFile = () => {
     if (confirm('Are you sure you want to clear the current file? All changes will be lost.')) {
@@ -253,28 +311,21 @@ export default function PDFStudioClient() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [canUndo, canRedo])
+  }, [handleUndo, handleRedo])
 
-  const handleToolSelect = (tool: Tool | null, slotIndex: number) => {
-    const newSlots = [...activeToolSlots]
-    newSlots[slotIndex] = tool
-    setActiveToolSlots(newSlots)
-    setIsSelectingTool(null)
-
-    if (isMobile) {
-      setShowMobileMenu(false)
+  // Tool selection
+  const handleToolSelect = (tool: Tool) => {
+    if (isSelectingTool !== null) {
+      const newSlots = [...activeToolSlots]
+      newSlots[isSelectingTool] = tool
+      setActiveToolSlots(newSlots)
+      setIsSelectingTool(null)
     }
   }
 
   const handleSlotClick = (index: number) => {
     const tool = activeToolSlots[index]
-
     if (tool) {
-      if (!file) {
-        alert('Please upload a PDF file first')
-        return
-      }
-
       switch (tool.id) {
         case 'rotate':
           handleRotateSelected()
@@ -501,6 +552,7 @@ export default function PDFStudioClient() {
             handleTouchStart={handleTouchStart}
             handleTouchEnd={handleTouchEnd}
             onPagesReorder={updatePages}
+            onFileDropped={handleFileDropped}
           />
         </div>
       </div>
@@ -520,11 +572,9 @@ export default function PDFStudioClient() {
 
       {showConvertUI && (
         <ConvertUI
-          onConvert={(format, options) =>
-            handleConvert(format, { ...options, format: convertFormat })
-          }
-          onCancel={() => closeAllToolUIs()}
-          isProcessing={isProcessing}
+          file={file}
+          totalPages={pages.length}
+          onClose={() => closeAllToolUIs()}
         />
       )}
 
@@ -534,6 +584,25 @@ export default function PDFStudioClient() {
           selectedPages={getSelectedPageNumbers()}
           onApply={handleApplyAnnotation}
           onCancel={() => closeAllToolUIs()}
+        />
+      )}
+
+      {/* Enhanced Merge UI with Real-time Preview */}
+      {showMergeUI && file && (
+        <MergeUI
+          currentFile={file}
+          currentFileName={file.name}
+          currentPages={pages.map(p => ({
+            id: p.id,
+            thumbnail: p.thumbnail,
+            pageNumber: p.pageNumber,
+          }))}
+          totalPages={pages.length}
+          onMerge={handleApplyMerge}
+          onMergeAndEdit={handleApplyMergeAndEdit}
+          onMergeWithCustomOrder={handleApplyMergeWithCustomOrder}
+          onMergeWithCustomOrderAndEdit={handleApplyMergeWithCustomOrderAndEdit}
+          onCancel={() => setShowMergeUI(false)}
         />
       )}
 

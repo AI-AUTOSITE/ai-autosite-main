@@ -1,0 +1,3114 @@
+{
+  "metadata": {
+    "source": "ToS;DR (Terms of Service; Didn't Read)",
+    "source_url": "https://tosdr.org",
+    "license": "CC BY-SA 3.0",
+    "extracted_at": "2025-12-06T20:07:30.412668",
+    "total_services": 34,
+    "total_points": 197
+  },
+  "categories": {
+    "data_collection": {
+      "name": "Data Collection",
+      "name_ja": "データ収集",
+      "description": "What personal data is collected",
+      "count": 57
+    },
+    "third_party_sharing": {
+      "name": "Third Party Sharing",
+      "name_ja": "第三者共有",
+      "description": "How data is shared with others",
+      "count": 37
+    },
+    "data_retention": {
+      "name": "Data Retention",
+      "name_ja": "データ保持",
+      "description": "How long data is kept",
+      "count": 20
+    },
+    "user_rights": {
+      "name": "User Rights",
+      "name_ja": "ユーザー権利",
+      "description": "User control over their data",
+      "count": 22
+    },
+    "security": {
+      "name": "Security",
+      "name_ja": "セキュリティ",
+      "description": "How data is protected",
+      "count": 18
+    },
+    "policy_changes": {
+      "name": "Policy Changes",
+      "name_ja": "ポリシー変更",
+      "description": "How users are notified of changes",
+      "count": 22
+    },
+    "legal": {
+      "name": "Legal & Jurisdiction",
+      "name_ja": "法的事項",
+      "description": "Legal terms and jurisdiction",
+      "count": 25
+    },
+    "advertising": {
+      "name": "Advertising",
+      "name_ja": "広告",
+      "description": "Targeted advertising practices",
+      "count": 14
+    },
+    "cookies": {
+      "name": "Cookies & Tracking",
+      "name_ja": "Cookie・トラッキング",
+      "description": "Use of cookies and tracking technologies",
+      "count": 17
+    },
+    "other": {
+      "name": "Other",
+      "name_ja": "その他",
+      "description": "Uncategorized points",
+      "count": 54
+    }
+  },
+  "patterns": {
+    "critical": [
+      {
+        "id": "point-504",
+        "title": "Your personal data is used for automated decision-making, profiling or AI training",
+        "summary": "Personal data or content you share with the service may be processed to make decisions by automated means without human involvement. This includes profiling, which is any form of automated processing of your information to analyse or predict things like your economic situation, health, personal pref",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Slack"
+        ]
+      },
+      {
+        "id": "point-202",
+        "title": "Specific content can be deleted without reason and may be removed without prior notice",
+        "summary": " This service can delete specific content. Usually they will claim they reserve the right to do it at their sole discretion, which is legalese for saying they won't give a specific reason. If the terms say they will not notify you, it shall be included in the quote but if it does not explicitly say ",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "policy_changes",
+          "legal"
+        ],
+        "services": [
+          "Microsoft Store"
+        ]
+      },
+      {
+        "id": "point-118",
+        "title": "You waive your moral rights",
+        "summary": "Moral rights are rights to creators of literary, dramatic, musical and artistic works, as well as directors of films.\r\n\r\n\"The moral rights include the right of attribution, the right to have a work published anonymously or pseudonymously, and the right to the integrity of the work. The preserving of",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "user_rights",
+          "legal"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-239",
+        "title": "Private messages can be read",
+        "summary": "The Service is able to access, scan, review or read all user communications, including private messages, which may contain personal or sensitive data.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-234",
+        "title": "They store data on you even if you did not interact with the service",
+        "summary": "Some services store data on you even if you did not provide that data yourself. For example, users might provide access to their address book, after which a service might also store the phone numbers of that person's contacts.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention"
+        ],
+        "services": [
+          "X"
+        ]
+      },
+      {
+        "id": "point-395",
+        "title": "Your browsing history can be viewed by the service",
+        "summary": "The service can view your search history and the websites you visit, which is an extremely intrusive way of collecting information that may include personal and/or sensitive data.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "X"
+        ]
+      },
+      {
+        "id": "point-174",
+        "title": "This service holds onto content that you've deleted",
+        "summary": "Content may remain in backup servers and be retained after deletion, and thus never be completely deleted. This case doesn't apply to contributions that can't be removed due to the nature of the service.",
+        "score": 50,
+        "categories": [
+          "data_retention"
+        ],
+        "services": [
+          "X"
+        ]
+      },
+      {
+        "id": "point-327",
+        "title": "Your identity is used in ads that are shown to other users",
+        "summary": "Ads shown to other users may include a reference to you as an implied endorsement.\r\nMight give away information about your own personal lifestyle to strangers.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Google"
+        ]
+      },
+      {
+        "id": "point-407",
+        "title": "Content you post may be edited by the service for any reason",
+        "summary": "This service can edit any content on the service for whatever the reason and at their sole discretion.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "TikTok"
+        ]
+      },
+      {
+        "id": "point-487",
+        "title": "Sensitive data is collected and shared to target advertising",
+        "summary": "Sensitive data refers to information requiring special protection, such as health data, political and religious beliefs, ethnic origins, sexual life and financial information. The service collects and shares this data with third parties for advertising or marketing.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "security",
+          "advertising"
+        ],
+        "services": [
+          "Uber"
+        ]
+      }
+    ],
+    "bad": [
+      {
+        "id": "point-403",
+        "title": "Instead of asking directly, this Service will assume your consent to changes of terms merely from your usage.",
+        "summary": "The Service infers your acceptance from your continued usage, instead of prompting you to read the new Terms and asking for direct consent. This doesn’t apply to services that have no way to seek consent from users through their contact details or an account.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "id": "point-201",
+        "title": "Your account can be deleted or permanently suspended without prior notice and without a reason",
+        "summary": "At any time, your account can be terminated without explanation and without warning by the service. ",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "policy_changes"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-149",
+        "title": "Any liability on behalf of the service is only limited to the fees you paid as a user",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-121",
+        "title": " Terms may be changed any time at their discretion, without notice to you ",
+        "summary": "The Agreements can be updated at any time, including in a way that negatively affects user rights, without notifying before or after the changes.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "policy_changes"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-387",
+        "title": "This service tracks which web page referred you to it",
+        "summary": "The service logs the URL of the last web page you visited before visiting the Site and may use that information to gather more data about you.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Proton AG"
+        ]
+      },
+      {
+        "id": "point-243",
+        "title": "Your personal data may be sold or otherwise transferred as part of a bankruptcy proceeding or other type of financial transaction",
+        "summary": "If the service gets acquired or is involved in a merger, bankruptcy, reorganisation or sale, your personal data may be transferred or sold.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-214",
+        "title": "You must provide your legal name, pseudonyms are not allowed",
+        "summary": "You must provide your legal name and pseudonyms aren't allowed. This case doesn't apply to Services for which transparency regarding users identities is relevant for their purposes.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-127",
+        "title": "Third party cookies are employed, but with opt out instructions",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "user_rights",
+          "cookies"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-187",
+        "title": "Your data may be processed and stored anywhere in the world",
+        "summary": "Your data is stored all over the world, including in countries where data protection rules may differ from the ones of the service's jurisdiction or those of your country jurisdiction.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention",
+          "security",
+          "legal"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-151",
+        "title": "You have a reduced time period to take legal action against the service",
+        "summary": "If you wish to bring legal action against a service about a past incident, you may not be able to do so if the Terms you agreed to implied a limited amount of time. As a result it may be worthy to carefully read that section of the Terms to know exactly how much time you might have before your right",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "legal"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-323",
+        "title": "You are tracked via web beacons, tracking pixels, browser fingerprinting, and/or device fingerprinting",
+        "summary": "Tracking technologies (such as web beacons, tracking pixels...) are employed on users and/or the service assigns a unique ID to a browser or device to track its behaviour.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-188",
+        "title": "This service gives your personal data to third parties involved in its operation",
+        "summary": "Your personal data is or may be given to third parties essential to the service’s operation. This could be an external spam detection service for an internet forum.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-164",
+        "title": "Your personal data may be disclosed to comply with government requests without notice to you",
+        "summary": "If the Government governing the Terms requests personal data of a user of this service, they may not inform/notify the user while complying with the request.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "policy_changes"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-289",
+        "title": "The service does not guarantee that software errors will be corrected",
+        "summary": "Users agree to use the service and its software as provided and accept that any errors within that software may not be corrected.",
+        "score": 50,
+        "categories": [
+          "user_rights"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-157",
+        "title": "Your use is throttled",
+        "summary": "The service may impose limits or restrictions to the use of the service, thus negatively impacting users experience. They may do so without reason or prior notice.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-325",
+        "title": "Third-party cookies are used for statistics",
+        "summary": "For instance, Google Analytics, rather than self-hosted (first-party) statistics software.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "cookies"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-333",
+        "title": "Some personal data may be kept for business interests or legal obligations",
+        "summary": "After the end of the data retention period and/or if you request the deletion of your data, they may still keep it for business interests (fraud detection, transactions...) or legal obligations (tax, legal reporting...)",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "legal"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-211",
+        "title": "Extra data may be collected about you through promotions",
+        "summary": "Additional personal data may be collected through contests, surveys, promotions, petitions or sweepstakes. ",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-382",
+        "title": "Information is gathered about you through third parties",
+        "summary": "This Service may employ, either identifiable or non-identifiable, data collection from third party sources about you.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-336",
+        "title": "Your personal data may be used for marketing purposes",
+        "summary": "The service may use your personal data for marketing, such as sending you personalised offerings.",
+        "score": 50,
+        "categories": [
+          "advertising"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-186",
+        "title": "This service assumes no liability for unauthorized access to your personal information",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-490",
+        "title": " The service is only available in some countries approved by its government",
+        "summary": "Countries under embargo or banned by the government of the country in question cannot use the service.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Discord"
+        ]
+      },
+      {
+        "id": "point-129",
+        "title": "This service tracks you on other websites",
+        "summary": "The service may use tracking technologies in third-party websites to track your online activity while you aren't visiting their Site.\r\n",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "cookies"
+        ],
+        "services": [
+          "Discord"
+        ]
+      },
+      {
+        "id": "point-216",
+        "title": "Your personal data is used for advertising",
+        "summary": "Your interaction with the service and data you have shared with them may be gathered to create an advertising ID or profile to target ads on you, either on the website you were visiting or in third party websites.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "advertising"
+        ],
+        "services": [
+          "Spotify"
+        ]
+      },
+      {
+        "id": "point-489",
+        "title": "Voice data is collected and shared with third-parties",
+        "summary": "The service collects data and recordings of your voice when you communicate with a service verbally and may use and share them with third parties, that may use this data for marketing or advertising.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "advertising"
+        ],
+        "services": [
+          "Spotify"
+        ]
+      },
+      {
+        "id": "point-373",
+        "title": "This service may collect, use, and share location data",
+        "summary": "Location-based information is collected and may be used and/or shared with third parties for purposes not directly related to the services provided (i.e. the Service doesn't rely on the use or share of location data to function properly).",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-128",
+        "title": "Third-party cookies are used for advertising",
+        "summary": "The service's website sets third-party cookies (cookies that do not belong to their domain) for purposes not including statistics and analytics.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "advertising",
+          "cookies"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-397",
+        "title": "Your biometric data is collected",
+        "summary": "This service can collect or use your biometric data. This includes but is not limited to facial recognition, fingerprints, and iris scans. Although this feature can sometimes be convenient to the user, providing this type of information to the service could open your personal data to being sold or s",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-208",
+        "title": "Many third parties are involved in operating the service",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-220",
+        "title": "Your personal data is used to employ targeted third-party advertising",
+        "summary": "Your Personal Information is traded and shared with advertising companies to target ads on you, either on the website you were visiting or in third party websites. Your interaction with the service and data you have shared with them may be gathered to create an advertising ID or profile.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "advertising"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-166",
+        "title": "This service shares your personal data with third parties that are not essential to its operation",
+        "summary": "Your personal data is or may be given to third parties nonessential to the service’s operation. This could be a business partner that receives your data to provide targeted advertisements.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "advertising"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-322",
+        "title": "App required for this service requires broad device permissions",
+        "summary": "The app of the service requires more device permissions than necessary. As a consequence it can compromise your privacy by accessing many functions and information from your device, such as precise location, contacts, device identifiers etc. ",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-307",
+        "title": " You are being tracked via social media cookies/pixels",
+        "summary": "These types of cookies/pixels send information to social media sites when you interact with the service.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-185",
+        "title": "Your personal information is used for many different purposes",
+        "summary": "Personal Data can be processed for many reasons, including non essential processing such as for advertising, marketing and analytics purposes.",
+        "score": 50,
+        "categories": [
+          "advertising",
+          "cookies"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-376",
+        "title": "Many different types of personal data are collected",
+        "summary": "The service collects different kinds of personal data, such as name, demographic information, postal address, biometric data, device information, IDs, contacts, call logs...",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-217",
+        "title": "Tracking pixels are used in service-to-user communication",
+        "summary": "The service tracks the user count or some actions of the user; this is usually used for statistics. For example, emails sent by a service can contain a pixel tag, which is a small, clear image that can tell them whether or not you have opened an email and what your IP address is.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-117",
+        "title": "You waive your right to a class action.",
+        "summary": "The right to be represented in a class action (or representative action) exists in the US and some European countries. It allows people who have been similarly injured by the same accused to take legal action by a single lawsuit instead of individually. Some Terms of Service try to limit that right.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Dropbox"
+        ]
+      },
+      {
+        "id": "point-400",
+        "title": "This service receives your precise location through GPS coordinates",
+        "summary": "Unless the service relies on Geo Location, this case is to be assigned to points that don't need your GPS coordinates to function properly.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Dropbox"
+        ]
+      },
+      {
+        "id": "point-339",
+        "title": "You are forced into binding arbitration in case of disputes",
+        "summary": "This service forces users to use their own contracted arbitrator and forces users to waive their rights to jury trial.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "legal"
+        ],
+        "services": [
+          "Dropbox"
+        ]
+      },
+      {
+        "id": "point-285",
+        "title": "You shall not interfere with another person's enjoyment of the service",
+        "summary": "Users are asked not to interfere with another person't enjoyment in using the service.\r\nHowever, this statement is very vague and open to interpretation by the service itself.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Microsoft Store"
+        ]
+      },
+      {
+        "id": "point-130",
+        "title": "A license is kept on user-generated content even after you close your account",
+        "summary": "The service may still use your content and display it after you stopped using it by closing your account. The case applies to terms requiring users to grant them a perpetual license over that content.\r\n",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-134",
+        "title": "Your content can be licensed to third parties",
+        "summary": "By posting content through the Services, users grant them a transferable and/or sublicensable right, which allows user content to be licensed to third parties.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-326",
+        "title": "Your profile is combined across various products",
+        "summary": "When using multiple services from one same company, they can combine these (unrelated) information sources about you to build up a single richer user profile about you.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "X"
+        ]
+      },
+      {
+        "id": "point-304",
+        "title": "The service may keep a secure, anonymized record of your data for analytical purposes even after the data retention period",
+        "summary": "The data retention period states how long a service keeps user data. In this case, the service may anonymize the personal data after its retention period is over and use it for analytical or research purposes.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention",
+          "security"
+        ],
+        "services": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "id": "point-173",
+        "title": "This service retains rights to your content even after you stop using your account",
+        "summary": "The service may still use your content and display it after you stopped using it by closing your account, since you granted them a perpetual or (in some cases) an unlimited license over that content.",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "Twitch"
+        ]
+      },
+      {
+        "id": "point-156",
+        "title": "Per the service's terms, you may not express negative opinions about them",
+        "summary": "Criticising, questioning, making objections or complaints about the Service, its staff or anything related to it is prohibited and constitutes a breach of the Terms.",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Google"
+        ]
+      },
+      {
+        "id": "point-328",
+        "title": "Usernames can be rejected or changed for any reason",
+        "summary": "The service's terms explain they may change or remove usernames at their sole discretion, and they may do so without prior notice.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Facebook"
+        ]
+      },
+      {
+        "id": "point-178",
+        "title": "Logs are kept for an undefined period of time",
+        "summary": "Logs are text files containing some information about web visitors, such as user agents (showing for instance that you're connecting from Firefox for Android) and ip addresses (which reveal your approximate location). This case applies to Services that may keep logs indefinitely, allowing user sessi",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention"
+        ],
+        "services": [
+          "Facebook"
+        ]
+      },
+      {
+        "id": "point-133",
+        "title": "very broad",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Instagram"
+        ]
+      }
+    ],
+    "warning": [],
+    "neutral": [
+      {
+        "id": "point-120",
+        "title": "Critical changes to the terms are made without user involvement",
+        "summary": "They may significantly update the terms at any time and at their sole discretion, meaning for any reason and without necessarily taking into account the interests or suggestions of the users of the Service. ",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "id": "point-408",
+        "title": "This service informs you that its Terms of Service does not apply to third party websites",
+        "summary": "The service states that whenever it links to third party websites or applications, its Terms of Service does not apply. Those third party websites or applications hosted or operated by other organizations may have their Terms of Service.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-190",
+        "title": "Your personal data is aggregated into statistics",
+        "summary": "Your personal data is used for statistics in a de-identified/aggregated form (i.e. not directly linked to a unique identity) to analyse trends, for research and for analytics.",
+        "score": 50,
+        "categories": [
+          "cookies"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-230",
+        "title": "You must create an account to use this service",
+        "summary": "You must provide the service with your information in order to use it",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-154",
+        "title": "This service cannot be held responsible for disputes that you may have with other users",
+        "summary": "You are responsible for the interactions and the disputes that may occur with other users of the Service. In the event of a dispute, you release the Service from all claims resulting from it.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-293",
+        "title": "The service assumes no liability for any damages the user incurs",
+        "summary": "The service assumes no liability for any damages the user incurs, including tangible (e.g. profits) and intangible losses (e.g. data), resulting from the use or inability to use the service or any other matter relating to the service.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-288",
+        "title": "The service does not guarantee accuracy or reliability of the information provided",
+        "summary": "This service makes no warranty regarding the accuracy or reliability of any information that is given on its website or the results that may be obtained from the use of the service.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-287",
+        "title": "The service provider makes no warranty regarding uninterrupted, timely, secure or error-free service",
+        "summary": "The service provider expressly does not claim to provide uninterrupted, timely, secure or error-free service.",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-148",
+        "title": "You are responsible for maintaining the security of your account and for the activities on your account",
+        "summary": "You are responsible for protecting the confidentiality of your password and for maintaining the security of your account. Any activity occurring under your account is your responsibility, whether authorized by you or not. ",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-280",
+        "title": "You agree not to use the service for illegal purposes",
+        "summary": "The user agrees not to commit any unlawful acts through the use of the website, including the posting of illegal content or messaging.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-286",
+        "title": "The service is provided 'as is' and to be used at your sole risk",
+        "summary": "This service does not provide any guarantees as to its usability or fitness for the users' purposes. Users agree to use it at their own risk, accepting any possible bugs, malfunctions or harm to their devices.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-203",
+        "title": "They may stop providing the service at any time",
+        "summary": "They may discontinue the services without prior notice, at any time, for any or no reason. They usually assume no liability for losses and damages resulting from this suspension.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-163",
+        "title": "The court of law governing the terms is in location X",
+        "summary": "The Terms are governed by the applicable laws of a jurisdiction (specified in the title of each point by replacing the \"X\").",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-152",
+        "title": "This service is only available to users over a certain age",
+        "summary": "The Services are intended for users who are at least a certain age. If you are younger than the age required then you are prohibited from using the Service.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-319",
+        "title": "Users who have been permanently banned from this service are not allowed to re-register under a new account",
+        "summary": "Once users have been permanently banned from this service, they are not allowed to create a new account to keep using the service.",
+        "score": 50,
+        "categories": [
+          "data_retention"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-207",
+        "title": "Third parties are involved in operating the service",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-237",
+        "title": "You agree to comply with the law of the service's country",
+        "summary": "By using the service, you agree to comply with the applicable laws of the service's jurisdiction, regardless of your location.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Proton AG"
+        ]
+      },
+      {
+        "id": "point-162",
+        "title": "The service has a no refund policy",
+        "summary": "Payments are final and can't be refunded unless required by law.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Proton AG"
+        ]
+      },
+      {
+        "id": "point-331",
+        "title": "There is a date of the last update of the agreements",
+        "summary": "The given text has a date that allows to know when it was last updated.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-169",
+        "title": "The service is transparent regarding government requests or inquiries that may involve your data.",
+        "summary": "Weight was 30.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-122",
+        "title": "The terms may be changed at any time, but you will receive notification of the changes",
+        "summary": "The Terms may be updated without prior notice, but users will be notified of the changes at the moment they will start applying.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "policy_changes"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-375",
+        "title": "Blocking first party cookies may limit your ability to use the service",
+        "summary": "Most browsers allow users to set preferences related to cookies storage. You may choose to block all cookies (including first-party cookies), but it may impact your use of this service and you may not be able to access some or any of the features provided.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-198",
+        "title": "The terms for this service are translated into different languages",
+        "summary": "Although there's generally a unique binding language for the terms, they are translated to allow all users to understand the agreement they're accepting, no matter their native language.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-290",
+        "title": "This service does not guarantee that it or the products obtained through it meet your expectations or requirements",
+        "summary": "This service provider informs its users that the services, information, products, or other materials provided on its website may not meet the users' expectations or requirements.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-295",
+        "title": "Failure to enforce any provision of the Terms of Service does not constitute a waiver of such provision",
+        "summary": "Even if the service does not or not always enforce all of the rules or provisions contained in its terms, they still apply. Users can at a later time still be held accountable for violating provisions that have not been enforced consistently.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-294",
+        "title": "Invalidity of any portion of the Terms of Service does not entail invalidity of its remainder",
+        "summary": "Should any portion of the Terms of Service be unenforceable or invalid, that portion will be enforced to the fullest extent permitted by applicable law and the remainder of the TOS will remain valid and enforceable.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-394",
+        "title": "You cannot delete your contributions, but it makes sense for this service",
+        "summary": "For services that are under an open license where your contributions are for public knowledge (such as Wikipedia and ToS;DR).",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-238",
+        "title": "You agree not to submit illegal content",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-316",
+        "title": "Political discussions or campaining are prohibited",
+        "summary": "Political content in the form or pictures, discussions, or campaigning isn't allowed.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-150",
+        "title": "Spidering, crawling, or accessing the site through any automated means is not allowed",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-299",
+        "title": "The service informs you that its privacy policy does not apply to third party websites",
+        "summary": "The service states that whenever it links to third party websites or applications, its privacy policy does not apply. Those third party websites or applications hosted or operated by other organizations may have their own privacy policies.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-329",
+        "title": "You should revisit the terms periodically, although in case of material changes, the service will notify",
+        "summary": "The service may update the Terms without notice, but if they significantly change the agreements in a manner that importantly and/or negatively affects the way the service is used, users will be notified.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-284",
+        "title": "You are prohibited from attempting to gain unauthorized access to other computer systems",
+        "summary": "The service does not allow any attempts at hacking or otherwise gaining unauthorized access to other users' computers.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "security"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-146",
+        "title": "You agree to defend, indemnify, and hold the service harmless in case of a claim related to your use of the service",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-291",
+        "title": "You are responsible for any risks, damages, or losses that may incur by downloading materials",
+        "summary": "Users are responsible for any harm to their computer system or loss of data they may incur through the download of materials from the service.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-384",
+        "title": "You authorise the service to charge a credit card supplied on re-occurring basis",
+        "summary": "You card will be billed on recurring basis unless cancelled. For instance, monthly or annual subscriptions.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-126",
+        "title": "First-party cookies are used",
+        "summary": "First-party cookies only belong to the domain of the service and not a third party.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "cookies"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-324",
+        "title": "Alternative accounts are not allowed",
+        "summary": "Services that do not allow multiple or alternative accounts are covered by this case.\r\nAlternative accounts can contribute to an increased privacy, but can also be used to manipulate discussions and polls and might decrease the trustworthiness of a person.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Tuta"
+        ]
+      },
+      {
+        "id": "point-281",
+        "title": "You are prohibited from sending chain letters, junk mail, spam or any unsolicited messages",
+        "summary": "Users are not allowed to use the service for chain letters, junk mail, spamming or any other distribution of content to people who have not agreed to receiving it.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Tuta"
+        ]
+      },
+      {
+        "id": "point-399",
+        "title": "Your IP address is collected, which can be used to view your approximate location",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-200",
+        "title": "Separate policies are employed for different parts of the service",
+        "summary": "The user may need to read additional product-specific agreements depending on the way the service is used.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-189",
+        "title": "Your private content may be accessed by people working for the service",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-138",
+        "title": "Instructions are provided on how to submit a copyright claim",
+        "summary": "If content that you own is copied or made accessible through the service in a way that constitutes an intellectual property right infringement, you can report it following the instructions given in the agreements. ",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-147",
+        "title": "Defend, indemnify, hold harmless; survives termination",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-229",
+        "title": "You cannot distribute or disclose your account to third parties",
+        "summary": "In this context third-parties refers to anyone including friends, family, or company ",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-493",
+        "title": "This service is a subsidiary of Company X",
+        "summary": "The service is a subsidiary of a certain company (called X in the title, to be replaced by the parent Company in each point's title). Company X’s Terms of Service may apply to the service.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-136",
+        "title": "The copyright license that you grant this service is limited to the parties that make up the service's broader platform.",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-205",
+        "title": "Your account can be suspended for several reasons",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Discord"
+        ]
+      },
+      {
+        "id": "point-233",
+        "title": "Do Not Track (DNT) headers are ignored and you are tracked anyway even if you set this header.",
+        "summary": "Even though the Do Not Track (DNT) header was not implemented perfectly, services should not track users whose browsers send a DNT header.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-143",
+        "title": "This service is only available for use individually and non-commercially.",
+        "summary": "Users can't use the Service for commercial purposes (unless the Service consents): it is only for personal, individual purposes.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-486",
+        "title": "Minors must have the authorization of their legal guardians to use the service",
+        "summary": "Minors must have the authorization of their legal guardians to use the services. The legal guardians are responsible for the use of the service by the minor.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-139",
+        "title": "Your content can be distributed through any media known now or in the future",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-278",
+        "title": "The service is not responsible for linked or (clearly) quoted content from third-party content providers",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-283",
+        "title": "You agree not to submit libelous, harassing or threatening content",
+        "summary": "This service prohibits users from submitting content of a variety of types. This can include content that is unlawful, harassing, abusive, threatening, libelous, sexist, racist, homophobic, transphobic, or discriminatory in any other way.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-310",
+        "title": "If you are the target of a copyright claim, your content may be removed",
+        "summary": "The content you have published on the service may be removed if it infringes copyright.",
+        "score": 50,
+        "categories": [
+          "advertising"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-292",
+        "title": "This service does not condone any ideas contained in its user-generated contents",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-213",
+        "title": "You are not allowed to use pseudonyms, as trust and transparency between users regarding their identities is relevant to the service.",
+        "summary": "You must provide your legal name and pseudonyms aren't allowed, but it makes sense for the purposes of this service.",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "id": "point-180",
+        "title": "This service can use your content for all their existing and future services",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "id": "point-279",
+        "title": "This service assumes no responsibility and liability for the contents of links to other websites",
+        "summary": "The service rejects any responsibility for the contents of other websites to which it links.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Pinterest"
+        ]
+      },
+      {
+        "id": "point-315",
+        "title": "The posting of pornographic content is prohibited",
+        "summary": "Users are not allowed to post any content of pornographic nature. This includes adult content, things that are sexually explicit, or obscene.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Twitch"
+        ]
+      },
+      {
+        "id": "point-168",
+        "title": "The service is not transparent regarding government requests or inquiries that may involve your data. ",
+        "summary": "Weight was 30.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Twitch"
+        ]
+      },
+      {
+        "id": "point-191",
+        "title": "Only aggregate data is given to third parties",
+        "summary": "The Service only shares your information in an aggregated form, which means an anonymized form\r\nthat can't be linked to a unique identity.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Steam"
+        ]
+      },
+      {
+        "id": "point-160",
+        "title": "No guarantee is given regarding quality",
+        "summary": "The Service doesn't warrant or guarantee the quality of the products or services provided.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Google"
+        ]
+      },
+      {
+        "id": "point-145",
+        "title": "You agree to indemnify and hold the service harmless in case of a claim related to your use of the service",
+        "summary": "You are responsible for your use of the service. If a claim arises related to that use, you agree to indemnify and hold the service harmless.\r\nIf users are also required to defend the service, see Case 146 instead.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Google"
+        ]
+      },
+      {
+        "id": "point-377",
+        "title": "Your content can be deleted if you violate the terms",
+        "summary": "Content infringing the Terms of Service (or the Acceptable Use Policy or equivalent)  may be removed, with or without notice.",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "policy_changes"
+        ],
+        "services": [
+          "Instagram"
+        ]
+      },
+      {
+        "id": "point-314",
+        "title": "You are prohibited from posting content which promotes violence or politically or religiously extremist values.",
+        "summary": "Users are not allowed to post extremist political or religious content. They are also not allowed to post content that glorifies violence.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Instagram"
+        ]
+      },
+      {
+        "id": "point-276",
+        "title": "The service can intervene in user disputes",
+        "summary": "If you have a dispute with another user on this service, they can review the issue and intervene. However, they don't have an obligation to do so.\r\n\r\n",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Uber"
+        ]
+      },
+      {
+        "id": "point-309",
+        "title": "You have the right to request lower Charges from Third Party Providers",
+        "summary": "For a service that allows you to buy goods or services from a third party (for instance, an e-commerce platform), the service allows buyers to request a lower price from the seller.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Uber"
+        ]
+      }
+    ],
+    "good": [
+      {
+        "id": "point-320",
+        "title": "No need to register",
+        "summary": "This service can be used without providing a user profile.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "id": "point-406",
+        "title": "An onion site accessible over Tor is provided",
+        "summary": "Tor is a software for anonymous communication that directs Internet traffic through an overlay network. Onion sites are only available through Tor browser and provide additional security and anonymity to users.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "id": "point-175",
+        "title": "You can delete your content from this service",
+        "summary": "You can ask the service to remove your content at any time, and it's deleted within a reasonable time.",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "id": "point-444",
+        "title": "The publishing of personally identifiable information without the owner’s consent is not allowed",
+        "summary": "Users agree not to publicly post personally identifiable information (name, postal address, contact information…) without the owner’s knowledge or consent",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-210",
+        "title": "Third parties used by the service are bound by confidentiality obligations",
+        "summary": "The Third Parties accessing your personal information must keep it confidential and only use it for limited purposes.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-311",
+        "title": "Your personal data is not shared with third parties",
+        "summary": "Information collected from users by this service is not given to third parties.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-195",
+        "title": "You can request access, correction and/or deletion of your data",
+        "summary": "Users have the right to access personal data hold by the Service, correct it and/or permanently delete it. This usually applies to Services GDPR compliants. ",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-372",
+        "title": "User-generated content is encrypted, and this service cannot decrypt it",
+        "summary": "Content generated by the users is end-to-end encrypted, in a way that it can't be accessed by anyone unauthorised, and even the service has no technical means to decrypt it.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-215",
+        "title": "Pseudonyms are allowed",
+        "summary": "You don't need to provide your full name to use the Service and you are allowed to use a pseudonym instead.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-193",
+        "title": "Your personal data is not sold",
+        "summary": "This service makes an explicit promise not to sell \"personal data\" of users.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-183",
+        "title": "You maintain ownership of your content",
+        "summary": "This service does not claim ownership over user-generated content or materials, and the user doesn't need to waive any moral rights by posting owned content.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-335",
+        "title": "You aren’t forced into binding arbitration in case of disputes",
+        "summary": "Binding Arbitration is a dispute resolution method involving a neutral third party which will render a decision instead of going to court. Since the arbitrator can decide the outgoing of a dispute without evidences or a legal basis, it is preferable that users decide whether they want or not their d",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-241",
+        "title": "The court of law governing the terms is in a jurisdiction that is friendlier to user privacy protection.",
+        "summary": "The Terms are governed by the applicable laws of a jurisdiction known for protecting citizens privacy with strong data regulations. Usually contributors will need to explain in the Analysis view of each point linked to this Case why the jurisdiction is friendly to user privacy protection.",
+        "score": 50,
+        "categories": [
+          "security",
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-170",
+        "title": "You have the right to leave this service at any time",
+        "summary": "You can stop using the service and/or cancel or delete your account at any time for any reason. Moreover, the termination is reasonably fast and simple.",
+        "score": 50,
+        "categories": [
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-226",
+        "title": "Information is provided about security practices",
+        "summary": "It's important to know what security measures are taken to protect your data from unauthorized access. This case applies to the Agreements that precisely explain their security practices.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-196",
+        "title": "Your personal data is used for limited purposes",
+        "summary": "Your Personal Data is only used for the essential purposes of the Service, which are clearly defined on the Agreements. For instance, the Service won't abuse your data to deliver targeted advertisements to you or for marketing purposes.",
+        "score": 50,
+        "categories": [
+          "advertising"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-140",
+        "title": "You can retrieve an archive of your data",
+        "summary": "Users can request a copy of the data collected through the services and infer from it the amount of personal information that is processed and stored by the Service. This usually applies to Services GDPR compliants.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention",
+          "user_rights"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-393",
+        "title": "The service will only respond to government requests that are reasonable",
+        "summary": " The Agreement explains they will disclose personal data about you if it is reasonably necessary to comply with applicable law and government requests.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-218",
+        "title": "You are not being tracked",
+        "summary": "The document excerpt needs to include the words \"[the service] does not track [users]\" or \"[the service] does not use any tracking technology\".",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-301",
+        "title": "The service reviews its privacy policy on a regular basis",
+        "summary": "Users know the date the privacy policy was last updated and can thus infer the next time it will be reviewed. This gives users more certainty about how long they can trust the current policy to apply.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-312",
+        "title": "Two factor authentication is provided for your account",
+        "summary": "The service provides means of further securing your account with two factor authentification, thus greatly improving account security.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-481",
+        "title": "The service claims to be GDPR compliant for European users",
+        "summary": "The service has a different behavior towards users protected by the GDPR.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-171",
+        "title": "Features of the website are made available under a free software license",
+        "summary": "This case applies to services under licenses that are free as in \"freedom\". According to the Free Software Foundation, \"free software is the software that grants the user the freedom to share, study, and modify it\". Furthermore, the code is entirely open source and may be used without any restrictio",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "user_rights"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-176",
+        "title": "Only necessary logs are kept by the service to ensure quality",
+        "summary": "Logs are text files containing some information about web visitors, such as user agents (showing for instance that you're connecting from Firefox for Android) and ip addresses (which reveal your approximate location). This case applies to Services that only keep the strictly necessary logs on their ",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention",
+          "security"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-305",
+        "title": "The service will resist legal requests for your information where reasonably possible",
+        "summary": "The service will attempt to protect user information to a great extent, even so far as stating that they will only follow legal requirements to disclose user information in circumstances where this cannot be reasonably resisted.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "security",
+          "legal"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-228",
+        "title": "Information is provided about what kind of information they collect",
+        "summary": "The Privacy Policy describes in detail the data collected through the website and through the services provided.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Signal"
+        ]
+      },
+      {
+        "id": "point-199",
+        "title": "The terms for this service are easy to read",
+        "summary": "The Agreements are well-organised, define legal terms (where applicable), aren't needlessly long and may be pleasant to read.",
+        "score": 50,
+        "categories": [
+          "security",
+          "legal"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-383",
+        "title": "Your browser's Do Not Track (DNT) headers are respected",
+        "summary": "This service does respect the browser's Do Not Track header and disables all user tracking if it is enabled.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-165",
+        "title": "The service promises to inform and/or notify you regarding government inquiries that may involve your personal data",
+        "summary": "In case the Government governing the Terms requests personal data of a user of this service, they will make reasonable efforts to inform/notify the user (e.g. warrant canary).",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-391",
+        "title": "You will be notified if personal data has been affected by data breaches",
+        "summary": "Should the personal information of a service be compromised, the service will inform users if any personal data has been affected by data breaches. This case is also related to privacy.",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-227",
+        "title": "Information is provided about how your personal data is used",
+        "summary": "The Privacy Policy explains the purposes for which data is collected and the way it is processed, used and shared.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-119",
+        "title": "Your feedback is invited regarding changes to the terms.",
+        "summary": "The Service takes user suggestions into account to update its Terms.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-223",
+        "title": "You can opt out of promotional communications",
+        "summary": "You can update your account preferences and/or easily unsubscribe of email/sms lists to stop receiving promotional communications.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "policy_changes",
+          "advertising"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-303",
+        "title": "The data retention period is kept to the minimum necessary for fulfilling its purposes",
+        "summary": "The service will remove personal data from its systems once it is no longer required. Depending on the type of information and the reason it was collected, data retention periods will vary.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Mozilla.org"
+        ]
+      },
+      {
+        "id": "point-124",
+        "title": "When the service wants to make a material change to its terms, you are notified at least 30 days in advance",
+        "summary": "The service may update the Terms without notice, but if they significantly change the agreements in a manner that importantly and/or negatively affects the way the service is used, users will be notified at least 30 days in advance.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-197",
+        "title": "Archives of their agreements are provided so that changes can be viewed over time",
+        "summary": "This case applies to Services whose agreements provide previous versions, so that users can compare them and understand how the Service seems to evolve regarding user rights.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "policy_changes"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-297",
+        "title": "Information is provided about how they collect personal data",
+        "summary": "The service details situations in which they collect personal information or means by which they do.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-131",
+        "title": "Content is published under a free license instead of a bilateral one",
+        "summary": "User-generated content, such as posts or comments, is published under a free license, meaning other users can reuse it (e.g. Creative Commons license).",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "id": "point-177",
+        "title": "Logs are deleted after a finite period of time",
+        "summary": "Logs are text files containing some information about web visitors, such as user agents (showing for instance that you're connecting from Firefox for Android) and ip addresses (which reveal your approximate location). This case applies to Services that periodically delete their logs to prevent user ",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "data_retention"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-192",
+        "title": "IP addresses of website visitors are not tracked",
+        "summary": "The Service disclaims that IP adresses from users are not collected (or anonymized) nor shared.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-298",
+        "title": "You can access most of the pages on the service's website without revealing any personal information",
+        "summary": "The service does not require users to reveal personal information for most of its website. However, it may still collect anonymous logs.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-381",
+        "title": "No third-party analytics or tracking platforms are used",
+        "summary": "There are no Google Analytics or other tracking codes embedded in the service.  Any tracking is performed by the service itself.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing",
+          "cookies"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-385",
+        "title": "Tracking cookies refused will not limit your ability to use the service",
+        "summary": "Blocking tracking technologies will not negatively impact your use of the service.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "cookies"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-389",
+        "title": "You can scrape the site, as long as it doesn't impact the server too much",
+        "summary": "Automated web scraping is a method of extracting information from a website. The service authorises scraping if it doesn't impact its server(s) too much.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-209",
+        "title": "You are warned of the potential consequences related to third-party access",
+        "summary": "This is different from disclaiming liability for external links, which is handled by the \"This service assumes no responsibility and liability for the contents of links to other websites\" case.",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "third_party_sharing"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-300",
+        "title": "A complaint mechanism is provided for the handling of personal data",
+        "summary": "The service provides users with contact information for an internal or external structure to lodge complaints. It also provides users with contact information for a higher data protection / privacy office in case the internal mechanism fails to satisfy the user.",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Nextcloud"
+        ]
+      },
+      {
+        "id": "point-161",
+        "title": "You are entitled to a refund if certain thresholds or standards are not met by the service",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-321",
+        "title": "Promises will be kept after a merger or acquisition",
+        "summary": "If the service gets acquired or needs to transfer personal data after a merger, bankruptcy, reorganisation or sale of the services, the data will still be processed in a manner that honours the promises made in the agreements.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "Bitwarden"
+        ]
+      },
+      {
+        "id": "point-158",
+        "title": "Accessibility to this service is guaranteed at 99% or more",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Tuta"
+        ]
+      },
+      {
+        "id": "point-159",
+        "title": "You will be notified about website maintenance",
+        "summary": "Users will be notified before their experience is impacted due to website maintenance.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Tuta"
+        ]
+      },
+      {
+        "id": "point-485",
+        "title": "The service is open-source",
+        "summary": "The code of the software is open-source and the users can have access to the source code.",
+        "score": 50,
+        "categories": [
+          "data_collection"
+        ],
+        "services": [
+          "Tuta"
+        ]
+      },
+      {
+        "id": "point-404",
+        "title": "This Service provides a list of Third Parties involved in its operation.",
+        "summary": "The Service provides a list detailing the third parties involved, their roles, and may even provide more information.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-338",
+        "title": "You can limit how your information is used by third-parties and the service",
+        "summary": "Usually it's related to the right to object to data processing or restrict it under the GDPR. Users may be able to refuse the use of their data for marketing purposes for instance.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "advertising"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-225",
+        "title": "You can choose with whom you share content",
+        "summary": "Users can decide whether or not they want their content to be shared and they can control how and with whom it is shared.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-135",
+        "title": "Copyright license limited for the purposes of that same service but transferable and sublicenseable",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "third_party_sharing"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-231",
+        "title": "You are informed about the risk of publishing personal info online",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "GitHub"
+        ]
+      },
+      {
+        "id": "point-232",
+        "title": "A free help desk is provided",
+        "summary": "The service can be easily contacted for questions or provides a support center at no extra cost.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-219",
+        "title": "You can opt out of targeted advertising",
+        "summary": "The service employs your data to target ads to you, but you can opt-out of this interest-based advertising.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "advertising"
+        ],
+        "services": [
+          "Netflix"
+        ]
+      },
+      {
+        "id": "point-390",
+        "title": "If you offer suggestions to the service, they may use that without your approval or compensation, but they do not become the owner",
+        "summary": "The service may employ a broad copyright license over feedback, proposals, ideas and suggestions submitted, including the right to use them without restriction, compensation or obligation to the user, but they do not claim ownership on them.",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Dropbox"
+        ]
+      },
+      {
+        "id": "point-206",
+        "title": "30 days of notice are given before closing your account",
+        "summary": "The Terms explain they will notify users at least 30 days before closing their accounts, which allows users to limit the losses and damages caused by this termination.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Slack"
+        ]
+      },
+      {
+        "id": "point-155",
+        "title": "If you are the target of a copyright holder's take down notice, this service gives you the opportunity to defend yourself",
+        "summary": "You have the right to send a counter-notice to the service if you believe the content that was removed wasn't infringing any copyright.",
+        "score": 50,
+        "categories": [
+          "policy_changes",
+          "advertising"
+        ],
+        "services": [
+          "Reddit"
+        ]
+      },
+      {
+        "id": "point-184",
+        "title": "This service provides a way for you to export your data",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "user_rights"
+        ],
+        "services": [
+          "X"
+        ]
+      },
+      {
+        "id": "point-402",
+        "title": "The service has non-exclusive use of your content",
+        "summary": "The service can pay for your content and you are allowed to make it commercially available to other services/parties. ",
+        "score": 50,
+        "categories": [
+          "other"
+        ],
+        "services": [
+          "Pinterest"
+        ]
+      },
+      {
+        "id": "point-306",
+        "title": " A list of all cookies set by the website is provided",
+        "summary": "The service provides users with a complete list of all first and third party cookies its website sets and an explanation of their uses. This information can be valuable for users to make an informed choice whether to allow those cookies.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "cookies"
+        ],
+        "services": [
+          "Twitch"
+        ]
+      },
+      {
+        "id": "point-337",
+        "title": "You can opt out of providing personal information to third parties",
+        "summary": "The Service provides opt-out instructions to the share of (some) personal information with third parties.",
+        "score": 50,
+        "categories": [
+          "third_party_sharing",
+          "user_rights"
+        ],
+        "services": [
+          "Twitch"
+        ]
+      },
+      {
+        "id": "point-167",
+        "title": "Third parties are not allowed to access your personal information without a legal basis",
+        "summary": "",
+        "score": 50,
+        "categories": [
+          "data_collection",
+          "user_rights",
+          "legal"
+        ],
+        "services": [
+          "Facebook"
+        ]
+      },
+      {
+        "id": "point-123",
+        "title": "When the service wants to change its terms, you are notified a week or more in advance.",
+        "summary": "Users will be notified a week before the Terms are somehow updated, which lets them a reasonable amount of time to carefully read the changes and perhaps stop using the services if they do not longer agree.",
+        "score": 50,
+        "categories": [
+          "policy_changes"
+        ],
+        "services": [
+          "Instagram"
+        ]
+      },
+      {
+        "id": "point-482",
+        "title": "The service claims to be CCPA compliant for California users",
+        "summary": "The service has a different behavior towards users protected by the California Consumer Privacy Act.",
+        "score": 50,
+        "categories": [
+          "user_rights",
+          "security"
+        ],
+        "services": [
+          "Uber"
+        ]
+      },
+      {
+        "id": "point-483",
+        "title": "The service claims to be LGPD compliant for Brazilian users",
+        "summary": "The service has a different behavior towards users protected by the Lei Geral de Proteção de Dados Pessoais.",
+        "score": 50,
+        "categories": [
+          "security"
+        ],
+        "services": [
+          "Uber"
+        ]
+      },
+      {
+        "id": "point-332",
+        "title": "This service offers a symbolic but nonbinding statement about a matter of opinion, ethics, society, or politics",
+        "summary": "If a service expresses a worldview antithetical to the user’s, that is a good signal that they should not use the service. Or conversely, if the service expresses an uncommonly-held belief that the user agrees with and thinks is relevant to the service-user relationship and/or important, they may wi",
+        "score": 50,
+        "categories": [
+          "legal"
+        ],
+        "services": [
+          "Uber"
+        ]
+      }
+    ]
+  },
+  "keywords": {
+    "negative": [
+      {
+        "word": "service",
+        "score": 210
+      },
+      {
+        "word": "personal",
+        "score": 120
+      },
+      {
+        "word": "content",
+        "score": 60
+      },
+      {
+        "word": "without",
+        "score": 60
+      },
+      {
+        "word": "third",
+        "score": 60
+      },
+      {
+        "word": "collected",
+        "score": 50
+      },
+      {
+        "word": "parties",
+        "score": 50
+      },
+      {
+        "word": "reason",
+        "score": 40
+      },
+      {
+        "word": "notice",
+        "score": 40
+      },
+      {
+        "word": "advertising",
+        "score": 40
+      },
+      {
+        "word": "deleted",
+        "score": 30
+      },
+      {
+        "word": "other",
+        "score": 30
+      },
+      {
+        "word": "account",
+        "score": 30
+      },
+      {
+        "word": "legal",
+        "score": 30
+      },
+      {
+        "word": "cookies",
+        "score": 30
+      },
+      {
+        "word": "period",
+        "score": 30
+      },
+      {
+        "word": "about",
+        "score": 30
+      },
+      {
+        "word": "through",
+        "score": 30
+      },
+      {
+        "word": "information",
+        "score": 30
+      },
+      {
+        "word": "purposes",
+        "score": 30
+      },
+      {
+        "word": "after",
+        "score": 30
+      },
+      {
+        "word": "prior",
+        "score": 20
+      },
+      {
+        "word": "waive",
+        "score": 20
+      },
+      {
+        "word": "rights",
+        "score": 20
+      },
+      {
+        "word": "shared",
+        "score": 20
+      },
+      {
+        "word": "terms",
+        "score": 20
+      },
+      {
+        "word": "liability",
+        "score": 20
+      },
+      {
+        "word": "changed",
+        "score": 20
+      },
+      {
+        "word": "tracks",
+        "score": 20
+      },
+      {
+        "word": "tracked",
+        "score": 20
+      },
+      {
+        "word": "tracking",
+        "score": 20
+      },
+      {
+        "word": "device",
+        "score": 20
+      },
+      {
+        "word": "involved",
+        "score": 20
+      },
+      {
+        "word": "operation",
+        "score": 20
+      },
+      {
+        "word": "government",
+        "score": 20
+      },
+      {
+        "word": "location",
+        "score": 20
+      },
+      {
+        "word": "broad",
+        "score": 20
+      },
+      {
+        "word": "different",
+        "score": 20
+      },
+      {
+        "word": "automated",
+        "score": 10
+      },
+      {
+        "word": "profiling",
+        "score": 10
+      },
+      {
+        "word": "training",
+        "score": 10
+      },
+      {
+        "word": "specific",
+        "score": 10
+      },
+      {
+        "word": "removed",
+        "score": 10
+      },
+      {
+        "word": "moral",
+        "score": 10
+      },
+      {
+        "word": "private",
+        "score": 10
+      },
+      {
+        "word": "messages",
+        "score": 10
+      },
+      {
+        "word": "store",
+        "score": 10
+      },
+      {
+        "word": "interact",
+        "score": 10
+      },
+      {
+        "word": "browsing",
+        "score": 10
+      },
+      {
+        "word": "history",
+        "score": 10
+      }
+    ],
+    "positive": [
+      {
+        "word": "service",
+        "score": 260
+      },
+      {
+        "word": "personal",
+        "score": 120
+      },
+      {
+        "word": "information",
+        "score": 110
+      },
+      {
+        "word": "provided",
+        "score": 100
+      },
+      {
+        "word": "about",
+        "score": 70
+      },
+      {
+        "word": "content",
+        "score": 60
+      },
+      {
+        "word": "third",
+        "score": 50
+      },
+      {
+        "word": "parties",
+        "score": 50
+      },
+      {
+        "word": "website",
+        "score": 50
+      },
+      {
+        "word": "without",
+        "score": 40
+      },
+      {
+        "word": "notified",
+        "score": 40
+      },
+      {
+        "word": "allowed",
+        "score": 30
+      },
+      {
+        "word": "purposes",
+        "score": 30
+      },
+      {
+        "word": "claims",
+        "score": 30
+      },
+      {
+        "word": "compliant",
+        "score": 30
+      },
+      {
+        "word": "users",
+        "score": 30
+      },
+      {
+        "word": "license",
+        "score": 30
+      },
+      {
+        "word": "access",
+        "score": 30
+      },
+      {
+        "word": "publishing",
+        "score": 20
+      },
+      {
+        "word": "terms",
+        "score": 20
+      },
+      {
+        "word": "privacy",
+        "score": 20
+      },
+      {
+        "word": "limited",
+        "score": 20
+      },
+      {
+        "word": "government",
+        "score": 20
+      },
+      {
+        "word": "requests",
+        "score": 20
+      },
+      {
+        "word": "tracked",
+        "score": 20
+      },
+      {
+        "word": "basis",
+        "score": 20
+      },
+      {
+        "word": "account",
+        "score": 20
+      },
+      {
+        "word": "under",
+        "score": 20
+      },
+      {
+        "word": "necessary",
+        "score": 20
+      },
+      {
+        "word": "legal",
+        "score": 20
+      },
+      {
+        "word": "collect",
+        "score": 20
+      },
+      {
+        "word": "promises",
+        "score": 20
+      },
+      {
+        "word": "regarding",
+        "score": 20
+      },
+      {
+        "word": "changes",
+        "score": 20
+      },
+      {
+        "word": "period",
+        "score": 20
+      },
+      {
+        "word": "wants",
+        "score": 20
+      },
+      {
+        "word": "change",
+        "score": 20
+      },
+      {
+        "word": "after",
+        "score": 20
+      },
+      {
+        "word": "tracking",
+        "score": 20
+      },
+      {
+        "word": "cookies",
+        "score": 20
+      },
+      {
+        "word": "limit",
+        "score": 20
+      },
+      {
+        "word": "provides",
+        "score": 20
+      },
+      {
+        "word": "copyright",
+        "score": 20
+      },
+      {
+        "word": "register",
+        "score": 10
+      },
+      {
+        "word": "onion",
+        "score": 10
+      },
+      {
+        "word": "accessible",
+        "score": 10
+      },
+      {
+        "word": "delete",
+        "score": 10
+      },
+      {
+        "word": "personally",
+        "score": 10
+      },
+      {
+        "word": "identifiable",
+        "score": 10
+      },
+      {
+        "word": "consent",
+        "score": 10
+      }
+    ]
+  },
+  "services_reference": {
+    "222": {
+      "name": "DuckDuckGo",
+      "rating": "C",
+      "url": "duckduckgo.com"
+    },
+    "528": {
+      "name": "Signal",
+      "rating": "B",
+      "url": "signal.org"
+    },
+    "491": {
+      "name": "Proton AG",
+      "rating": "C",
+      "url": "protonmail.com"
+    },
+    "530": {
+      "name": "Mozilla.org",
+      "rating": "C",
+      "url": "mozilla.org"
+    },
+    "265": {
+      "name": "Wikipedia",
+      "rating": "B",
+      "url": "wikipedia.org"
+    },
+    "707": {
+      "name": "Nextcloud",
+      "rating": "B",
+      "url": "nextcloud.com"
+    },
+    "1348": {
+      "name": "Bitwarden",
+      "rating": "C",
+      "url": "bitwarden.com"
+    },
+    "157": {
+      "name": "Tuta",
+      "rating": "A",
+      "url": "tutanota.com"
+    },
+    "9475": {
+      "name": "Mastodon",
+      "rating": "N/A",
+      "url": "mastodon.cloud"
+    },
+    "297": {
+      "name": "GitHub",
+      "rating": "B",
+      "url": "github.com"
+    },
+    "536": {
+      "name": "Discord",
+      "rating": "D",
+      "url": "discord.com"
+    },
+    "225": {
+      "name": "Spotify",
+      "rating": "D",
+      "url": "spotify.com"
+    },
+    "185": {
+      "name": "Netflix",
+      "rating": "D",
+      "url": "netflix.com"
+    },
+    "270": {
+      "name": "Dropbox",
+      "rating": "D",
+      "url": "dropbox.com"
+    },
+    "206": {
+      "name": "Slack",
+      "rating": "B",
+      "url": "slack.com"
+    },
+    "500": {
+      "name": "ZoomInfo",
+      "rating": "N/A",
+      "url": "zoominfo.com"
+    },
+    "202": {
+      "name": "Microsoft Store",
+      "rating": "D",
+      "url": "microsoft.com"
+    },
+    "8379": {
+      "name": "Applebees",
+      "rating": "N/A",
+      "url": "applebees.com"
+    },
+    "194": {
+      "name": "Reddit",
+      "rating": "E",
+      "url": "reddit.com"
+    },
+    "195": {
+      "name": "X",
+      "rating": "E",
+      "url": "twitter.com"
+    },
+    "193": {
+      "name": "LinkedIn",
+      "rating": "D",
+      "url": "linkedin.com"
+    },
+    "175": {
+      "name": "Pinterest",
+      "rating": "E",
+      "url": "pinterest.com"
+    },
+    "200": {
+      "name": "Twitch",
+      "rating": "E",
+      "url": "twitch.tv"
+    },
+    "180": {
+      "name": "Steam",
+      "rating": "D",
+      "url": "steampowered.com"
+    },
+    "217": {
+      "name": "Google",
+      "rating": "E",
+      "url": "google.com"
+    },
+    "182": {
+      "name": "Facebook",
+      "rating": "E",
+      "url": "facebook.com"
+    },
+    "219": {
+      "name": "Instagram",
+      "rating": "E",
+      "url": "instagram.com"
+    },
+    "1448": {
+      "name": "TikTok",
+      "rating": "E",
+      "url": "tiktok.com"
+    },
+    "190": {
+      "name": "Amazon",
+      "rating": "E",
+      "url": "amazon.com"
+    },
+    "252": {
+      "name": "Uber",
+      "rating": "E",
+      "url": "uber.com"
+    },
+    "311": {
+      "name": "Snapchat",
+      "rating": "E",
+      "url": "snapchat.com"
+    },
+    "198": {
+      "name": "WhatsApp",
+      "rating": "C",
+      "url": "whatsapp.com"
+    },
+    "274": {
+      "name": "YouTube",
+      "rating": "E",
+      "url": "youtube.com"
+    },
+    "7376": {
+      "name": "iPGMail ",
+      "rating": "N/A",
+      "url": "ipgmail.com"
+    }
+  }
+}

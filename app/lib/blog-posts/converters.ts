@@ -13,6 +13,10 @@ import { twitterCounterPost } from '@/tools/twitter-counter/blog-post'
 import { ageCalculatorPost } from '@/tools/age-calculator/blog-post'
 import { bmiCalculatorPost } from '@/tools/bmi-calculator/blog-post'
 import { percentageCalculatorPost } from '@/tools/percentage-calculator/blog-post'
+import { timestampConverterPost } from '@/tools/timestamp-converter/blog-post'
+import { urlEncoderPost } from '@/tools/url-encoder/blog-post'
+import { aspectRatioCalculatorPost } from '@/tools/aspect-ratio-calculator/blog-post'
+import { wordCounterProPost } from '@/tools/word-counter-pro/blog-post'
 
 export const convertersPosts: BlogPost[] = [
   textCasePost,
@@ -26,4 +30,8 @@ export const convertersPosts: BlogPost[] = [
   ageCalculatorPost,
   bmiCalculatorPost,
   percentageCalculatorPost,
+  timestampConverterPost,
+  urlEncoderPost,
+  aspectRatioCalculatorPost,
+  wordCounterProPost,
 ]

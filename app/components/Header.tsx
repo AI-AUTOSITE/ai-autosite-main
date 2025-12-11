@@ -3,7 +3,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, HelpCircle, Home, FileText, Zap } from 'lucide-react'
+import { Menu, X, HelpCircle, Home, FileText } from 'lucide-react'
 import { useState, useEffect, Suspense, useCallback, useRef } from 'react'
 import SignalBrand from './icons/SignalBrand'
 
@@ -16,16 +16,9 @@ export default function Header() {
   // ✅ Ref for DOM operations (avoid forced reflow)
   const headerRef = useRef<HTMLElement>(null)
 
-  // Navigation items with icons - Automationを追加 
+  // Navigation items with icons
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
-    { 
-      href: '/automation', 
-      label: 'Automation', 
-      icon: Zap,
-      badge: 'NEW',
-      highlight: true 
-    },
     { href: '/blog', label: 'Blog', icon: FileText },
     { href: '/faq', label: 'FAQ', icon: HelpCircle },
   ]
@@ -160,8 +153,7 @@ export default function Header() {
               {navItems.map((item) => {
                 const isActive =
                   pathname === item.href || 
-                  (item.href === '/blog' && pathname.startsWith('/blog')) ||
-                  (item.href === '/automation' && pathname.startsWith('/automation'))
+                  (item.href === '/blog' && pathname.startsWith('/blog'))
 
                 return (
                   <Link
@@ -169,22 +161,15 @@ export default function Header() {
                     href={item.href}
                     className={`
                       px-4 py-2 rounded-lg text-sm font-medium transition-all
-                      flex items-center gap-2 relative
+                      flex items-center gap-2
                       ${
                         isActive
                           ? 'bg-cyan-500/20 text-cyan-400'
-                          : item.highlight
-                          ? 'text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10'
                           : 'text-gray-300 hover:text-white hover:bg-white/10'
                       }
                     `}
                   >
                     {item.label}
-                    {item.badge && (
-                      <span className="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-bold bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full">
-                        {item.badge}
-                      </span>
-                    )}
                   </Link>
                 )
               })}
@@ -236,8 +221,7 @@ export default function Header() {
                 {navItems.map((item) => {
                   const isActive =
                     pathname === item.href ||
-                    (item.href === '/blog' && pathname.startsWith('/blog')) ||
-                    (item.href === '/automation' && pathname.startsWith('/automation'))
+                    (item.href === '/blog' && pathname.startsWith('/blog'))
                   const Icon = item.icon
 
                   return (
@@ -246,25 +230,16 @@ export default function Header() {
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={`
-                        flex items-center justify-between gap-2 px-4 py-3 rounded-lg text-base font-medium transition-all relative
+                        flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium transition-all
                         ${
                           isActive
                             ? 'bg-cyan-500/20 text-cyan-400'
-                            : item.highlight
-                            ? 'text-emerald-400 bg-emerald-500/10'
                             : 'text-gray-300 bg-gray-800/50 hover:bg-gray-700/50'
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-5 h-5 flex-shrink-0" />
-                        <span>{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span className="px-2 py-0.5 text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full">
-                          {item.badge}
-                        </span>
-                      )}
+                      <Icon className="w-5 h-5 flex-shrink-0" />
+                      <span>{item.label}</span>
                     </Link>
                   )
                 })}

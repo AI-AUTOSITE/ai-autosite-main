@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { FileText, Copy, Eye, Code, RefreshCw, Check, Hash } from 'lucide-react'
+import { FileText, Copy, Eye, Code, RefreshCw, Check, Hash, Lock } from 'lucide-react'
 import { marked } from 'marked'
 
 type ViewMode = 'preview' | 'code'
@@ -99,6 +99,17 @@ export default function MarkdownHtmlClient() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
+      {/* Privacy Badge */}
+      <div className="mb-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-2">
+        <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <p className="text-green-300 font-medium">100% Private</p>
+          <p className="text-green-400/70 text-xs mt-1">
+            Markdown is converted locally in your browser • No data sent anywhere
+          </p>
+        </div>
+      </div>
+
       {/* Editor Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Markdown Input */}

@@ -554,7 +554,6 @@ function ToolsGrid({ tools }: { tools: ClientTool[] }) {
                   gap-4 sm:gap-5 md:gap-6 
                   auto-rows-fr">
       {tools.map((tool) => (
-        // @ts-expect-error - React key prop is not part of component props
         <ToolCard key={tool.id} tool={tool} />
       ))}
     </div>
@@ -572,7 +571,6 @@ function ToolsList({ tools }: { tools: ClientTool[] }) {
   return (
     <div className="space-y-3 sm:space-y-4">
       {tools.map((tool) => (
-        // @ts-expect-error - React key prop is not part of component props
         <ToolCardCompact key={tool.id} tool={tool} />
       ))}
     </div>

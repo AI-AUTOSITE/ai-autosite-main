@@ -36,6 +36,7 @@ export const CATEGORY_MAP = {
   'editors': 'editors',
   'generators': 'generators',
   'analyzers': 'analyzers',
+  'privacy': 'privacy',
   'ai-tools': 'ai-tools',
   'dev-tools': 'dev-tools',
   'learning': 'learning',
@@ -57,4 +58,4 @@ export function mapCategoryId(category: string): string {
 // Type exports for strict typing
 export type ToolStatus = 'live' | 'coming' | 'maintenance'
 export type PostStatus = 'active' | 'coming' | 'draft'
-export type CategoryId = 'converters' | 'editors' | 'generators' | 'analyzers' | 'ai-tools' | 'dev-tools' | 'learning'
+export type CategoryId = 'converters' | 'editors' | 'generators' | 'analyzers' | 'privacy' | 'ai-tools' | 'dev-tools' | 'learning'

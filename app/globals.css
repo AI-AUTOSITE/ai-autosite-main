@@ -272,3 +272,59 @@ body {
     color: black;
   }
 }
+/* Add this to your globals.css or tailwind.config.js */
+
+/* === OPTION 1: Add to globals.css === */
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 2s ease infinite;
+}
+
+/* Pulsing glow effect */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+
+/* === OPTION 2: Add to tailwind.config.js === */
+/*
+module.exports = {
+  theme: {
+    extend: {
+      animation: {
+        'gradient-x': 'gradient-x 2s ease infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+      },
+      keyframes: {
+        'gradient-x': {
+          '0%, 100%': { 'background-position': '0% 50%' },
+          '50%': { 'background-position': '100% 50%' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { 'box-shadow': '0 0 5px rgba(168, 85, 247, 0.4)' },
+          '50%': { 'box-shadow': '0 0 20px rgba(168, 85, 247, 0.8)' },
+        },
+      },
+    },
+  },
+};
+*/
