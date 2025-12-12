@@ -83,6 +83,108 @@ const SIZE_PRESETS = [
   { name: 'Custom', value: 'custom' },
 ]
 
+// HEIC/HEIF support for iPhone photos
+const isHeicFile = (file: File): boolean => {
+  const type = file.type.toLowerCase()
+  const name = file.name.toLowerCase()
+  return type === 'image/heic' || type === 'image/heif' || 
+         name.endsWith('.heic') || name.endsWith('.heif')
+}
+
+const isValidImageFile = (file: File): boolean => {
+  const type = file.type.toLowerCase()
+  const name = file.name.toLowerCase()
+  
+  // Standard image types
+  if (type.startsWith('image/')) return true
+  
+  // HEIC/HEIF (iPhone) - type might be empty in some browsers
+  if (name.endsWith('.heic') || name.endsWith('.heif')) return true
+  
+  // Common image extensions as fallback
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']
+  if (imageExtensions.some(ext => name.endsWith(ext))) return true
+  
+  return false
+}
+
+// Convert HEIC to JPEG using heic2any library
+const convertHeicToJpeg = async (file: File): Promise<File> => {
+  try {
+    // Dynamic import of heic2any
+    const heic2any = (await import('heic2any')).default
+    
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: 'image/jpeg',
+      quality: 0.92,
+    })
+    
+    // heic2any can return array or single blob
+    const resultBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+    
+    const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg')
+    return new File([resultBlob], newName, { type: 'image/jpeg' })
+    
+  } catch (heicError) {
+    console.warn('heic2any failed, trying canvas fallback:', heicError)
+    
+    // Fallback: Try native browser decoding (works on some iOS versions)
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      const url = URL.createObjectURL(file)
+      
+      const timeout = setTimeout(() => {
+        URL.revokeObjectURL(url)
+        reject(new Error('Image loading timeout'))
+      }, 10000)
+      
+      img.onload = () => {
+        clearTimeout(timeout)
+        try {
+          const canvas = document.createElement('canvas')
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          const ctx = canvas.getContext('2d')
+          
+          if (!ctx) {
+            URL.revokeObjectURL(url)
+            reject(new Error('Failed to create canvas context'))
+            return
+          }
+          
+          ctx.drawImage(img, 0, 0)
+          
+          canvas.toBlob(
+            (blob) => {
+              URL.revokeObjectURL(url)
+              if (blob) {
+                const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg')
+                resolve(new File([blob], newName, { type: 'image/jpeg' }))
+              } else {
+                reject(new Error('Failed to convert image'))
+              }
+            },
+            'image/jpeg',
+            0.92
+          )
+        } catch (err) {
+          URL.revokeObjectURL(url)
+          reject(err)
+        }
+      }
+      
+      img.onerror = () => {
+        clearTimeout(timeout)
+        URL.revokeObjectURL(url)
+        reject(new Error('Browser cannot decode this image format'))
+      }
+      
+      img.src = url
+    })
+  }
+}
+
 export default function BgEraserClient() {
   // State
   const [status, setStatus] = useState<Status>('idle')
@@ -317,8 +419,9 @@ export default function BgEraserClient() {
 
   // Handle file selection
   const handleFileSelect = useCallback(async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError("Please select an image file (PNG, JPG, or WebP)")
+    // Check if valid image file (including HEIC/HEIF)
+    if (!isValidImageFile(file)) {
+      setError("Please select an image file (PNG, JPG, WebP, or HEIC)")
       setStatus('error')
       return
     }
@@ -337,25 +440,40 @@ export default function BgEraserClient() {
     setZoom(1)
     setPan({ x: 0, y: 0 })
 
-    const originalUrl = URL.createObjectURL(file)
+    // Convert HEIC to JPEG if needed (for iPhone photos)
+    let processFile = file
+    if (isHeicFile(file)) {
+      try {
+        setProgress(1)
+        processFile = await convertHeicToJpeg(file)
+        setProgress(3)
+      } catch (err) {
+        console.error('HEIC conversion error:', err)
+        setError("Couldn't process this photo format. Try taking a screenshot of the photo and using that instead.")
+        setStatus('error')
+        return
+      }
+    }
+
+    const originalUrl = URL.createObjectURL(processFile)
 
     setProcessedImage({
       originalUrl,
       resultUrl: '',
-      originalFile: file,
+      originalFile: processFile,
       resultBlob: null,
       width: 0,
       height: 0
     })
 
     try {
-      const { blob, width, height } = await removeBackground(file)
+      const { blob, width, height } = await removeBackground(processFile)
       const resultUrl = URL.createObjectURL(blob)
 
       setProcessedImage({
         originalUrl,
         resultUrl,
-        originalFile: file,
+        originalFile: processFile,
         resultBlob: blob,
         width,
         height
@@ -824,7 +942,7 @@ export default function BgEraserClient() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp,image/jpg"
+                accept="image/png,image/jpeg,image/webp,image/jpg,image/heic,image/heif,.heic,.heif"
                 onChange={handleInputChange}
                 className="hidden"
               />

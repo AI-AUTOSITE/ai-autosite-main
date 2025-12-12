@@ -22,6 +22,7 @@ const nextConfig = {
         ...config.resolve.alias,
         'onnxruntime-node': false,
         'sharp': false,
+        'canvas': false,  // 🔥 追加: canvasを除外
       }
     }
 
@@ -29,6 +30,14 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
+    }
+
+    // 🔥 canvasをクライアントでも除外（pdfjs-distが使おうとする）
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'canvas': false,
+      }
     }
 
     // WASM support for ONNX Runtime
@@ -44,6 +53,7 @@ const nextConfig = {
         fs: false,
         path: false,
         crypto: false,
+        canvas: false,  // 🔥 追加
       }
 
       // .mjs ファイルをESMとして処理
@@ -56,6 +66,12 @@ const nextConfig = {
         },
       })
     }
+
+    // 🔥 .node ファイル（ネイティブモジュール）を無視
+    config.module.rules.push({
+      test: /\.node$/,
+      use: 'null-loader',
+    })
 
     // .onnx ファイルのサポート
     config.module.rules.push({
@@ -160,6 +176,7 @@ const nextConfig = {
     serverComponentsExternalPackages: [
       'onnxruntime-node',
       'sharp',
+      'canvas',  // 🔥 追加
     ],
     // 🔥 ファイルトレーシング除外
     outputFileTracingExcludes: {
@@ -170,6 +187,8 @@ const nextConfig = {
         './node_modules/@img/sharp-libvips-*/**/*',
         './node_modules/sharp',
         './node_modules/sharp/**/*',
+        './node_modules/canvas',       // 🔥 追加
+        './node_modules/canvas/**/*',  // 🔥 追加
       ],
     },
     esmExternals: 'loose',
