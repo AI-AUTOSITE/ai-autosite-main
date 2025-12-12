@@ -7,6 +7,44 @@ interface UseBgRemovalOptions {
   onProgress: (progress: number) => void
 }
 
+// HEIC/HEIFファイルかどうかを判定
+function isHeicFile(file: File): boolean {
+  const type = file.type.toLowerCase()
+  const name = file.name.toLowerCase()
+  
+  return (
+    type === 'image/heic' ||
+    type === 'image/heif' ||
+    name.endsWith('.heic') ||
+    name.endsWith('.heif')
+  )
+}
+
+// HEIC/HEIFをJPEGに変換
+async function convertHeicToJpeg(file: File): Promise<File> {
+  try {
+    // heic2anyを動的にインポート
+    const heic2any = (await import('heic2any')).default
+    
+    const convertedBlob = await heic2any({
+      blob: file,
+      toType: 'image/jpeg',
+      quality: 0.92,
+    })
+    
+    // heic2anyは配列またはBlobを返す可能性がある
+    const resultBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+    
+    // 新しいファイル名を作成（.heic → .jpg）
+    const newName = file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg')
+    
+    return new File([resultBlob], newName, { type: 'image/jpeg' })
+  } catch (error) {
+    console.error('HEIC conversion error:', error)
+    throw new Error('Failed to convert HEIC image. Please try a different image.')
+  }
+}
+
 export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) {
   const [modelLoaded, setModelLoaded] = useState(false)
   const modelRef = useRef<any>(null)
@@ -58,6 +96,16 @@ export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) 
   }, [onProgress])
 
   const removeBackground = useCallback(async (file: File): Promise<{ blob: Blob; width: number; height: number }> => {
+    // 🔥 HEICファイルの場合はJPEGに変換
+    let processFile = file
+    if (isHeicFile(file)) {
+      onProgress(1)
+      console.log('Converting HEIC to JPEG...')
+      processFile = await convertHeicToJpeg(file)
+      console.log('HEIC conversion complete')
+      onProgress(3)
+    }
+
     await loadModel()
 
     // Dynamic import
@@ -65,7 +113,7 @@ export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) 
 
     onProgress(72)
 
-    const imageUrl = URL.createObjectURL(file)
+    const imageUrl = URL.createObjectURL(processFile)
     
     try {
       const image = await RawImage.fromURL(imageUrl)
