@@ -23,24 +23,31 @@ const nextConfig = {
 
   // 🔥 Webpack設定
   webpack: (config, { isServer }) => {
-    // 🔥 サーバーサイドから完全に除外
+    // 🔥 サーバーサイドから完全に除外（正規表現でより確実に）
     if (isServer) {
-      config.externals = config.externals || []
+      const originalExternals = config.externals || []
       
-      // 配列形式で追加
-      const externalsToAdd = [
+      config.externals = [
+        ...(Array.isArray(originalExternals) ? originalExternals : [originalExternals]),
+        // 文字列で除外
         'canvas',
-        'onnxruntime-web',
-        'onnxruntime-node', 
         'sharp',
-        '@huggingface/transformers',  // 🔥 追加
+        // 🔥 正規表現で関連パッケージを全て除外
+        /^@huggingface\/.*/,
+        /^onnxruntime-.*/,
+        /^@xenova\/.*/,
+        // 関数で追加の除外
+        ({ request }, callback) => {
+          if (
+            request.includes('@huggingface') ||
+            request.includes('onnxruntime') ||
+            request.includes('transformers')
+          ) {
+            return callback(null, 'commonjs ' + request)
+          }
+          callback()
+        },
       ]
-      
-      if (Array.isArray(config.externals)) {
-        config.externals.push(...externalsToAdd)
-      } else {
-        config.externals = [config.externals, ...externalsToAdd]
-      }
     }
 
     // Client-side: Alias node-only modules to false

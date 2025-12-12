@@ -1,38 +1,49 @@
-import { Metadata } from 'next'
-import BgEraserClient from './components/BgEraserClient'
+import type { Metadata } from 'next'
+import BgEraserClient from './BgEraserClient'
+
+// 🔥 このページを完全に静的化（サーバーレス関数を生成しない）
+export const dynamic = 'force-static'
+export const dynamicParams = false
+export const revalidate = false
 
 export const metadata: Metadata = {
-  title: 'Free Background Remover - No Ads, No Sign Up | AI AutoSite',
-  description:
-    'Remove image backgrounds instantly with AI. 100% free, no ads, works offline. Images never leave your browser.',
-  keywords: 'free background remover, remove background, transparent png, cutout, no ads, privacy, no sign up, ai background removal',
+  title: 'AI Background Eraser - Remove Image Backgrounds Instantly | Free Online Tool',
+  description: 'Remove backgrounds from images instantly with AI. Free, no signup required. Works with photos of people, products, animals and more. 100% private - processed in your browser.',
+  keywords: [
+    'background remover',
+    'remove background',
+    'AI background eraser',
+    'transparent background',
+    'photo background remover',
+    'free background remover',
+    'image background removal',
+    'remove bg',
+    'cutout tool',
+    'product photo background'
+  ],
   openGraph: {
-    title: 'Background Eraser - Truly Free, No Ads',
-    description: 'Zero ads, zero tracking. Remove backgrounds without uploading anywhere.',
+    title: 'AI Background Eraser - Remove Backgrounds Instantly',
+    description: 'Free AI-powered background removal. No signup, 100% private, works in your browser.',
     type: 'website',
-    images: [
-      {
-        url: '/og-bg-eraser.png',
-        width: 1200,
-        height: 630,
-        alt: 'Free Background Eraser - No Ads',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Background Eraser - Free Forever, Private',
-    description: 'Remove backgrounds offline. Zero uploads.',
+    title: 'AI Background Eraser',
+    description: 'Remove backgrounds from any image with AI - free and private.',
   },
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: 'https://ai-autosite.com/tools/bg-eraser',
+    canonical: '/tools/bg-eraser',
   },
 }
 
 export default function BgEraserPage() {
-  return <BgEraserClient />
+  return (
+    <main className="min-h-screen bg-gray-900">
+      <BgEraserClient />
+    </main>
+  )
 }
