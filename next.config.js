@@ -16,12 +16,19 @@ const nextConfig = {
 
   // 🔥 Webpack設定
   webpack: (config, { isServer }) => {
-    // 🔥 $サフィックスで完全一致
+    // 🔥 サーバーサイドのみで除外（クライアントには影響させない）
+    if (isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'onnxruntime-node': false,
+        'sharp': false,
+      }
+    }
+
+    // クライアント・サーバー共通
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
-      'onnxruntime-node$': false,
-      'sharp$': false,
     }
 
     // WASM support for ONNX Runtime
@@ -148,13 +155,13 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // 🔥 experimental内に配置（Next.js 14用）
+  // 🔥 experimental設定
   experimental: {
     serverComponentsExternalPackages: [
       'onnxruntime-node',
       'sharp',
     ],
-    // 🔥 ファイルトレーシング除外（Next.js 14ではここに配置）
+    // 🔥 ファイルトレーシング除外
     outputFileTracingExcludes: {
       '*': [
         './node_modules/onnxruntime-node',
