@@ -20,7 +20,7 @@ const nextConfig = {
   // 🔥 Transformers.js対応
   transpilePackages: ['@huggingface/transformers'],
 
-  // 🔥 メモリ最適化: Webpack設定を簡略化
+  // 🔥 メモリ最適化: Webpack設定
   webpack: (config, { isServer }) => {
     // Server-side configuration
     if (isServer) {
@@ -56,12 +56,30 @@ const nextConfig = {
         path: false,
         crypto: false,
       }
+
+      // 🔥 onnxruntime-web の .mjs ファイルを ESM として処理
+      config.module.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+        resolve: {
+          fullySpecified: false,
+        },
+      })
     }
 
     // 🔥 .onnx ファイルのサポート
     config.module.rules.push({
       test: /\.onnx$/,
       type: 'asset/resource',
+    })
+
+    // 🔥 import.meta サポート
+    config.module.rules.push({
+      test: /onnxruntime-web/,
+      resolve: {
+        fullySpecified: false,
+      },
     })
 
     return config
