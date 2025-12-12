@@ -14,21 +14,9 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // 🔥 これが最重要！Vercelのファイルトレーシングから除外
-  outputFileTracingExcludes: {
-    '*': [
-      'node_modules/onnxruntime-node',
-      'node_modules/onnxruntime-node/**/*',
-      'node_modules/@img/sharp-libvips-*',
-      'node_modules/@img/sharp-libvips-*/**/*',
-      'node_modules/sharp',
-      'node_modules/sharp/**/*',
-    ],
-  },
-
   // 🔥 Webpack設定
   webpack: (config, { isServer }) => {
-    // 🔥 $サフィックスで完全一致（これが重要！）
+    // 🔥 $サフィックスで完全一致
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
@@ -160,12 +148,23 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // 🔥 サーバーコンポーネントから除外
+  // 🔥 experimental内に配置（Next.js 14用）
   experimental: {
     serverComponentsExternalPackages: [
       'onnxruntime-node',
       'sharp',
     ],
+    // 🔥 ファイルトレーシング除外（Next.js 14ではここに配置）
+    outputFileTracingExcludes: {
+      '*': [
+        './node_modules/onnxruntime-node',
+        './node_modules/onnxruntime-node/**/*',
+        './node_modules/@img/sharp-libvips-*',
+        './node_modules/@img/sharp-libvips-*/**/*',
+        './node_modules/sharp',
+        './node_modules/sharp/**/*',
+      ],
+    },
     esmExternals: 'loose',
   },
 }
