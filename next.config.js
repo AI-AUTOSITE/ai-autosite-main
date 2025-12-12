@@ -17,14 +17,20 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
+  // 🔥 Transformers.js対応
+  transpilePackages: ['@huggingface/transformers'],
+
   // 🔥 メモリ最適化: Webpack設定を簡略化
   webpack: (config, { isServer }) => {
     // Server-side configuration
     if (isServer) {
       config.externals = config.externals || []
-      config.externals.push({
-        canvas: 'canvas',
-      })
+      // 配列形式で追加（オブジェクト形式と混在させない）
+      if (Array.isArray(config.externals)) {
+        config.externals.push('canvas', 'onnxruntime-web', 'sharp', 'onnxruntime-node')
+      } else {
+        config.externals = [config.externals, 'canvas', 'onnxruntime-web', 'sharp', 'onnxruntime-node']
+      }
     }
 
     // Client-side: Alias node-only modules to false (they will use web alternatives)
@@ -51,6 +57,12 @@ const nextConfig = {
         crypto: false,
       }
     }
+
+    // 🔥 .onnx ファイルのサポート
+    config.module.rules.push({
+      test: /\.onnx$/,
+      type: 'asset/resource',
+    })
 
     return config
   },
@@ -102,6 +114,20 @@ const nextConfig = {
           {
             key: 'Content-Type',
             value: 'application/wasm',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // 🔥 ONNX files - Content-Type header
+      {
+        source: '/:path*.onnx',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/octet-stream',
           },
           {
             key: 'Cache-Control',
@@ -284,13 +310,15 @@ const nextConfig = {
   // Enable compression
   compress: true,
 
-  // 🔥 メモリ最適化: 実験的機能を無効化
+  // 🔥 メモリ最適化: 実験的機能
   experimental: {
     // メモリ使用量を抑制
     optimizeCss: false,
     swcTraceProfiling: false,
     // Transformers.js: exclude from server bundling
-    serverComponentsExternalPackages: ['sharp', 'onnxruntime-node'],
+    serverComponentsExternalPackages: ['sharp', 'onnxruntime-node', 'onnxruntime-web'],
+    // 🔥 ESM互換性向上
+    esmExternals: 'loose',
   },
 }
 
