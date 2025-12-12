@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Core configuration
@@ -9,40 +11,37 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  // 🔥 スタンドアロン出力を削除（サイズ削減）
-  // output: 'standalone', // コメントアウト
-
   // Compiler configuration
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // 🔥 transpilePackages から transformers を削除
-  // （クライアントで動的importするため不要）
-  // transpilePackages: ['@huggingface/transformers'],
-
   // 🔥 Webpack設定
   webpack: (config, { isServer }) => {
-    // 🔥 サーバーサイドから完全に除外（正規表現でより確実に）
+    // 🔥 onnxruntime-node を完全に無視（最重要 - 727MB削減）
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^onnxruntime-node$/,
+      })
+    )
+
+    // 🔥 サーバーサイドから完全に除外
     if (isServer) {
       const originalExternals = config.externals || []
       
       config.externals = [
         ...(Array.isArray(originalExternals) ? originalExternals : [originalExternals]),
-        // 文字列で除外
+        'onnxruntime-node',
         'canvas',
         'sharp',
-        // 🔥 正規表現で関連パッケージを全て除外
-        /^@huggingface\/.*/,
-        /^onnxruntime-.*/,
-        /^@xenova\/.*/,
-        // 関数で追加の除外
+        '@huggingface/transformers',
+        'onnxruntime-web',
+        // 関数形式で追加の除外
         ({ request }, callback) => {
-          if (
-            request.includes('@huggingface') ||
-            request.includes('onnxruntime') ||
-            request.includes('transformers')
-          ) {
+          if (request && (
+            request.includes('onnxruntime-node') ||
+            request.includes('@img/sharp')
+          )) {
             return callback(null, 'commonjs ' + request)
           }
           callback()
@@ -50,12 +49,12 @@ const nextConfig = {
       ]
     }
 
-    // Client-side: Alias node-only modules to false
+    // 🔥 モジュール解決時に除外
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
-      "sharp$": false,
-      "onnxruntime-node$": false,
+      'onnxruntime-node': false,
+      'sharp': false,
     }
 
     // WASM support for ONNX Runtime
@@ -73,7 +72,7 @@ const nextConfig = {
         crypto: false,
       }
 
-      // 🔥 .mjs ファイルをESMとして処理
+      // .mjs ファイルをESMとして処理
       config.module.rules.push({
         test: /\.mjs$/,
         include: /node_modules/,
@@ -84,7 +83,7 @@ const nextConfig = {
       })
     }
 
-    // 🔥 .onnx ファイルのサポート
+    // .onnx ファイルのサポート
     config.module.rules.push({
       test: /\.onnx$/,
       type: 'asset/resource',
@@ -133,7 +132,6 @@ const nextConfig = {
   // Security and performance headers
   async headers() {
     return [
-      // WASM files
       {
         source: '/:path*.wasm',
         headers: [
@@ -141,7 +139,6 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
-      // ONNX files
       {
         source: '/:path*.onnx',
         headers: [
@@ -149,7 +146,6 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
-      // API CORS headers
       {
         source: '/api/:path*',
         headers: [
@@ -159,26 +155,12 @@ const nextConfig = {
           { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
         ],
       },
-      // Static assets caching
-      {
-        source: '/:path*.(jpg|jpeg|png|gif|webp|svg|ico)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
-      {
-        source: '/:path*.(woff|woff2|ttf|otf)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
       {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
-      // Security headers
       {
         source: '/:path*',
         headers: [
@@ -191,28 +173,22 @@ const nextConfig = {
     ]
   },
 
-  // Environment variables
   env: {
     NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || '1.0.0',
     NEXT_PUBLIC_ENVIRONMENT: process.env.NODE_ENV || 'development',
   },
 
-  // Disable powered by header
   poweredByHeader: false,
-  
-  // Enable compression
   compress: true,
 
-  // 🔥 実験的機能
   experimental: {
     optimizeCss: false,
     swcTraceProfiling: false,
-    // 🔥 サーバーコンポーネントから除外
     serverComponentsExternalPackages: [
-      'sharp',
       'onnxruntime-node',
       'onnxruntime-web',
-      '@huggingface/transformers',  // 🔥 追加
+      'sharp',
+      '@huggingface/transformers',
     ],
     esmExternals: 'loose',
   },
