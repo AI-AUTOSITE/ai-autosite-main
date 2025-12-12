@@ -1,49 +1,33 @@
 import type { Metadata } from 'next'
-import BgEraserClient from './BgEraserClient'
+import dynamic from 'next/dynamic'
 
-// 🔥 このページを完全に静的化（サーバーレス関数を生成しない）
-export const dynamic = 'force-static'
-export const dynamicParams = false
-export const revalidate = false
+// 🔥 ssr: false が最重要！サーバーサイドバンドリングを完全に防ぐ
+const BgEraserClient = dynamic(
+  () => import('./BgEraserClient'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+)
 
 export const metadata: Metadata = {
-  title: 'AI Background Eraser - Remove Image Backgrounds Instantly | Free Online Tool',
-  description: 'Remove backgrounds from images instantly with AI. Free, no signup required. Works with photos of people, products, animals and more. 100% private - processed in your browser.',
-  keywords: [
-    'background remover',
-    'remove background',
-    'AI background eraser',
-    'transparent background',
-    'photo background remover',
-    'free background remover',
-    'image background removal',
-    'remove bg',
-    'cutout tool',
-    'product photo background'
-  ],
+  title: 'AI背景削除ツール | 無料で高精度な背景透過 - AI AutoSite',
+  description: 'AIを使って画像の背景を自動削除。人物、商品、ペットなど様々な被写体に対応。ブラウザ内で処理するため、画像がサーバーに送信されることはありません。',
+  keywords: ['背景削除', '背景透過', 'AI', '画像編集', '無料', 'オンライン', '透過PNG'],
   openGraph: {
-    title: 'AI Background Eraser - Remove Backgrounds Instantly',
-    description: 'Free AI-powered background removal. No signup, 100% private, works in your browser.',
+    title: 'AI背景削除ツール | 無料で高精度な背景透過',
+    description: 'AIを使って画像の背景を自動削除。プライバシー保護のため、すべての処理はブラウザ内で完結します。',
     type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'AI Background Eraser',
-    description: 'Remove backgrounds from any image with AI - free and private.',
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: '/tools/bg-eraser',
   },
 }
 
 export default function BgEraserPage() {
-  return (
-    <main className="min-h-screen bg-gray-900">
-      <BgEraserClient />
-    </main>
-  )
+  return <BgEraserClient />
 }

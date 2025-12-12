@@ -1,5 +1,3 @@
-const webpack = require('webpack')
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Core configuration
@@ -16,45 +14,26 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
+  // 🔥 これが最重要！Vercelのファイルトレーシングから除外
+  outputFileTracingExcludes: {
+    '*': [
+      'node_modules/onnxruntime-node',
+      'node_modules/onnxruntime-node/**/*',
+      'node_modules/@img/sharp-libvips-*',
+      'node_modules/@img/sharp-libvips-*/**/*',
+      'node_modules/sharp',
+      'node_modules/sharp/**/*',
+    ],
+  },
+
   // 🔥 Webpack設定
   webpack: (config, { isServer }) => {
-    // 🔥 onnxruntime-node を完全に無視（最重要 - 727MB削減）
-    config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^onnxruntime-node$/,
-      })
-    )
-
-    // 🔥 サーバーサイドから完全に除外
-    if (isServer) {
-      const originalExternals = config.externals || []
-      
-      config.externals = [
-        ...(Array.isArray(originalExternals) ? originalExternals : [originalExternals]),
-        'onnxruntime-node',
-        'canvas',
-        'sharp',
-        '@huggingface/transformers',
-        'onnxruntime-web',
-        // 関数形式で追加の除外
-        ({ request }, callback) => {
-          if (request && (
-            request.includes('onnxruntime-node') ||
-            request.includes('@img/sharp')
-          )) {
-            return callback(null, 'commonjs ' + request)
-          }
-          callback()
-        },
-      ]
-    }
-
-    // 🔥 モジュール解決時に除外
+    // 🔥 $サフィックスで完全一致（これが重要！）
     config.resolve.alias = {
       ...config.resolve.alias,
       'pdfjs-dist': 'pdfjs-dist/legacy/build/pdf',
-      'onnxruntime-node': false,
-      'sharp': false,
+      'onnxruntime-node$': false,
+      'sharp$': false,
     }
 
     // WASM support for ONNX Runtime
@@ -181,14 +160,11 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
+  // 🔥 サーバーコンポーネントから除外
   experimental: {
-    optimizeCss: false,
-    swcTraceProfiling: false,
     serverComponentsExternalPackages: [
       'onnxruntime-node',
-      'onnxruntime-web',
       'sharp',
-      '@huggingface/transformers',
     ],
     esmExternals: 'loose',
   },
