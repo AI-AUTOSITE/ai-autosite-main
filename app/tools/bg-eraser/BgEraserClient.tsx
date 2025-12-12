@@ -95,10 +95,28 @@ export default function BgEraserClient() {
     }, [processedImage])
   })
 
+  // Check if file is a valid image (including HEIC for iPhone)
+  const isValidImageFile = (file: File): boolean => {
+    const type = file.type.toLowerCase()
+    const name = file.name.toLowerCase()
+    
+    // Standard image types
+    if (type.startsWith('image/')) return true
+    
+    // HEIC/HEIF (iPhone) - file.type might be empty in some browsers
+    if (name.endsWith('.heic') || name.endsWith('.heif')) return true
+    
+    // Common image extensions as fallback (for when file.type is empty)
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']
+    if (imageExtensions.some(ext => name.endsWith(ext))) return true
+    
+    return false
+  }
+
   // Handle file selection
   const handleFileSelect = useCallback(async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError("Please select an image file (PNG, JPG, or WebP)")
+    if (!isValidImageFile(file)) {
+      setError("Please select an image file (PNG, JPG, WebP, or HEIC)")
       setStatus('error')
       return
     }
@@ -139,9 +157,11 @@ export default function BgEraserClient() {
       })
       setStatus('done')
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Processing error:', err)
-      setError("Something went wrong. Please try again with a different image.")
+      // 🔍 デバッグ用：実際のエラー内容を表示
+      const errorMessage = err?.message || err?.toString() || 'Unknown error'
+      setError(`Error: ${errorMessage}`)
       setStatus('error')
       URL.revokeObjectURL(originalUrl)
     }

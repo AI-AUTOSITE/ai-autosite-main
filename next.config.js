@@ -22,7 +22,8 @@ const nextConfig = {
         ...config.resolve.alias,
         'onnxruntime-node': false,
         'sharp': false,
-        'canvas': false,  // 🔥 追加: canvasを除外
+        'canvas': false,
+        '@xenova/transformers': false,  // 🔥 追加: iOS Safari対応
       }
     }
 
@@ -53,7 +54,7 @@ const nextConfig = {
         fs: false,
         path: false,
         crypto: false,
-        canvas: false,  // 🔥 追加
+        canvas: false,
       }
 
       // .mjs ファイルをESMとして処理
@@ -176,7 +177,8 @@ const nextConfig = {
     serverComponentsExternalPackages: [
       'onnxruntime-node',
       'sharp',
-      'canvas',  // 🔥 追加
+      'canvas',
+      '@xenova/transformers',  // 🔥 追加: iOS Safari対応
     ],
     // 🔥 ファイルトレーシング除外
     outputFileTracingExcludes: {
@@ -187,8 +189,10 @@ const nextConfig = {
         './node_modules/@img/sharp-libvips-*/**/*',
         './node_modules/sharp',
         './node_modules/sharp/**/*',
-        './node_modules/canvas',       // 🔥 追加
-        './node_modules/canvas/**/*',  // 🔥 追加
+        './node_modules/canvas',
+        './node_modules/canvas/**/*',
+        './node_modules/@xenova/transformers',       // 🔥 追加
+        './node_modules/@xenova/transformers/**/*',  // 🔥 追加
       ],
     },
     esmExternals: 'loose',

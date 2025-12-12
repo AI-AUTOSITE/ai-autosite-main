@@ -56,7 +56,7 @@ export function UploadArea({ maxFileSize, isTouchDevice, onFileSelect }: UploadA
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/png,image/jpeg,image/webp,image/jpg"
+          accept="image/png,image/jpeg,image/webp,image/jpg,image/heic,image/heif,.heic,.heif"
           onChange={handleInputChange}
           className="hidden"
         />
@@ -72,7 +72,7 @@ export function UploadArea({ maxFileSize, isTouchDevice, onFileSelect }: UploadA
           <p className="text-gray-400 text-sm">{isTouchDevice ? 'or take a photo' : 'or click to choose'}</p>
         </div>
 
-        <p className="text-xs md:text-sm text-gray-500">PNG, JPG, WebP • Max {formatFileSize(maxFileSize)}</p>
+        <p className="text-xs md:text-sm text-gray-500">PNG, JPG, WebP, HEIC • Max {formatFileSize(maxFileSize)}</p>
       </div>
 
       <div className="flex items-start gap-3 p-3 md:p-4 bg-violet-500/10 rounded-xl border border-violet-500/20">

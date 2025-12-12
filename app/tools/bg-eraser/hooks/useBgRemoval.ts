@@ -23,7 +23,6 @@ function isHeicFile(file: File): boolean {
 // HEIC/HEIFをJPEGに変換
 async function convertHeicToJpeg(file: File): Promise<File> {
   try {
-    // heic2anyを動的にインポート
     const heic2any = (await import('heic2any')).default
     
     const convertedBlob = await heic2any({
@@ -32,10 +31,7 @@ async function convertHeicToJpeg(file: File): Promise<File> {
       quality: 0.92,
     })
     
-    // heic2anyは配列またはBlobを返す可能性がある
     const resultBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
-    
-    // 新しいファイル名を作成（.heic → .jpg）
     const newName = file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg')
     
     return new File([resultBlob], newName, { type: 'image/jpeg' })
@@ -58,8 +54,9 @@ export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) 
     onProgress(5)
 
     try {
-      // Dynamic import to avoid Terser issues with import.meta
-      const { AutoModel, AutoProcessor, env } = await import('@huggingface/transformers')
+      // 🔥 @xenova/transformers v2 を使用（iOS Safari対応）
+      const { AutoModel, AutoProcessor, env } = await import('@xenova/transformers')
+      
       env.allowLocalModels = false
       
       onProgress(10)
@@ -89,9 +86,10 @@ export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) 
       onProgress(70)
       setModelLoaded(true)
       
-    } catch (err) {
+    } catch (err: any) {
       console.error('Model loading error:', err)
-      throw new Error("Couldn't load the AI model. Please try again.")
+      const detail = err?.message || err?.toString() || 'Unknown error'
+      throw new Error(`Model error: ${detail}`)
     }
   }, [onProgress])
 
@@ -100,23 +98,40 @@ export function useBgRemoval({ maxDimension, onProgress }: UseBgRemovalOptions) 
     let processFile = file
     if (isHeicFile(file)) {
       onProgress(1)
-      console.log('Converting HEIC to JPEG...')
-      processFile = await convertHeicToJpeg(file)
-      console.log('HEIC conversion complete')
+      try {
+        processFile = await convertHeicToJpeg(file)
+      } catch (heicErr: any) {
+        throw new Error(`HEIC conversion failed: ${heicErr?.message || heicErr}`)
+      }
       onProgress(3)
     }
 
-    await loadModel()
+    try {
+      await loadModel()
+    } catch (modelErr: any) {
+      throw new Error(`Model loading failed: ${modelErr?.message || modelErr}`)
+    }
 
     // Dynamic import
-    const { RawImage } = await import('@huggingface/transformers')
+    let RawImage: any
+    try {
+      const transformers = await import('@xenova/transformers')
+      RawImage = transformers.RawImage
+    } catch (importErr: any) {
+      throw new Error(`Import failed: ${importErr?.message || importErr}`)
+    }
 
     onProgress(72)
 
     const imageUrl = URL.createObjectURL(processFile)
     
     try {
-      const image = await RawImage.fromURL(imageUrl)
+      let image: any
+      try {
+        image = await RawImage.fromURL(imageUrl)
+      } catch (imgErr: any) {
+        throw new Error(`Image load failed: ${imgErr?.message || imgErr}`)
+      }
       
       let processImage = image
       if (image.width > maxDimension || image.height > maxDimension) {
