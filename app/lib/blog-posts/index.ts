@@ -1,6 +1,7 @@
 // app/lib/blog-posts/index.ts
 import { convertersPosts } from './converters'
 import { editorsPosts } from './editors'
+import { imageToolsPosts } from './image-tools'
 import { generatorsPosts } from './generators'
 import { analyzersPosts } from './analyzers'
 import { aiToolsPosts } from './ai-tools'
@@ -12,6 +13,7 @@ import type { BlogPost } from './types'
 export const blogPostsByCategory = {
   converters: convertersPosts,
   editors: editorsPosts,
+  'image-tools': imageToolsPosts,
   generators: generatorsPosts,
   analyzers: analyzersPosts,
   'ai-tools': aiToolsPosts,
@@ -19,9 +21,9 @@ export const blogPostsByCategory = {
   learning: learningPosts,
   
   // Backward compatibility mappings (old → new)
-  'quick-tools': [...convertersPosts, ...editorsPosts, ...generatorsPosts, ...analyzersPosts],
+  'quick-tools': [...convertersPosts, ...editorsPosts, ...imageToolsPosts, ...generatorsPosts, ...analyzersPosts],
   'business-tools': aiToolsPosts,
-  'creative-tools': [...generatorsPosts, ...editorsPosts],
+  'creative-tools': [...generatorsPosts, ...editorsPosts, ...imageToolsPosts],
   'study-tools': [...aiToolsPosts, ...learningPosts],
   'learning-hub': learningPosts,
 } as const
@@ -30,6 +32,7 @@ export const blogPostsByCategory = {
 export const allBlogPosts: BlogPost[] = [
   ...convertersPosts,
   ...editorsPosts,
+  ...imageToolsPosts,
   ...generatorsPosts,
   ...analyzersPosts,
   ...aiToolsPosts,
@@ -77,6 +80,7 @@ export const getRecentPosts = (limit: number = 5): BlogPost[] => {
 export {
   convertersPosts,
   editorsPosts,
+  imageToolsPosts,
   generatorsPosts,
   analyzersPosts,
   aiToolsPosts,

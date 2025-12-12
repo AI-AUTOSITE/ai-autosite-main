@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 // Tool title mapping
 const getToolTitle = (pathname: string) => {
   const toolMap: Record<string, string> = {
+    '/tools/bg-eraser': 'Background Eraser',
     '/tools/pdf-to-data': 'PDF → CSV/Excel',
     '/tools/pc-optimizer': 'PC Optimizer',
     '/tools/test-file-generator': 'Test File Generator',
@@ -97,13 +98,16 @@ const getToolCategory = (pathname: string): { id: string; name: string } | null 
     '/tools/word-counter-pro': { id: 'converters', name: 'Converters' },
     
     // Editors
-    '/tools/blurtap': { id: 'editors', name: 'Editors' },
-    '/tools/color-palette': { id: 'editors', name: 'Editors' },
-    '/tools/image-compress': { id: 'editors', name: 'Editors' },
-    '/tools/image-grid-maker': { id: 'editors', name: 'Editors' },
-    '/tools/image-splitter': { id: 'editors', name: 'Editors' },
-    '/tools/japanese-ocr': { id: 'editors', name: 'Editors' },
     '/tools/pdf-tools': { id: 'editors', name: 'Editors' },
+    
+    // Image Tools
+    '/tools/bg-eraser': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/blurtap': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/color-palette': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/image-compress': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/image-grid-maker': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/image-splitter': { id: 'image-tools', name: 'Image Tools' },
+    '/tools/japanese-ocr': { id: 'image-tools', name: 'Image Tools' },
     
     // Generators
     '/tools/password-generator': { id: 'generators', name: 'Generators' },
@@ -174,6 +178,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
     const categoryMap: Record<string, string> = {
       'converters': 'Converters',
       'editors': 'Editors',
+      'image-tools': 'Image Tools',
       'generators': 'Generators',
       'analyzers': 'Analyzers',
       'privacy': 'Privacy',

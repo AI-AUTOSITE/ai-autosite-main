@@ -8,6 +8,7 @@ import { mapToolStatus, mapPostStatus, mapCategoryId } from './core/status-map'
 // Tool data synchronous import (new structure)
 import { converters } from './categories/converters'
 import { editors } from './categories/editors'
+import { imageTools } from './categories/image-tools'
 import { generators } from './categories/generators'
 import { analyzers } from './categories/analyzers'
 import { aiTools } from './categories/ai-tools'
@@ -17,6 +18,7 @@ import { learning } from './categories/learning'
 // Blog post data synchronous import (new structure)
 import { convertersPosts } from './blog-posts/converters'
 import { editorsPosts } from './blog-posts/editors'
+import { imageToolsPosts } from './blog-posts/image-tools'
 import { generatorsPosts } from './blog-posts/generators'
 import { analyzersPosts } from './blog-posts/analyzers'
 import { aiToolsPosts } from './blog-posts/ai-tools'
@@ -115,6 +117,7 @@ function unifyPost(post: any): UnifiedPost | null {
 const ALL_TOOLS: UnifiedTool[] = [
   ...(converters || []),
   ...(editors || []),
+  ...(imageTools || []),
   ...(generators || []),
   ...(analyzers || []),
   ...(aiTools || []),
@@ -128,6 +131,7 @@ const ALL_TOOLS: UnifiedTool[] = [
 const ALL_POSTS: UnifiedPost[] = [
   ...(convertersPosts || []),
   ...(editorsPosts || []),
+  ...(imageToolsPosts || []),
   ...(generatorsPosts || []),
   ...(analyzersPosts || []),
   ...(aiToolsPosts || []),
@@ -273,8 +277,10 @@ export function getStatistics() {
     categories: {
       converters: getToolsByCategory('converters').filter((t) => t.isActive).length,
       editors: getToolsByCategory('editors').filter((t) => t.isActive).length,
+      'image-tools': getToolsByCategory('image-tools').filter((t) => t.isActive).length,
       generators: getToolsByCategory('generators').filter((t) => t.isActive).length,
       analyzers: getToolsByCategory('analyzers').filter((t) => t.isActive).length,
+      privacy: getToolsByCategory('privacy').filter((t) => t.isActive).length,
       'ai-tools': getToolsByCategory('ai-tools').filter((t) => t.isActive).length,
       'dev-tools': getToolsByCategory('dev-tools').filter((t) => t.isActive).length,
       learning: getToolsByCategory('learning').filter((t) => t.isActive).length,

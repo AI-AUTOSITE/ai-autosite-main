@@ -15,6 +15,7 @@ export { CATEGORIES } from '../categories-config'
 // ===================================
 import { converters } from './converters'
 import { editors } from './editors'
+import { imageTools } from './image-tools'
 import { generators } from './generators'
 import { analyzers } from './analyzers'
 import { aiTools } from './ai-tools'
@@ -25,6 +26,7 @@ import { learning } from './learning'
 export const TOOLS: Tool[] = [
   ...converters,
   ...editors,
+  ...imageTools,
   ...generators,
   ...analyzers,
   ...aiTools,
@@ -33,12 +35,13 @@ export const TOOLS: Tool[] = [
 ]
 
 // Export individual collections for direct access
-export { converters, editors, generators, analyzers, aiTools, devTools, learning }
+export { converters, editors, imageTools, generators, analyzers, aiTools, devTools, learning }
 
 // Tools organized by category ID
 export const toolsByCategory = {
   converters: converters,
   editors: editors,
+  'image-tools': imageTools,
   generators: generators,
   analyzers: analyzers,
   'ai-tools': aiTools,
