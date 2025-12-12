@@ -2,6 +2,11 @@
   "name": "ai-autosite-main",
   "version": "1.0.0",
   "private": true,
+  "browser": {
+    "onnxruntime-node": false,
+    "sharp": false,
+    "canvas": false
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
