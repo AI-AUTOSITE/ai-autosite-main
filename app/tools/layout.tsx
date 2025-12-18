@@ -73,6 +73,19 @@ const getToolTitle = (pathname: string) => {
     '/tools/cron-generator': 'Cron Generator',
     '/tools/diff-checker': 'Diff Checker',
     '/tools/voice-transcription': 'Voice Transcription',
+    '/tools/mp3-to-wav': 'MP3 to WAV Converter',
+'/tools/wav-to-mp3': 'WAV to MP3 Converter',
+'/tools/volume-booster': 'Volume Booster',
+'/tools/record-voice': 'Voice Recorder',
+'/tools/trim-audio': 'Trim Audio',
+'/tools/speed-changer': 'Speed Changer',
+'/tools/reverse-audio': 'Reverse Audio',
+'/tools/fade-audio': 'Fade Audio',
+'/tools/extract-audio': 'Extract Audio',
+'/tools/loop-audio': 'Loop Audio',
+'/tools/merge-audio': 'Merge Audio',
+'/tools/audio-converter': 'Audio Converter',
+'/tools/text-to-audio': 'Text to Audio',
   }
   return toolMap[pathname] || ''
 }
@@ -163,6 +176,21 @@ const getToolCategory = (pathname: string): { id: string; name: string } | null 
     
     // Audio Tools
     '/tools/voice-transcription': { id: 'audio-tools', name: 'Audio Tools' },
+
+    // Audio Tools
+'/tools/mp3-to-wav': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/wav-to-mp3': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/volume-booster': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/record-voice': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/trim-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/speed-changer': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/reverse-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/fade-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/extract-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/loop-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/merge-audio': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/audio-converter': { id: 'audio-tools', name: 'Audio Tools' },
+'/tools/text-to-audio': { id: 'audio-tools', name: 'Audio Tools' },
   }
   return toolCategoryMap[pathname] || null
 }

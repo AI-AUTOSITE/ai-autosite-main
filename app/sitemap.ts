@@ -81,7 +81,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'uuid-generator',
     'voice-transcription',
     'whatsapp-link',
-    'word-counter-pro'
+    'word-counter-pro',
+    'audio-converter',
+    'extract-audio',
+    'fade-audio',
+    'loop-audio',
+    'merge-audio',
+    'mp3-to-wav',
+    'record-voice',
+    'reverse-audio',
+    'speed-changer',
+    'text-to-audio',
+    'trim-audio',
+    'volume-booster',
+    'wav-to-mp3',
   ]
 
   const blogPosts = [
@@ -149,7 +162,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'uuid-generator-guide',
     'voice-transcription-guide',
     'whatsapp-link-generator-guide',
-    'word-counter-pro-guide'
+    'word-counter-pro-guide',
+    'audio-converter-guide',
+    'extract-audio-guide',
+    'fade-audio-guide',
+    'loop-audio-guide',
+    'merge-audio-guide',
+    'mp3-to-wav-guide',
+    'record-voice-guide',
+    'reverse-audio-guide',
+    'speed-changer-guide',
+    'text-to-audio-guide',
+    'trim-audio-guide',
+    'volume-booster-guide',
+    'wav-to-mp3-guide',
   ]
 
   const highPriorityTools = [
