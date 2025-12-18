@@ -72,6 +72,7 @@ const getToolTitle = (pathname: string) => {
     '/tools/meta-tag-generator': 'Meta Tag Generator',
     '/tools/cron-generator': 'Cron Generator',
     '/tools/diff-checker': 'Diff Checker',
+    '/tools/voice-transcription': 'Voice Transcription',
   }
   return toolMap[pathname] || ''
 }
@@ -159,6 +160,9 @@ const getToolCategory = (pathname: string): { id: string; name: string } | null 
     '/tools/cornell-note': { id: 'learning', name: 'Learning' },
     '/tools/debate-trainer': { id: 'learning', name: 'Learning' },
     '/tools/pomodoro-timer': { id: 'learning', name: 'Learning' },
+    
+    // Audio Tools
+    '/tools/voice-transcription': { id: 'audio-tools', name: 'Audio Tools' },
   }
   return toolCategoryMap[pathname] || null
 }
@@ -185,6 +189,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       'ai-tools': 'AI Tools',
       'dev-tools': 'Dev Tools',
       'learning': 'Learning',
+      'audio-tools': 'Audio Tools',
     }
     const parts = pathname.split('/')
     if (parts.length === 3 && parts[1] === 'tools') {

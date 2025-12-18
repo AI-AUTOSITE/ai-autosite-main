@@ -211,19 +211,6 @@ export default function BgEraserClient() {
           onDismiss={dismissMobileWarning} 
         />
       )}
-
-      {/* Header */}
-      <div className="text-center mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-3 flex items-center justify-center gap-2">
-          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-violet-400" />
-          Background Eraser
-        </h1>
-        <p className="text-gray-400 text-sm md:text-lg">
-          Remove backgrounds like magic—free forever!
-        </p>
-      </div>
-
-      <div className="space-y-4 md:space-y-6">
         
         {/* Upload State */}
         {status === 'idle' && (
@@ -292,6 +279,5 @@ export default function BgEraserClient() {
           </div>
         )}
       </div>
-    </div>
   )
 }

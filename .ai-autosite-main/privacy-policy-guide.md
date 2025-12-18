@@ -1,13 +1,14 @@
 # プライバシー・個人情報取り扱いガイド
 
-**Version: 1.0**  
-**最終更新: 2025-01-29**
+**Version: 1.1**  
+**最終更新: 2025-12-15**
 
 ## 📌 絶対原則
 
 ### Zero Tracking・Zero Collection
 
-**AI AutoSiteでは、個人情報の取得・送信・追跡・保存を一切行いません。**
+**AI AutoSiteでは、個人情報の取得・送信・追跡・保存を一切行いません。**  
+**（例外: AI/GPU処理ツールは処理後即座に削除される条件で外部送信を許可）**
 
 この原則は、サイトの根幹であり、絶対に妥協しません。
 
@@ -204,6 +205,52 @@ const response = await fetch('/api/ai-summarize', {
 
 ---
 
+### 4. GPU処理ツール（NEW!）
+```typescript
+// ✅ 許可：自社GPUサーバーへの送信（即時削除条件付き）
+const transcribeAudio = async (audioBlob: Blob) => {
+  const base64 = await blobToBase64(audioBlob);
+  
+  // ✅ GPU処理サーバーへ送信
+  const response = await fetch('https://ai-autosite--whisper-api.modal.run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ audio: base64 })
+  });
+  
+  return response.json();
+};
+
+// 必須：ユーザーへの明示
+<div className="bg-cyan-500/10 border border-cyan-500/30 p-4 rounded-lg mb-4">
+  <p className="text-sm text-cyan-400">
+    ⚡ GPU Processing Notice
+  </p>
+  <p className="text-sm text-gray-300 mb-2">
+    This tool sends data to our GPU server for high-performance processing.
+  </p>
+  <p className="text-xs text-gray-400">
+    • Data is deleted immediately after processing<br/>
+    • No data storage or logging<br/>
+    • HTTPS encrypted transmission
+  </p>
+</div>
+```
+
+**GPU処理ツール使用時のルール：**
+1. **GPUバッジを表示**する（明確に識別できるように）
+2. **処理後即削除**を明記する
+3. **ログを取らない**ことを保証する
+4. **HTTPS通信のみ**を使用する
+
+**現在のGPU処理ツール：**
+| ツール | API | 用途 |
+|--------|-----|------|
+| Voice Transcription | Whisper API | 音声→テキスト変換 |
+| Background Remover | RMBG API | 背景削除 |
+
+---
+
 ### 4. エラーログ（匿名化済み）
 ```typescript
 // ✅ 許可：匿名化されたエラーログ
@@ -241,6 +288,13 @@ console.error('API Error:', {
 - [ ] **何が送信されるか**を説明している
 - [ ] **保存しないこと**を明記している
 - [ ] **ユーザーが承諾した上で**使用できる
+
+#### GPU処理ツール使用時（該当する場合）
+- [ ] **GPUバッジを表示**している
+- [ ] **処理後即削除を明記**している
+- [ ] **ログを取らないこと**を保証している
+- [ ] **HTTPS通信のみ**を使用している
+- [ ] **ユーザーへの説明**を表示している
 
 #### ローカルストレージ使用時（該当する場合）
 - [ ] **保存するデータが個人情報でない**
@@ -394,7 +448,8 @@ Most tools process data entirely in your browser:
 
 | Ver | 日付 | 内容 |
 |-----|------|------|
-| 1.0 | 2025-01-29 | 初版作成 |
+| 1.0 | 2025-10-17 | 初版作成 |
+| 1.1 | 2025-12-15 | GPU処理ツールの例外を追加 |
 
 ---
 

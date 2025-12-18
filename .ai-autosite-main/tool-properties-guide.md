@@ -1,7 +1,7 @@
 📄 ファイル2: tool-properties-guide.md
 markdown# ツールプロパティ・定義ガイド
-**Version: 1.0**  
-**最終更新: 2025-01-29**
+**Version: 1.1**  
+**最終更新: 2025-12-15**
 
 ## 📌 概要
 
@@ -105,15 +105,28 @@ timeToUse
 
 🏷️ バッジシステム
 バッジタイプ
-typescriptbadge?: 'NEW' | 'HOT' | 'BETA' | 'AI' | 'COMING SOON' | 'MAINTENANCE'
+typescriptbadge?: 'NEW' | 'HOT' | 'BETA' | 'AI' | 'GPU' | 'COMING SOON' | 'MAINTENANCE'
 バッジ優先順位
 
-AI - AI機能使用（最優先）
+GPU - GPU処理使用（最優先）
+AI - AI機能使用
 HOT - 人気急上昇
 NEW - 新規追加
 BETA - ベータ版
 COMING SOON - 近日公開
 MAINTENANCE - メンテナンス中
+
+GPUバッジの条件（NEW!）
+GPUバッジは以下の条件をすべて満たすツールに付与：
+typescript{
+  badge: 'GPU',
+  apiRequired: true,
+  dataProcessing: 'server',  // GPU server
+  pricing: 'free'
+}
+
+GPUツール一覧（全2個）
+ツールカテゴリーエンドポイントVoice Transcriptionaudio-toolsModal Whisper APIBackground Removerimage-toolsModal RMBG API
 
 AIバッジの条件
 AIバッジは以下の条件をすべて満たすツールに付与：
@@ -123,26 +136,29 @@ typescript{
   dataProcessing: 'server',
   pricing: 'freemium'
 }
-AIツール一覧（全6個）
-ツールカテゴリーエンドポイントCompetitive Analyzerbusiness-tools/api/ai-analysisAI Resumebusiness-tools/api/ai-resumeCode Roasterdev-tools/api/code-roasterDebate Trainerstudy-tools/api/debateAI Summarizerstudy-tools/api/summarizePDF to Dataquick-tools/api/pdf-to-data
+AIツール一覧（全5+個）
+ツールカテゴリーエンドポイントCompetitive Analyzeranalyzers/api/ai-analysisAI Resumegenerators/api/ai-resumeCode Roasterdev-tools/api/code-roasterDebate Trainerlearning/api/debateAI Summarizerlearning/api/summarize
 詳細は ai-tools-guide.md を参照
 
 📁 カテゴリー別ファイル構成
 app/lib/categories/
 ├── types.ts           # 型定義（マスター）
-├── business-tools.ts  # ビジネスツール
-├── creative-tools.ts  # クリエイティブツール
-├── dev-tools.ts      # 開発者ツール
-├── learning-tools.ts  # 学習ツール
-├── quick-tools.ts    # クイックツール
-├── study-tools.ts    # スタディツール
-└── index.ts          # エクスポート統合
+├── converters.ts      # 変換ツール
+├── editors.ts         # 編集ツール
+├── image-tools.ts     # 画像ツール
+├── generators.ts      # 生成ツール
+├── analyzers.ts       # 分析ツール
+├── ai-tools.ts        # AIツール
+├── dev-tools.ts       # 開発者ツール
+├── learning.ts        # 学習ツール
+├── audio-tools.ts     # 音声ツール (NEW!)
+└── index.ts           # エクスポート統合
 カテゴリー整合性ルール
 
 categoryフィールドは必ずファイル名のプレフィックスと一致
 重複ツールは絶対禁止
-合計44個のツール管理
-各カテゴリーに最低3個のツール
+合計50+個のツール管理
+各カテゴリーに最低2個のツール
 
 
 📋 ツール追加手順
@@ -271,10 +287,10 @@ typescript// シアン系（汎用）
 
 📊 ツール統計
 カテゴリー別分布
-カテゴリーツール数AIツールQuick Tools181Dev Tools121Study Tools63Business Tools42Creative Tools30Learning Tools10合計446
+カテゴリーツール数AIツールGPUツールConverters10+00Editors8+00Image Tools8+01Generators6+10Analyzers5+10AI Tools5+50Dev Tools6+10Learning4+20Audio Tools2+01合計50+5+2
 
 🔄 更新履歴
-Ver日付内容1.02025-01-29初版作成（master-guideから分離）
+Ver日付内容1.12025-12-15GPUバッジ追加、カテゴリー構成更新1.02025-10-17初版作成（master-guideから分離）
 
 新規ツール追加時は必ずこのガイドを参照してください
 ```

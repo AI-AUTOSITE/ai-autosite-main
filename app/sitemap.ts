@@ -13,7 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'analyzers',
     'ai-tools',
     'dev-tools',
-    'learning'
+    'learning',
+    'audio-tools'
   ]
   
   const tools = [
@@ -78,6 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter',
     'url-encoder',
     'uuid-generator',
+    'voice-transcription',
     'whatsapp-link',
     'word-counter-pro'
   ]
@@ -145,6 +147,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'unit-converter-guide',
     'url-encoder-guide',
     'uuid-generator-guide',
+    'voice-transcription-guide',
     'whatsapp-link-generator-guide',
     'word-counter-pro-guide'
   ]
@@ -167,7 +170,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'pomodoro-timer',
     'spam-email-checker',
     'stack-recommender',
-    'tech-stack-analyzer'
+    'tech-stack-analyzer',
+    'voice-transcription'
   ]
   
   return [

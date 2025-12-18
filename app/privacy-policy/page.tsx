@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-xl text-gray-400">
               We protect your privacy with minimal data collection and maximum transparency.
             </p>
-            <p className="text-sm text-gray-500 mt-4">Last updated: October 17, 2025</p>
+            <p className="text-sm text-gray-500 mt-4">Last updated: December 15, 2025</p>
           </div>
 
           {/* Critical Warning Banner */}
@@ -99,6 +99,10 @@ export default function PrivacyPolicyPage() {
                   <p className="text-gray-300">AI tools send data to Claude API temporarily</p>
                 </div>
                 <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2"></div>
+                  <p className="text-gray-300">GPU tools send data to our secure server (deleted after processing)</p>
+                </div>
+                <div className="flex items-start space-x-3">
                   <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
                   <p className="text-gray-300">No data selling, ever</p>
                 </div>
@@ -116,9 +120,9 @@ export default function PrivacyPolicyPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
                 <Database className="w-6 h-6 mr-3 text-cyan-400" />
-                Understanding Our Two Types of Tools
+                Understanding Our Three Types of Tools
               </h2>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-3 gap-6">
                 {/* Browser-Only Tools */}
                 <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-4">
@@ -192,6 +196,46 @@ export default function PrivacyPolicyPage() {
                     <p className="text-xs text-gray-400 mb-1">Examples:</p>
                     <p className="text-xs text-gray-300">
                       Tech Stack Analyzer, AI-powered code analysis, content generators
+                    </p>
+                  </div>
+                </div>
+
+                {/* GPU Processing Tools */}
+                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                      <Smartphone className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-cyan-300">GPU Processing Tools</h3>
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white">GPU</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-4">
+                    High-performance tools processed on our secure GPU servers
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-yellow-400 text-lg">⚠</span>
+                      <p className="text-gray-300 text-sm">Data sent to our GPU server</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-400 text-lg">✓</span>
+                      <p className="text-gray-300 text-sm">Deleted immediately after processing</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-400 text-lg">✓</span>
+                      <p className="text-gray-300 text-sm">No data stored or logged</p>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-400 text-lg">✓</span>
+                      <p className="text-gray-300 text-sm">Faster & higher accuracy than browser</p>
+                    </div>
+                  </div>
+                  <div className="bg-black/30 rounded p-3 mt-4">
+                    <p className="text-xs text-gray-400 mb-1">Examples:</p>
+                    <p className="text-xs text-gray-300">
+                      Voice Transcription (Whisper), Background Remover (RMBG-2.0)
                     </p>
                   </div>
                 </div>
@@ -360,6 +404,114 @@ export default function PrivacyPolicyPage() {
               </div>
             </section>
 
+            {/* GPU Processing Tools Detailed Explanation */}
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+                <Smartphone className="w-6 h-6 mr-3 text-cyan-400" />
+                GPU Processing Tools: How They Work
+              </h2>
+              <div className="space-y-4 text-gray-300">
+                <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-6">
+                  <h3 className="text-lg font-bold text-cyan-300 mb-4">🔄 Complete Data Flow</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-cyan-300 font-bold">1</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">You Upload Media</p>
+                        <p className="text-sm text-gray-400">Upload audio/image files through the tool interface</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-cyan-300 font-bold">2</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">Secure Transfer</p>
+                        <p className="text-sm text-gray-400">Data sent via HTTPS to our managed GPU server (Modal)</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-cyan-300 font-bold">3</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">GPU Processing</p>
+                        <p className="text-sm text-gray-400">High-performance AI models process your data (Whisper, RMBG-2.0)</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-cyan-300 font-bold">4</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">Results Returned</p>
+                        <p className="text-sm text-gray-400">Processed results sent back to your browser</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-green-300 font-bold">5</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">Immediate Deletion</p>
+                        <p className="text-sm text-gray-400">Your uploaded data is deleted immediately after processing - NO storage, NO logging</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <h4 className="font-semibold text-blue-300 mb-3">🛡️ Our GPU Server Commitments</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Data is <strong>NOT stored</strong> on our servers</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Data is <strong>NOT used for training</strong> any AI models</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Data is <strong>NOT shared</strong> with any third parties</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Transmitted via <strong>encrypted connections</strong> (HTTPS)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Server containers are <strong>stateless</strong> - auto-terminate after processing</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                  <h4 className="font-semibold text-green-300 mb-3">✨ Why GPU Processing?</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 mr-2">🚀</span>
+                      <span><strong>Faster:</strong> 5-10x faster than browser-based processing</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 mr-2">🎯</span>
+                      <span><strong>More Accurate:</strong> Uses larger, more precise AI models</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 mr-2">📱</span>
+                      <span><strong>Mobile-Friendly:</strong> Works great on any device</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-cyan-400 mr-2">📁</span>
+                      <span><strong>Larger Files:</strong> No browser memory limitations</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Your Content */}
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">Your Content & Files</h2>
@@ -392,6 +544,19 @@ export default function PrivacyPolicyPage() {
                   </ol>
                   <p className="text-xs text-gray-400 mt-2">
                     Data temporarily sent to Claude API but not stored long-term.
+                  </p>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-lg p-4">
+                  <p className="font-semibold mb-2">⚡ GPU Tools Processing:</p>
+                  <ol className="space-y-2 list-decimal list-inside text-sm">
+                    <li>You upload media → Sent to our GPU server via HTTPS</li>
+                    <li>GPU processes using high-performance AI models</li>
+                    <li>Results returned to your browser</li>
+                    <li>Your upload deleted immediately after processing</li>
+                  </ol>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Data temporarily processed on our managed GPU server, then deleted immediately.
                   </p>
                 </div>
 
@@ -612,7 +777,7 @@ export default function PrivacyPolicyPage() {
             {/* Legal Notice */}
             <section className="pt-6 border-t border-white/10">
               <p className="text-sm text-gray-500">
-                This privacy policy is effective as of October 17, 2025. We will notify you of any 
+                This privacy policy is effective as of December 15, 2025. We will notify you of any 
                 changes by posting the new policy on this page. Changes are effective immediately 
                 upon posting.
               </p>

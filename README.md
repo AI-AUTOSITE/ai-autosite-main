@@ -36,12 +36,13 @@ AI AutoSite is an **open-source collection of instant web tools** designed with 
 
 | Feature | Description |
 |---------|-------------|
-| **45+ Tools** | Across 6 categories for everyday needs |
+| **50+ Tools** | Across 9 categories for everyday needs |
 | **Zero Configuration** | Works immediately in any browser |
 | **Mobile Optimized** | Perfect experience on any device |
 | **Dark Mode** | Easy on the eyes, day or night |
 | **🔒 Privacy First** | No localStorage, no cookies, no tracking |
 | **⚡ Ultra Fast** | Client-side processing = zero latency |
+| **🎤 GPU Processing** | High-performance AI for audio/image tasks |
 | **Offline Ready** | Many tools work without internet |
 | **Open Source** | Free to use, modify, and learn from |
 
@@ -53,35 +54,72 @@ AI AutoSite is an **open-source collection of instant web tools** designed with 
 
 | Category | Tools | Description |
 |----------|-------|-------------|
-| ⚡ **Quick Tools** | 15+ | Instant tools for everyday tasks |
-| 🔧 **Developer Tools** | 12+ | Tools for developers and coders |
-| 📚 **Learning Hub** | 8+ | Educational and learning resources |
-| 🎓 **Study Tools** | 5+ | AI-powered study assistance |
-| 💼 **Business Tools** | 3+ | Professional productivity tools |
-| 🎨 **Creative Tools** | 2+ | Design and creative tools |
+| 🔄 **Converters** | 10+ | File format and data conversion tools |
+| ✏️ **Editors** | 8+ | Text and content editing tools |
+| 🖼️ **Image Tools** | 8+ | Image processing and manipulation |
+| ✨ **Generators** | 6+ | Content and code generation tools |
+| 🔍 **Analyzers** | 5+ | Analysis and inspection tools |
+| 🤖 **AI Tools** | 5+ | AI-powered solutions for complex tasks |
+| ⚙️ **Dev Tools** | 6+ | Developer utilities and code tools |
+| 📚 **Learning** | 4+ | Study tools and educational resources |
+| 🎵 **Audio Tools** | 2+ | Audio processing and transcription |
 
 </div>
 
 ---
 
+## 🔧 Three Types of Tools
+
+### 1. 🟢 Browser-Only Tools (Most Tools)
+**100% client-side processing - Maximum privacy**
+
+- ✅ No data sent to any server
+- ✅ Works offline after page load
+- ✅ Instant processing
+- ✅ Zero privacy concerns
+
+**Examples:** Image compressor, Base64 converter, PDF merger, QR code generator
+
+### 2. 🟣 AI-Powered Tools
+**Uses Claude API for advanced AI features**
+
+- ⚠️ Data sent to Claude API temporarily
+- ✅ Not stored after processing
+- ✅ Clearly marked with `AI` badge
+
+**Examples:** Tech Stack Analyzer, AI-powered code analysis
+
+### 3. 🔵 GPU Processing Tools (NEW!)
+**High-performance processing on our managed GPU server**
+
+- ⚠️ Data sent to our GPU server
+- ✅ Deleted immediately after processing
+- ✅ No data storage or logging
+- ✅ 5-10x faster than browser processing
+- ✅ Better accuracy with larger AI models
+
+**Examples:** Voice Transcription (Whisper), Background Remover (RMBG-2.0)
+
+---
+
 ## 🔒 Privacy Protection - Our Promise
 
-**Your data never leaves your browser. Period.**
+**Your data never leaves your browser. Period.** (Except for clearly marked AI/GPU tools)
 
 ### What We DON'T Do
 
 ❌ No cookies or localStorage  
 ❌ No Google Analytics or tracking  
 ❌ No user identification or fingerprinting  
-❌ No external data transmission  
+❌ No personal data collection  
 ❌ No email collection or sign-ups  
 ❌ No IP address logging  
 
 ### What We DO
 
-✅ All processing in browser memory  
+✅ All browser-only processing in memory  
 ✅ Data cleared on page reload  
-✅ No personal information required  
+✅ GPU tools delete data immediately after processing  
 ✅ Complete transparency  
 ✅ Open source code for verification  
 
@@ -95,7 +133,7 @@ This project is a **100% transparent showcase** of AI-assisted development.
 
 ### The Team
 
-- **99% Claude AI** (Extended Thinking + Sonnet 4, 4.5, Opus 4.1)
+- **99% Claude AI** (Extended Thinking + Sonnet 4, 4.5, Opus 4.5)
 - **1% Human Developer** (Japanese developer with minimal coding experience)
 
 ### The Process
@@ -141,6 +179,7 @@ Priority: User privacy and ethical development
 
 - **July 2025** - Project started
 - **October 2025** - 45+ tools launched
+- **December 2025** - 50+ tools, GPU processing added
 - **Ongoing** - Adding new tools weekly
 
 ### The Setup (Beginner-Friendly)
@@ -155,14 +194,15 @@ Priority: User privacy and ethical development
 
 ---
 
-## 📐 Claude Custom Instructions (Version 1.1)
+## 📐 Claude Custom Instructions (Version 1.2)
 
-**Last Updated: October 22, 2025**
+**Last Updated: December 15, 2025**
 
 The developer uses **specific Claude AI settings** optimized for:
 - ✅ Stable, beginner-friendly development
 - ✅ Privacy-first architecture
 - ✅ Extensible, maintainable code
+- ✅ GPU processing for high-performance tools
 
 ### 📋 Complete Instructions
 
@@ -175,10 +215,11 @@ The developer uses **specific Claude AI settings** optimized for:
 3. **Extensibility First** - Features added frequently
 4. **Functionality First** - Make it work, then perfect
 5. **Privacy by Default** 🔒 - Never collect, store, or transmit user data
+6. **GPU Processing** ⚡ - High-performance tools with immediate data deletion
 
 ---
 
-## ⚠️ Critical Rules (Version 1.1)
+## ⚠️ Critical Rules (Version 1.2)
 
 ### ❌ Absolutely Forbidden
 
@@ -192,12 +233,12 @@ The developer uses **specific Claude AI settings** optimized for:
 - Cookie / localStorage / sessionStorage / IndexedDB
 - Google Analytics / Facebook Pixel / Any tracking
 - User ID / Session ID / Device fingerprinting
-- External API data transmission (user data)
+- External API data transmission (except AI/GPU tools)
 - Email / Name / Personal information collection
 - IP address logging or user identification
 
 **Development Mistakes:**
-- Using AI knowledge cutoff dates (January 2025)
+- Using AI knowledge cutoff dates
 - Hard-coded inflexible patterns
 - Multiple simultaneous changes
 - `.mjs` file extensions
@@ -214,10 +255,10 @@ The developer uses **specific Claude AI settings** optimized for:
 ```
 
 **Privacy-First Code:**
-- All processing in browser memory (React state)
+- All browser-only processing in memory (React state)
 - No persistent storage of any kind
-- No external data transmission
-- User files stay in browser only
+- GPU tools must delete data immediately after processing
+- User files stay in browser only (except GPU processing)
 
 **Development Practices:**
 - Use time tools for current dates
@@ -232,12 +273,13 @@ The developer uses **specific Claude AI settings** optimized for:
 ### Decision Rule
 
 **Does the data leave the browser or persist after reload?**
-- **YES** → ❌ Absolutely Forbidden
+- **YES (and not GPU tool)** → ❌ Absolutely Forbidden
+- **YES (GPU tool with immediate deletion)** → ✅ OK
 - **NO** → ✅ OK
 
 ### Code Examples
 
-#### ✅ GOOD - Privacy Protected
+#### ✅ GOOD - Privacy Protected (Browser-Only)
 ```typescript
 'use client';
 import { useState } from 'react';
@@ -253,24 +295,30 @@ export default function TextCounter() {
     setCount(e.target.value.length);
   };
 
-  // ✅ Download to user's device
-  const downloadResult = () => {
-    const blob = new Blob([text]);
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'result.txt';
-    link.click();
-  };
-
   return (
-    
-      
-      Count: {count}
-      Download
-    
+    <div>
+      <textarea onChange={handleChange} />
+      <p>Count: {count}</p>
+    </div>
   );
 }
+```
+
+#### ✅ GOOD - GPU Processing Tool
+```typescript
+// ✅ GPU tool with immediate deletion policy
+const transcribeAudio = async (audioBlob: Blob) => {
+  const base64 = await blobToBase64(audioBlob);
+  
+  // ✅ Send to our GPU server (data deleted after processing)
+  const response = await fetch('https://ai-autosite--whisper-api.modal.run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ audio: base64 })
+  });
+  
+  return response.json();
+};
 ```
 
 #### ❌ BAD - Privacy Violations
@@ -281,14 +329,8 @@ localStorage.setItem('userData', JSON.stringify(data));
 // ❌ Cookies
 document.cookie = 'user=123';
 
-// ❌ External transmission
-fetch('/api/track', {
-  method: 'POST',
-  body: JSON.stringify(userData)
-});
-
 // ❌ Tracking scripts
-
+<script src="https://www.googletagmanager.com/gtag/js" />
 
 // ❌ User identification
 const userId = crypto.randomUUID();
@@ -359,7 +401,12 @@ ai-autosite/
 │   ├── ui/               # Base UI components
 │   └── tools/            # Tool-specific components
 ├── lib/                   # Utility functions
-│   └── unified-data.ts   # Tool data management
+│   ├── unified-data.ts   # Tool data management
+│   ├── modal-api.ts      # GPU API utilities
+│   └── categories/       # Category definitions
+├── hooks/                 # Custom React hooks
+│   ├── useModalWhisper.ts    # Voice transcription hook
+│   └── useModalBgRemoval.ts  # Background removal hook
 ├── public/                # Static assets
 ├── styles/                # Global styles
 └── .ai-autosite-main/     # 🤖 AI Development Guides
@@ -378,7 +425,7 @@ ai-autosite/
 ### 🎯 Start Here
 
 **[`CLAUDE_INSTRUCTIONS.md`](.ai-autosite-main/CLAUDE_INSTRUCTIONS.md)**  
-Complete Claude AI custom instructions (Version 1.1)
+Complete Claude AI custom instructions (Version 1.2)
 
 ### Core Guides
 
@@ -424,6 +471,11 @@ Complete Claude AI custom instructions (Version 1.1)
 - [Tailwind CSS v3.4](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/) (Icons)
 
+**GPU Processing:**
+- [Modal](https://modal.com/) (Serverless GPU)
+- Whisper large-v3 (Speech-to-text)
+- RMBG-2.0 (Background removal)
+
 **Deployment:**
 - [Vercel](https://vercel.com/) (One-click deploy)
 
@@ -441,12 +493,12 @@ Complete Claude AI custom instructions (Version 1.1)
 
 ### Date Inconsistencies (Being Fixed)
 
-Due to Claude's knowledge cutoff (January 2025), some dates in the codebase may be incorrect.
+Due to Claude's knowledge cutoff, some dates in the codebase may be incorrect.
 
 **Timeline:**
 - ✅ **Correct**: July 2025 or later
 - ❌ **Incorrect**: January 2025 or earlier
-- 🔧 **Status**: Ongoing corrections (as of October 22, 2025)
+- 🔧 **Status**: Ongoing corrections (as of December 2025)
 
 **How to Check:**
 - Project started: ~July 2025
@@ -480,7 +532,8 @@ Contributions are **greatly appreciated**!
 - ✅ Extensible code patterns
 - ✅ Correct dates (use time tools, not knowledge cutoff)
 - 🔒 **No localStorage/cookies/tracking**
-- 🔒 **All user data stays in browser memory**
+- 🔒 **Browser-only data stays in memory**
+- ⚡ **GPU tools follow immediate-deletion policy**
 
 **Pull Request Checklist:**
 - [ ] Follows stable version requirements
@@ -540,6 +593,7 @@ Contributions are **greatly appreciated**!
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
 - [Lucide](https://lucide.dev/) - Beautiful icons
 - [Vercel](https://vercel.com/) - Deployment platform
+- [Modal](https://modal.com/) - Serverless GPU platform
 - **[Claude AI](https://www.anthropic.com/claude)** - The AI that wrote 99% of this code
 
 **Special Thanks:**
@@ -560,10 +614,10 @@ Contributions are **greatly appreciated**!
   
   **Free • Private • Instant • Open Source**
   
-  🔒 **Your data never leaves your browser**
+  🔒 **Your data never leaves your browser** (except clearly marked AI/GPU tools)
   
   ---
   
-  **Version 1.1** | Last Updated: October 22, 2025
+  **Version 1.2** | Last Updated: December 15, 2025
   
 </div>

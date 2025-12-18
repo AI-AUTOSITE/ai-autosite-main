@@ -14,6 +14,7 @@ import { analyzers } from './categories/analyzers'
 import { aiTools } from './categories/ai-tools'
 import { devTools } from './categories/dev-tools'
 import { learning } from './categories/learning'
+import { audioTools } from './categories/audio-tools'
 
 // Blog post data synchronous import (new structure)
 import { convertersPosts } from './blog-posts/converters'
@@ -24,6 +25,7 @@ import { analyzersPosts } from './blog-posts/analyzers'
 import { aiToolsPosts } from './blog-posts/ai-tools'
 import { devToolsPosts } from './blog-posts/dev-tools'
 import { learningPosts } from './blog-posts/learning'
+import { audioToolsPosts } from './blog-posts/audio-tools'
 
 // ===================================
 // Type Definitions
@@ -123,6 +125,7 @@ const ALL_TOOLS: UnifiedTool[] = [
   ...(aiTools || []),
   ...(devTools || []),
   ...(learning || []),
+  ...(audioTools || []),
 ]
   .map(unifyTool)
   .filter((tool): tool is UnifiedTool => tool !== null)
@@ -137,6 +140,7 @@ const ALL_POSTS: UnifiedPost[] = [
   ...(aiToolsPosts || []),
   ...(devToolsPosts || []),
   ...(learningPosts || []),
+  ...(audioToolsPosts || []),
 ]
   .map(unifyPost)
   .filter((post): post is UnifiedPost => post !== null)
@@ -284,6 +288,7 @@ export function getStatistics() {
       'ai-tools': getToolsByCategory('ai-tools').filter((t) => t.isActive).length,
       'dev-tools': getToolsByCategory('dev-tools').filter((t) => t.isActive).length,
       learning: getToolsByCategory('learning').filter((t) => t.isActive).length,
+      'audio-tools': getToolsByCategory('audio-tools').filter((t) => t.isActive).length,
     },
   }
 }

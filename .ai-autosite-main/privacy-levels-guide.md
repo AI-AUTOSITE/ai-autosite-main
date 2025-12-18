@@ -1,7 +1,8 @@
 # Privacy Levels Guide - プライバシーレベル別開発ガイド
 
-**Version: 1.0**  
+**Version: 1.1**  
 **Created: November 26, 2025**  
+**Updated: December 15, 2025**  
 **Language: Japanese / English**
 
 ---
@@ -118,10 +119,43 @@ function selectDomain(feature: Feature): Domain {
 ```yaml
 個人情報収集: ❌ 一切なし
 データ保存: ❌ なし (ブラウザメモリのみ)
-外部通信: ❌ なし (ユーザーデータ関連)
+外部通信: ❌ なし (ユーザーデータ関連) ⚠️ GPU処理ツールは例外
 追跡/分析: ❌ なし
 Cookie: ❌ なし
 認証: ❌ なし
+```
+
+### ⚡ GPU処理ツールの例外 (NEW!)
+
+一部のツールは、高精度・高速処理のためにGPUサーバーへのデータ送信が許可されます。
+
+```yaml
+GPU処理ツールの条件:
+  - データ送信先: 自社管理GPUサーバー (Modal)
+  - データ保存: ❌ 処理後即座に削除
+  - ログ: ❌ ユーザーデータのログ禁止
+  - 通信: HTTPS必須
+  - 明示: ユーザーへの明確な説明必須
+
+対象ツール:
+  - Voice Transcription (Whisper API)
+  - Background Remover (RMBG-2.0 API)
+```
+
+```typescript
+// ✅ GPU処理ツール - 許可されるパターン
+const transcribeAudio = async (audioBlob: Blob) => {
+  const base64 = await blobToBase64(audioBlob);
+  
+  // ✅ 自社GPUサーバーへ送信 (処理後即削除)
+  const response = await fetch('https://ai-autosite--whisper-api.modal.run', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ audio: base64 })
+  });
+  
+  return response.json();
+};
 ```
 
 ### 絶対に禁止されるもの
@@ -1183,6 +1217,7 @@ Level 3:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | 2025-11-26 | 初版作成 |
+| 1.1 | 2025-12-15 | GPU処理ツールの例外を追加 |
 
 ---
 

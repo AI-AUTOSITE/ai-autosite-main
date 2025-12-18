@@ -11,6 +11,7 @@ import {
   Zap,
   Boxes,
   Image,
+  Mic,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -150,6 +151,21 @@ export const CATEGORIES: Category[] = [
     enabled: true,
     order: 8,
     path: '/tools?category=learning',
+    tagFilter: false,
+  },
+  {
+    id: 'audio-tools',
+    name: 'Audio Tools',
+    emoji: '🎵',
+    icon: Mic,
+    color: 'from-violet-500 to-purple-600',
+    bgColor: 'bg-violet-500',
+    bgGradient: 'from-violet-500/20 to-purple-600/20',
+    description: 'Transcription, recording, and audio processing',
+    enabled: true,
+    order: 9,
+    badge: 'NEW',
+    path: '/tools?category=audio-tools',
     tagFilter: false,
   },
   // Future categories (disabled)

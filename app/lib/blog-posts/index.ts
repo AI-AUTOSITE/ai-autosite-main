@@ -7,6 +7,7 @@ import { analyzersPosts } from './analyzers'
 import { aiToolsPosts } from './ai-tools'
 import { devToolsPosts } from './dev-tools'
 import { learningPosts } from './learning'
+import { audioToolsPosts } from './audio-tools'
 import type { BlogPost } from './types'
 
 // Blog posts organized by new category structure
@@ -19,6 +20,7 @@ export const blogPostsByCategory = {
   'ai-tools': aiToolsPosts,
   'dev-tools': devToolsPosts,
   learning: learningPosts,
+  'audio-tools': audioToolsPosts,
   
   // Backward compatibility mappings (old → new)
   'quick-tools': [...convertersPosts, ...editorsPosts, ...imageToolsPosts, ...generatorsPosts, ...analyzersPosts],
@@ -38,6 +40,7 @@ export const allBlogPosts: BlogPost[] = [
   ...aiToolsPosts,
   ...devToolsPosts,
   ...learningPosts,
+  ...audioToolsPosts,
 ]
 
 // Get post count for a category
@@ -86,4 +89,5 @@ export {
   aiToolsPosts,
   devToolsPosts,
   learningPosts,
+  audioToolsPosts,
 }

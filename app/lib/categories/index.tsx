@@ -21,6 +21,7 @@ import { analyzers } from './analyzers'
 import { aiTools } from './ai-tools'
 import { devTools } from './dev-tools'
 import { learning } from './learning'
+import { audioTools } from './audio-tools'
 
 // Combine all tools into single array
 export const TOOLS: Tool[] = [
@@ -32,10 +33,11 @@ export const TOOLS: Tool[] = [
   ...aiTools,
   ...devTools,
   ...learning,
+  ...audioTools,
 ]
 
 // Export individual collections for direct access
-export { converters, editors, imageTools, generators, analyzers, aiTools, devTools, learning }
+export { converters, editors, imageTools, generators, analyzers, aiTools, devTools, learning, audioTools }
 
 // Tools organized by category ID
 export const toolsByCategory = {
@@ -47,6 +49,7 @@ export const toolsByCategory = {
   'ai-tools': aiTools,
   'dev-tools': devTools,
   learning: learning,
+  'audio-tools': audioTools,
 } as const
 
 // ===================================
