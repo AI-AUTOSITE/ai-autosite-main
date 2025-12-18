@@ -5,7 +5,8 @@ import {
   BarChart3, 
   Bot, 
   Code, 
-  GraduationCap 
+  GraduationCap,
+  Music
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -74,5 +75,13 @@ export const blogCategories: BlogCategory[] = [
     icon: GraduationCap,
     color: 'from-pink-500 to-red-500',
     description: 'Study techniques and productivity tools',
+  },
+  {
+    id: 'audio-tools',
+    name: 'Audio Tools',
+    shortName: 'Audio',
+    icon: Music,
+    color: 'from-emerald-500 to-teal-500',
+    description: 'Audio conversion, editing, and recording',
   },
 ]
