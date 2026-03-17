@@ -365,15 +365,15 @@ export default function StreamingSearchClient() {
               <img
                 src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
                 alt="The Movie Database (TMDB)"
-                className="h-10"
+                className="h-14"
               />
             </a>
-            <span className="text-gray-600 text-2xl font-light">+</span>
+            <span className="text-gray-600 text-3xl font-light">+</span>
             <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
-              <span className="text-xl font-bold text-yellow-400">JustWatch</span>
+              <span className="text-2xl font-bold text-yellow-400">JustWatch</span>
             </a>
           </div>
-          <p className="text-sm text-gray-400 text-center leading-relaxed">
+          <p className="text-base text-gray-400 text-center leading-relaxed">
             Streaming availability data powered by JustWatch.
             This product uses the TMDB API but is not endorsed or certified by TMDB.
           </p>
