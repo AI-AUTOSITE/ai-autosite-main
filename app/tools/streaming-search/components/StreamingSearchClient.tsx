@@ -397,7 +397,7 @@ function ResultsGrid({
         <button
           key={`${r.mediaType}-${r.id}`}
           onClick={() => onSelect(r)}
-          className="min-w-0 w-full overflow-hidden text-left focus:outline-none group"
+          className="block min-w-0 w-full overflow-hidden text-left focus:outline-none group"
         >
           {/* Poster — native aspect-ratio, no padding hack */}
           <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800/60 border border-gray-700/40 group-hover:border-cyan-500/40 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/10">
