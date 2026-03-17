@@ -18,6 +18,11 @@ export default function Footer() {
       { label: 'Contact', href: '/contact' },
       { label: 'Request Tool', href: '/request' },
     ],
+    apps: [
+      { label: 'Tuck Voice', href: 'https://apps.apple.com/app/id6760351425' },
+      { label: 'DealKit', href: 'https://apps.apple.com/app/id6757729007' },
+      { label: 'TimeSee', href: 'https://apps.apple.com/app/id6759831241' },
+    ],
     legal: [
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Terms of Service', href: '/terms-of-service' },
@@ -46,7 +51,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
         {/* Desktop Footer with Brand Section */}
-        <div className="hidden md:grid md:grid-cols-5 gap-8 lg:gap-12 mb-8">
+        <div className="hidden md:grid md:grid-cols-6 gap-8 lg:gap-12 mb-8">
           
           {/* Brand Section */}
           <div className="col-span-2">
@@ -134,6 +139,27 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Our Apps */}
+          <div>
+            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+              Our Apps
+            </h3>
+            <ul className="space-y-2">
+              {footerSections.apps.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Legal */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
@@ -200,6 +226,24 @@ export default function Footer() {
                 {link.label}
               </Link>
             ))}
+          </div>
+
+          {/* Mobile Our Apps */}
+          <div className="mt-5 pt-4 border-t border-gray-800">
+            <p className="text-xs text-gray-500 text-center mb-2">Our Apps</p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {footerSections.apps.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs text-gray-400 hover:text-cyan-400 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 

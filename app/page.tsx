@@ -4,6 +4,7 @@ import { Suspense } from 'react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CategoryHomeView from '@/components/ToolsPageClient'
+import OurApps from '@/components/OurApps'
 
 // SEO Metadata - no changes
 export const metadata: Metadata = {
@@ -69,6 +70,7 @@ export default function HomePage() {
         >
           <CategoryHomeView />
         </Suspense>
+        <OurApps />
       </main>
       <Footer />
     </div>
