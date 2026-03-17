@@ -398,18 +398,18 @@ function ResultsGrid({
         <button
           key={`${r.mediaType}-${r.id}`}
           onClick={() => onSelect(r)}
-          className="group text-left focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded-xl"
+          className="group text-left focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded-xl overflow-hidden min-w-0"
         >
-          <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-gray-800/60 border border-gray-700/40 group-hover:border-cyan-500/40 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/10">
+          <div className="relative w-full rounded-xl overflow-hidden bg-gray-800/60 border border-gray-700/40 group-hover:border-cyan-500/40 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/10" style={{ aspectRatio: '2/3' }}>
             {r.posterPath ? (
               <img
                 src={`${TMDB_IMG}/w342${r.posterPath}`}
                 alt={r.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 loading="lazy"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-600">
+              <div className="absolute inset-0 w-full h-full flex items-center justify-center text-gray-600">
                 <Film className="w-10 h-10" />
               </div>
             )}
@@ -438,8 +438,8 @@ function ResultsGrid({
               <span className="text-xs text-cyan-400 font-medium">Check availability →</span>
             </div>
           </div>
-          <div className="mt-2 px-0.5">
-            <h4 className="text-sm font-medium text-gray-200 truncate group-hover:text-white transition-colors">
+          <div className="mt-2 px-0.5 overflow-hidden">
+            <h4 className="text-sm font-medium text-gray-200 truncate group-hover:text-white transition-colors leading-tight">
               {r.title}
             </h4>
             {r.year && <p className="text-xs text-gray-500 mt-0.5">{r.year}</p>}
