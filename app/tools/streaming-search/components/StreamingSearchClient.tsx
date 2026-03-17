@@ -393,58 +393,64 @@ function ResultsGrid({
   onSelect: (r: SearchResult) => void
 }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
       {results.map((r) => (
-        <button
-          key={`${r.mediaType}-${r.id}`}
-          onClick={() => onSelect(r)}
-          className="group text-left focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded-xl overflow-hidden min-w-0"
-        >
-          <div className="relative w-full rounded-xl overflow-hidden bg-gray-800/60 border border-gray-700/40 group-hover:border-cyan-500/40 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/10" style={{ aspectRatio: '2/3' }}>
-            {r.posterPath ? (
-              <img
-                src={`${TMDB_IMG}/w342${r.posterPath}`}
-                alt={r.title}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                loading="lazy"
-              />
-            ) : (
-              <div className="absolute inset-0 w-full h-full flex items-center justify-center text-gray-600">
-                <Film className="w-10 h-10" />
-              </div>
-            )}
-            {/* Type badge */}
-            <div className="absolute top-2 left-2">
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/70 text-[10px] text-gray-300 font-medium backdrop-blur-sm">
-                {r.mediaType === 'movie' ? (
-                  <Film className="w-2.5 h-2.5" />
-                ) : (
-                  <Tv className="w-2.5 h-2.5" />
-                )}
-                {r.mediaType === 'movie' ? 'Movie' : 'TV'}
-              </span>
-            </div>
-            {/* Rating */}
-            {r.voteAverage > 0 && (
-              <div className="absolute top-2 right-2">
-                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-black/70 text-[10px] text-amber-400 font-medium backdrop-blur-sm">
-                  <Star className="w-2.5 h-2.5 fill-amber-400" />
-                  {r.voteAverage.toFixed(1)}
+        <div key={`${r.mediaType}-${r.id}`} className="w-full">
+          <button
+            onClick={() => onSelect(r)}
+            className="w-full text-left focus:outline-none group"
+          >
+            {/* Poster container - padding-bottom trick for 2:3 ratio */}
+            <div
+              className="relative w-full rounded-xl overflow-hidden bg-gray-800/60 border border-gray-700/40 group-hover:border-cyan-500/40 transition-all group-hover:shadow-lg group-hover:shadow-cyan-500/10"
+              style={{ paddingBottom: '150%' }}
+            >
+              {r.posterPath ? (
+                <img
+                  src={`${TMDB_IMG}/w342${r.posterPath}`}
+                  alt={r.title}
+                  className="absolute top-0 left-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-gray-600">
+                  <Film className="w-10 h-10" />
+                </div>
+              )}
+              {/* Type badge */}
+              <div className="absolute top-2 left-2 z-10">
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/70 text-[10px] text-gray-300 font-medium backdrop-blur-sm">
+                  {r.mediaType === 'movie' ? (
+                    <Film className="w-2.5 h-2.5" />
+                  ) : (
+                    <Tv className="w-2.5 h-2.5" />
+                  )}
+                  {r.mediaType === 'movie' ? 'Movie' : 'TV'}
                 </span>
               </div>
-            )}
-            {/* Hover overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <span className="text-xs text-cyan-400 font-medium">Check availability →</span>
+              {/* Rating */}
+              {r.voteAverage > 0 && (
+                <div className="absolute top-2 right-2 z-10">
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-black/70 text-[10px] text-amber-400 font-medium backdrop-blur-sm">
+                    <Star className="w-2.5 h-2.5 fill-amber-400" />
+                    {r.voteAverage.toFixed(1)}
+                  </span>
+                </div>
+              )}
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3 z-10">
+                <span className="text-xs text-cyan-400 font-medium">Check availability →</span>
+              </div>
             </div>
-          </div>
-          <div className="mt-2 px-0.5 overflow-hidden">
-            <h4 className="text-sm font-medium text-gray-200 truncate group-hover:text-white transition-colors leading-tight">
-              {r.title}
-            </h4>
-            {r.year && <p className="text-xs text-gray-500 mt-0.5">{r.year}</p>}
-          </div>
-        </button>
+            {/* Title - below poster */}
+            <div className="mt-2">
+              <h4 className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors overflow-hidden text-ellipsis whitespace-nowrap">
+                {r.title}
+              </h4>
+              {r.year && <p className="text-xs text-gray-500 mt-0.5">{r.year}</p>}
+            </div>
+          </button>
+        </div>
       ))}
     </div>
   )
