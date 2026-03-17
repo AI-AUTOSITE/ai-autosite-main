@@ -359,21 +359,21 @@ export default function StreamingSearchClient() {
         </div>
 
         {/* TMDB + JustWatch Attribution */}
-        <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="max-w-2xl mx-auto px-6 py-5 bg-gray-800/40 border border-gray-700/30 rounded-xl">
+          <div className="flex flex-wrap items-center justify-center gap-6 mb-3">
             <a href="https://www.themoviedb.org" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
               <img
                 src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
                 alt="The Movie Database (TMDB)"
-                className="h-7"
+                className="h-10"
               />
             </a>
-            <span className="text-gray-600 text-lg">+</span>
-            <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
-              <span className="text-base font-semibold text-yellow-400">JustWatch</span>
+            <span className="text-gray-600 text-2xl font-light">+</span>
+            <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
+              <span className="text-xl font-bold text-yellow-400">JustWatch</span>
             </a>
           </div>
-          <p className="text-sm text-gray-500 max-w-md">
+          <p className="text-sm text-gray-400 text-center leading-relaxed">
             Streaming availability data powered by JustWatch.
             This product uses the TMDB API but is not endorsed or certified by TMDB.
           </p>
