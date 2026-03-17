@@ -344,37 +344,39 @@ export default function StreamingSearchClient() {
       )}
 
       {/* Attribution & Privacy Footer */}
-      <div className="mt-12 pt-8 border-t border-gray-800/60">
+      <div className="mt-12 pt-8 border-t border-gray-800/60 space-y-6">
+        {/* Privacy Notice */}
+        <div className="max-w-2xl mx-auto px-4 py-4 bg-emerald-500/5 border border-emerald-500/15 rounded-xl text-center">
+          <div className="flex items-center justify-center gap-2 text-emerald-400 font-medium mb-2">
+            <Shield className="w-5 h-5" />
+            <span>100% Private — No Data Sent to External Services</span>
+          </div>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Your search queries are processed through our server only. No personal data, IP address,
+            or browsing history is sent to TMDB, JustWatch, or any third party.
+            Nothing is stored — all data is cleared when you leave the page.
+          </p>
+        </div>
+
+        {/* TMDB + JustWatch Attribution */}
         <div className="flex flex-col items-center gap-4 text-center">
-          {/* TMDB + JustWatch Attribution */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a href="https://www.themoviedb.org" target="_blank" rel="noopener noreferrer" className="opacity-80 hover:opacity-100 transition-opacity">
               <img
                 src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
-                alt="TMDB"
-                className="h-5 opacity-70"
+                alt="The Movie Database (TMDB)"
+                className="h-7"
               />
-              <span className="text-gray-600">|</span>
-              <span className="text-sm text-gray-400">Streaming data by</span>
-              <a
-                href="https://www.justwatch.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-2 font-medium"
-              >
-                JustWatch
-              </a>
-            </div>
-            <p className="text-sm text-gray-500 max-w-lg">
-              This product uses the TMDB API but is not endorsed or certified by TMDB.
-            </p>
+            </a>
+            <span className="text-gray-600 text-lg">+</span>
+            <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
+              <span className="text-base font-semibold text-yellow-400">JustWatch</span>
+            </a>
           </div>
-
-          {/* Privacy Badge */}
-          <div className="flex items-center gap-2 text-sm text-emerald-400/80">
-            <Shield className="w-4 h-4" />
-            <span>100% Private — No data stored</span>
-          </div>
+          <p className="text-sm text-gray-500 max-w-md">
+            Streaming availability data powered by JustWatch.
+            This product uses the TMDB API but is not endorsed or certified by TMDB.
+          </p>
         </div>
       </div>
     </div>
@@ -498,18 +500,20 @@ function DetailView({
 
         <div className="relative flex flex-col sm:flex-row gap-6 p-6">
           {/* Poster */}
-          <div className="flex-shrink-0 w-32 sm:w-40 mx-auto sm:mx-0">
-            {title.posterPath ? (
-              <img
-                src={`${TMDB_IMG}/w342${title.posterPath}`}
-                alt={title.title}
-                className="w-full rounded-xl shadow-2xl"
-              />
-            ) : (
-              <div className="w-full aspect-[2/3] rounded-xl bg-gray-700/40 flex items-center justify-center">
-                <Film className="w-12 h-12 text-gray-600" />
-              </div>
-            )}
+          <div className="flex-shrink-0 w-36 sm:w-44 mx-auto sm:mx-0">
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-700/40 shadow-2xl">
+              {title.posterPath ? (
+                <img
+                  src={`${TMDB_IMG}/w342${title.posterPath}`}
+                  alt={title.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Film className="w-12 h-12 text-gray-600" />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Info */}
@@ -582,7 +586,7 @@ function DetailView({
 
       {/* Where to Watch */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-1">
           <h3 className="text-lg font-semibold text-white flex items-center gap-2">
             <Monitor className="w-5 h-5 text-cyan-400" />
             Where to Watch
@@ -591,6 +595,12 @@ function DetailView({
             {regionObj?.flag} {regionObj?.name}
           </span>
         </div>
+        <p className="text-xs text-gray-500 mb-4">
+          Powered by{' '}
+          <a href="https://www.justwatch.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 underline underline-offset-2">
+            JustWatch
+          </a>
+        </p>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
