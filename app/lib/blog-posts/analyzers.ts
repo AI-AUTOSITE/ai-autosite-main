@@ -7,6 +7,7 @@ import { tokenCompressorPost } from '@/tools/token-compressor/blog-post'
 import { networkCheckerPost } from '@/tools/network-checker/blog-post'
 import { competitiveAnalyzerPost } from '@/tools/competitive-analyzer/blog-post'
 import { japaneseOcrPost } from '@/tools/japanese-ocr/blog-post'
+import { streamingSearchPost } from '@/tools/streaming-search/blog-post'
 
 export const analyzersPosts: BlogPost[] = [
   pcOptimizerPost,
@@ -14,4 +15,5 @@ export const analyzersPosts: BlogPost[] = [
   networkCheckerPost,
   competitiveAnalyzerPost,
   japaneseOcrPost,
+  streamingSearchPost,
 ]

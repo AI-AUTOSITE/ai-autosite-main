@@ -86,6 +86,7 @@ const getToolTitle = (pathname: string) => {
 '/tools/merge-audio': 'Merge Audio',
 '/tools/audio-converter': 'Audio Converter',
 '/tools/text-to-audio': 'Text to Audio',
+'/tools/streaming-search': 'Streaming Search',
   }
   return toolMap[pathname] || ''
 }
@@ -141,6 +142,7 @@ const getToolCategory = (pathname: string): { id: string; name: string } | null 
     '/tools/spam-email-checker': { id: 'analyzers', name: 'Analyzers' },
     '/tools/competitive-analyzer': { id: 'analyzers', name: 'Analyzers' },
     '/tools/tech-stack-analyzer': { id: 'analyzers', name: 'Analyzers' },
+    '/tools/streaming-search': { id: 'analyzers', name: 'Analyzers' },
     
     // Privacy
     '/tools/pdf-to-data': { id: 'privacy', name: 'Privacy' },
