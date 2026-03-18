@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { useSearchParams, useRouter } from 'next/navigation'
 import {
   Search,
   X,
@@ -51,7 +52,11 @@ const REGIONS = [
 // Main Component
 // ==========================================
 export default function StreamingSearchClient() {
-  const [query, setQuery] = useState('')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const initialQuery = searchParams.get('q') || ''
+
+  const [query, setQuery] = useState(initialQuery)
   const [results, setResults] = useState<SearchResult[]>([])
   const [trending, setTrending] = useState<SearchResult[]>([])
   const [region, setRegion] = useState('US')
@@ -67,6 +72,13 @@ export default function StreamingSearchClient() {
     fetchTrending()
   }, [])
 
+  // ---- Restore search from URL param on mount ----
+  useEffect(() => {
+    if (initialQuery) {
+      performSearch(initialQuery)
+    }
+  }, [])
+
   const fetchTrending = async () => {
     try {
       const res = await fetch('/api/streaming-search?action=trending')
@@ -77,7 +89,28 @@ export default function StreamingSearchClient() {
     }
   }
 
-  // ---- Debounced search ----
+  // ---- Actual search function ----
+  const performSearch = async (value: string) => {
+    setIsSearching(true)
+    try {
+      const res = await fetch(
+        `/api/streaming-search?action=search&q=${encodeURIComponent(value.trim())}`
+      )
+      const data = await res.json()
+      if (data.error) {
+        setError(data.error)
+        setResults([])
+      } else {
+        setResults(data.results || [])
+      }
+    } catch {
+      setError('Search failed. Please try again.')
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  // ---- Debounced search with URL update ----
   const handleSearch = useCallback(
     (value: string) => {
       setQuery(value)
@@ -87,27 +120,15 @@ export default function StreamingSearchClient() {
 
       if (!value.trim()) {
         setResults([])
+        // Remove q param from URL
+        router.replace('/tools/streaming-search', { scroll: false })
         return
       }
 
-      debounceRef.current = setTimeout(async () => {
-        setIsSearching(true)
-        try {
-          const res = await fetch(
-            `/api/streaming-search?action=search&q=${encodeURIComponent(value.trim())}`
-          )
-          const data = await res.json()
-          if (data.error) {
-            setError(data.error)
-            setResults([])
-          } else {
-            setResults(data.results || [])
-          }
-        } catch {
-          setError('Search failed. Please try again.')
-        } finally {
-          setIsSearching(false)
-        }
+      debounceRef.current = setTimeout(() => {
+        // Update URL with search query (for back navigation)
+        router.replace(`/tools/streaming-search?q=${encodeURIComponent(value.trim())}`, { scroll: false })
+        performSearch(value)
       }, 350)
     },
     []
@@ -117,6 +138,7 @@ export default function StreamingSearchClient() {
     setQuery('')
     setResults([])
     setError('')
+    router.replace('/tools/streaming-search', { scroll: false })
     searchInputRef.current?.focus()
   }
 

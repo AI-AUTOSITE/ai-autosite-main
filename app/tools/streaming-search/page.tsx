@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import StreamingSearchClient from './components/StreamingSearchClient'
 
 export const metadata: Metadata = {
@@ -49,5 +50,9 @@ export const metadata: Metadata = {
 }
 
 export default function StreamingSearchPage() {
-  return <StreamingSearchClient />
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" /></div>}>
+      <StreamingSearchClient />
+    </Suspense>
+  )
 }
