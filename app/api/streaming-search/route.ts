@@ -150,6 +150,107 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // ---- Translate (fetch title data in a specific language) ----
+    if (action === 'translate') {
+      const id = searchParams.get('id')
+      const type = searchParams.get('type')
+      const lang = searchParams.get('lang') || 'en-US'
+
+      if (!id || !type) {
+        return NextResponse.json({ error: 'id and type required' }, { status: 400 })
+      }
+
+      const data = await tmdbFetch(`/${type}/${id}`, { language: lang })
+
+      return NextResponse.json({
+        title: data.title || data.name || '',
+        overview: data.overview || '',
+        tagline: data.tagline || '',
+        genres: (data.genres || []).map((g: any) => ({ id: g.id, name: g.name })),
+      })
+    }
+
+    // ---- Detail (bilingual, for SEO pages) ----
+    if (action === 'detail') {
+      const id = searchParams.get('id')
+      const type = searchParams.get('type') // movie or tv
+      const region = searchParams.get('region') || 'US'
+
+      if (!id || !type) {
+        return NextResponse.json({ error: 'id and type required' }, { status: 400 })
+      }
+
+      // Fetch EN + JA details in parallel
+      const [detailsEN, detailsJA, watchProviders] = await Promise.all([
+        tmdbFetch(`/${type}/${id}`, {
+          language: 'en-US',
+          append_to_response: 'credits,release_dates,content_ratings',
+        }),
+        tmdbFetch(`/${type}/${id}`, {
+          language: 'ja-JP',
+        }),
+        tmdbFetch(`/${type}/${id}/watch/providers`),
+      ])
+
+      const regionData = watchProviders.results?.[region] || {}
+
+      // Extract certification
+      let certification = null
+      if (type === 'movie' && detailsEN.release_dates?.results) {
+        const usRelease = detailsEN.release_dates.results.find(
+          (r: any) => r.iso_3166_1 === 'US'
+        )
+        if (usRelease?.release_dates) {
+          const cert = usRelease.release_dates.find((rd: any) => rd.certification)
+          certification = cert?.certification || null
+        }
+      } else if (type === 'tv' && detailsEN.content_ratings?.results) {
+        const usRating = detailsEN.content_ratings.results.find(
+          (r: any) => r.iso_3166_1 === 'US'
+        )
+        certification = usRating?.rating || null
+      }
+
+      return NextResponse.json({
+        id: detailsEN.id,
+        title: detailsEN.title || detailsEN.name,
+        originalTitle: detailsEN.original_title || detailsEN.original_name,
+        titleJA: detailsJA.title || detailsJA.name || detailsEN.title || detailsEN.name,
+        mediaType: type,
+        year: (detailsEN.release_date || detailsEN.first_air_date || '').substring(0, 4),
+        posterPath: detailsEN.poster_path,
+        backdropPath: detailsEN.backdrop_path,
+        overviewEN: detailsEN.overview || '',
+        overviewJA: detailsJA.overview || '',
+        voteAverage: detailsEN.vote_average,
+        voteCount: detailsEN.vote_count,
+        runtime: detailsEN.runtime || detailsEN.episode_run_time?.[0] || null,
+        genres: detailsEN.genres || [],
+        genresJA: detailsJA.genres || [],
+        tagline: detailsEN.tagline || null,
+        taglineJA: detailsJA.tagline || null,
+        numberOfSeasons: detailsEN.number_of_seasons || null,
+        numberOfEpisodes: detailsEN.number_of_episodes || null,
+        status: detailsEN.status || null,
+        certification,
+        director:
+          detailsEN.credits?.crew?.find((c: any) => c.job === 'Director')?.name || null,
+        cast: (detailsEN.credits?.cast || []).slice(0, 8).map((c: any) => ({
+          name: c.name,
+          character: c.character,
+          profilePath: c.profile_path,
+        })),
+        providers: {
+          flatrate: regionData.flatrate || [],
+          rent: regionData.rent || [],
+          buy: regionData.buy || [],
+          ads: regionData.ads || [],
+          free: regionData.free || [],
+          link: regionData.link || null,
+        },
+      })
+    }
+
     // ---- Trending ----
     if (action === 'trending') {
       const data = await tmdbFetch('/trending/all/week', {

@@ -85,6 +85,26 @@ const REGIONS = [
   { code: 'MX', name: 'Mexico', flag: '🇲🇽' },
 ]
 
+const LANGUAGES = [
+  { code: 'en', tmdbCode: 'en-US', label: 'EN', name: 'English' },
+  { code: 'ja', tmdbCode: 'ja-JP', label: 'JA', name: '日本語' },
+  { code: 'de', tmdbCode: 'de-DE', label: 'DE', name: 'Deutsch' },
+  { code: 'fr', tmdbCode: 'fr-FR', label: 'FR', name: 'Français' },
+  { code: 'es', tmdbCode: 'es-MX', label: 'ES', name: 'Español' },
+  { code: 'pt', tmdbCode: 'pt-BR', label: 'PT', name: 'Português' },
+  { code: 'hi', tmdbCode: 'hi-IN', label: 'HI', name: 'हिन्दी' },
+  { code: 'ko', tmdbCode: 'ko-KR', label: 'KO', name: '한국어' },
+  { code: 'zh', tmdbCode: 'zh-CN', label: 'ZH', name: '中文' },
+  { code: 'it', tmdbCode: 'it-IT', label: 'IT', name: 'Italiano' },
+]
+
+interface TranslationData {
+  title: string
+  overview: string
+  tagline: string
+  genres: { id: number; name: string }[]
+}
+
 // ==========================================
 // Main Component
 // ==========================================
@@ -93,19 +113,69 @@ export default function MovieDetailClient({
 }: {
   titleData: TitleData
 }) {
-  const [lang, setLang] = useState<'en' | 'ja'>('en')
+  const [lang, setLang] = useState('en')
   const [region, setRegion] = useState('US')
   const [providers, setProviders] = useState(titleData.providers)
   const [showRegionPicker, setShowRegionPicker] = useState(false)
   const [isLoadingProviders, setIsLoadingProviders] = useState(false)
+  const [isLoadingTranslation, setIsLoadingTranslation] = useState(false)
+  const [translations, setTranslations] = useState<Record<string, TranslationData>>({
+    en: {
+      title: titleData.title,
+      overview: titleData.overviewEN,
+      tagline: titleData.tagline || '',
+      genres: titleData.genres,
+    },
+    ja: {
+      title: titleData.titleJA,
+      overview: titleData.overviewJA,
+      tagline: titleData.taglineJA || '',
+      genres: titleData.genresJA,
+    },
+  })
   const router = useRouter()
 
   const currentRegion = REGIONS.find((r) => r.code === region) || REGIONS[0]
+  const currentLang = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]
 
-  const overview = lang === 'ja' && titleData.overviewJA ? titleData.overviewJA : titleData.overviewEN
-  const genres = lang === 'ja' && titleData.genresJA?.length ? titleData.genresJA : titleData.genres
-  const tagline = lang === 'ja' && titleData.taglineJA ? titleData.taglineJA : titleData.tagline
-  const displayTitle = lang === 'ja' && titleData.titleJA ? titleData.titleJA : titleData.title
+  // Get translated content (fallback to EN)
+  const t = translations[lang] || translations['en']
+  const displayTitle = t.title || titleData.title
+  const overview = t.overview || titleData.overviewEN
+  const tagline = t.tagline || titleData.tagline
+  const genres = t.genres?.length ? t.genres : titleData.genres
+
+  // Fetch translation for a new language
+  const switchLanguage = async (langCode: string) => {
+    setLang(langCode)
+
+    // Already cached
+    if (translations[langCode]) return
+
+    const langDef = LANGUAGES.find((l) => l.code === langCode)
+    if (!langDef) return
+
+    setIsLoadingTranslation(true)
+    try {
+      const res = await fetch(
+        `/api/streaming-search?action=translate&id=${titleData.id}&type=${titleData.mediaType}&lang=${langDef.tmdbCode}`
+      )
+      const data = await res.json()
+      setTranslations((prev) => ({
+        ...prev,
+        [langCode]: {
+          title: data.title || '',
+          overview: data.overview || '',
+          tagline: data.tagline || '',
+          genres: data.genres || [],
+        },
+      }))
+    } catch {
+      // Fallback to EN on error
+    } finally {
+      setIsLoadingTranslation(false)
+    }
+  }
 
   const hasFlatrate = providers.flatrate.length > 0 || providers.ads.length > 0 || providers.free.length > 0
   const hasAnyProvider =
@@ -201,7 +271,7 @@ export default function MovieDetailClient({
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mt-3 leading-tight">
                 {displayTitle}
               </h1>
-              {lang === 'ja' && titleData.title !== titleData.titleJA && (
+              {lang !== 'en' && titleData.title !== displayTitle && (
                 <p className="text-sm text-gray-400 mt-1">{titleData.title}</p>
               )}
 
@@ -295,30 +365,24 @@ export default function MovieDetailClient({
         <section className="mt-8">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-lg font-semibold text-white">
-              {lang === 'ja' ? 'あらすじ' : 'Synopsis'}
+              Synopsis
             </h2>
             {/* Language toggle */}
-            <div className="flex bg-gray-800/60 rounded-lg p-0.5 ring-1 ring-white/5">
-              <button
-                onClick={() => setLang('en')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
-                  lang === 'en'
-                    ? 'bg-gray-700 text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                EN
-              </button>
-              <button
-                onClick={() => setLang('ja')}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
-                  lang === 'ja'
-                    ? 'bg-gray-700 text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                JA
-              </button>
+            <div className="flex gap-0.5 bg-gray-800/60 rounded-lg p-0.5 ring-1 ring-white/5 overflow-x-auto scrollbar-hide">
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => switchLanguage(l.code)}
+                  title={l.name}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all flex-shrink-0 ${
+                    lang === l.code
+                      ? 'bg-gray-700 text-white shadow-sm'
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  {l.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -326,11 +390,16 @@ export default function MovieDetailClient({
             <p className="text-sm text-cyan-400 italic mb-2">&ldquo;{tagline}&rdquo;</p>
           )}
 
-          {overview ? (
+          {isLoadingTranslation ? (
+            <div className="flex items-center gap-2 py-4">
+              <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+              <span className="text-sm text-gray-400">Loading translation...</span>
+            </div>
+          ) : overview ? (
             <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{overview}</p>
           ) : (
             <p className="text-sm text-gray-500">
-              {lang === 'ja' ? 'あらすじはまだ登録されていません。' : 'No synopsis available.'}
+              No synopsis available in {currentLang.name}.
             </p>
           )}
         </section>
@@ -338,9 +407,7 @@ export default function MovieDetailClient({
         {/* Cast */}
         {titleData.cast.length > 0 && (
           <section className="mt-8">
-            <h2 className="text-lg font-semibold text-white mb-3">
-              {lang === 'ja' ? 'キャスト' : 'Cast'}
-            </h2>
+            <h2 className="text-lg font-semibold text-white mb-3">Cast</h2>
             <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
               {titleData.cast.map((c, i) => (
                 <div
@@ -372,7 +439,7 @@ export default function MovieDetailClient({
         {titleData.director && (
           <div className="mt-4 flex items-center gap-2 text-sm text-gray-400">
             <Award className="w-4 h-4 text-gray-500" />
-            <span>{lang === 'ja' ? '監督' : 'Director'}:</span>
+            <span>Director:</span>
             <span className="text-gray-200 font-medium">{titleData.director}</span>
           </div>
         )}
@@ -382,7 +449,7 @@ export default function MovieDetailClient({
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
               <Monitor className="w-5 h-5 text-cyan-400" />
-              {lang === 'ja' ? '視聴方法' : 'Where to Watch'}
+              Where to Watch
             </h2>
 
             {/* Region picker */}
@@ -443,7 +510,7 @@ export default function MovieDetailClient({
             <div className="space-y-6">
               {providers.flatrate.length > 0 && (
                 <ProviderSection
-                  label={lang === 'ja' ? 'サブスクリプション' : 'Included with Subscription'}
+                  label='Included with Subscription'
                   icon={<Play className="w-4 h-4" />}
                   color="cyan"
                   providers={providers.flatrate}
@@ -451,7 +518,7 @@ export default function MovieDetailClient({
               )}
               {providers.ads.length > 0 && (
                 <ProviderSection
-                  label={lang === 'ja' ? '広告付き無料' : 'Free with Ads'}
+                  label='Free with Ads'
                   icon={<Monitor className="w-4 h-4" />}
                   color="green"
                   providers={providers.ads}
@@ -459,7 +526,7 @@ export default function MovieDetailClient({
               )}
               {providers.free.length > 0 && (
                 <ProviderSection
-                  label={lang === 'ja' ? '無料' : 'Free'}
+                  label='Free'
                   icon={<Monitor className="w-4 h-4" />}
                   color="green"
                   providers={providers.free}
@@ -467,7 +534,7 @@ export default function MovieDetailClient({
               )}
               {providers.rent.length > 0 && (
                 <ProviderSection
-                  label={lang === 'ja' ? 'レンタル' : 'Available for Rent'}
+                  label='Available for Rent'
                   icon={<Tag className="w-4 h-4" />}
                   color="amber"
                   providers={providers.rent}
@@ -475,7 +542,7 @@ export default function MovieDetailClient({
               )}
               {providers.buy.length > 0 && (
                 <ProviderSection
-                  label={lang === 'ja' ? '購入' : 'Available to Buy'}
+                  label='Available to Buy'
                   icon={<ShoppingBag className="w-4 h-4" />}
                   color="orange"
                   providers={providers.buy}
@@ -490,7 +557,7 @@ export default function MovieDetailClient({
                     className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-cyan-400 transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    {lang === 'ja' ? 'TMDBで直接リンクを見る' : 'View on TMDB for direct links'}
+                    'View on TMDB for direct links'
                   </a>
                 </div>
               )}
@@ -499,14 +566,10 @@ export default function MovieDetailClient({
             <div className="text-center py-10 bg-gray-800/30 rounded-xl border border-gray-700/30">
               <Info className="w-10 h-10 text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400 font-medium">
-                {lang === 'ja'
-                  ? 'ストリーミング情報がありません'
-                  : 'No streaming information available'}
+                No streaming information available
               </p>
               <p className="text-gray-500 text-sm mt-1">
-                {lang === 'ja'
-                  ? `${currentRegion.name}ではまだ配信されていない可能性があります。`
-                  : `This title may not be available in ${currentRegion.name}. Try a different region.`}
+                This title may not be available in {currentRegion.name}. Try a different region.
               </p>
             </div>
           )}
@@ -515,9 +578,7 @@ export default function MovieDetailClient({
           {hasAnyProvider && (
             <p className="text-[11px] text-gray-600 mt-4 flex items-start gap-1.5">
               <Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
-              {lang === 'ja'
-                ? 'ストリーミング情報は最新の状況を反映していない場合があります。データはJustWatch経由のTMDB提供です。'
-                : 'Streaming availability may not reflect the latest changes. Data provided by JustWatch via TMDB.'}
+              Streaming availability may not reflect the latest changes. Data provided by JustWatch via TMDB.
             </p>
           )}
         </section>
@@ -529,27 +590,23 @@ export default function MovieDetailClient({
               <div className="relative">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 text-cyan-400 text-xs font-medium mb-4">
                   <Bell className="w-3.5 h-3.5" />
-                  {lang === 'ja' ? 'サブスク配信を逃さない' : 'Never miss when it becomes free'}
+                  Never miss when it becomes free
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                  {lang === 'ja'
-                    ? 'レンタルのみ？配信開始で通知を受け取ろう'
-                    : 'Rent-only? Get notified when it\'s included free'}
+                  Rent-only? Get notified when it&apos;s included free
                 </h3>
                 <p className="text-sm text-gray-400 max-w-md mx-auto mb-5">
-                  {lang === 'ja'
-                    ? 'Unrentアプリが、この作品がサブスクリプションに追加された時にプッシュ通知でお知らせします。'
-                    : 'Unrent alerts you the moment this title joins your streaming subscriptions — so you never pay to rent what\'s about to be free.'}
+                  Unrent alerts you the moment this title joins your streaming subscriptions — so you never pay to rent what&apos;s about to be free.
                 </p>
                 <a
                   href="#"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-semibold rounded-xl transition-colors text-sm"
                 >
                   <Play className="w-4 h-4" />
-                  {lang === 'ja' ? 'Unrentをダウンロード — 無料' : 'Download Unrent — Free'}
+                  Download Unrent — Free
                 </a>
                 <p className="text-[11px] text-gray-600 mt-3">
-                  {lang === 'ja' ? 'iOS対応 · 個人情報の収集なし' : 'Available on iOS · No data collection'}
+                  Available on iOS · No data collection
                 </p>
               </div>
             </div>
@@ -557,36 +614,37 @@ export default function MovieDetailClient({
         )}
 
         {/* Attribution Footer */}
-        <footer className="mt-12 pt-8 border-t border-gray-800/60 space-y-4">
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            <a
-              href="https://www.themoviedb.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-70 hover:opacity-100 transition-opacity"
-            >
-              <img
-                src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
-                alt="The Movie Database (TMDB)"
-                className="h-8"
-              />
-            </a>
-            <span className="text-gray-700">+</span>
-            <a
-              href="https://www.justwatch.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-70 hover:opacity-100 transition-opacity"
-            >
-              <span className="text-lg font-bold text-yellow-400/80 hover:text-yellow-400">
-                JustWatch
-              </span>
-            </a>
+        <footer className="mt-12 pt-8 border-t border-gray-800/60 space-y-6">
+          {/* TMDB + JustWatch Attribution */}
+          <div className="max-w-2xl mx-auto px-6 py-5 bg-gray-800/40 border border-gray-700/30 rounded-xl">
+            <div className="flex flex-wrap items-center justify-center gap-6 mb-3">
+              <a
+                href="https://www.themoviedb.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 hover:opacity-100 transition-opacity"
+              >
+                <img
+                  src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg"
+                  alt="The Movie Database (TMDB)"
+                  className="h-14"
+                />
+              </a>
+              <span className="text-gray-600 text-3xl font-light">+</span>
+              <a
+                href="https://www.justwatch.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 hover:opacity-100 transition-opacity"
+              >
+                <span className="text-2xl font-bold text-yellow-400">JustWatch</span>
+              </a>
+            </div>
+            <p className="text-base text-gray-400 text-center leading-relaxed">
+              Streaming availability data powered by JustWatch.
+              This product uses the TMDB API but is not endorsed or certified by TMDB.
+            </p>
           </div>
-          <p className="text-xs text-gray-600 text-center max-w-xl mx-auto">
-            This product uses the TMDB API but is not endorsed or certified by TMDB.
-            Streaming availability data provided by JustWatch.
-          </p>
 
           {/* Privacy */}
           <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
