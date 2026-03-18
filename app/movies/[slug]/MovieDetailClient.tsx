@@ -111,6 +111,12 @@ const REGION_TO_LANG: Record<string, string> = {
   JP: 'ja', DE: 'de', FR: 'fr', IN: 'hi', BR: 'pt', MX: 'es',
 }
 
+// Map language code to default region
+const LANG_TO_REGION: Record<string, string> = {
+  en: 'US', ja: 'JP', de: 'DE', fr: 'FR', hi: 'IN', pt: 'BR', es: 'MX',
+  ko: 'US', zh: 'US', it: 'US',
+}
+
 // ==========================================
 // Main Component
 // ==========================================
@@ -149,10 +155,10 @@ export default function MovieDetailClient({
   // Auto-fetch translation + providers if region from URL is not US
   useEffect(() => {
     if (initialRegion !== 'US') {
-      changeRegion(initialRegion)
+      fetchProviders(initialRegion)
     }
     if (initialLang !== 'en' && initialLang !== 'ja') {
-      switchLanguage(initialLang)
+      switchLanguage(initialLang, true) // skip region sync on init
     }
   }, [])
 
@@ -166,9 +172,17 @@ export default function MovieDetailClient({
   const tagline = t.tagline || titleData.tagline
   const genres = t.genres?.length ? t.genres : titleData.genres
 
-  // Fetch translation for a new language
-  const switchLanguage = async (langCode: string) => {
+  // Fetch translation for a new language + sync region
+  const switchLanguage = async (langCode: string, skipRegionSync = false) => {
     setLang(langCode)
+
+    // Sync region when language changes
+    if (!skipRegionSync) {
+      const mappedRegion = LANG_TO_REGION[langCode]
+      if (mappedRegion && mappedRegion !== region) {
+        fetchProviders(mappedRegion)
+      }
+    }
 
     // Already cached
     if (translations[langCode]) return
@@ -206,12 +220,10 @@ export default function MovieDetailClient({
     providers.ads.length > 0 ||
     providers.free.length > 0
 
-  // Region change → refetch providers
-  const changeRegion = async (newRegion: string) => {
+  // Fetch providers for a region (without triggering language sync)
+  const fetchProviders = async (newRegion: string) => {
     setRegion(newRegion)
-    setShowRegionPicker(false)
     setIsLoadingProviders(true)
-
     try {
       const res = await fetch(
         `/api/streaming-search?action=providers&id=${titleData.id}&type=${titleData.mediaType}&region=${newRegion}`
@@ -224,6 +236,18 @@ export default function MovieDetailClient({
       // Keep current providers on error
     } finally {
       setIsLoadingProviders(false)
+    }
+  }
+
+  // Region change → refetch providers + sync language
+  const changeRegion = async (newRegion: string) => {
+    setShowRegionPicker(false)
+    fetchProviders(newRegion)
+
+    // Sync language when region changes
+    const mappedLang = REGION_TO_LANG[newRegion] || 'en'
+    if (mappedLang !== lang) {
+      switchLanguage(mappedLang, true) // skipRegionSync to avoid loop
     }
   }
 
