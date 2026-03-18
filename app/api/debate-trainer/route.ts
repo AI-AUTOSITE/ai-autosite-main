@@ -1,213 +1,263 @@
-// app/api/debate/route.ts
+// app/api/streaming-search/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
-
-const requestCounts = new Map<string, { count: number; resetTime: number }>()
-
-function getClientIp(request: NextRequest): string {
-  const forwarded = request.headers.get('x-forwarded-for')
-  const ip = forwarded ? forwarded.split(',')[0] : 'unknown'
-  return ip
+// ==========================================
+// Rate Limiting
+// ==========================================
+const rateLimiter = new Map<string, { count: number; resetTime: number }>()
+const RATE_LIMIT = {
+  maxRequests: 30,
+  windowMs: 60 * 1000,
 }
 
-function checkRateLimit(identifier: string): { allowed: boolean; resetIn?: number } {
+function checkRateLimit(ip: string): boolean {
   const now = Date.now()
-  const limit = 10
-  const window = 60 * 60 * 1000
+  const entry = rateLimiter.get(ip)
 
-  const record = requestCounts.get(identifier)
-
-  if (record && now > record.resetTime) {
-    requestCounts.delete(identifier)
+  if (!entry || now > entry.resetTime) {
+    rateLimiter.set(ip, { count: 1, resetTime: now + RATE_LIMIT.windowMs })
+    return true
   }
 
-  const current = requestCounts.get(identifier)
-
-  if (!current) {
-    requestCounts.set(identifier, {
-      count: 1,
-      resetTime: now + window,
-    })
-    return { allowed: true }
+  if (entry.count >= RATE_LIMIT.maxRequests) {
+    return false
   }
 
-  if (current.count >= limit) {
-    const resetIn = Math.ceil((current.resetTime - now) / 1000 / 60)
-    return { allowed: false, resetIn }
-  }
-
-  current.count++
-  return { allowed: true }
+  entry.count++
+  return true
 }
 
-const stylePrompts = {
-  kind: `You are a supportive debate coach. Be encouraging, constructive, and positive while providing honest feedback. Focus on strengths first, then gently point out areas for improvement.`,
-  teacher: `You are a logical debate professor. Be educational, analytical, and thorough. Provide detailed reasoning for your scores and help the debater understand logical principles.`,
-  devil: `You are a sharp debate critic playing devil's advocate. Challenge arguments directly and rigorously, but remain respectful and educational. Your goal is to strengthen the debater's skills through tough but fair critique.`,
+// ==========================================
+// TMDB API Helper
+// ==========================================
+const TMDB_BASE = 'https://api.themoviedb.org/3'
+
+async function tmdbFetch(path: string, params: Record<string, string> = {}) {
+  const apiKey = process.env.TMDB_API_KEY
+  if (!apiKey) {
+    throw new Error('TMDB_API_KEY not configured')
+  }
+
+  const url = new URL(`${TMDB_BASE}${path}`)
+  url.searchParams.set('api_key', apiKey)
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v))
+
+  const res = await fetch(url.toString(), {
+    headers: { 'Content-Type': 'application/json' },
+    next: { revalidate: 3600 }, // Cache for 1 hour
+  })
+
+  if (!res.ok) {
+    throw new Error(`TMDB API error: ${res.status}`)
+  }
+
+  return res.json()
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const { theme, message, style, user_token, is_new_session } = body
-
-    if (!theme || !message || !style) {
-      return NextResponse.json({ error: 'Please provide all required fields' }, { status: 400 })
-    }
-
-    if (theme.length > 200 || message.length > 2000) {
-      return NextResponse.json(
-        { error: 'Input too long. Please keep your arguments concise.' },
-        { status: 400 }
-      )
-    }
-
-    const clientIp = getClientIp(request)
-    const ipIdentifier = `ip:${clientIp}`
-    const ipCheck = checkRateLimit(ipIdentifier)
-
-    if (!ipCheck.allowed) {
-      return NextResponse.json(
-        { error: `Rate limit exceeded. Please try again in ${ipCheck.resetIn} minutes.` },
-        { status: 429 }
-      )
-    }
-
-    if (is_new_session && user_token) {
-      const userIdentifier = `user:${user_token}`
-      const userCheck = checkRateLimit(userIdentifier)
-
-      if (!userCheck.allowed) {
-        return NextResponse.json(
-          { error: `You've started too many debates. Please try again later.` },
-          { status: 429 }
-        )
-      }
-    }
-
-    const roleInstruction = stylePrompts[style as keyof typeof stylePrompts] || stylePrompts.teacher
-
-    const userPrompt = `Evaluate this debate argument CRITICALLY and provide honest scores.
-
-Topic: "${theme}"
-Argument: "${message}"
-
-IMPORTANT: Be strict in your evaluation. Poor arguments should receive LOW scores (1-2/5).
-
-Provide your response in this EXACT format:
-
-RESPONSE: [Your 2-4 sentence counterargument]
-
-SCORES:
-Logical Consistency: x/5 - [Why this score]
-Persuasiveness: x/5 - [Why this score]
-Factual Accuracy: x/5 - [Why this score]
-Structural Coherence: x/5 - [Why this score]
-Rebuttal Resilience: x/5 - [Why this score]
-
-FEEDBACK: [One specific improvement suggestion]
-
-SCORING GUIDELINES:
-1/5 = Severely flawed (major logical errors, unsupported claims, incoherent)
-2/5 = Poor (multiple issues, weak reasoning, lacks evidence)
-3/5 = Mediocre (some valid points but significant weaknesses)
-4/5 = Good (solid argument with minor issues)
-5/5 = Excellent (well-reasoned, supported, coherent)`
-
-    const completion = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022', // 最新のHaiku
-      max_tokens: 1500, // より詳細な評価用
-      temperature: 0.7,
-      system: roleInstruction,
-      messages: [
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
-    })
-
-    const rawResponse = completion.content[0].type === 'text' ? completion.content[0].text : ''
-
-    let scores = {
-      'Logical Consistency': 3,
-      Persuasiveness: 3,
-      'Factual Accuracy': 3,
-      'Structural Coherence': 3,
-      'Rebuttal Resilience': 3,
-    }
-
-    let scoreExplanations: Record<string, string> = {}
-    let feedback = 'Keep practicing your argumentation skills!'
-
-    // スコアと説明を抽出
-    // スコアを抽出（よりシンプルに）
-    const scoreMatches = Array.from(
-      rawResponse.matchAll(
-        /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*(\d)\/5/g
-      )
+// ==========================================
+// GET Handler
+// ==========================================
+export async function GET(request: NextRequest) {
+  // Rate limit check
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait a moment.' },
+      { status: 429 }
     )
+  }
 
-    for (const match of scoreMatches) {
-      const key = match[1] as keyof typeof scores
-      const value = parseInt(match[2], 10)
+  const { searchParams } = new URL(request.url)
+  const action = searchParams.get('action')
 
-      if (value >= 1 && value <= 5) {
-        scores[key] = value
+  try {
+    // ---- Search ----
+    if (action === 'search') {
+      const query = searchParams.get('q')?.trim()
+      if (!query || query.length < 1) {
+        return NextResponse.json({ error: 'Query required' }, { status: 400 })
       }
+
+      const data = await tmdbFetch('/search/multi', {
+        query,
+        include_adult: 'false',
+        language: 'en-US',
+        page: '1',
+      })
+
+      // Filter to movies and TV only, exclude adult
+      const results = (data.results || [])
+        .filter(
+          (r: any) =>
+            (r.media_type === 'movie' || r.media_type === 'tv') &&
+            r.adult !== true
+        )
+        .slice(0, 20)
+        .map((r: any) => ({
+          id: r.id,
+          title: r.title || r.name,
+          originalTitle: r.original_title || r.original_name,
+          mediaType: r.media_type,
+          year: (r.release_date || r.first_air_date || '').substring(0, 4),
+          posterPath: r.poster_path,
+          backdropPath: r.backdrop_path,
+          overview: r.overview,
+          voteAverage: r.vote_average,
+          genreIds: r.genre_ids,
+        }))
+
+      return NextResponse.json({ results })
     }
 
-    // 説明を別途抽出
-    const explanationPattern =
-      /(Logical Consistency|Persuasiveness|Factual Accuracy|Structural Coherence|Rebuttal Resilience):\s*\d\/5\s*-\s*([^\n]+)/g
-    const explanationMatches = Array.from(rawResponse.matchAll(explanationPattern))
+    // ---- Watch Providers ----
+    if (action === 'providers') {
+      const id = searchParams.get('id')
+      const type = searchParams.get('type') // movie or tv
+      const region = searchParams.get('region') || 'US'
 
-    for (const match of explanationMatches) {
-      const key = match[1] as keyof typeof scores
-      scoreExplanations[key] = match[2].trim()
+      if (!id || !type) {
+        return NextResponse.json({ error: 'id and type required' }, { status: 400 })
+      }
+
+      const data = await tmdbFetch(`/${type}/${id}/watch/providers`)
+      const regionData = data.results?.[region] || {}
+
+      // Also fetch details for runtime/genres
+      const details = await tmdbFetch(`/${type}/${id}`, {
+        language: 'en-US',
+        append_to_response: 'credits',
+      })
+
+      return NextResponse.json({
+        providers: {
+          flatrate: regionData.flatrate || [],
+          rent: regionData.rent || [],
+          buy: regionData.buy || [],
+          ads: regionData.ads || [],
+          free: regionData.free || [],
+          link: regionData.link || null,
+        },
+        details: {
+          runtime: details.runtime || details.episode_run_time?.[0] || null,
+          genres: details.genres || [],
+          tagline: details.tagline || null,
+          numberOfSeasons: details.number_of_seasons || null,
+          status: details.status || null,
+          director:
+            details.credits?.crew?.find((c: any) => c.job === 'Director')?.name || null,
+          cast: (details.credits?.cast || []).slice(0, 6).map((c: any) => c.name),
+        },
+      })
     }
 
-    const feedbackMatch = rawResponse.match(/FEEDBACK:\s*([\s\S]+?)(?:\n\n|$)/)
-    if (feedbackMatch) {
-      feedback = feedbackMatch[1].trim().slice(0, 300)
-    }
+    // ---- Detail (bilingual, for SEO pages) ----
+    if (action === 'detail') {
+      const id = searchParams.get('id')
+      const type = searchParams.get('type') // movie or tv
+      const region = searchParams.get('region') || 'US'
 
-    if (Math.random() < 0.01) {
-      const now = Date.now()
-      for (const [key, value] of requestCounts.entries()) {
-        if (now > value.resetTime) {
-          requestCounts.delete(key)
+      if (!id || !type) {
+        return NextResponse.json({ error: 'id and type required' }, { status: 400 })
+      }
+
+      // Fetch EN + JA details in parallel
+      const [detailsEN, detailsJA, watchProviders] = await Promise.all([
+        tmdbFetch(`/${type}/${id}`, {
+          language: 'en-US',
+          append_to_response: 'credits,release_dates,content_ratings',
+        }),
+        tmdbFetch(`/${type}/${id}`, {
+          language: 'ja-JP',
+        }),
+        tmdbFetch(`/${type}/${id}/watch/providers`),
+      ])
+
+      const regionData = watchProviders.results?.[region] || {}
+
+      // Extract certification
+      let certification = null
+      if (type === 'movie' && detailsEN.release_dates?.results) {
+        const usRelease = detailsEN.release_dates.results.find(
+          (r: any) => r.iso_3166_1 === 'US'
+        )
+        if (usRelease?.release_dates) {
+          const cert = usRelease.release_dates.find((rd: any) => rd.certification)
+          certification = cert?.certification || null
         }
+      } else if (type === 'tv' && detailsEN.content_ratings?.results) {
+        const usRating = detailsEN.content_ratings.results.find(
+          (r: any) => r.iso_3166_1 === 'US'
+        )
+        certification = usRating?.rating || null
       }
+
+      return NextResponse.json({
+        id: detailsEN.id,
+        title: detailsEN.title || detailsEN.name,
+        originalTitle: detailsEN.original_title || detailsEN.original_name,
+        titleJA: detailsJA.title || detailsJA.name || detailsEN.title || detailsEN.name,
+        mediaType: type,
+        year: (detailsEN.release_date || detailsEN.first_air_date || '').substring(0, 4),
+        posterPath: detailsEN.poster_path,
+        backdropPath: detailsEN.backdrop_path,
+        overviewEN: detailsEN.overview || '',
+        overviewJA: detailsJA.overview || '',
+        voteAverage: detailsEN.vote_average,
+        voteCount: detailsEN.vote_count,
+        runtime: detailsEN.runtime || detailsEN.episode_run_time?.[0] || null,
+        genres: detailsEN.genres || [],
+        genresJA: detailsJA.genres || [],
+        tagline: detailsEN.tagline || null,
+        taglineJA: detailsJA.tagline || null,
+        numberOfSeasons: detailsEN.number_of_seasons || null,
+        numberOfEpisodes: detailsEN.number_of_episodes || null,
+        status: detailsEN.status || null,
+        certification,
+        director:
+          detailsEN.credits?.crew?.find((c: any) => c.job === 'Director')?.name || null,
+        cast: (detailsEN.credits?.cast || []).slice(0, 8).map((c: any) => ({
+          name: c.name,
+          character: c.character,
+          profilePath: c.profile_path,
+        })),
+        providers: {
+          flatrate: regionData.flatrate || [],
+          rent: regionData.rent || [],
+          buy: regionData.buy || [],
+          ads: regionData.ads || [],
+          free: regionData.free || [],
+          link: regionData.link || null,
+        },
+      })
     }
 
-    return NextResponse.json({
-      reply: rawResponse,
-      scores,
-      scoreExplanations,
-      feedback,
-    })
-  } catch (error: any) {
-    console.error('Debate API error:', error)
+    // ---- Trending ----
+    if (action === 'trending') {
+      const data = await tmdbFetch('/trending/all/week', {
+        language: 'en-US',
+      })
 
-    if (error.status === 401) {
-      return NextResponse.json(
-        { error: 'Configuration error. Please contact support.' },
-        { status: 500 }
-      )
+      const results = (data.results || [])
+        .filter((r: any) => r.adult !== true)
+        .slice(0, 10)
+        .map((r: any) => ({
+          id: r.id,
+          title: r.title || r.name,
+          mediaType: r.media_type,
+          year: (r.release_date || r.first_air_date || '').substring(0, 4),
+          posterPath: r.poster_path,
+          voteAverage: r.vote_average,
+        }))
+
+      return NextResponse.json({ results })
     }
 
-    if (error.status === 429) {
-      return NextResponse.json(
-        { error: 'Service temporarily unavailable. Please try again later.' },
-        { status: 429 }
-      )
-    }
-
-    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  } catch (err: any) {
+    console.error('Streaming search API error:', err)
+    return NextResponse.json(
+      { error: err.message || 'Internal server error' },
+      { status: 500 }
+    )
   }
 }

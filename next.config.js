@@ -113,7 +113,7 @@ const nextConfig = {
 
   // Image optimization configuration
   images: {
-    domains: ['ai-autosite.com', 'tool7.ai-autosite.com'],
+    domains: ['ai-autosite.com', 'tool7.ai-autosite.com', 'image.tmdb.org'],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
