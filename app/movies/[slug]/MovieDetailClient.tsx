@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Star,
   Clock,
@@ -105,6 +105,12 @@ interface TranslationData {
   genres: { id: number; name: string }[]
 }
 
+// Map region code to default language
+const REGION_TO_LANG: Record<string, string> = {
+  US: 'en', GB: 'en', CA: 'en', AU: 'en',
+  JP: 'ja', DE: 'de', FR: 'fr', IN: 'hi', BR: 'pt', MX: 'es',
+}
+
 // ==========================================
 // Main Component
 // ==========================================
@@ -113,10 +119,15 @@ export default function MovieDetailClient({
 }: {
   titleData: TitleData
 }) {
-  const [lang, setLang] = useState('en')
-  const [region, setRegion] = useState('US')
+  const searchParams = useSearchParams()
+  const initialRegion = searchParams.get('region') || 'US'
+  const initialLang = REGION_TO_LANG[initialRegion] || 'en'
+
+  const [lang, setLang] = useState(initialLang)
+  const [region, setRegion] = useState(initialRegion)
   const [providers, setProviders] = useState(titleData.providers)
   const [showRegionPicker, setShowRegionPicker] = useState(false)
+  const [showLangPicker, setShowLangPicker] = useState(false)
   const [isLoadingProviders, setIsLoadingProviders] = useState(false)
   const [isLoadingTranslation, setIsLoadingTranslation] = useState(false)
   const [translations, setTranslations] = useState<Record<string, TranslationData>>({
@@ -134,6 +145,16 @@ export default function MovieDetailClient({
     },
   })
   const router = useRouter()
+
+  // Auto-fetch translation + providers if region from URL is not US
+  useEffect(() => {
+    if (initialRegion !== 'US') {
+      changeRegion(initialRegion)
+    }
+    if (initialLang !== 'en' && initialLang !== 'ja') {
+      switchLanguage(initialLang)
+    }
+  }, [])
 
   const currentRegion = REGIONS.find((r) => r.code === region) || REGIONS[0]
   const currentLang = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0]
@@ -367,22 +388,43 @@ export default function MovieDetailClient({
             <h2 className="text-lg font-semibold text-white">
               Synopsis
             </h2>
-            {/* Language toggle */}
-            <div className="flex gap-0.5 bg-gray-800/60 rounded-lg p-0.5 ring-1 ring-white/5 overflow-x-auto scrollbar-hide">
-              {LANGUAGES.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => switchLanguage(l.code)}
-                  title={l.name}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all flex-shrink-0 ${
-                    lang === l.code
-                      ? 'bg-gray-700 text-white shadow-sm'
-                      : 'text-gray-500 hover:text-gray-300'
-                  }`}
-                >
-                  {l.label}
-                </button>
-              ))}
+            {/* Language picker (globe + dropdown) */}
+            <div className="relative">
+              <button
+                onClick={() => setShowLangPicker(!showLangPicker)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800/60 hover:bg-gray-700/60 rounded-lg text-sm text-gray-300 transition-colors ring-1 ring-white/5"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span className="text-xs font-medium">{currentLang.label}</span>
+                <span className="hidden sm:inline text-xs">{currentLang.name}</span>
+              </button>
+              {showLangPicker && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowLangPicker(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 z-50 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl py-2 w-48 max-h-64 overflow-y-auto">
+                    {LANGUAGES.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => {
+                          switchLanguage(l.code)
+                          setShowLangPicker(false)
+                        }}
+                        className={`w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-700/60 transition-colors text-sm ${
+                          lang === l.code
+                            ? 'text-cyan-400 bg-cyan-500/10'
+                            : 'text-gray-300'
+                        }`}
+                      >
+                        <span>{l.name}</span>
+                        <span className="text-xs text-gray-500">{l.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

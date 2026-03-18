@@ -144,10 +144,11 @@ export default function StreamingSearchClient() {
 
   const currentRegion = REGIONS.find((r) => r.code === region) || REGIONS[0]
 
-  // Helper to generate movie page URL slug
+  // Helper to generate movie page URL slug (includes region if not US)
   const getMovieUrl = (r: SearchResult) => {
     const slug = (r.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-    return `/movies/${r.mediaType}-${r.id}-${slug}`
+    const regionParam = region !== 'US' ? `?region=${region}` : ''
+    return `/movies/${r.mediaType}-${r.id}-${slug}${regionParam}`
   }
 
   // ==========================================

@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import MovieDetailClient from './MovieDetailClient'
 
@@ -249,7 +250,9 @@ export default async function MoviePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
-      <MovieDetailClient titleData={titleData} />
+      <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" /></div>}>
+        <MovieDetailClient titleData={titleData} />
+      </Suspense>
     </>
   )
 }
