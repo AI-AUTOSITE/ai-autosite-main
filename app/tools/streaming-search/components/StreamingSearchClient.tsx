@@ -125,7 +125,7 @@ export default function StreamingSearchClient() {
   // Helper to generate movie page URL slug
   const getMovieUrl = (r: SearchResult) => {
     const slug = (r.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-    return `/movies/${r.id}-${slug}`
+    return `/movies/${r.mediaType}-${r.id}-${slug}`
   }
 
   // ==========================================

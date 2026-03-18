@@ -23,16 +23,49 @@ async function tmdbFetch(path: string, params: Record<string, string> = {}) {
   return res.json()
 }
 
-// Parse slug: "414906-the-batman" → { id: "414906", type: guess }
-function parseSlug(slug: string) {
-  const match = slug.match(/^(\d+)/)
-  if (!match) return null
-  return match[1]
+// Parse slug: "movie-414906-the-batman" or "tv-111110-one-piece" or legacy "414906-the-batman"
+function parseSlug(slug: string): { id: string; mediaType?: 'movie' | 'tv' } | null {
+  // New format: type-id-slug
+  const newMatch = slug.match(/^(movie|tv)-(\d+)/)
+  if (newMatch) {
+    return { id: newMatch[2], mediaType: newMatch[1] as 'movie' | 'tv' }
+  }
+  // Legacy format: id-slug
+  const legacyMatch = slug.match(/^(\d+)/)
+  if (legacyMatch) {
+    return { id: legacyMatch[1] }
+  }
+  return null
 }
 
-// Try movie first, then TV
-async function fetchTitle(id: string) {
-  // Try movie
+// Fetch title by ID, using mediaType hint if available
+async function fetchTitle(id: string, mediaTypeHint?: 'movie' | 'tv') {
+  // If we know the type, fetch directly
+  if (mediaTypeHint === 'tv') {
+    const tv = await tmdbFetch(`/tv/${id}`, {
+      language: 'en-US',
+      append_to_response: 'credits,content_ratings,watch/providers',
+    })
+    if (tv && tv.id) {
+      const tvJA = await tmdbFetch(`/tv/${id}`, { language: 'ja-JP' })
+      return { data: tv, dataJA: tvJA, mediaType: 'tv' as const }
+    }
+    return null
+  }
+
+  if (mediaTypeHint === 'movie') {
+    const movie = await tmdbFetch(`/movie/${id}`, {
+      language: 'en-US',
+      append_to_response: 'credits,release_dates,watch/providers',
+    })
+    if (movie && movie.id && movie.success !== false) {
+      const movieJA = await tmdbFetch(`/movie/${id}`, { language: 'ja-JP' })
+      return { data: movie, dataJA: movieJA, mediaType: 'movie' as const }
+    }
+    return null
+  }
+
+  // No hint — try movie first, then TV (legacy URLs)
   const movie = await tmdbFetch(`/movie/${id}`, {
     language: 'en-US',
     append_to_response: 'credits,release_dates,watch/providers',
@@ -42,7 +75,6 @@ async function fetchTitle(id: string) {
     return { data: movie, dataJA: movieJA, mediaType: 'movie' as const }
   }
 
-  // Try TV
   const tv = await tmdbFetch(`/tv/${id}`, {
     language: 'en-US',
     append_to_response: 'credits,content_ratings,watch/providers',
@@ -63,10 +95,10 @@ export async function generateMetadata({
 }: {
   params: { slug: string }
 }): Promise<Metadata> {
-  const id = parseSlug(params.slug)
-  if (!id) return { title: 'Title Not Found' }
+  const parsed = parseSlug(params.slug)
+  if (!parsed) return { title: 'Title Not Found' }
 
-  const result = await fetchTitle(id)
+  const result = await fetchTitle(parsed.id, parsed.mediaType)
   if (!result) return { title: 'Title Not Found' }
 
   const { data, mediaType } = result
@@ -113,10 +145,10 @@ export default async function MoviePage({
 }: {
   params: { slug: string }
 }) {
-  const id = parseSlug(params.slug)
-  if (!id) notFound()
+  const parsed = parseSlug(params.slug)
+  if (!parsed) notFound()
 
-  const result = await fetchTitle(id)
+  const result = await fetchTitle(parsed.id, parsed.mediaType)
   if (!result) notFound()
 
   const { data, dataJA, mediaType } = result

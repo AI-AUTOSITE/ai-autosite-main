@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   Star,
   Clock,
@@ -97,6 +98,7 @@ export default function MovieDetailClient({
   const [providers, setProviders] = useState(titleData.providers)
   const [showRegionPicker, setShowRegionPicker] = useState(false)
   const [isLoadingProviders, setIsLoadingProviders] = useState(false)
+  const router = useRouter()
 
   const currentRegion = REGIONS.find((r) => r.code === region) || REGIONS[0]
 
@@ -155,14 +157,14 @@ export default function MovieDetailClient({
         )}
 
         <div className="relative max-w-5xl mx-auto px-4 pt-6 pb-8">
-          {/* Back link */}
-          <Link
-            href="/tools/streaming-search"
+          {/* Back link — uses browser back to preserve search results */}
+          <button
+            onClick={() => router.back()}
             className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors mb-8 group"
           >
             <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            Streaming Search
-          </Link>
+            Back
+          </button>
 
           {/* Title card */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
