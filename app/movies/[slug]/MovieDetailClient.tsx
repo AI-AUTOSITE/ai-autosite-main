@@ -623,7 +623,7 @@ export default function MovieDetailClient({
                     className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-cyan-400 transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    'View on TMDB for direct links'
+                    View on TMDB for direct links
                   </a>
                 </div>
               )}
@@ -649,30 +649,35 @@ export default function MovieDetailClient({
           )}
         </section>
 
-        {/* Conditional Unrent CTA — only when no flatrate available */}
-        {!hasFlatrate && hasAnyProvider && (
+        {/* Conditional Unrent CTA — when no flatrate available (rent-only OR no providers) */}
+        {!hasFlatrate && !isLoadingProviders && (
           <section className="mt-8">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 border border-cyan-500/20 p-6 sm:p-8 text-center">
               <div className="relative">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 text-cyan-400 text-xs font-medium mb-4">
                   <Bell className="w-3.5 h-3.5" />
-                  Never miss when it becomes free
+                  {hasAnyProvider
+                    ? 'Never miss when it becomes free'
+                    : 'Get notified when it starts streaming'}
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                  Rent-only? Get notified when it&apos;s included free
+                  {hasAnyProvider
+                    ? 'Rent-only? Get notified when it\u2019s included free'
+                    : 'Not streaming yet? We\u2019ll let you know'}
                 </h3>
                 <p className="text-sm text-gray-400 max-w-md mx-auto mb-5">
-                  Unrent alerts you the moment this title joins your streaming subscriptions — so you never pay to rent what&apos;s about to be free.
+                  {hasAnyProvider
+                    ? 'Unrent alerts you the moment this title joins your streaming subscriptions \u2014 so you never pay to rent what\u2019s about to be free.'
+                    : 'Unrent monitors streaming services and sends you a push notification the moment this title becomes available.'}
                 </p>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-semibold rounded-xl transition-colors text-sm"
+                <div
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gray-700/60 text-gray-300 font-semibold rounded-xl text-sm ring-1 ring-white/10"
                 >
                   <Play className="w-4 h-4" />
-                  Download Unrent — Free
-                </a>
+                  Coming Soon on the App Store
+                </div>
                 <p className="text-[11px] text-gray-600 mt-3">
-                  Available on iOS · No data collection
+                  iOS · No data collection · Free
                 </p>
               </div>
             </div>
