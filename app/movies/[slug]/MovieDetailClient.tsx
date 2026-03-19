@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   Star,
@@ -266,20 +265,22 @@ export default function MovieDetailClient({
               alt=""
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-950/60 via-gray-950/80 to-gray-950" />
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-950/90 via-gray-950/50 to-gray-950/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-950/20 via-gray-950/50 to-gray-950" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-950/70 via-gray-950/20 to-gray-950/70" />
           </div>
         )}
 
         <div className="relative max-w-5xl mx-auto px-4 pt-6 pb-8">
-          {/* Back link — uses browser back to preserve search results */}
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors mb-8 group"
-          >
-            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            Back
-          </button>
+          {/* Back button — sticky on desktop only */}
+          <div className="lg:sticky lg:top-4 lg:z-30 mb-8">
+            <button
+              onClick={() => router.back()}
+              className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors group lg:bg-gray-950/80 lg:backdrop-blur-sm lg:px-3 lg:py-1.5 lg:rounded-lg lg:ring-1 lg:ring-white/10"
+            >
+              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              Back
+            </button>
+          </div>
 
           {/* Title card */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
@@ -723,15 +724,15 @@ export default function MovieDetailClient({
             <span>No personal data collected · No cookies · No tracking</span>
           </div>
 
-          {/* Back to streaming search */}
+          {/* Back to search */}
           <div className="text-center pt-2">
-            <Link
-              href="/tools/streaming-search"
+            <button
+              onClick={() => router.back()}
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-cyan-400 transition-colors"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
-              Back to Streaming Search
-            </Link>
+              Back to search results
+            </button>
           </div>
         </footer>
       </div>
