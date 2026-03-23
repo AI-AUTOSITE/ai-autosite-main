@@ -671,14 +671,17 @@ export default function MovieDetailClient({
                     ? 'Unrent alerts you the moment this title joins your streaming subscriptions \u2014 so you never pay to rent what\u2019s about to be free.'
                     : 'Unrent monitors streaming services and sends you a push notification the moment this title becomes available.'}
                 </p>
-                <div
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gray-700/60 text-gray-300 font-semibold rounded-xl text-sm ring-1 ring-white/10"
+                <a
+                  href="https://apps.apple.com/app/unrent-streaming-tracker/id6760618114"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-semibold rounded-xl text-sm transition-colors"
                 >
                   <Play className="w-4 h-4" />
-                  Coming Soon on the App Store
-                </div>
+                  Download Unrent — Free
+                </a>
                 <p className="text-[11px] text-gray-600 mt-3">
-                  iOS · No data collection · Free
+                  Available on iOS · No data collection
                 </p>
               </div>
             </div>
