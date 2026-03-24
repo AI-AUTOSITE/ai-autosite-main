@@ -118,6 +118,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
         />
+
+        {/* Impact.com verification */}
+        <meta name='impact-site-verification' value='6f7b5f69-3662-47ea-924d-94a92e8122f5' />
         
         {/* 4. JSON-LD structured data */}
         <script
