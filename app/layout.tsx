@@ -120,9 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {/* Impact.com verification */}
-        <meta name='impact-site-verification' value='6f7b5f69-3662-47ea-924d-94a92e8122f5' />
-        
-        {/* 4. JSON-LD structured data */}
+<meta name='impact-site-verification' content='caf4f152-6bf0-4f9a-aa54-04590ec5cbc4' />        {/* 4. JSON-LD structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
