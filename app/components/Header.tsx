@@ -3,7 +3,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, HelpCircle, Home, FileText } from 'lucide-react'
+import { Menu, X, HelpCircle, Home, FileText, Briefcase } from 'lucide-react'
 import { useState, useEffect, Suspense, useCallback, useRef } from 'react'
 import SignalBrand from './icons/SignalBrand'
 
@@ -19,6 +19,7 @@ export default function Header() {
   // Navigation items with icons
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
+    { href: '/hire', label: 'Hire', icon: Briefcase },
     { href: '/blog', label: 'Blog', icon: FileText },
     { href: '/faq', label: 'FAQ', icon: HelpCircle },
   ]

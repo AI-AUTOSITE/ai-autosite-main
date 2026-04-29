@@ -15,6 +15,7 @@ export default function Footer() {
     ],
     company: [
       { label: 'About', href: '/about' },
+      { label: 'Hire Me', href: '/hire' },
       { label: 'Contact', href: '/contact' },
       { label: 'Request Tool', href: '/request' },
     ],

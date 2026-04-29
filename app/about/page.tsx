@@ -1,7 +1,30 @@
+// app/about/page.tsx
 import Link from 'next/link'
-import Header from 'app/components/Header'
-import Footer from 'app/components/Footer'
-import { Shield, Zap, Heart, Users, Code, Globe, Target, Sparkles } from 'lucide-react'
+import type { Metadata } from 'next'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import SignalLogo from '@/components/icons/SignalLogo'
+import {
+  Shield,
+  Zap,
+  Heart,
+  Code,
+  Globe,
+  Target,
+  Sparkles,
+  Mail,
+  MapPin,
+  ArrowRight,
+} from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'About — Hidekazu Yamaoka & Signal Studio | AI AutoSite',
+  description:
+    'Signal is a one-person studio in Fukuoka, Japan, run by Hidekazu Yamaoka. Privacy-first iOS apps, Next.js tools, and software built without surveillance baked in.',
+  alternates: {
+    canonical: 'https://ai-autosite.com/about',
+  },
+}
 
 export default function AboutPage() {
   const values = [
@@ -9,63 +32,48 @@ export default function AboutPage() {
       icon: Shield,
       title: 'Privacy First',
       description:
-        'We collect minimal data and never track or sell your information. Your content stays in your browser.',
+        'I collect minimal data and never track or sell your information. Your content stays in your browser.',
       color: 'from-cyan-500 to-blue-500',
     },
     {
       icon: Zap,
       title: 'Instant & Simple',
       description:
-        'Tools that work immediately without registration, complex setup, or learning curves.',
+        'Tools that work immediately — no registration, no complex setup, no learning curve.',
       color: 'from-yellow-500 to-orange-500',
     },
     {
       icon: Heart,
       title: 'User-Centered',
       description:
-        'Every feature is built based on real user needs, not metrics or monetization goals.',
+        'Every feature is built based on real needs, not engagement metrics or monetization goals.',
       color: 'from-pink-500 to-red-500',
     },
     {
       icon: Code,
       title: 'Open & Transparent',
       description:
-        'Much of our code is open source, and we believe in transparency over black boxes.',
+        'Most of the code is open source on GitHub under MIT. Transparency over black boxes.',
       color: 'from-green-500 to-emerald-500',
     },
   ]
 
   const stats = [
-    { number: '6', label: 'Tools Available', description: 'And growing based on user needs' },
-    { number: '10k+', label: 'Monthly Users', description: 'Developers and creatives worldwide' },
-    { number: '0', label: 'Data Breaches', description: "Hard to breach what you don't store" },
-    { number: '100%', label: 'Open Source', description: 'Core tools available on GitHub' },
+    { number: '77+', label: 'Free Tools', description: 'Across 9 categories, growing weekly' },
+    { number: '4', label: 'iOS Apps', description: 'Shipped to the App Store' },
+    { number: '0', label: 'Trackers', description: 'No analytics, no fingerprinting, ever' },
+    { number: '100%', label: 'Open Source', description: 'Web tools available on GitHub' },
   ]
 
-  const team = [
-    {
-      name: 'AI-Powered Development',
-      role: 'Core Architecture',
-      description: 'Leveraging AI for efficient, high-quality code generation and optimization.',
-      avatar: '🤖',
-    },
-    {
-      name: 'Community Feedback',
-      role: 'Product Direction',
-      description: 'User requests and feedback drive our development roadmap and priorities.',
-      avatar: '👥',
-    },
-    {
-      name: 'Privacy-First Design',
-      role: 'Security & Ethics',
-      description: 'Every feature is designed with user privacy and data minimization in mind.',
-      avatar: '🛡️',
-    },
+  const apps = [
+    { name: 'Tuck Voice', url: 'https://apps.apple.com/app/id6760351425' },
+    { name: 'DealKit', url: 'https://apps.apple.com/app/id6757729007' },
+    { name: 'TimeSee', url: 'https://apps.apple.com/app/id6759831241' },
   ]
 
   return (
     <div className="min-h-screen bg-gray-800 flex flex-col">
-      {/* Background animation - more subtle */}
+      {/* Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-pulse"></div>
@@ -74,210 +82,212 @@ export default function AboutPage() {
       <Header />
 
       <main className="relative z-10 flex-1">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Header */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          {/* HERO */}
           <div className="text-center mb-16">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center w-20 h-20 mb-6">
+              <SignalLogo size={80} colors={['#FFFFFF', '#E0E0E0', '#B0B0B0']} />
             </div>
-            <h1 className="text-4xl font-bold text-white mb-6">About AI-AutoSite</h1>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              We believe the internet should be filled with tools that respect your privacy, work
-              instantly, and solve real problems without unnecessary complexity.
+
+            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              Hi, I&rsquo;m Hidekazu.
+            </h1>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">
+              I build software the way I wish more people would: privately, transparently, and
+              without surveillance baked in.
             </p>
+
+            <div className="flex items-center justify-center gap-4 text-sm text-gray-500 flex-wrap">
+              <span className="inline-flex items-center gap-1.5">
+                <span>🇯🇵</span>
+                <MapPin className="w-4 h-4" />
+                Fukuoka, Japan
+              </span>
+              <span className="text-gray-700">·</span>
+              <span>Solo developer</span>
+              <span className="text-gray-700">·</span>
+              <span>Since 2025</span>
+            </div>
           </div>
 
-          {/* Mission Statement */}
+          {/* STORY */}
           <section className="mb-16">
-            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
-              <div className="text-center">
-                <Target className="w-12 h-12 text-cyan-400 mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-white mb-6">Our Mission</h2>
-                <p className="text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                  We're committed to solving the complexity issues of modern web tools that often
-                  frustrate users. By combining AI technology with user-centered design, we create
-                  tools that enable everyone to achieve their goals effortlessly, regardless of
-                  technical expertise or background.
+            <div className="bg-gradient-to-br from-gray-700/60 to-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-600/50 p-8 sm:p-10">
+              <div className="prose prose-invert max-w-none">
+                <p className="text-lg text-gray-200 leading-relaxed mb-4">
+                  AI AutoSite started as a personal frustration: most modern web tools demand
+                  sign-ups, push ads, and quietly send your data to third parties — even when none
+                  of that has anything to do with the job they&rsquo;re supposed to do.
+                </p>
+                <p className="text-base text-gray-300 leading-relaxed mb-4">
+                  So I started building the tools I wished existed. They run entirely in your
+                  browser. They don&rsquo;t need an account. They don&rsquo;t track you. There are
+                  77 of them now, with new ones added regularly, and the code is open source on
+                  GitHub under the MIT license.
+                </p>
+                <p className="text-base text-gray-300 leading-relaxed mb-4">
+                  Alongside the web tools, I ship native iOS apps under the same philosophy. Tuck
+                  Voice transcribes your voice memos on-device with Whisper, no cloud involved.
+                  DealKit is a CRM for creators with no analytics SDK in sight. TimeSee is a
+                  visual timer designed for ADHD brains, with a real Apple Watch experience.
+                </p>
+                <p className="text-base text-gray-300 leading-relaxed">
+                  The umbrella for all of this is{' '}
+                  <span className="text-white font-semibold">Signal</span> — a one-person studio I
+                  run from Fukuoka. The name is a reference to clarity and transparency, the same
+                  values that shape how I build.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* Core Values */}
+          {/* VALUES */}
           <section className="mb-16">
-            <h2 className="text-2xl font-bold text-white mb-8 text-center">What We Stand For</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {values.map((value, index) => {
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-white mb-3">What Signal stands for</h2>
+              <p className="text-gray-400">Four principles, applied to every tool and app I ship.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {values.map((value) => {
                 const Icon = value.icon
                 return (
                   <div
-                    key={index}
-                    className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8"
+                    key={value.title}
+                    className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-colors"
                   >
                     <div
                       className={`w-12 h-12 bg-gradient-to-br ${value.color} rounded-xl flex items-center justify-center mb-4`}
                     >
                       <Icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-3">{value.title}</h3>
-                    <p className="text-gray-300 leading-relaxed">{value.description}</p>
+                    <h3 className="text-lg font-bold text-white mb-2">{value.title}</h3>
+                    <p className="text-sm text-gray-300 leading-relaxed">{value.description}</p>
                   </div>
                 )
               })}
             </div>
           </section>
 
-          {/* Stats */}
+          {/* STATS */}
           <section className="mb-16">
-            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
-              <h2 className="text-2xl font-bold text-white mb-8 text-center">
-                Impact by the Numbers
-              </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-3xl lg:text-4xl font-bold text-transparent bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text mb-2">
-                      {stat.number}
-                    </div>
-                    <div className="text-white font-semibold mb-1">{stat.label}</div>
-                    <div className="text-gray-400 text-sm">{stat.description}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* How We're Different */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold text-white mb-8 text-center">How We're Different</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6">
-                <h3 className="text-lg font-semibold text-red-400 mb-4">❌ What We Don't Do</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• Track your behavior or build user profiles</li>
-                  <li>• Require lengthy registrations or verifications</li>
-                  <li>• Store your sensitive files or content</li>
-                  <li>• Show ads or sell your data to third parties</li>
-                  <li>• Add features just because competitors have them</li>
-                  <li>• Hide functionality behind paywalls unnecessarily</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6">
-                <h3 className="text-lg font-semibold text-green-400 mb-4">✅ What We Do</h3>
-                <ul className="space-y-2 text-gray-300">
-                  <li>• Build tools that work instantly in your browser</li>
-                  <li>• Process data locally whenever possible</li>
-                  <li>• Listen to user feedback and build what's needed</li>
-                  <li>• Keep interfaces simple and intuitive</li>
-                  <li>• Open-source our core tools for transparency</li>
-                  <li>• Provide generous free tiers with real value</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* Team Philosophy */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold text-white mb-8 text-center">Our Approach</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {team.map((member, index) => (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {stats.map((stat) => (
                 <div
-                  key={index}
-                  className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-xl border border-gray-600 p-6 text-center"
+                  key={stat.label}
+                  className="text-center bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
                 >
-                  <div className="text-4xl mb-4">{member.avatar}</div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{member.name}</h3>
-                  <div className="text-cyan-400 text-sm mb-3">{member.role}</div>
-                  <p className="text-gray-300 text-sm">{member.description}</p>
+                  <div className="text-3xl sm:text-4xl font-bold text-white mb-1">
+                    {stat.number}
+                  </div>
+                  <div className="text-sm font-medium text-cyan-400 mb-1">{stat.label}</div>
+                  <div className="text-[11px] text-gray-500 leading-tight">{stat.description}</div>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* Technology Stack */}
+          {/* HOW I BUILD */}
           <section className="mb-16">
-            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                Built with Modern Tech
-              </h2>
-              <p className="text-gray-400 text-center mb-8 max-w-2xl mx-auto">
-                We use cutting-edge technology to deliver fast, reliable tools while maintaining our
-                commitment to privacy and simplicity.
-              </p>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <Sparkles className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                  <h3 className="text-white font-semibold mb-2">AI-Powered</h3>
-                  <p className="text-gray-400 text-sm">
-                    Leveraging AI for intelligent analysis and recommendations
-                  </p>
+            <div className="bg-gradient-to-br from-purple-500/5 to-cyan-500/5 backdrop-blur-xl rounded-2xl border border-white/10 p-8 sm:p-10">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
                 </div>
-                <div className="text-center">
-                  <Zap className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
-                  <h3 className="text-white font-semibold mb-2">Edge Computing</h3>
-                  <p className="text-gray-400 text-sm">
-                    Processing data in your browser for speed and privacy
-                  </p>
-                </div>
-                <div className="text-center">
-                  <Globe className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                  <h3 className="text-white font-semibold mb-2">Global CDN</h3>
-                  <p className="text-gray-400 text-sm">
-                    Fast loading times worldwide with edge distribution
-                  </p>
-                </div>
+                <h2 className="text-2xl font-bold text-white">How I build</h2>
+              </div>
+
+              <div className="space-y-4 text-base text-gray-300 leading-relaxed">
+                <p>
+                  I&rsquo;m one person, but I ship at the pace of a small team. That&rsquo;s
+                  possible because I work async, write everything down, and use modern AI-assisted
+                  tooling the way professional software studios do in 2026.
+                </p>
+                <p>What that means in practice:</p>
+                <ul className="space-y-3 pl-1">
+                  <li className="flex items-start gap-3">
+                    <span className="text-cyan-400 mt-1 flex-shrink-0">→</span>
+                    <span>
+                      I take full responsibility for every line that ships. AI is a tool, not a
+                      collaborator that gets its name on the commit.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-cyan-400 mt-1 flex-shrink-0">→</span>
+                    <span>
+                      User data — yours, mine, anyone&rsquo;s — never enters a third-party AI
+                      training pipeline. The privacy promise is non-negotiable.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-cyan-400 mt-1 flex-shrink-0">→</span>
+                    <span>
+                      Decisions are documented as Architecture Decision Records, so the code
+                      doesn&rsquo;t need me to explain it.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-cyan-400 mt-1 flex-shrink-0">→</span>
+                    <span>
+                      Deadlines are commitments, not estimates. If something is at risk, I say so
+                      48 hours in advance, with a written plan — not a last-minute apology.
+                    </span>
+                  </li>
+                </ul>
+                <p className="text-gray-400 italic pt-2">
+                  Honesty about how the work gets made is part of being privacy-first.
+                </p>
               </div>
             </div>
           </section>
 
-          {/* Future Vision */}
+          {/* APPS */}
           <section className="mb-16">
-            <div className="bg-gradient-to-br from-gray-700 to-gray-800 backdrop-blur-xl rounded-2xl border border-gray-600 p-8">
-              <h2 className="text-2xl font-bold text-white mb-6 text-center">Looking Ahead</h2>
-              <div className="max-w-3xl mx-auto text-center">
-                <p className="text-gray-300 leading-relaxed mb-6">
-                  We envision a web where powerful tools are accessible to everyone, where privacy
-                  is the default, and where technology serves users rather than exploiting them. Our
-                  goal is to prove that sustainable, ethical software can compete with and surpass
-                  traditional approaches.
-                </p>
-                <p className="text-gray-400">
-                  Every tool we build brings us closer to this vision. Join us on this journey.
-                </p>
-              </div>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-white mb-3">Other things I&rsquo;ve made</h2>
+              <p className="text-gray-400">Native apps that follow the same playbook.</p>
             </div>
-          </section>
 
-          {/* Contact CTA */}
-          <section>
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-6">Want to Learn More?</h2>
-              <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-                We're always happy to discuss our approach, answer questions, or hear your ideas for
-                making the web a better place.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all"
-                >
-                  <span>Get in Touch</span>
-                </Link>
-                <Link
-                  href="/blog"
-                  className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
-                >
-                  <span>Read Our Blog</span>
-                </Link>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {apps.map((app) => (
                 <a
-                  href="https://github.com/ai-autosite"
+                  key={app.name}
+                  href={app.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-all"
+                  className="flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-5 py-4 transition-colors group"
                 >
-                  <span>View on GitHub</span>
+                  <span className="text-white font-medium">{app.name}</span>
+                  <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
                 </a>
+              ))}
+            </div>
+          </section>
+
+          {/* CTA */}
+          <section>
+            <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 backdrop-blur-xl rounded-2xl border border-cyan-500/20 p-8 text-center">
+              <Target className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-3">Want to work with me?</h2>
+              <p className="text-gray-300 mb-6 max-w-xl mx-auto">
+                Signal also takes on a small number of client projects each year — privacy-first
+                iOS and Next.js work, on monthly retainers.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <Link
+                  href="/hire"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-semibold hover:opacity-90 transition-opacity"
+                >
+                  See how I work with clients
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 text-white hover:bg-white/15 transition-colors"
+                >
+                  <Mail className="w-4 h-4" />
+                  General contact
+                </Link>
               </div>
             </div>
           </section>
