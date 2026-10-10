@@ -24,6 +24,13 @@ export default function Footer() {
       { label: 'DealKit', href: 'https://apps.apple.com/app/id6757729007' },
       { label: 'TimeSee', href: 'https://apps.apple.com/app/id6759831241' },
     ],
+    sites: [
+      {
+        label: 'iPhone Diff',
+        href: 'https://diff.ai-autosite.com',
+        description: 'Pick two iPhones, see only what changes.',
+      },
+    ],
     legal: [
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Terms of Service', href: '/terms-of-service' },
@@ -159,6 +166,24 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+
+            <h3 className="text-white font-semibold mb-4 mt-6 text-sm uppercase tracking-wider">
+              Our Sites
+            </h3>
+            <ul className="space-y-2">
+              {footerSections.sites.map((link) => (
+                <li key={link.href}>
+                  {/* 姉妹サイトは同じタブで開く：target="_blank" や rel は付けないこと */}
+                  <a
+                    href={link.href}
+                    title={link.description}
+                    className="text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Legal */}
@@ -242,6 +267,21 @@ export default function Footer() {
                   rel="noopener noreferrer"
                 >
                   {link.label}
+                </a>
+              ))}
+            </div>
+
+            <p className="text-xs text-gray-500 text-center mt-4 mb-2">Our Sites</p>
+            <div className="flex flex-wrap gap-3 justify-center text-center">
+              {footerSections.sites.map((link) => (
+                // 姉妹サイトは同じタブで開く：target="_blank" や rel は付けないこと
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-xs text-gray-400 hover:text-cyan-400 transition-colors"
+                >
+                  {link.label}
+                  <span className="text-gray-500"> · {link.description}</span>
                 </a>
               ))}
             </div>
